@@ -11,6 +11,7 @@ import java.awt.*;
  */
 public class Actor implements Physical {
 
+  private final String name;
   private final char appearance;
   private final Color color;
   private final Color bgcolor;
@@ -20,11 +21,17 @@ public class Actor implements Physical {
 
 
   Actor(ActorTemplate aT) {
+    name = aT.name;
     appearance = aT.appearance;
     color = aT.color;
     bgcolor = aT.bgcolor;
     weight = aT.weight;
     isBlocking = aT.isBlocking;
+  }
+
+  @Override
+  public String getName() {
+    return name;
   }
 
   @Override

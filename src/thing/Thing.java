@@ -11,6 +11,7 @@ import java.awt.*;
  */
 public class Thing implements Physical {
 
+  private final String name;
   private final char appearance;
   private final Color color;
   private final Double weight;
@@ -20,11 +21,17 @@ public class Thing implements Physical {
 
 
   Thing(ThingTemplate tT) {
+    name = tT.name;
     appearance = tT.getRandomAppearance();
     color = tT.getRandomColor();
     weight = tT.weight;
     isImmobile = tT.isImmobile;
     isBlocking = tT.isBlocking;
+  }
+
+  @Override
+  public String getName() {
+    return name;
   }
 
 

@@ -20,6 +20,11 @@ public class Terrain implements Physical {
     this.colorID = type.getRandomColorID();
   }
 
+  @Override
+  public String getName() {
+    return type.name();
+  }
+
   public TerrainType getType() {
     return type;
   }

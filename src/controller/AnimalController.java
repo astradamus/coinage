@@ -3,6 +3,7 @@ package controller;
 import actor.Actor;
 import game.Game;
 import world.Area;
+import world.World;
 
 import java.awt.*;
 
@@ -23,16 +24,18 @@ public class AnimalController extends ActorController {
 
   @Override
   public void onUpdate() {
-    Area area = Game.getActive().AREA;
+    World world = Game.getActive().WORLD;
+
     if (wandering.x == -1) {
 
       if (waiting < 0) {
 
-        // Pick a non-blocked location to wander to.
+
+        // Pick a non-blocked worldLocation to wander to.
         do {
-          wandering.x = Game.RANDOM.nextInt(area.getWidth());
-          wandering.y = Game.RANDOM.nextInt(area.getHeight());
-        } while (area.isBlocked(wandering.x, wandering.y));
+          wandering.x = Game.RANDOM.nextInt(world.globalWidth);
+          wandering.y = Game.RANDOM.nextInt(world.globalHeight);
+        } while (world.globalIsBlocked(wandering.x, wandering.y));
 
       } else {
         waiting--;
@@ -40,40 +43,39 @@ public class AnimalController extends ActorController {
 
     } else {
 
-      if (location.equals(wandering)) {
+      if (worldLocation.equals(wandering)) {
         stopWander();
       } else {
 
-        int newX = location.x;
-        int newY = location.y;
+        int newX = worldLocation.x;
+        int newY = worldLocation.y;
 
         if (Game.RANDOM.nextBoolean()) {
 
-          if (wandering.x > location.x) {
+          if (wandering.x > worldLocation.x) {
             newX += 1;
           } else
-          if (wandering.x < location.x) {
+          if (wandering.x < worldLocation.x) {
             newX -= 1;
           }
 
         } else {
 
 
-          if (wandering.y > location.y) {
+          if (wandering.y > worldLocation.y) {
             newY += 1;
           } else
-          if (wandering.y < location.y) {
+          if (wandering.y < worldLocation.y) {
             newY -= 1;
           }
 
         }
 
-        if (area.movePhysical(actor, location.x, location.y, newX, newY)) {
-          location.setLocation(newX,newY);
+        if (world.globalMovePhysical(actor, worldLocation.x, worldLocation.y, newX, newY)) {
+          worldLocation.setLocation(newX,newY);
         } else {
           stopWander();
         }
-
 
       }
 

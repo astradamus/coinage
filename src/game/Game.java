@@ -1,6 +1,7 @@
 package game;
 
 import world.Area;
+import world.World;
 
 import java.util.Random;
 
@@ -21,11 +22,11 @@ public class Game {
     return ACTIVE;
   }
 
-  public final Area AREA;
+  public final World WORLD;
   public final Controllers CONTROLLERS;
 
-  public Game(Area area, Controllers controllers) {
-    this.AREA = area;
+  public Game(World world, Controllers controllers) {
+    this.WORLD = world;
     this.CONTROLLERS = controllers;
   }
 
@@ -34,7 +35,7 @@ public class Game {
   }
 
   public static void main(String[] args) {
-    GameLoader.newGame(64,64);
+    GameLoader.newGame(10,10,64,64);
     GameDisplay.recalculateSize();
     GameDisplay.addKeyListener(Game.getActive().CONTROLLERS.getPlayerController().getKeyListener());
     GameEngine.start();

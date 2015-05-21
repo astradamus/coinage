@@ -2,7 +2,7 @@ package controller;
 
 import actor.Actor;
 import game.Game;
-import world.Area;
+import world.World;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -51,7 +51,7 @@ public class PlayerController extends ActorController {
 
   @Override
   public void onUpdate() {
-    Area area = Game.getActive().AREA;
+    World world = Game.getActive().WORLD;
 
     if (beatsToRecover > 0) {
         beatsToRecover--;
@@ -61,10 +61,10 @@ public class PlayerController extends ActorController {
           action = null;
         } else {
           Direction dir = movingDirections.peek();
-          int newX = location.x + dir.relativeX;
-          int newY = location.y + dir.relativeY;
-          if (area.movePhysical(actor, location.x, location.y, newX, newY)) {
-            location.setLocation(newX, newY);
+          int newX = worldLocation.x + dir.relativeX;
+          int newY = worldLocation.y + dir.relativeY;
+          if (world.globalMovePhysical(actor, worldLocation.x, worldLocation.y, newX, newY)) {
+            worldLocation.setLocation(newX, newY);
             beatsToRecover = action.beatsToPerform;
           }
         }
@@ -75,6 +75,13 @@ public class PlayerController extends ActorController {
   @Override
   public int getRolledInitiative() {
     return 0;
+  }
+
+  public int getX() {
+    return worldLocation.x;
+  }
+  public int getY() {
+    return worldLocation.y;
   }
 
   public KeyListener getKeyListener() {

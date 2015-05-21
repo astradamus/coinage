@@ -69,8 +69,6 @@ public class AreaFactory {
     int treeCount = (int) (STDGEN_TREE_FREQUENCY * width * height);
     int boulderCount = (int) (STDGEN_BOULDER_FREQUENCY * width * height);
 
-    System.out.println(Integer.toString(treeCount) + " : " + Integer.toString(boulderCount));
-
     // generate trees
     treeLoop:
     while (treeCount > 0) {

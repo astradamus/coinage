@@ -1,5 +1,6 @@
 package game;
 
+import controller.PlayerController;
 import world.Area;
 
 import javax.swing.*;
@@ -23,7 +24,8 @@ public class GameDisplay {
     public void paint(Graphics g) {
       super.paint(g);
       Graphics2D g2d = (Graphics2D) g;
-      Area area = Game.getActive().AREA;
+      PlayerController pC = Game.getActive().CONTROLLERS.getPlayerController();
+      Area area = Game.getActive().WORLD.getAreaFromGlobalCoordinate(pC.getX(),pC.getY());
       for (int y = 0; y < area.getHeight(); y++) {
         for (int x = 0; x < area.getWidth(); x++) {
 
@@ -57,8 +59,8 @@ public class GameDisplay {
   };
 
   static void recalculateSize() {
-    WINDOW.setSize((Game.getActive().AREA.getWidth() + 1) * TILE_SIZE,
-        (Game.getActive().AREA.getHeight() + 1) * TILE_SIZE + WINDOW.getInsets().top);
+    WINDOW.setSize((Game.getActive().WORLD.areaWidth + 1) * TILE_SIZE,
+        (Game.getActive().WORLD.areaHeight + 1) * TILE_SIZE + WINDOW.getInsets().top);
   }
 
   static void onUpdate() {

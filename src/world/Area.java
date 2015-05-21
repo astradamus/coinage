@@ -12,7 +12,7 @@ public final class Area {
   private final int height;
 
   private final Terrain[][] terrain;
-  private final AreaLayer_Physicals physicals;
+  final AreaLayer_Physicals physicals;
 
 
   Area(Terrain[][] terrain, Physical[][] physicals) {
@@ -20,8 +20,8 @@ public final class Area {
       throw new IllegalArgumentException("terrain AND physicals MUST BE THE SAME DIMENSIONS!");
     }
 
-    this.width = terrain.length;
-    this.height = terrain[0].length;
+    this.width = terrain[0].length;
+    this.height = terrain.length;
     this.terrain = terrain;
 
     this.physicals = new AreaLayer_Physicals(physicals);
@@ -41,9 +41,7 @@ public final class Area {
   }
 
   public boolean movePhysical(Physical moving, int fromX, int fromY, int toX, int toY) {
-    if (physicals.getLocationIsBlocked(toX, toY)
-        || toX < 0 || toX >= getWidth()
-        || toY < 0 || toY >= getHeight()) {
+    if (physicals.getLocationIsBlocked(toX, toY)) {
       return false;
     }
     if (physicals.removePhysicalFrom(fromX, fromY, moving)) {

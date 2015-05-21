@@ -1,7 +1,5 @@
 package controller;
 
-import world.World;
-
 /**
  * All Controllers registered with Game.register() will have onUpdate() called every
  * frame. Most controllers will be puppeteers for Actors,
@@ -9,10 +7,10 @@ import world.World;
 public interface Controller {
 
   /**
-   * Called every frame by Game.Engine as long as this Controller is registered with
+   * Called every frame by Game.GameEngine as long as this Controller is registered with
    * Game.register()
    */
-  void onUpdate(World world);
+  void onUpdate();
 
   /**
    * Called between frames, after the current update() has finished. Determines the order in

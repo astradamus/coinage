@@ -1,6 +1,7 @@
 package controller;
 
 import actor.Actor;
+import game.Game;
 import world.World;
 
 import java.awt.*;
@@ -49,7 +50,9 @@ public class PlayerController extends ActorController {
   }
 
   @Override
-  public void onUpdate(World world) {
+  public void onUpdate() {
+    World world = Game.getActive().WORLD;
+
     if (beatsToRecover > 0) {
         beatsToRecover--;
     } else {

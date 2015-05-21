@@ -22,7 +22,8 @@ public class AnimalController extends ActorController {
 
 
   @Override
-  public void onUpdate(World world) {
+  public void onUpdate() {
+    World world = Game.getActive().WORLD;
     if (wandering.x == -1) {
 
       if (waiting < 0) {

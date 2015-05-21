@@ -3,79 +3,84 @@ package world;
 import game.Physical;
 
 /**
- * Contains the Physical information for the game. The way the world looks and the locations of
- * any placed Physicals. Many/most generic Things are stored only in the listings here.
+ *
  */
-public final class World {
+public class World {
 
-  private final int width;
-  private final int height;
+  final Area[][] areas;
+  public final int worldAreasWide;
+  public final int worldAreasTall;
+  public final int areaWidth;
+  public final int areaHeight;
+  public final int globalWidth;
+  public final int globalHeight;
 
-  private final Terrain[][] terrain;
-  private final WorldLayer_Physicals physicals;
+  World(Area[][] areas) {
 
-
-  World(Terrain[][] terrain, Physical[][] physicals) {
-    if (physicals.length != terrain.length || physicals[0].length != terrain[0].length) {
-      throw new IllegalArgumentException("terrain AND physicals MUST BE THE SAME DIMENSIONS!");
-    }
-
-    this.width = terrain.length;
-    this.height = terrain[0].length;
-    this.terrain = terrain;
-
-    this.physicals = new WorldLayer_Physicals(physicals);
+    this.areas = areas;
+    worldAreasWide = areas[0].length;
+    worldAreasTall = areas.length;
+    areaWidth = areas[0][0].getWidth();
+    areaHeight = areas[0][0].getHeight();
+    globalWidth = worldAreasWide * areaWidth;
+    globalHeight = worldAreasTall * areaHeight;
 
   }
 
-
-
-  public void placePhysical(Physical spawning, int x, int y) {
-    physicals.putPhysical(x,y,spawning);
+  public void globalPlacePhysical(Physical spawning, int globalX, int globalY) {
+    BreakResult bR = breakWorldLocation(globalX,globalY);
+    bR.area.physicals.putPhysical(bR.localX, bR.localY, spawning);
   }
 
-  public void removePhysical(Physical removing, int fromX, int fromY) {
-    if (!physicals.removePhysicalFrom(fromX, fromY, removing)) {
-      System.out.println("Attempted to remove Physical that was not found at fromX/fromY.");
-    }
-  }
+  public boolean globalMovePhysical(Physical moving, int fromGlobalX, int fromGlobalY,
+                                    int toGlobalX, int toGlobalY) {
+    
+    BreakResult from = breakWorldLocation(fromGlobalX, fromGlobalY);
+    BreakResult to = breakWorldLocation(toGlobalX, toGlobalY);
 
-  public boolean movePhysical(Physical moving, int fromX, int fromY, int toX, int toY) {
-    if (physicals.getLocationIsBlocked(toX, toY)
-        || toX < 0 || toX >= getWidth()
-        || toY < 0 || toY >= getHeight()) {
+    if (to.area.physicals.getLocationIsBlocked(to.localX, to.localY)) {
       return false;
     }
-    if (physicals.removePhysicalFrom(fromX, fromY, moving)) {
-      physicals.putPhysical(toX,toY,moving);
+    if (from.area.physicals.removePhysicalFrom(from.localX, from.localY, moving)) {
+      to.area.physicals.putPhysical(to.localX,to.localY,moving);
       return true;
     } else {
-      System.out.println("Attempted to move Physical that was not found at fromX/fromY.");
+      System.out.println("Attempted to move Physical that was not found at fromGlobalX/fromGlobalY.");
       return false;
     }
+
   }
 
-  public boolean isBlocked(int x, int y) {
-    return physicals.getLocationIsBlocked(x, y);
+  public boolean globalIsBlocked(int globalX, int globalY) {
+    BreakResult bR = breakWorldLocation(globalX,globalY);
+    return bR.area.physicals.getLocationIsBlocked(bR.localX, bR.localY);
   }
 
-  public int getWidth() {
-    return width;
+  public Area getAreaFromGlobalCoordinate(int globalX, int globalY) {
+    return breakWorldLocation(globalX,globalY).area;
   }
 
-  public int getHeight() {
-    return height;
+
+  /**
+   * Translates a global coordinate into an Area and local coordinates within that area.
+   */
+  BreakResult breakWorldLocation(int worldX, int worldY) {
+    Area area = areas[worldY / areaHeight][worldX / areaWidth];
+    int localX = worldX % areaWidth;
+    int localY = worldY % areaHeight;
+    return new BreakResult(area,localX,localY);
   }
 
-  public Terrain getTile(int x, int y) {
-    return terrain[y][x];
-  }
+  class BreakResult {
+    public final Area area;
+    public final int localX;
+    public final int localY;
 
-  public Physical getPriorityPhysical(int x, int y) {
-    Physical priority = physicals.getPriorityPhysicalAt(x, y);
-    if (priority == null) {
-      priority = getTile(x,y);
+    public BreakResult(Area area, int localX, int localY) {
+      this.area = area;
+      this.localX = localX;
+      this.localY = localY;
     }
-    return priority;
   }
+
 }

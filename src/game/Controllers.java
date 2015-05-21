@@ -2,7 +2,6 @@ package game;
 
 import controller.Controller;
 import controller.PlayerController;
-import world.World;
 
 import java.util.ArrayList;
 import java.util.List;

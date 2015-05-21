@@ -10,14 +10,14 @@ import java.awt.*;
 public abstract class ActorController implements Controller {
 
   final Actor actor;
-  final Point location;
+  final Point worldLocation;
 
-  public ActorController(Actor actor, Point location) {
-    if (actor == null || location == null) {
+  public ActorController(Actor actor, Point worldLocation) {
+    if (actor == null || worldLocation == null) {
       throw new IllegalArgumentException("Cannot create ActorController with any null values.");
     }
     this.actor = actor;
-    this.location = location;
+    this.worldLocation = worldLocation;
   }
 
 }

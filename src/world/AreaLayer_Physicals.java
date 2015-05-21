@@ -9,11 +9,11 @@ import java.util.List;
  * A 2D List table of Physical lists sorted such that the 'visible' Physical in each list (the top)
  * is the Physical with the highest "Visual Priority."
  */
-public class WorldLayer_Physicals {
+public class AreaLayer_Physicals {
 
   private final List<List<List<Physical>>> physicals;
 
-  public WorldLayer_Physicals(Physical[][] physicals) {
+  public AreaLayer_Physicals(Physical[][] physicals) {
 
     this.physicals = new ArrayList<>();
 
@@ -37,7 +37,7 @@ public class WorldLayer_Physicals {
    */
   void putPhysical(int x, int y, Physical placing) {
       if (placing == null) {
-        System.out.println("Attempted to put null to WorldLayer_Physicals.");
+        System.out.println("Attempted to put null to AreaLayer_Physicals.");
         return;
       }
 

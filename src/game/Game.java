@@ -1,6 +1,6 @@
 package game;
 
-import world.World;
+import world.Area;
 
 import java.util.Random;
 
@@ -21,11 +21,11 @@ public class Game {
     return ACTIVE;
   }
 
-  public final World WORLD;
+  public final Area AREA;
   public final Controllers CONTROLLERS;
 
-  public Game(World world, Controllers controllers) {
-    this.WORLD = world;
+  public Game(Area area, Controllers controllers) {
+    this.AREA = area;
     this.CONTROLLERS = controllers;
   }
 

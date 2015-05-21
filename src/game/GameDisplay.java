@@ -1,6 +1,6 @@
 package game;
 
-import world.World;
+import world.Area;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,11 +23,11 @@ public class GameDisplay {
     public void paint(Graphics g) {
       super.paint(g);
       Graphics2D g2d = (Graphics2D) g;
-      World world = Game.getActive().WORLD;
-      for (int y = 0; y < world.getHeight(); y++) {
-        for (int x = 0; x < world.getWidth(); x++) {
+      Area area = Game.getActive().AREA;
+      for (int y = 0; y < area.getHeight(); y++) {
+        for (int x = 0; x < area.getWidth(); x++) {
 
-          Physical visible = world.getPriorityPhysical(x, y);
+          Physical visible = area.getPriorityPhysical(x, y);
 
           int placeX = (x) * TILE_SIZE;
           int placeY = (y + 1) * TILE_SIZE;
@@ -57,8 +57,8 @@ public class GameDisplay {
   };
 
   static void recalculateSize() {
-    WINDOW.setSize((Game.getActive().WORLD.getWidth() + 1) * TILE_SIZE,
-        (Game.getActive().WORLD.getHeight() + 1) * TILE_SIZE + WINDOW.getInsets().top);
+    WINDOW.setSize((Game.getActive().AREA.getWidth() + 1) * TILE_SIZE,
+        (Game.getActive().AREA.getHeight() + 1) * TILE_SIZE + WINDOW.getInsets().top);
   }
 
   static void onUpdate() {

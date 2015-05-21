@@ -6,16 +6,16 @@ import game.Physical;
  * Contains the Physical information for the game. The way the world looks and the locations of
  * any placed Physicals. Many/most generic Things are stored only in the listings here.
  */
-public final class World {
+public final class Area {
 
   private final int width;
   private final int height;
 
   private final Terrain[][] terrain;
-  private final WorldLayer_Physicals physicals;
+  private final AreaLayer_Physicals physicals;
 
 
-  World(Terrain[][] terrain, Physical[][] physicals) {
+  Area(Terrain[][] terrain, Physical[][] physicals) {
     if (physicals.length != terrain.length || physicals[0].length != terrain[0].length) {
       throw new IllegalArgumentException("terrain AND physicals MUST BE THE SAME DIMENSIONS!");
     }
@@ -24,7 +24,7 @@ public final class World {
     this.height = terrain[0].length;
     this.terrain = terrain;
 
-    this.physicals = new WorldLayer_Physicals(physicals);
+    this.physicals = new AreaLayer_Physicals(physicals);
 
   }
 

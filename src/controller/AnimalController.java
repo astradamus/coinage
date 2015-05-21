@@ -2,7 +2,7 @@ package controller;
 
 import actor.Actor;
 import game.Game;
-import world.World;
+import world.Area;
 
 import java.awt.*;
 
@@ -23,16 +23,16 @@ public class AnimalController extends ActorController {
 
   @Override
   public void onUpdate() {
-    World world = Game.getActive().WORLD;
+    Area area = Game.getActive().AREA;
     if (wandering.x == -1) {
 
       if (waiting < 0) {
 
         // Pick a non-blocked location to wander to.
         do {
-          wandering.x = Game.RANDOM.nextInt(world.getWidth());
-          wandering.y = Game.RANDOM.nextInt(world.getHeight());
-        } while (world.isBlocked(wandering.x, wandering.y));
+          wandering.x = Game.RANDOM.nextInt(area.getWidth());
+          wandering.y = Game.RANDOM.nextInt(area.getHeight());
+        } while (area.isBlocked(wandering.x, wandering.y));
 
       } else {
         waiting--;
@@ -68,7 +68,7 @@ public class AnimalController extends ActorController {
 
         }
 
-        if (world.movePhysical(actor, location.x, location.y, newX, newY)) {
+        if (area.movePhysical(actor, location.x, location.y, newX, newY)) {
           location.setLocation(newX,newY);
         } else {
           stopWander();

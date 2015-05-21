@@ -2,7 +2,7 @@ package controller;
 
 import actor.Actor;
 import game.Game;
-import world.World;
+import world.Area;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -51,7 +51,7 @@ public class PlayerController extends ActorController {
 
   @Override
   public void onUpdate() {
-    World world = Game.getActive().WORLD;
+    Area area = Game.getActive().AREA;
 
     if (beatsToRecover > 0) {
         beatsToRecover--;
@@ -63,7 +63,7 @@ public class PlayerController extends ActorController {
           Direction dir = movingDirections.peek();
           int newX = location.x + dir.relativeX;
           int newY = location.y + dir.relativeY;
-          if (world.movePhysical(actor, location.x, location.y, newX, newY)) {
+          if (area.movePhysical(actor, location.x, location.y, newX, newY)) {
             location.setLocation(newX, newY);
             beatsToRecover = action.beatsToPerform;
           }

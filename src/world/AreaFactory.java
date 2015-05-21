@@ -3,12 +3,11 @@ package world;
 import game.Game;
 import game.Physical;
 import thing.ThingFactory;
-import thing.ThingTemplate;
 
 /**
  *
  */
-public class WorldFactory {
+public class AreaFactory {
 
   public static final int STDGEN_PATCH_RADIUS_LIMIT = 3;
   public static final TerrainType STDGEN_BASE_TILETYPE = TerrainType.GRASS;
@@ -18,7 +17,7 @@ public class WorldFactory {
   public static final double STDGEN_TREE_FREQUENCY = 0.02; // % of tiles are trees
   public static final double STDGEN_PATCH_HOLINESS = 0.500; // % of patch candidates are discarded
 
-  public static World standardGeneration(int width, int height) {
+  public static Area standardGeneration(int width, int height) {
 
     // FIRST, GENERATE TERRAIN
 
@@ -114,7 +113,7 @@ public class WorldFactory {
       physicals[y][x] = ThingFactory.makeThing("BOULDER");
     }
 
-    return new World(terrain, physicals);
+    return new Area(terrain, physicals);
   }
 
   /**

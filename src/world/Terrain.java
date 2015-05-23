@@ -10,14 +10,21 @@ import java.awt.*;
  */
 public class Terrain implements Physical {
 
+  private static char[] chars = new char[]{'.', ',', '\'', '`'};
+
   private final TerrainType type;
-  private final int charID;
-  private final int colorID;
+  private final char appearance;
+  private final Color color;
 
   Terrain(TerrainType type) {
     this.type = type;
-    this.charID = type.getRandomCharID();
-    this.colorID = type.getRandomColorID();
+    this.appearance = chars[Game.RANDOM.nextInt(chars.length)];
+    this.color = type.colors[Game.RANDOM.nextInt(type.colors.length)];
+  }
+
+
+  public TerrainType getType() {
+    return type;
   }
 
   @Override
@@ -25,18 +32,14 @@ public class Terrain implements Physical {
     return type.name();
   }
 
-  public TerrainType getType() {
-    return type;
-  }
-
   @Override
   public char getAppearance() {
-    return type.chars[charID];
+    return appearance;
   }
 
   @Override
   public Color getColor() {
-    return type.colors[colorID];
+    return color;
   }
 
   @Override

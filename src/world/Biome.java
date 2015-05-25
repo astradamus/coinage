@@ -70,6 +70,14 @@ public enum Biome {
     }
   };
 
+  public static int[] getAllWeights() {
+    int[] weights = new int[values().length];
+    for (int i = 0; i < weights.length; i++) {
+      weights[i] = values()[i].biomeWeight;
+    }
+    return  weights;
+  }
+
   final int biomeWeight;
 
   TerrainType[] terrainTypes;

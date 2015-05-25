@@ -8,6 +8,8 @@ import game.Physical;
  */
 public final class Area {
 
+  private final Biome biome;
+
   private final int width;
   private final int height;
 
@@ -15,10 +17,12 @@ public final class Area {
   final AreaLayer_Physicals physicals;
 
 
-  Area(Terrain[][] terrain, Physical[][] physicals) {
+  Area(Biome biome, Terrain[][] terrain, Physical[][] physicals) {
     if (physicals.length != terrain.length || physicals[0].length != terrain[0].length) {
       throw new IllegalArgumentException("terrain AND physicals MUST BE THE SAME DIMENSIONS!");
     }
+
+    this.biome = biome;
 
     this.width = terrain[0].length;
     this.height = terrain.length;

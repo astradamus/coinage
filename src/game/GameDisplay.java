@@ -17,7 +17,7 @@ public class GameDisplay {
 
     {
       setBackground(Color.BLACK);
-      setFont(new Font("Droid Sans Mono", Font.BOLD, TILE_SIZE));
+      setFont(new Font("Monospace", Font.BOLD, TILE_SIZE));
     }
 
     @Override

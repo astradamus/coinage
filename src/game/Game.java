@@ -1,6 +1,5 @@
 package game;
 
-import world.Area;
 import world.World;
 
 import java.util.Random;

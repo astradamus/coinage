@@ -12,44 +12,48 @@ public enum TerrainType {
       new Color[]{
           new Color(94, 94, 94),
           new Color(79, 79, 79),
-          new Color(63, 63, 63)}),
+          new Color(63, 63, 63)
+      }),
   DIRT(
       new Color[]{
-          new Color(119, 59, 9),
-          new Color(116, 50, 24)}),
+          new Color(98, 49, 7),
+          new Color(96, 41, 20)
+      }),
   GRASS(
       new Color[]{
-          new Color(30, 115, 30),
-          new Color(0, 75, 0)}),
+          new Color(71, 105, 26),
+          new Color(25, 92, 25),
+          new Color(55, 87, 26),
+          new Color(18, 70, 18),
+      }),
 
 
   MUCK(
       new Color[]{
           new Color(69, 19, 19),
-          new Color(79, 43, 26)}),
+          new Color(79, 43, 26)
+      }),
   MARSH(
       new Color[]{
-          new Color(119, 62, 97),
-          new Color(22, 73, 62),
-          new Color(28, 70, 63),
-          new Color(5, 61, 21)}),
-  WEEDS(
-      new Color[]{
-          new Color(44, 82, 0),
-          new Color(60, 75, 29)}),
+          new Color(19, 73, 49),
+          new Color(14, 70, 39)
+      }),
 
 
   SANDSTONE(
       new Color[]{
-          new Color(79, 44, 36),
-          new Color(79, 76, 40),
-          new Color(62, 58, 16)}),
+          new Color(124, 23, 18),
+          new Color(102, 30, 21),
+          new Color(105, 46, 0),
+          new Color(86, 57, 0)
+      }),
   SAND(
       new Color[]{
-          new Color(116, 116, 21),
-          new Color(116, 80, 27),
-          new Color(104, 37, 35),
-          new Color(131, 106, 0)}),
+          new Color(120, 123, 28),
+          new Color(106, 75, 0),
+          new Color(88, 62, 15),
+          new Color(111, 89, 0)
+      }),
   ;
 
   Color[] colors;

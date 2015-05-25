@@ -34,6 +34,10 @@ public class World {
 
   public boolean globalMovePhysical(Physical moving, int fromGlobalX, int fromGlobalY,
                                     int toGlobalX, int toGlobalY) {
+
+    if (toGlobalX < 0 || toGlobalX >= globalWidth || toGlobalY < 0 || toGlobalY >= globalHeight) {
+      return false; // don't allow movement to points outside the world
+    }
     
     BreakResult from = breakWorldLocation(fromGlobalX, fromGlobalY);
     BreakResult to = breakWorldLocation(toGlobalX, toGlobalY);

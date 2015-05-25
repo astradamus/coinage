@@ -24,6 +24,14 @@ public enum Direction {
     this.relativeY = relativeY;
   }
 
+  public Direction getLeftNeighbor() {
+    return values()[(ordinal()+values().length-1)%values().length];
+  }
+
+  public Direction getRightNeighbor() {
+    return values()[(ordinal()+1)%values().length];
+  }
+
   public static Direction fromKeyEvent(KeyEvent keyEvent) {
     switch (keyEvent.getKeyCode()) {
       case KeyEvent.VK_HOME:      return NORTH_WEST;

@@ -5,70 +5,54 @@ import game.Game;
 import world.World;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Stack;
 
 /**
  * Prototypical ActorController that enables movement of an Actor with keyboard input.
  */
 public class PlayerController extends ActorController {
 
-  Action action;
-  Stack<Direction> movingDirections = new Stack<>();
-  int beatsToRecover = 0;
+  private Action action;
+  private Direction facing;
 
-  KeyListener keyListener = new KeyListener() {
+  private int beatsToRecover = 0;
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-      Direction direction = Direction.fromKeyEvent(e);
-      if (direction != null) {
-        if (movingDirections.isEmpty()) {
-          action = Action.MOVING;
-        }
-        if (!movingDirections.contains(direction)){
-          movingDirections.push(direction);
-        }
-      }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-      Direction direction = Direction.fromKeyEvent(e);
-      movingDirections.remove(direction);
-    }
-
-  };
+  private KeyListener listener = new NumPadDirectionListener(this);
 
   public PlayerController(Actor actor, Point location) {
     super(actor, location);
   }
+
+
+  void startMoving(Direction movingIn) {
+    action = Action.MOVING;
+    facing = movingIn;
+  }
+
+  void stopMoving() {
+    action = null;
+  }
+
+
 
   @Override
   public void onUpdate() {
     World world = Game.getActive().WORLD;
 
     if (beatsToRecover > 0) {
-        beatsToRecover--;
-    } else {
-      if (action == Action.MOVING) {
-        if (movingDirections.isEmpty()) {
-          action = null;
-        } else {
-          Direction dir = movingDirections.peek();
-          int newX = worldLocation.x + dir.relativeX;
-          int newY = worldLocation.y + dir.relativeY;
-          if (world.globalMovePhysical(actor, worldLocation.x, worldLocation.y, newX, newY)) {
-            worldLocation.setLocation(newX, newY);
-            beatsToRecover = action.beatsToPerform;
-          }
-        }
+
+      beatsToRecover--; // until this is zero no action can be taken.
+
+    } else if (action == Action.MOVING) {
+
+      int newX = worldLocation.x + facing.relativeX;
+      int newY = worldLocation.y + facing.relativeY;
+
+      if (world.globalMovePhysical(actor, worldLocation.x, worldLocation.y, newX, newY)) {
+        worldLocation.setLocation(newX, newY);
+        beatsToRecover = action.beatsToPerform;
       }
+
     }
   }
 
@@ -85,7 +69,7 @@ public class PlayerController extends ActorController {
   }
 
   public KeyListener getKeyListener() {
-    return keyListener;
+    return listener;
   }
 
 }

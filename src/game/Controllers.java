@@ -65,7 +65,7 @@ public class Controllers {
     register(playerController);
   }
 
-  PlayerController getPlayerController() {
+  public PlayerController getPlayerController() {
     return PLAYER_CONTROLLER;
   }
 }

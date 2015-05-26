@@ -1,5 +1,6 @@
 package game;
 
+import game.display.GameDisplay;
 import world.World;
 
 import java.util.Random;

@@ -33,30 +33,7 @@ public class SidePanel extends JPanel {
     int playerX = pC.getX() / world.areaWidth;
     int playerY = pC.getY() / world.areaHeight;
 
-//    int centerMapOnX = playerX;
-//    int centerMapOnY = playerY;
-
-    // stop scrolling world map before any void would show
-
-//    int leftCameraWall = MAP_FRAME_RADIUS+1;
-//    int rightCameraWall = world.worldAreasWide - MAP_FRAME_RADIUS-1;
-//    int topCameraWall = MAP_FRAME_RADIUS+1;
-//    int bottomCameraWall = world.worldAreasTall - MAP_FRAME_RADIUS-1;
-//
-//    if (playerX < leftCameraWall) {
-//      centerMapOnX = leftCameraWall;
-//    } else if (playerX > rightCameraWall) {
-//      centerMapOnX = rightCameraWall;
-//    }
-//    if (playerY < topCameraWall) {
-//      centerMapOnY = topCameraWall;
-//    } else if (playerY > bottomCameraWall) {
-//      centerMapOnY = bottomCameraWall;
-//    }
-
-
-
-    Area playerAt = world.getAreaAt(playerX, playerY);
+    Area playerAt = world.getAreaByWorldMapCoordinate(playerX, playerY);
 
     int size = (MAP_FRAME_RADIUS * 2 + 1) * TILE_SIZE;
     g.drawRect(24,63, size+1, size+1);
@@ -69,7 +46,7 @@ public class SidePanel extends JPanel {
         int worldY = playerY + y - MAP_FRAME_RADIUS;
 
 
-        Area thisArea = world.getAreaAt(worldX, worldY);
+        Area thisArea = world.getAreaByWorldMapCoordinate(worldX, worldY);
         if (thisArea == null) {
           continue;
         }
@@ -78,17 +55,25 @@ public class SidePanel extends JPanel {
         int placeX = (x + 1) * TILE_SIZE;
         int placeY = (y + 2 + 1) * TILE_SIZE;
 
+        Color mapBGColor = biome.worldMapBGColor;
+        Color mapColor = biome.worldMapColor;
+        char mapChar = biome.worldMapChar;
 
-        Color bgColor = biome.worldMapBGColor;
-        if (bgColor != null) {
-          g.setColor(bgColor);
+        // if this area is not explored, draw an 'unexplored' marker
+        if (!pC.getWorldMapAreaExplored(worldX,worldY)) {
+          mapBGColor = new Color(11,11,11);
+          mapColor = new Color(25,25,25);
+          mapChar = '?';
+        }
+
+        if (mapBGColor != null) {
+          g.setColor(mapBGColor);
           g.fillRect((placeX - TILE_SIZE / 6), (int) (placeY - TILE_SIZE * 0.85), TILE_SIZE,
               TILE_SIZE);
         }
 
-        Color color = biome.worldMapColor;
-        g.setColor(color);
-        g.drawChars(new char[]{biome.worldMapChar}, 0, 1, placeX, placeY);
+        g.setColor(mapColor);
+        g.drawChars(new char[]{mapChar}, 0, 1, placeX, placeY);
 
         if (playerAt == thisArea) {
           g.setColor(Color.WHITE);

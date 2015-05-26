@@ -27,7 +27,7 @@ public class AreaPanel extends JPanel {
     super.paint(g);
     Graphics2D g2d = (Graphics2D) g;
     PlayerController pC = Game.getActive().CONTROLLERS.getPlayerController();
-    Area area = Game.getActive().WORLD.getAreaFromGlobalCoordinate(pC.getX(),pC.getY());
+    Area area = Game.getActive().WORLD.getAreaByGlobalCoordinate(pC.getX(), pC.getY());
     for (int y = 0; y < area.getHeight(); y++) {
       for (int x = 0; x < area.getWidth(); x++) {
 

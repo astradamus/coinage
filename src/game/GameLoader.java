@@ -50,13 +50,12 @@ public class GameLoader {
 
     world.globalPlacePhysical(player, playerX, playerY);
 
+    // produce Game instance and assign it to ACTIVE
+    Game.ACTIVE = new Game(world, controllers);
+
     // assign the Human to a PlayerController and register it
     PlayerController playerController = new PlayerController(player,playerLocation);
     controllers.setPlayerController(playerController);
-
-
-    // produce Game instance and assign it to ACTIVE
-    Game.ACTIVE = new Game(world, controllers);
 
   }
 

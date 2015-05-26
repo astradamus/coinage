@@ -60,10 +60,17 @@ public class World {
     return bR.area.physicals.getLocationIsBlocked(bR.localX, bR.localY);
   }
 
-  public Area getAreaFromGlobalCoordinate(int globalX, int globalY) {
+  public Area getAreaByGlobalCoordinate(int globalX, int globalY) {
     return breakWorldLocation(globalX,globalY).area;
   }
 
+  public Area getAreaByWorldMapCoordinate(int worldAreasX, int worldAreasY) {
+    try {
+      return areas[worldAreasY][worldAreasX];
+    } catch (IndexOutOfBoundsException ioob) {
+      return null;
+    }
+  }
 
   /**
    * Translates a global coordinate into an Area and local coordinates within that area.
@@ -75,13 +82,6 @@ public class World {
     return new BreakResult(area,localX,localY);
   }
 
-  public Area getAreaAt(int worldAreasX, int worldAreasY) {
-    try {
-      return areas[worldAreasY][worldAreasX];
-    } catch (IndexOutOfBoundsException ioob) {
-      return null;
-    }
-  }
 
   class BreakResult {
     public final Area area;

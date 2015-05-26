@@ -2,6 +2,7 @@ package controller;
 
 import actor.Actor;
 import game.Game;
+import world.Area;
 import world.World;
 
 import java.awt.*;
@@ -12,6 +13,8 @@ import java.awt.event.KeyListener;
  */
 public class PlayerController extends ActorController {
 
+  private boolean[][] worldMapExplored;
+
   private Action action;
   private Direction facing;
 
@@ -21,6 +24,9 @@ public class PlayerController extends ActorController {
 
   public PlayerController(Actor actor, Point location) {
     super(actor, location);
+    World world = Game.getActive().WORLD;
+    worldMapExplored = new boolean[world.worldAreasTall][world.worldAreasWide];
+    worldMapExplored[getY()/world.areaHeight][getX()/world.areaWidth] = true;
   }
 
 
@@ -48,9 +54,14 @@ public class PlayerController extends ActorController {
       int newX = worldLocation.x + facing.relativeX;
       int newY = worldLocation.y + facing.relativeY;
 
+
       if (world.globalMovePhysical(actor, worldLocation.x, worldLocation.y, newX, newY)) {
         worldLocation.setLocation(newX, newY);
         beatsToRecover = action.beatsToPerform;
+
+        // Reveal current area on World Map
+        worldMapExplored[newY/world.areaHeight][newX/world.areaWidth] = true;
+
       }
 
     }
@@ -72,4 +83,7 @@ public class PlayerController extends ActorController {
     return listener;
   }
 
+  public boolean getWorldMapAreaExplored(int worldX, int worldY) {
+    return worldMapExplored[worldY][worldX];
+  }
 }

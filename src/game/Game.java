@@ -35,7 +35,7 @@ public class Game {
   }
 
   public static void main(String[] args) {
-    GameLoader.newGame(10,10,64,64);
+    GameLoader.newGame(18,18,64,64);
     GameDisplay.recalculateSize();
     GameDisplay.addKeyListener(Game.getActive().CONTROLLERS.getPlayerController().getKeyListener());
     GameEngine.start();

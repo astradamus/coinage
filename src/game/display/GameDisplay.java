@@ -38,7 +38,7 @@ public class GameDisplay {
     int areaPanelWidth = (Game.getActive().WORLD.areaWidth + 1) * TILE_SIZE;
     int areaPanelHeight = (Game.getActive().WORLD.areaHeight + 1) * TILE_SIZE;
 
-    int sidePanelWidth = SidePanel.TILES_WIDE * TILE_SIZE;
+    int sidePanelWidth = SidePanel.TILES_WIDE * SidePanel.TILE_SIZE;
 
     PANEL_AREA.setMaximumSize(new Dimension(areaPanelWidth,areaPanelHeight));
     PANEL_SIDE.setMaximumSize(new Dimension(sidePanelWidth,areaPanelHeight));

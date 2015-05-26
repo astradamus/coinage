@@ -75,6 +75,14 @@ public class World {
     return new BreakResult(area,localX,localY);
   }
 
+  public Area getAreaAt(int worldAreasX, int worldAreasY) {
+    try {
+      return areas[worldAreasY][worldAreasX];
+    } catch (IndexOutOfBoundsException ioob) {
+      return null;
+    }
+  }
+
   class BreakResult {
     public final Area area;
     public final int localX;

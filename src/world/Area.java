@@ -61,6 +61,10 @@ public final class Area {
     return physicals.getLocationIsBlocked(x, y);
   }
 
+  public Biome getBiome() {
+    return biome;
+  }
+
   public int getWidth() {
     return width;
   }
@@ -80,4 +84,5 @@ public final class Area {
     }
     return priority;
   }
+
 }

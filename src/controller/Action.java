@@ -4,7 +4,7 @@ package controller;
  *
  */
 public enum Action {
-  MOVING    (0);
+  MOVING    (3);
 
   final int beatsToPerform;
 

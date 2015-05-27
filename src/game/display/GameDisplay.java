@@ -35,10 +35,10 @@ public class GameDisplay {
   };
 
   public static void recalculateSize() {
-    int areaPanelWidth = (Game.getActive().WORLD.areaWidth + 1) * TILE_SIZE;
-    int areaPanelHeight = (Game.getActive().WORLD.areaHeight + 1) * TILE_SIZE;
+    int areaPanelWidth = (Game.getActive().WORLD.getAreaSizeInSquares().getWidth() + 1)*TILE_SIZE;
+    int areaPanelHeight = (Game.getActive().WORLD.getAreaSizeInSquares().getHeight() + 1)*TILE_SIZE;
 
-    int sidePanelWidth = SidePanel.TILES_WIDE * SidePanel.TILE_SIZE;
+    int sidePanelWidth = SidePanel.TILES_WIDE * SidePanel.SQUARE_SIZE;
 
     PANEL_AREA.setMaximumSize(new Dimension(areaPanelWidth,areaPanelHeight));
     PANEL_SIDE.setMaximumSize(new Dimension(sidePanelWidth,areaPanelHeight));
@@ -54,4 +54,5 @@ public class GameDisplay {
   public static void addKeyListener(KeyListener keyListener) {
     WINDOW.addKeyListener(keyListener);
   }
+
 }

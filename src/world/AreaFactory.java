@@ -3,6 +3,7 @@ package world;
 import game.Game;
 import game.Physical;
 import thing.ThingFactory;
+import utils.Dimension;
 
 /**
  *
@@ -12,7 +13,10 @@ public class AreaFactory {
   public static final int    STDGEN_PATCH_RADIUS_LIMIT = 5;
   public static final double STDGEN_PATCH_PATCHINESS = 0.300; // % of patch candidates are discarded
 
-  public static Area standardGeneration(Biome biome, int width, int height) {
+  public static Area standardGeneration(Biome biome, Dimension areaSizeInSquares) {
+
+    int width = areaSizeInSquares.getWidth();
+    int height = areaSizeInSquares.getHeight();
 
     // Get a WeightMap
     WeightMap terrainWeightMap =
@@ -32,7 +36,8 @@ public class AreaFactory {
       }
     }
 
-    return new Area(biome, terrain, physicals);
+    return new Area(biome, areaSizeInSquares, terrain, physicals);
+
   }
 
 

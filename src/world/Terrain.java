@@ -29,7 +29,7 @@ public class Terrain implements Physical {
 
   @Override
   public String getName() {
-    return type.name();
+    return type.name().substring(0,1) + type.name().toLowerCase().substring(1); // cap first char
   }
 
   @Override

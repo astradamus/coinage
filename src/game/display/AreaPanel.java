@@ -15,11 +15,11 @@ import java.awt.*;
 public class AreaPanel extends JPanel {
 
 
-  private static final int TILE_SIZE = GameDisplay.TILE_SIZE;
+  private static final int SQUARE_SIZE = GameDisplay.SQUARE_SIZE;
 
   public AreaPanel() {
     setBackground(Color.BLACK);
-    setFont(new Font("Monospace", Font.BOLD, TILE_SIZE));
+    setFont(new Font("Monospace", Font.BOLD, SQUARE_SIZE));
   }
 
 
@@ -38,19 +38,29 @@ public class AreaPanel extends JPanel {
 
         Physical visible = area.getPhysicalsComponent().getPriorityPhysical(x, y);
 
-        int placeX = (x) * TILE_SIZE;
-        int placeY = (y + 1) * TILE_SIZE;
+        int placeX = (x) * SQUARE_SIZE;
+        int placeY = (y + 1) * SQUARE_SIZE;
 
         Color bgColor = visible.getBGColor();
         Color color = visible.getColor();
         if (bgColor != null) {
           g.setColor(bgColor);
-          g.fillRect((placeX - TILE_SIZE / 6), (int) (placeY - TILE_SIZE * 0.85), TILE_SIZE,
-              TILE_SIZE);
+          g.fillRect((placeX - SQUARE_SIZE / 6), (int) (placeY - SQUARE_SIZE * 0.85), SQUARE_SIZE,
+              SQUARE_SIZE);
         }
 
         g.setColor(color);
         g.drawChars(new char[]{visible.getAppearance()}, 0, 1, placeX, placeY);
+
+
+        Point cursorTarget = Game.getActive().INPUT_SWITCH.getCursorTarget();
+        if (cursorTarget.x == x && cursorTarget.y == y) {
+          g.setColor(Color.WHITE);
+          g.drawOval((placeX - SQUARE_SIZE / 6), (int) (placeY - SQUARE_SIZE * 0.85), SQUARE_SIZE,
+              SQUARE_SIZE);
+          g.drawChars(new char[]{'X'}, 0, 1, placeX, placeY);
+        }
+
       }
     }
   }

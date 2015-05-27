@@ -1,5 +1,7 @@
 package utils;
 
+import java.awt.*;
+
 /**
  * An immutable replacement for Java.awt.Dimension.
  */
@@ -24,6 +26,10 @@ public class Dimension {
 
   public boolean getCoordinateIsWithinBounds(int testX, int testY) {
     return (testX >= 0 && testX < width && testY >= 0 && testY < height);
+  }
+
+  public boolean getCoordinateIsWithinBounds(Point localCoordinate) {
+    return getCoordinateIsWithinBounds(localCoordinate.x, localCoordinate.y);
   }
 
 }

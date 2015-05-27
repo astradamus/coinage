@@ -88,7 +88,8 @@ public class World {
   }
 
   /**
-   * Translates a global coordinate (numbered in squares) into an Area.
+   * Translates a global coordinate (numbered in squares) into a World coordinate (measured in
+   * Areas).
    */
   public Point getWorldCoordinateFromGlobalCoordinate(Point globalCoordinate) {
     if (globalSizeInSquares.getCoordinateIsWithinBounds(globalCoordinate.x, globalCoordinate.y)) {
@@ -99,6 +100,18 @@ public class World {
     }
   }
 
+  /**
+   * Translates a global coordinate (numbered in squares) into an Area coordinate (measured in
+   * squares).
+   */
+  public Point getAreaCoordinateFromGlobalCoordinate(Point globalCoordinate) {
+    if (globalSizeInSquares.getCoordinateIsWithinBounds(globalCoordinate.x, globalCoordinate.y)) {
+      return new Point(globalCoordinate.x % areaSizeInSquares.getWidth(),
+          globalCoordinate.y % areaSizeInSquares.getHeight());
+    } else {
+      return null;
+    }
+  }
 
   public Dimension getAreaSizeInSquares() {
     return areaSizeInSquares;
@@ -124,6 +137,7 @@ public class World {
     return new BreakResult(area,localX,localY);
 
   }
+
 
   private class BreakResult {
     public final Area area;

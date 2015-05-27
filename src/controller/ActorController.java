@@ -36,12 +36,12 @@ public abstract class ActorController implements Controller {
   private Direction facing;
   private int beatsToRecover = 0;
 
-  protected final void startMoving(Direction movingIn) {
+  public final void startMoving(Direction movingIn) {
     action = Action.MOVING;
     facing = movingIn;
   }
 
-  protected final void stopMoving() {
+  public final void stopMoving() {
     action = null;
   }
 

@@ -3,6 +3,7 @@ package world;
 import game.Physical;
 import utils.Dimension;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,6 +95,20 @@ public final class Component_Physicals {
    */
   boolean pull(Physical pulling, int localX, int localY) {
     return this.physicals.get(localY).get(localX).remove(pulling);
+  }
+
+
+  public List<Physical> getAllPhysicalsAt(Point localCoordinate) {
+
+    if (!size.getCoordinateIsWithinBounds(localCoordinate)) {
+      return null;
+    }
+
+    List<Physical> physicals =
+        new ArrayList<>(this.physicals.get(localCoordinate.y).get(localCoordinate.x));
+    physicals.add(terrain[localCoordinate.y][localCoordinate.x]);
+    return physicals;
+
   }
 
 }

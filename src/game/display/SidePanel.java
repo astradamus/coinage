@@ -2,12 +2,15 @@ package game.display;
 
 import controller.PlayerController;
 import game.Game;
+import game.GameMode;
+import game.Physical;
 import world.Area;
 import world.Biome;
 import world.World;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 /**
  *
@@ -19,7 +22,7 @@ public class SidePanel extends JPanel {
     setFont(new Font("Monospace", Font.BOLD, SQUARE_SIZE));
   }
 
-  public static final int SQUARE_SIZE = GameDisplay.TILE_SIZE*2;
+  public static final int SQUARE_SIZE = GameDisplay.SQUARE_SIZE *2;
   public static final int TILES_WIDE = 13;
   public static final int MAP_FRAME_RADIUS = 5;
 
@@ -38,7 +41,7 @@ public class SidePanel extends JPanel {
     int worldMapSizeInPixels = (worldMapSizeInSquares) * SQUARE_SIZE;
 
     // draw world map outline
-    g.drawRect(24,63, worldMapSizeInPixels+1, worldMapSizeInPixels+1);
+    g.drawRect(24,33, worldMapSizeInPixels+1, worldMapSizeInPixels+1);
 
     // draw the zone of Areas surrounding the player's current area, using a blank 'unknown'
     //   token for Areas that have not yet been explored by the player, and skipping any null Areas
@@ -55,7 +58,7 @@ public class SidePanel extends JPanel {
         }
 
         int placeX = (x + 1) * SQUARE_SIZE;
-        int placeY = (y + 2 + 1) * SQUARE_SIZE;
+        int placeY = (y + 1 + 1) * SQUARE_SIZE;
 
 
         Biome biome = thisArea.getBiome();
@@ -92,6 +95,30 @@ public class SidePanel extends JPanel {
 
       }
     }
+
+
+    if (Game.getActive().INPUT_SWITCH.getMode() == GameMode.LOOK) {
+
+      Point cursorLocalTarget = Game.getActive().INPUT_SWITCH.getCursorTarget();
+      List<Physical> allPhysicalsAt = playerAt.getPhysicalsComponent().getAllPhysicalsAt(cursorLocalTarget);
+
+      if (allPhysicalsAt != null) {
+
+        for (int i = 0; i < allPhysicalsAt.size(); i++) {
+
+          Physical physical = allPhysicalsAt.get(i);
+
+          g.setColor(physical.getColor());
+          g.drawString(physical.getName(),25,(i+3)*SQUARE_SIZE + worldMapSizeInPixels);
+
+        }
+
+      }
+
+    }
+
+
+
   }
 
 }

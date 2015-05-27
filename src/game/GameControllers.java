@@ -1,7 +1,7 @@
 package game;
 
 import controller.Controller;
-import controller.PlayerController;
+import controller.player.PlayerController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  *
  */
-public class Controllers {
+public class GameControllers {
 
   private PlayerController PLAYER_CONTROLLER;
 
@@ -18,7 +18,7 @@ public class Controllers {
 
 
   /**
-   * Called every frame by Game.update(). Walks the list of Controllers (in getRolledInitiative()
+   * Called every frame by Game.update(). Walks the list of GameControllers (in getRolledInitiative()
    * order). For each, it calls onUpdate() and then sorts the Controller anew into a second list.
    * After the initial list is walked, the second list becomes the initial list for the next frame.
    */

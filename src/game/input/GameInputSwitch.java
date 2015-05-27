@@ -1,8 +1,7 @@
-package game;
+package game.input;
 
-import controller.Direction;
-import controller.DirectionListener;
-import controller.NumPadDirectionInterpreter;
+import game.Direction;
+import game.Game;
 
 import java.awt.*;
 import java.awt.event.KeyListener;
@@ -12,40 +11,40 @@ import java.util.List;
 /**
  *
  */
-public class GameInputSwitch implements DirectionListener, ModeHotkeyListener {
+public class GameInputSwitch implements DirectionListener, ModeListener {
 
   private final List<KeyListener> keyListeners;
 
   private final Point cursorTarget = new Point(-1,-1);
   private Direction cursorMovingIn = null;
 
-  private GameMode mode = GameMode.EXPLORE;
+  private InputMode inputMode = InputMode.EXPLORE;
 
 
   public GameInputSwitch() {
 
     keyListeners = new ArrayList<>();
-    keyListeners.add(new NumPadDirectionInterpreter(this));
-    keyListeners.add(new ModeHotkeyInterpreter(this));
+    keyListeners.add(new KeyboardDirectionInterpreter(this));
+    keyListeners.add(new KeyboardInputModeInterpreter(this));
 
   }
 
 
 
   @Override
-  public void receiveMode(GameMode mode) {
-    if (this.mode != mode) {
+  public void receiveMode(InputMode inputMode) {
+    if (this.inputMode != inputMode) {
 
-      if (mode == GameMode.EXPLORE) {
+      if (inputMode == InputMode.EXPLORE) {
 
         cursorTarget.setLocation(-1,-1);
         cursorMovingIn = null;
-        this.mode = mode;
-        System.out.println(mode.name());
+        this.inputMode = inputMode;
+        System.out.println(inputMode.name());
         Game.unpauseGame();
 
       } else
-      if (mode == GameMode.LOOK) {
+      if (inputMode == InputMode.LOOK) {
 
         Point globalCoordinate =
             Game.getActive().CONTROLLERS.getPlayerController().getGlobalCoordinate();
@@ -53,8 +52,8 @@ public class GameInputSwitch implements DirectionListener, ModeHotkeyListener {
             Game.getActive().WORLD.getAreaCoordinateFromGlobalCoordinate(globalCoordinate);
 
         cursorTarget.setLocation(localCoordinate);
-        this.mode = mode;
-        System.out.println(mode.name());
+        this.inputMode = inputMode;
+        System.out.println(inputMode.name());
         Game.pauseGame();
 
       }
@@ -68,7 +67,7 @@ public class GameInputSwitch implements DirectionListener, ModeHotkeyListener {
   private int moveDelay = 0;
   public void onUpdate() {
 
-    if (mode == GameMode.LOOK && cursorMovingIn != null) {
+    if (inputMode == InputMode.LOOK && cursorMovingIn != null) {
 
       if (moveDelay > 0) {
         moveDelay--;
@@ -92,9 +91,9 @@ public class GameInputSwitch implements DirectionListener, ModeHotkeyListener {
   @Override
   public void receiveDirection(Direction direction) {
 
-    if (mode == GameMode.EXPLORE) {
+    if (inputMode == InputMode.EXPLORE) {
       Game.getActive().CONTROLLERS.getPlayerController().startMoving(direction);
-    } else if (mode == GameMode.LOOK) {
+    } else if (inputMode == InputMode.LOOK) {
       cursorMovingIn = direction;
     }
 
@@ -103,16 +102,16 @@ public class GameInputSwitch implements DirectionListener, ModeHotkeyListener {
   @Override
   public void receiveDirectionsCleared() {
 
-    if (mode == GameMode.EXPLORE) {
+    if (inputMode == InputMode.EXPLORE) {
       Game.getActive().CONTROLLERS.getPlayerController().stopMoving();
-    } else if (mode == GameMode.LOOK) {
+    } else if (inputMode == InputMode.LOOK) {
       cursorMovingIn = null;
     }
 
   }
 
-  public GameMode getMode() {
-    return mode;
+  public InputMode getInputMode() {
+    return inputMode;
   }
 
   public Point getCursorTarget() {

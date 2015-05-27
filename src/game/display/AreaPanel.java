@@ -1,6 +1,6 @@
 package game.display;
 
-import controller.PlayerController;
+import controller.player.PlayerController;
 import game.Game;
 import game.Physical;
 import world.Area;

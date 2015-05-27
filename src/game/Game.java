@@ -1,6 +1,7 @@
 package game;
 
 import game.display.GameDisplay;
+import game.input.GameInputSwitch;
 import utils.Dimension;
 import world.World;
 
@@ -32,7 +33,7 @@ public class Game {
    * Stops the Engine from sending updates to Game. Does NOT stop the Engine from sending updates
    * to GameDisplay.
    */
-  static void pauseGame() {
+  public static void pauseGame() {
     if (!gameIsPaused) {
       gameIsPaused = true;
     } else {
@@ -43,7 +44,7 @@ public class Game {
   /**
    * Resumes sending of updates to Game.
    */
-  static void unpauseGame() {
+  public static void unpauseGame() {
     if (gameIsPaused) {
       gameIsPaused = false;
     } else {
@@ -55,7 +56,7 @@ public class Game {
    * Convenience method to toggle pause state. Should only be used for player controls. Code
    * calling to pause/unpause the game should be aware of the pause state its in already.
    */
-  static void togglePauseGame() {
+  public static void togglePauseGame() {
     gameIsPaused = !gameIsPaused;
   }
 
@@ -65,11 +66,11 @@ public class Game {
 
   public final GameInputSwitch INPUT_SWITCH;
   public final World WORLD;
-  public final Controllers CONTROLLERS;
+  public final GameControllers CONTROLLERS;
 
-  public Game(World world, Controllers controllers) {
+  public Game(World world, GameControllers gameControllers) {
     this.WORLD = world;
-    this.CONTROLLERS = controllers;
+    this.CONTROLLERS = gameControllers;
     INPUT_SWITCH = new GameInputSwitch();
   }
 

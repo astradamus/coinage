@@ -1,6 +1,7 @@
-package controller;
+package controller.player;
 
 import actor.Actor;
+import controller.ActorController;
 import game.Game;
 import utils.Dimension;
 

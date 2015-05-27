@@ -1,6 +1,7 @@
 package controller;
 
 import actor.Actor;
+import game.Direction;
 import game.Game;
 import world.World;
 
@@ -11,7 +12,6 @@ import java.awt.*;
  *
  */
 public abstract class ActorController implements Controller {
-
 
   private final Actor actor;
   private final Point globalCoordinate;

@@ -1,4 +1,6 @@
-package controller;
+package game.input;
+
+import game.Direction;
 
 /**
  *

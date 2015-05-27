@@ -5,6 +5,8 @@ package game;
  */
 public class GameEngine {
 
+  public static final int MILLISECONDS_PER_HEARTBEAT = 25;
+
   private static Thread thread;
   private static Runnable gameLoop = new Runnable() {
     @Override
@@ -16,7 +18,7 @@ public class GameEngine {
           //   continue sending Display updates.
           Game.getActive().update();
           try {
-            wait(Timing.MILLISECONDS_PER_HEARTBEAT);
+            wait(MILLISECONDS_PER_HEARTBEAT);
           } catch (InterruptedException e) {
             e.printStackTrace();
             break;

@@ -1,6 +1,7 @@
 package controller;
 
 import actor.Actor;
+import game.Direction;
 import game.Game;
 
 import java.awt.*;

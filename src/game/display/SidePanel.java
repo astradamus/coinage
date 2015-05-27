@@ -1,8 +1,8 @@
 package game.display;
 
-import controller.PlayerController;
+import controller.player.PlayerController;
 import game.Game;
-import game.GameMode;
+import game.input.InputMode;
 import game.Physical;
 import world.Area;
 import world.Biome;
@@ -97,7 +97,7 @@ public class SidePanel extends JPanel {
     }
 
 
-    if (Game.getActive().INPUT_SWITCH.getMode() == GameMode.LOOK) {
+    if (Game.getActive().INPUT_SWITCH.getInputMode() == InputMode.LOOK) {
 
       Point cursorLocalTarget = Game.getActive().INPUT_SWITCH.getCursorTarget();
       List<Physical> allPhysicalsAt = playerAt.getPhysicalsComponent().getAllPhysicalsAt(cursorLocalTarget);

@@ -4,6 +4,8 @@ import game.display.GameDisplay;
 import utils.Dimension;
 import world.World;
 
+import java.awt.event.KeyListener;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -36,9 +38,15 @@ public class Game {
   }
 
   public static void main(String[] args) {
-    GameLoader.newGame(new Dimension(64,64),new Dimension(18,18));
+    GameLoader.newGame(new Dimension(64, 64), new Dimension(18, 18));
     GameDisplay.recalculateSize();
-    GameDisplay.addKeyListener(Game.getActive().CONTROLLERS.getPlayerController().getKeyListener());
+
+    // register player keyListeners.
+    List<KeyListener> keyListeners = Game.getActive().CONTROLLERS.getPlayerController().getKeyListeners();
+    for (KeyListener keyListener : keyListeners) {
+      GameDisplay.addKeyListener(keyListener);
+    }
+
     GameEngine.start();
   }
 

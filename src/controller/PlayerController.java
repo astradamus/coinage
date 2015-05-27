@@ -2,58 +2,35 @@ package controller;
 
 import actor.Actor;
 import game.Game;
-import world.World;
+import utils.Dimension;
 
-import java.awt.*;
+import java.awt.Point;
 import java.awt.event.KeyListener;
 
 /**
- * Prototypical ActorController that enables movement of an Actor with keyboard input.
+ * ActorController that enables movement of an Actor with keyboard input.
  */
 public class PlayerController extends ActorController {
 
-  private Action action;
-  private Direction facing;
+  private final Component_WorldMapRevealed component_worldMapRevealed;
+  private final KeyListener listener;
 
-  private int beatsToRecover = 0;
 
-  private KeyListener listener = new NumPadDirectionListener(this);
+  public PlayerController(Actor actor, Dimension worldSizeInAreas, Point globalStartLocation) {
+    super(actor, globalStartLocation);
 
-  public PlayerController(Actor actor, Point location) {
-    super(actor, location);
+    this.component_worldMapRevealed = new Component_WorldMapRevealed(worldSizeInAreas);
+    listener = new NumPadDirectionListener(this);
+
   }
-
-
-  void startMoving(Direction movingIn) {
-    action = Action.MOVING;
-    facing = movingIn;
-  }
-
-  void stopMoving() {
-    action = null;
-  }
-
-
 
   @Override
-  public void onUpdate() {
-    World world = Game.getActive().WORLD;
+  protected void onMoveSucceeded() {
 
-    if (beatsToRecover > 0) {
+    // Update WorldMapRevealed component accordingly.
+      Point worldCoord = Game.getActive().WORLD.getWorldCoordinateFromGlobalCoordinate(getGlobalCoordinate());
+      component_worldMapRevealed.setAreaIsRevealed(worldCoord.x,worldCoord.y);
 
-      beatsToRecover--; // until this is zero no action can be taken.
-
-    } else if (action == Action.MOVING) {
-
-      int newX = worldLocation.x + facing.relativeX;
-      int newY = worldLocation.y + facing.relativeY;
-
-      if (world.globalMovePhysical(actor, worldLocation.x, worldLocation.y, newX, newY)) {
-        worldLocation.setLocation(newX, newY);
-        beatsToRecover = action.beatsToPerform;
-      }
-
-    }
   }
 
   @Override
@@ -61,11 +38,9 @@ public class PlayerController extends ActorController {
     return 0;
   }
 
-  public int getX() {
-    return worldLocation.x;
-  }
-  public int getY() {
-    return worldLocation.y;
+
+  public final Component_WorldMapRevealed getWorldMapRevealedComponenet() {
+    return component_worldMapRevealed;
   }
 
   public KeyListener getKeyListener() {

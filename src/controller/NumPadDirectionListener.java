@@ -12,12 +12,12 @@ import java.util.Stack;
  */
 public class NumPadDirectionListener implements KeyListener {
 
-  private final PlayerController playerController;
+  private final ActorController actorController;
 
   private Stack<Direction> heldDirections = new Stack<>();
 
-  public NumPadDirectionListener(PlayerController playerController) {
-    this.playerController = playerController;
+  public NumPadDirectionListener(PlayerController actorController) {
+    this.actorController = actorController;
   }
 
 
@@ -30,7 +30,7 @@ public class NumPadDirectionListener implements KeyListener {
 
     if (heldDirections.isEmpty()) {
 
-      playerController.stopMoving();
+      actorController.stopMoving();
 
     } else {
 
@@ -47,7 +47,7 @@ public class NumPadDirectionListener implements KeyListener {
 
       }
 
-      playerController.startMoving(movingIn);
+      actorController.startMoving(movingIn);
 
     }
   }

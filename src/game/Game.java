@@ -1,5 +1,7 @@
 package game;
 
+import game.display.GameDisplay;
+import utils.Dimension;
 import world.World;
 
 import java.util.Random;
@@ -34,7 +36,7 @@ public class Game {
   }
 
   public static void main(String[] args) {
-    GameLoader.newGame(10,10,64,64);
+    GameLoader.newGame(new Dimension(64,64),new Dimension(18,18));
     GameDisplay.recalculateSize();
     GameDisplay.addKeyListener(Game.getActive().CONTROLLERS.getPlayerController().getKeyListener());
     GameEngine.start();

@@ -1,5 +1,7 @@
 package game;
 
+import game.display.GameDisplay;
+
 /**
  *
  */

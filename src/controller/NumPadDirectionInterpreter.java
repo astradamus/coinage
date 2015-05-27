@@ -10,14 +10,14 @@ import java.util.Stack;
  * Pressing non-complimentary directions in succession will go in the direction most recently
  * pressed.
  */
-public class NumPadDirectionListener implements KeyListener {
+public class NumPadDirectionInterpreter implements KeyListener {
 
-  private final ActorController actorController;
+  private final DirectionListener directionListener;
 
   private Stack<Direction> heldDirections = new Stack<>();
 
-  public NumPadDirectionListener(PlayerController actorController) {
-    this.actorController = actorController;
+  public NumPadDirectionInterpreter(DirectionListener directionListener) {
+    this.directionListener = directionListener;
   }
 
 
@@ -30,7 +30,7 @@ public class NumPadDirectionListener implements KeyListener {
 
     if (heldDirections.isEmpty()) {
 
-      actorController.stopMoving();
+      directionListener.receiveDirectionsCleared();
 
     } else {
 
@@ -47,7 +47,7 @@ public class NumPadDirectionListener implements KeyListener {
 
       }
 
-      actorController.startMoving(movingIn);
+      directionListener.receiveDirection(movingIn);
 
     }
   }

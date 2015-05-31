@@ -1,4 +1,6 @@
-package controller;
+package game.input;
+
+import game.Direction;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -10,13 +12,13 @@ import java.util.Stack;
  * Pressing non-complimentary directions in succession will go in the direction most recently
  * pressed.
  */
-public class NumPadDirectionInterpreter implements KeyListener {
+public class KeyboardDirectionInterpreter implements KeyListener {
 
   private final DirectionListener directionListener;
 
   private Stack<Direction> heldDirections = new Stack<>();
 
-  public NumPadDirectionInterpreter(DirectionListener directionListener) {
+  public KeyboardDirectionInterpreter(DirectionListener directionListener) {
     this.directionListener = directionListener;
   }
 

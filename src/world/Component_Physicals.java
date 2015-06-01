@@ -101,7 +101,7 @@ public final class Component_Physicals {
   public List<Physical> getAllPhysicalsAt(Point localCoordinate) {
 
     if (!size.getCoordinateIsWithinBounds(localCoordinate)) {
-      return null;
+      throw new IllegalArgumentException("Given coordinate is out of bounds.");
     }
 
     List<Physical> physicals =

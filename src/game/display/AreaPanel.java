@@ -43,22 +43,13 @@ public class AreaPanel extends JPanel {
 
         Color bgColor = visible.getBGColor();
         Color color = visible.getColor();
-        if (bgColor != null) {
-          g.setColor(bgColor);
-          g.fillRect((placeX - SQUARE_SIZE / 6), (int) (placeY - SQUARE_SIZE * 0.85), SQUARE_SIZE,
-              SQUARE_SIZE);
-        }
 
-        g.setColor(color);
-        g.drawChars(new char[]{visible.getAppearance()}, 0, 1, placeX, placeY);
-
+        SquareDrawer.drawSquare(g, bgColor, color, visible.getAppearance(),
+            SQUARE_SIZE, placeX, placeY);
 
         Point cursorTarget = Game.getActive().INPUT_SWITCH.getCursorTarget();
         if (cursorTarget.x == x && cursorTarget.y == y) {
-          g.setColor(Color.WHITE);
-          g.drawOval((placeX - SQUARE_SIZE / 6), (int) (placeY - SQUARE_SIZE * 0.85), SQUARE_SIZE,
-              SQUARE_SIZE);
-          g.drawChars(new char[]{'X'}, 0, 1, placeX, placeY);
+          SquareDrawer.drawOval(g, Color.WHITE, Color.WHITE, 'X', SQUARE_SIZE, placeX, placeY);
         }
 
       }

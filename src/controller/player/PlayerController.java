@@ -1,11 +1,11 @@
-package controller;
+package controller.player;
 
 import actor.Actor;
+import controller.ActorController;
 import game.Game;
 import utils.Dimension;
 
 import java.awt.Point;
-import java.awt.event.KeyListener;
 
 /**
  * ActorController that enables movement of an Actor with keyboard input.
@@ -13,14 +13,13 @@ import java.awt.event.KeyListener;
 public class PlayerController extends ActorController {
 
   private final Component_WorldMapRevealed component_worldMapRevealed;
-  private final KeyListener listener;
 
 
   public PlayerController(Actor actor, Dimension worldSizeInAreas, Point globalStartLocation) {
+
     super(actor, globalStartLocation);
 
     this.component_worldMapRevealed = new Component_WorldMapRevealed(worldSizeInAreas);
-    listener = new NumPadDirectionListener(this);
 
   }
 
@@ -41,10 +40,6 @@ public class PlayerController extends ActorController {
 
   public final Component_WorldMapRevealed getWorldMapRevealedComponenet() {
     return component_worldMapRevealed;
-  }
-
-  public KeyListener getKeyListener() {
-    return listener;
   }
 
 }

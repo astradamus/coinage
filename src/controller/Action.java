@@ -4,6 +4,7 @@ package controller;
  *
  */
 public enum Action {
+
   MOVING    (3);
 
   final int beatsToPerform;
@@ -11,4 +12,5 @@ public enum Action {
   Action(int beatsToPerform) {
     this.beatsToPerform = beatsToPerform;
   }
+
 }

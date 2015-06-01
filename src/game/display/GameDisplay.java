@@ -12,7 +12,9 @@ import java.awt.event.KeyListener;
  */
 public class GameDisplay {
 
-  public static final int TILE_SIZE = 15;
+  public static final Appearance CURSOR = new Appearance('X',Color.WHITE,Color.WHITE);
+
+  public static final int SQUARE_SIZE = 15;
 
 
   private static AreaPanel PANEL_AREA = new AreaPanel();
@@ -35,10 +37,10 @@ public class GameDisplay {
   };
 
   public static void recalculateSize() {
-    int areaPanelWidth = (Game.getActive().WORLD.getAreaSizeInSquares().getWidth() + 1)*TILE_SIZE;
-    int areaPanelHeight = (Game.getActive().WORLD.getAreaSizeInSquares().getHeight() + 1)*TILE_SIZE;
+    int areaPanelWidth = (Game.getActive().WORLD.getAreaSizeInSquares().getWidth() + 1)* SQUARE_SIZE;
+    int areaPanelHeight = (Game.getActive().WORLD.getAreaSizeInSquares().getHeight() + 1)* SQUARE_SIZE;
 
-    int sidePanelWidth = SidePanel.TILES_WIDE * SidePanel.SQUARE_SIZE;
+    int sidePanelWidth = SidePanel.SP_SQUARES_WIDE * SidePanel.SP_SQUARE_SIZE;
 
     PANEL_AREA.setMaximumSize(new Dimension(areaPanelWidth,areaPanelHeight));
     PANEL_SIDE.setMaximumSize(new Dimension(sidePanelWidth,areaPanelHeight));

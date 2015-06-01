@@ -2,6 +2,7 @@ package thing;
 
 import game.Game;
 import game.Physical;
+import game.display.Appearance;
 
 import java.awt.*;
 
@@ -12,8 +13,7 @@ import java.awt.*;
 public class Thing implements Physical {
 
   private final String name;
-  private final char appearance;
-  private final Color color;
+  private final Appearance appearance;
   private final Double weight;
 
   private final boolean isImmobile;
@@ -21,12 +21,17 @@ public class Thing implements Physical {
 
 
   Thing(ThingTemplate tT) {
+
     name = tT.name;
-    appearance = tT.getRandomAppearance();
-    color = tT.getRandomColor();
+
+    char character = tT.getRandomCharacter();
+    Color color = tT.getRandomColor();
+    this.appearance = new Appearance(character,color);
+
     weight = tT.weight;
     isImmobile = tT.isImmobile;
     isBlocking = tT.isBlocking;
+
   }
 
   @Override
@@ -34,20 +39,9 @@ public class Thing implements Physical {
     return name;
   }
 
-
   @Override
-  public char getAppearance() {
+  public Appearance getAppearance() {
     return appearance;
-  }
-
-  @Override
-  public Color getColor() {
-    return color;
-  }
-
-  @Override
-  public Color getBGColor() {
-    return null;
   }
 
   @Override

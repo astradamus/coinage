@@ -1,5 +1,7 @@
 package world;
 
+import game.display.Appearance;
+
 import java.awt.*;
 
 /**
@@ -7,8 +9,7 @@ import java.awt.*;
  */
 public enum Biome {
 
-  GRASSLAND(8,'G',new Color(7, 140, 0),
-      new Color(8, 96, 0)){
+  GRASSLAND(8, new Appearance('G', new Color(7, 140, 0), new Color(8, 96, 0))){
     {
       terrainTypes = new TerrainType[] { TerrainType.GRASS,   TerrainType.DIRT,   TerrainType.ROCK};
       terrainWeights = new int[]                       {40,                  3,                  1};
@@ -16,8 +17,7 @@ public enum Biome {
       featureFrequencies = new double[][] {         {0.02},             {0.01},            {0.002}};
     }
   },
-  FOREST(4,'F',new Color(28, 82, 0),
-      new Color(3, 33, 0)){
+  FOREST(4, new Appearance('F', new Color(28, 82, 0), new Color(3, 33, 0))){
     {
       terrainTypes = new TerrainType[] { TerrainType.GRASS,   TerrainType.DIRT,   TerrainType.ROCK};
       terrainWeights = new int[]                       {32,                  2,                  1};
@@ -27,8 +27,7 @@ public enum Biome {
                                                      0.12},             {0.03},            {0.001}};
     }
   },
-  CRAGS(2,'C',new Color(205, 205, 205),
-      new Color(85, 85, 85)){
+  CRAGS(2, new Appearance('C', new Color(205, 205, 205), new Color(85, 85, 85))){
     {
       terrainTypes = new TerrainType[] { TerrainType.GRASS,   TerrainType.DIRT,   TerrainType.ROCK};
       terrainWeights = new int[]                        {1,                  2,                 16};
@@ -37,8 +36,7 @@ public enum Biome {
     }
   },
 
-  DESERT(1,'D',new Color(255, 204, 0),
-      new Color(114, 90, 0)){
+  DESERT(1, new Appearance('D', new Color(255, 204, 0), new Color(114, 90, 0))){
     {
       terrainTypes = new TerrainType[] {         TerrainType.SAND,     TerrainType.SANDSTONE};
       terrainWeights = new int[]                               {20,                        1};
@@ -50,8 +48,7 @@ public enum Biome {
                                                                                       0.002}};
     }
   },
-  BADLANDS(1,'B',new Color(144, 71, 0),
-      new Color(76, 14, 0)){
+  BADLANDS(1, new Appearance('B', new Color(144, 71, 0), new Color(76, 14, 0))){
     {
       terrainTypes = new TerrainType[] { TerrainType.DIRT,  TerrainType.SAND,  TerrainType.SANDSTONE};
       terrainWeights = new int[]                        {1,                 3,                    30};
@@ -62,8 +59,7 @@ public enum Biome {
     }
   },
 
-  SWAMP(1,'S',new Color(71, 0, 63),
-      new Color(25, 0, 48)){
+  SWAMP(1, new Appearance('S', new Color(71, 0, 63), new Color(25, 0, 48))){
     {
       terrainTypes = new TerrainType[] {  TerrainType.MARSH,  TerrainType.MUCK};
       terrainWeights = new int[]                         {2,                16};
@@ -88,19 +84,16 @@ public enum Biome {
 
   final int biomeWeight;
 
-  public final char worldMapChar;
-  public final Color worldMapColor;
-  public final Color worldMapBGColor;
+  public final Appearance worldMapAppearance;
 
   TerrainType[] terrainTypes;
   int[] terrainWeights;
   String[][] featureIDs;
   double[][] featureFrequencies;
 
-  Biome(int biomeWeight, char worldMapChar, Color worldMapColor, Color worldMapBGColor) {
+  Biome(int biomeWeight, Appearance worldMapAppearance) {
     this.biomeWeight = biomeWeight;
-    this.worldMapChar = worldMapChar;
-    this.worldMapColor = worldMapColor;
-    this.worldMapBGColor = worldMapBGColor;
+    this.worldMapAppearance = worldMapAppearance;
   }
+
 }

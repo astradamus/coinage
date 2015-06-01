@@ -3,7 +3,7 @@ package game;
 import actor.Actor;
 import actor.ActorFactory;
 import controller.AnimalController;
-import controller.PlayerController;
+import controller.player.PlayerController;
 import utils.Dimension;
 import world.World;
 import world.WorldFactory;
@@ -32,7 +32,7 @@ public class GameLoader {
     World world = WorldFactory.standardGeneration(areaSizeInSquares, worldSizeInAreas);
 
     // populate with animals and a Human for the player to control
-    Controllers controllers = new Controllers();
+    GameControllers gameControllers = new GameControllers();
 
     for (int i = 0; i < 500; i++) {
       String id = (i%2 == 0) ? "DOG" : "CAT";
@@ -41,7 +41,7 @@ public class GameLoader {
       Point point = new Point(Game.RANDOM.nextInt(world.getGlobalSizeInSquares().getWidth()),
           Game.RANDOM.nextInt(world.getGlobalSizeInSquares().getHeight()));
       world.put(actor, point.x, point.y);
-      controllers.register(new AnimalController(actor, point));
+      gameControllers.register(new AnimalController(actor, point));
     }
 
     Actor player = ActorFactory.makeActor("HUMAN");
@@ -54,10 +54,10 @@ public class GameLoader {
     // assign the Human to a PlayerController and register it
     PlayerController playerController =
         new PlayerController(player,worldSizeInAreas,playerLocation);
-    controllers.setPlayerController(playerController);
+    gameControllers.setPlayerController(playerController);
 
     // produce Game instance and assign it to ACTIVE
-    Game.ACTIVE = new Game(world, controllers);
+    Game.ACTIVE = new Game(world, gameControllers);
 
   }
 

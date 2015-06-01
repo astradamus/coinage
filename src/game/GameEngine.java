@@ -1,11 +1,11 @@
 package game;
 
-import game.display.GameDisplay;
-
 /**
  *
  */
 public class GameEngine {
+
+  public static final int MILLISECONDS_PER_HEARTBEAT = 25;
 
   private static Thread thread;
   private static Runnable gameLoop = new Runnable() {
@@ -13,10 +13,12 @@ public class GameEngine {
     public void run() {
       synchronized (this) {
         while (!thread.isInterrupted()) {
+
+          // Freeze the game (stop sending state updates) if the Engine has been paused, but
+          //   continue sending Display updates.
           Game.getActive().update();
-          GameDisplay.onUpdate();
           try {
-            wait(Timing.MILLISECONDS_PER_HEARTBEAT);
+            wait(MILLISECONDS_PER_HEARTBEAT);
           } catch (InterruptedException e) {
             e.printStackTrace();
             break;

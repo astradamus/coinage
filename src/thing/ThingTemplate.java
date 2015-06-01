@@ -15,16 +15,16 @@ public class ThingTemplate {
   char[] appearances;
   Color[] colors;
   Double weight;
-  boolean isImmobile;
+  boolean isImmovable;
   boolean isBlocking;
 
   public ThingTemplate(String name, char[] appearances, Color[] colors, Double weight,
-                       boolean isImmobile, boolean isBlocking) {
+                       boolean isImmovable, boolean isBlocking) {
     this.name = name;
     this.appearances = appearances;
     this.colors = colors;
     this.weight = weight;
-    this.isImmobile = isImmobile;
+    this.isImmovable = isImmovable;
     this.isBlocking = isBlocking;
   }
 

@@ -53,7 +53,7 @@ public class Actor implements Physical {
 
   @Override
   public boolean isImmovable() {
-    return false;
+    return true;
   }
 
   @Override

@@ -16,7 +16,7 @@ public class Thing implements Physical {
   private final Appearance appearance;
   private final Double weight;
 
-  private final boolean isImmobile;
+  private final boolean isImmovable;
   private final boolean isBlocking;
 
 
@@ -29,7 +29,7 @@ public class Thing implements Physical {
     this.appearance = new Appearance(character,color);
 
     weight = tT.weight;
-    isImmobile = tT.isImmobile;
+    isImmovable = tT.isImmovable;
     isBlocking = tT.isBlocking;
 
   }
@@ -56,7 +56,7 @@ public class Thing implements Physical {
 
   @Override
   public boolean isImmovable() {
-    return isImmobile;
+    return isImmovable;
   }
 
   @Override

@@ -40,7 +40,6 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
         cursorTarget.setLocation(-1,-1);
         cursorMovingIn = null;
         this.inputMode = inputMode;
-        System.out.println(inputMode.name());
         Game.unpauseGame();
 
       } else

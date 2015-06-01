@@ -28,7 +28,7 @@ public class ThingTemplate {
     this.isBlocking = isBlocking;
   }
 
-  char getRandomAppearance() {
+  char getRandomCharacter() {
     return appearances[Game.RANDOM.nextInt(appearances.length)];
   }
 

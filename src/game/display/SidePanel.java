@@ -36,6 +36,9 @@ public class SidePanel extends JPanel {
   public static final Font LARGE_TEXT = new Font("Serif", Font.BOLD, SP_SQUARE_SIZE);
   public static final Font SMALL_TEXT = new Font("Monospace", Font.PLAIN, SP_TEXT_SIZE);
 
+  public static final Appearance MAP_UNEXPLORED_SQUARE =
+      new Appearance('?',new Color(25,25,25),new Color(11,11,11));
+
   public static final int MAP_RADIUS_SQUARES = 5;
   public static final int MAP_SIZE_SQUARES = MAP_RADIUS_SQUARES * 2 + 1;
   public static final int MAP_SIZE_PIXELS = MAP_SIZE_SQUARES * SP_SQUARE_SIZE;
@@ -126,33 +129,26 @@ public class SidePanel extends JPanel {
 
 
 
-        Color mapBGColor; // the background color for this map square
-        Color mapColor; // the foreground (symbol) color for this map square
-        char mapChar; // the symbol for this map square
+        Appearance appearance;
 
         if (pC.getWorldMapRevealedComponenet().getAreaIsRevealed(worldX,worldY)) {
 
-          // if this square is revealed, use the biome's appearance...
-          Biome biome = thisArea.getBiome();
-          mapBGColor = biome.worldMapBGColor;
-          mapColor = biome.worldMapColor;
-          mapChar = biome.worldMapChar;
+          // if this square is revealed, use the biome's worldMapAppearance...
+          appearance = thisArea.getBiome().worldMapAppearance;
 
         } else {
 
           // ...otherwise, use a generic 'unexplored' appearance
-          mapBGColor = new Color(11,11,11);
-          mapColor = new Color(25,25,25);
-          mapChar = '?';
+          appearance = MAP_UNEXPLORED_SQUARE;
 
         }
 
         // draw the square
-        SquareDrawer.drawSquare(g, mapBGColor, mapColor, mapChar, SP_SQUARE_SIZE, placeX, placeY);
+        SquareDrawer.drawSquare(g, appearance, SP_SQUARE_SIZE, placeX, placeY);
 
         // draw a selection symbol over the area occupied by the player
         if (playerAt == thisArea) {
-          SquareDrawer.drawOval(g, Color.WHITE, Color.WHITE, 'X', SP_SQUARE_SIZE, placeX, placeY);
+          SquareDrawer.drawOval(g, GameDisplay.CURSOR, SP_SQUARE_SIZE, placeX, placeY);
         }
 
       }

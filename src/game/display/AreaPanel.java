@@ -36,20 +36,16 @@ public class AreaPanel extends JPanel {
     for (int y = 0; y < world.getAreaSizeInSquares().getHeight(); y++) {
       for (int x = 0; x < world.getAreaSizeInSquares().getWidth(); x++) {
 
-        Physical visible = area.getPhysicalsComponent().getPriorityPhysical(x, y);
+        Appearance visible = area.getPhysicalsComponent().getPriorityPhysical(x,y).getAppearance();
 
         int placeX = (x) * SQUARE_SIZE;
         int placeY = (y + 1) * SQUARE_SIZE;
 
-        Color bgColor = visible.getBGColor();
-        Color color = visible.getColor();
-
-        SquareDrawer.drawSquare(g, bgColor, color, visible.getAppearance(),
-            SQUARE_SIZE, placeX, placeY);
+        SquareDrawer.drawSquare(g, visible, SQUARE_SIZE, placeX, placeY);
 
         Point cursorTarget = Game.getActive().INPUT_SWITCH.getCursorTarget();
         if (cursorTarget.x == x && cursorTarget.y == y) {
-          SquareDrawer.drawOval(g, Color.WHITE, Color.WHITE, 'X', SQUARE_SIZE, placeX, placeY);
+          SquareDrawer.drawOval(g, GameDisplay.CURSOR, SQUARE_SIZE, placeX, placeY);
         }
 
       }

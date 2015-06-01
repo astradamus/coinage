@@ -12,6 +12,8 @@ import java.awt.event.KeyListener;
  */
 public class GameDisplay {
 
+  public static final Appearance CURSOR = new Appearance('X',Color.WHITE,Color.WHITE);
+
   public static final int SQUARE_SIZE = 15;
 
 

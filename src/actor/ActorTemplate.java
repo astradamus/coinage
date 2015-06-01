@@ -12,17 +12,17 @@ public class ActorTemplate {
   String name;
   char appearance;
   Color color;
-  Color bgcolor;
+  Color bgColor;
   Double weight;
   boolean isImmobile;
   boolean isBlocking;
 
-  public ActorTemplate(String name, char appearance, Color color, Color bgcolor, Double weight,
+  public ActorTemplate(String name, char appearance, Color color, Color bgColor, Double weight,
                        boolean isImmobile, boolean isBlocking) {
     this.name = name;
     this.appearance = appearance;
     this.color = color;
-    this.bgcolor = bgcolor;
+    this.bgColor = bgColor;
     this.weight = weight;
     this.isImmobile = isImmobile;
     this.isBlocking = isBlocking;

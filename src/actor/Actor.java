@@ -2,6 +2,7 @@ package actor;
 
 import game.Game;
 import game.Physical;
+import game.display.Appearance;
 
 import java.awt.*;
 
@@ -12,9 +13,7 @@ import java.awt.*;
 public class Actor implements Physical {
 
   private final String name;
-  private final char appearance;
-  private final Color color;
-  private final Color bgcolor;
+  private final Appearance appearance;
   private final Double weight;
 
   private final boolean isBlocking;
@@ -22,9 +21,12 @@ public class Actor implements Physical {
 
   Actor(ActorTemplate aT) {
     name = aT.name;
-    appearance = aT.appearance;
-    color = aT.color;
-    bgcolor = aT.bgcolor;
+
+    char character = aT.appearance;
+    Color color = aT.color;
+    Color bgColor = aT.bgColor;
+    this.appearance = new Appearance(character,color,bgColor);
+
     weight = aT.weight;
     isBlocking = aT.isBlocking;
   }
@@ -35,18 +37,8 @@ public class Actor implements Physical {
   }
 
   @Override
-  public char getAppearance() {
+  public Appearance getAppearance() {
     return appearance;
-  }
-
-  @Override
-  public Color getColor() {
-    return color;
-  }
-
-  @Override
-  public Color getBGColor() {
-    return bgcolor;
   }
 
   @Override

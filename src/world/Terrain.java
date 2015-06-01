@@ -2,6 +2,7 @@ package world;
 
 import game.Game;
 import game.Physical;
+import game.display.Appearance;
 
 import java.awt.*;
 
@@ -13,13 +14,17 @@ public class Terrain implements Physical {
   private static char[] chars = new char[]{'.', ',', '\'', '`'};
 
   private final TerrainType type;
-  private final char appearance;
-  private final Color color;
+  private final Appearance appearance;
 
   Terrain(TerrainType type) {
+
     this.type = type;
-    this.appearance = chars[Game.RANDOM.nextInt(chars.length)];
-    this.color = type.colors[Game.RANDOM.nextInt(type.colors.length)];
+
+    char character = chars[Game.RANDOM.nextInt(chars.length)];
+    Color color = type.colors[Game.RANDOM.nextInt(type.colors.length)];
+
+    this.appearance = new Appearance(character,color);
+
   }
 
 
@@ -33,18 +38,8 @@ public class Terrain implements Physical {
   }
 
   @Override
-  public char getAppearance() {
+  public Appearance getAppearance() {
     return appearance;
-  }
-
-  @Override
-  public Color getColor() {
-    return color;
-  }
-
-  @Override
-  public Color getBGColor() {
-    return null;
   }
 
   @Override

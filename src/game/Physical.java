@@ -1,6 +1,6 @@
 package game;
 
-import java.awt.*;
+import game.display.Appearance;
 
 /**
  *
@@ -9,9 +9,7 @@ import java.awt.*;
 public interface Physical {
 
   String getName();
-  char getAppearance();
-  Color getColor();
-  Color getBGColor();
+  Appearance getAppearance();
   Double getWeight();
 
   int getVisualPriority();

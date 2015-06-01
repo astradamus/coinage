@@ -12,8 +12,12 @@ import java.util.List;
  */
 public class SquareDrawer {
 
-  public static void drawSquare(Graphics g, Color bgColor, Color color, char appearance,
+  public static void drawSquare(Graphics g, Appearance appearance,
                                 int squareSize, int drawX, int drawY) {
+
+    char character = appearance.getCharacter();
+    Color color = appearance.getColor();
+    Color bgColor = appearance.getBGColor();
 
     if (bgColor != null) {
       g.setColor(bgColor);
@@ -21,20 +25,24 @@ public class SquareDrawer {
     }
 
     g.setColor(color);
-    g.drawChars(new char[]{appearance}, 0, 1, calcForegroundX(drawX,squareSize), drawY);
+    g.drawChars(new char[]{character}, 0, 1, calcForegroundX(drawX,squareSize), drawY);
 
   }
 
-  public static void drawOval(Graphics g, Color bgColor, Color color, char appearance,
+  public static void drawOval(Graphics g, Appearance appearance,
                               int squareSize, int drawX, int drawY) {
+
+    char character = appearance.getCharacter();
+    Color color = appearance.getColor();
+    Color bgColor = appearance.getBGColor();
 
     if (bgColor != null) {
       g.setColor(bgColor);
-      g.drawOval(drawX, calcBackgroundY(drawY, squareSize), squareSize, squareSize);
+      g.drawOval(drawX-1, calcBackgroundY(drawY, squareSize)-1, squareSize, squareSize);
     }
 
     g.setColor(color);
-    g.drawChars(new char[]{appearance}, 0, 1, calcForegroundX(drawX,squareSize), drawY);
+    g.drawChars(new char[]{character}, 0, 1, calcForegroundX(drawX,squareSize), drawY);
 
   }
 
@@ -52,7 +60,8 @@ public class SquareDrawer {
     for (int i = 0; i < physicals.size(); i++) {
 
       Physical physical = physicals.get(i);
-      drawString(g, physical.getName(), physical.getColor(), drawX, drawY + i * squareSize);
+      drawString(g, physical.getName(), physical.getAppearance().getColor(),
+          drawX, drawY + i *squareSize);
 
     }
 

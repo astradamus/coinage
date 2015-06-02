@@ -17,7 +17,7 @@ public class AreaPanel extends JPanel {
 
   public AreaPanel() {
     setBackground(Color.BLACK);
-    setFont(new Font("Monospace", Font.BOLD, SQUARE_SIZE));
+    setFont(new Font("SansSerif", Font.BOLD, SQUARE_SIZE));
   }
 
 

@@ -32,9 +32,9 @@ public class SidePanel extends JPanel {
   public static final int SP_BORDER_SQUARES_X = 1;
   public static final int SP_BORDER_SQUARES_Y = 2;
 
-  public static final Font MAP_FONT = new Font("Monospace", Font.BOLD, SP_SQUARE_SIZE);
+  public static final Font MAP_FONT = new Font("SansSerif", Font.BOLD, SP_SQUARE_SIZE);
   public static final Font LARGE_TEXT = new Font("Serif", Font.BOLD, SP_SQUARE_SIZE);
-  public static final Font SMALL_TEXT = new Font("Monospace", Font.PLAIN, SP_TEXT_SIZE);
+  public static final Font SMALL_TEXT = new Font("Monospaced", Font.PLAIN, SP_TEXT_SIZE);
 
   public static final Appearance MAP_UNEXPLORED_SQUARE =
       new Appearance('?',new Color(25,25,25),new Color(11,11,11));

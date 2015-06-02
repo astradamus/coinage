@@ -1,10 +1,14 @@
 package game;
 
+import controller.player.Component_WorldMapRevealed;
 import game.display.GameDisplay;
 import game.input.GameInputSwitch;
+import game.input.InputMode;
 import utils.Dimension;
+import world.Area;
 import world.World;
 
+import java.awt.*;
 import java.awt.event.KeyListener;
 import java.util.List;
 import java.util.Random;
@@ -27,6 +31,35 @@ public class Game {
   public static Game getActive() {
     return ACTIVE;
   }
+
+
+
+  public static InputMode getActiveInputMode() {
+    return ACTIVE.INPUT_SWITCH.getInputMode();
+  }
+
+  public static Component_WorldMapRevealed getActivePlayerWorldMapRevealedComponent() {
+    return ACTIVE.INPUT_SWITCH.getPlayerController().getWorldMapRevealedComponenet();
+  }
+
+  public static Point getActivePlayerGlobalCoordinate() {
+    return ACTIVE.INPUT_SWITCH.getPlayerController().getGlobalCoordinate();
+  }
+
+  public static Point getActivePlayerWorldCoordinate() {
+    return ACTIVE.WORLD.getWorldCoordinateFromGlobalCoordinate(getActivePlayerGlobalCoordinate());
+  }
+
+  public static Area getActivePlayerArea() {
+    Point activePlayerGlobalCoordinate = getActivePlayerGlobalCoordinate();
+    return ACTIVE.WORLD.getAreaByGlobalCoordinate(activePlayerGlobalCoordinate.x,
+        activePlayerGlobalCoordinate.y);
+  }
+
+  public static Point getActiveCursorTarget() {
+    return ACTIVE.INPUT_SWITCH.getCursorTarget();
+  }
+
 
 
   /**
@@ -64,17 +97,15 @@ public class Game {
 
 
 
-  public final GameInputSwitch INPUT_SWITCH;
+  final GameInputSwitch INPUT_SWITCH;
   public final World WORLD;
-  public final GameControllers CONTROLLERS;
+  final GameControllers CONTROLLERS;
 
-  public Game(World world, GameControllers gameControllers) {
+  public Game(World world, GameControllers gameControllers, GameInputSwitch gameInputSwitch) {
     this.WORLD = world;
     this.CONTROLLERS = gameControllers;
-    INPUT_SWITCH = new GameInputSwitch();
+    this.INPUT_SWITCH = gameInputSwitch;
   }
-
-
 
 
   void update() {

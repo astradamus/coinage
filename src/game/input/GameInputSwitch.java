@@ -1,5 +1,6 @@
 package game.input;
 
+import controller.player.PlayerController;
 import game.Direction;
 import game.Game;
 
@@ -12,6 +13,8 @@ import java.util.List;
  *
  */
 public class GameInputSwitch implements DirectionListener, ModeListener {
+
+  private PlayerController playerController;
 
   private final List<KeyListener> keyListeners;
 
@@ -45,8 +48,7 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
       } else
       if (inputMode == InputMode.LOOK) {
 
-        Point globalCoordinate =
-            Game.getActive().CONTROLLERS.getPlayerController().getGlobalCoordinate();
+        Point globalCoordinate = playerController.getGlobalCoordinate();
         Point localCoordinate =
             Game.getActive().WORLD.getAreaCoordinateFromGlobalCoordinate(globalCoordinate);
 
@@ -90,7 +92,7 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
   public void receiveDirection(Direction direction) {
 
     if (inputMode == InputMode.EXPLORE) {
-      Game.getActive().CONTROLLERS.getPlayerController().startMoving(direction);
+      playerController.startMoving(direction);
     } else if (inputMode == InputMode.LOOK) {
       cursorMovingIn = direction;
     }
@@ -101,11 +103,19 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
   public void receiveDirectionsCleared() {
 
     if (inputMode == InputMode.EXPLORE) {
-      Game.getActive().CONTROLLERS.getPlayerController().stopMoving();
+      playerController.stopMoving();
     } else if (inputMode == InputMode.LOOK) {
       cursorMovingIn = null;
     }
 
+  }
+
+  public void setPlayerController(PlayerController playerController) {
+    this.playerController = playerController;
+  }
+
+  public PlayerController getPlayerController() {
+    return playerController;
   }
 
   public InputMode getInputMode() {

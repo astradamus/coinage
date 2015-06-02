@@ -4,6 +4,7 @@ import actor.Actor;
 import actor.ActorFactory;
 import controller.AnimalController;
 import controller.player.PlayerController;
+import game.input.GameInputSwitch;
 import utils.Dimension;
 import world.World;
 import world.WorldFactory;
@@ -54,10 +55,14 @@ public class GameLoader {
     // assign the Human to a PlayerController and register it
     PlayerController playerController =
         new PlayerController(player,worldSizeInAreas,playerLocation);
-    gameControllers.setPlayerController(playerController);
+    gameControllers.register(playerController);
+
+    // set up the GameInputSwitch
+    GameInputSwitch gameInputSwitch = new GameInputSwitch();
+    gameInputSwitch.setPlayerController(playerController);
 
     // produce Game instance and assign it to ACTIVE
-    Game.ACTIVE = new Game(world, gameControllers);
+    Game.ACTIVE = new Game(world, gameControllers, gameInputSwitch);
 
   }
 

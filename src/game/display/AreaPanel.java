@@ -1,8 +1,6 @@
 package game.display;
 
-import controller.player.PlayerController;
 import game.Game;
-import game.Physical;
 import world.Area;
 import world.World;
 
@@ -27,8 +25,7 @@ public class AreaPanel extends JPanel {
   public void paint(Graphics g) {
     super.paint(g);
 
-    PlayerController pC = Game.getActive().CONTROLLERS.getPlayerController();
-    Point playerCoordinate = pC.getGlobalCoordinate();
+    Point playerCoordinate = Game.getActivePlayerGlobalCoordinate();
 
     World world = Game.getActive().WORLD;
     Area area = world.getAreaByGlobalCoordinate(playerCoordinate.x,playerCoordinate.y);
@@ -43,7 +40,7 @@ public class AreaPanel extends JPanel {
 
         SquareDrawer.drawSquare(g, visible, SQUARE_SIZE, placeX, placeY);
 
-        Point cursorTarget = Game.getActive().INPUT_SWITCH.getCursorTarget();
+        Point cursorTarget = Game.getActiveCursorTarget();
         if (cursorTarget.x == x && cursorTarget.y == y) {
           SquareDrawer.drawOval(g, GameDisplay.CURSOR, SQUARE_SIZE, placeX, placeY);
         }

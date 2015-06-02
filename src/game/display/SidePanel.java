@@ -52,24 +52,15 @@ public class SidePanel extends JPanel {
   public void paint(Graphics g) {
     super.paint(g);
 
-    World world = Game.getActive().WORLD;
-    PlayerController playerController = Game.getActive().CONTROLLERS.getPlayerController();
-
-    Point playerWorldXY = world.getWorldCoordinateFromGlobalCoordinate(
-                            playerController.getGlobalCoordinate());
-
-    Area playerAt = world.getAreaByWorldCoordinate(playerWorldXY.x, playerWorldXY.y);
-
-
     // draw the world map
-    drawWorldMap(g, world, playerController, playerWorldXY, playerAt);
+    drawWorldMap(g);
 
     // switch out of MAP_FONT
     g.setFont(SMALL_TEXT);
 
     // if we're in look mode, draw the look list for the selected square
-    if (Game.getActive().INPUT_SWITCH.getInputMode() == InputMode.LOOK) {
-      drawLookList(g, playerAt);
+    if (Game.getActiveInputMode() == InputMode.LOOK) {
+      drawLookList(g);
     } else {
       SquareDrawer.drawStringList(g, OPTIONS, new Color(93, 93, 93), SP_TEXT_SIZE, UNDERMAP_START_X,
           UNDERMAP_START_Y);
@@ -83,7 +74,7 @@ public class SidePanel extends JPanel {
   );
 
 
-  private void drawLookList(Graphics g, Area playerAt) {
+  private void drawLookList(Graphics g) {
 
     SquareDrawer.drawString(g,"(press ESC to resume)", new Color(93, 93, 93),UNDERMAP_START_X,
         UNDERMAP_START_Y);
@@ -92,10 +83,11 @@ public class SidePanel extends JPanel {
         UNDERMAP_START_Y+SP_SQUARE_SIZE);
 
     // determine where the player is 'looking'
-    Point cursorLocalTarget = Game.getActive().INPUT_SWITCH.getCursorTarget();
+    Point cursorLocalTarget = Game.getActiveCursorTarget();
 
     // determine what's there
-    List<Physical> allPhysicalsAt = playerAt.getPhysicalsComponent().getAllPhysicalsAt(cursorLocalTarget);
+    List<Physical> allPhysicalsAt = Game.getActivePlayerArea()
+        .getPhysicalsComponent().getAllPhysicalsAt(cursorLocalTarget);
 
     // draw what we've found as a list under the world map
     SquareDrawer.drawPhysicalsList(g, allPhysicalsAt, SP_SQUARE_SIZE, UNDERMAP_START_X+SP_SQUARE_SIZE,
@@ -103,9 +95,9 @@ public class SidePanel extends JPanel {
 
   }
 
-  private void drawWorldMap(Graphics g, World world, PlayerController pC, Point playerWorldXY,
-                            Area playerAt) {
+  private void drawWorldMap(Graphics g) {
 
+    Point playerWorldXY = Game.getActivePlayerWorldCoordinate();
 
     // draw world map outline
     g.drawRect(29, 33, MAP_SIZE_PIXELS+1, MAP_SIZE_PIXELS+1);
@@ -119,7 +111,7 @@ public class SidePanel extends JPanel {
         int worldX = playerWorldXY.x + x - MAP_RADIUS_SQUARES;
         int worldY = playerWorldXY.y + y - MAP_RADIUS_SQUARES;
 
-        Area thisArea = world.getAreaByWorldCoordinate(worldX, worldY);
+        Area thisArea = Game.getActive().WORLD.getAreaByWorldCoordinate(worldX, worldY);
         if (thisArea == null) {
           continue; // skip null areas
         }
@@ -131,7 +123,7 @@ public class SidePanel extends JPanel {
 
         Appearance appearance;
 
-        if (pC.getWorldMapRevealedComponenet().getAreaIsRevealed(worldX,worldY)) {
+        if (Game.getActivePlayerWorldMapRevealedComponent().getAreaIsRevealed(worldX,worldY)) {
 
           // if this square is revealed, use the biome's worldMapAppearance...
           appearance = thisArea.getBiome().worldMapAppearance;
@@ -147,7 +139,7 @@ public class SidePanel extends JPanel {
         SquareDrawer.drawSquare(g, appearance, SP_SQUARE_SIZE, placeX, placeY);
 
         // draw a selection symbol over the area occupied by the player
-        if (playerAt == thisArea) {
+        if (Game.getActivePlayerArea() == thisArea) {
           SquareDrawer.drawOval(g, GameDisplay.CURSOR, SP_SQUARE_SIZE, placeX, placeY);
         }
 

@@ -1,7 +1,6 @@
 package game;
 
 import controller.Controller;
-import controller.player.PlayerController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +9,6 @@ import java.util.List;
  *
  */
 public class GameControllers {
-
-  private PlayerController PLAYER_CONTROLLER;
 
   private final List<Controller> ACTIVE_CONTROLLERS = new ArrayList<>();
   private final List<Controller> NEW_CONTROLLERS    = new ArrayList<>();
@@ -54,19 +51,6 @@ public class GameControllers {
     } else {
       System.out.println("Tried to reregister an unregistered controller.");
     }
-  }
-
-  /**
-   * Will call register() on this playerController, for convenience's sake. Since register()
-   * rejects duplicates, this is risk free.
-   */
-  void setPlayerController(PlayerController playerController) {
-    PLAYER_CONTROLLER = playerController;
-    register(playerController);
-  }
-
-  public PlayerController getPlayerController() {
-    return PLAYER_CONTROLLER;
   }
 
 }

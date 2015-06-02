@@ -68,8 +68,11 @@ public class SidePanel extends JPanel {
     g.setFont(SMALL_TEXT);
 
     // if we're in look mode, draw the look list for the selected square
-    if (Game.getActive().INPUT_SWITCH.getInputMode() == InputMode.LOOK) {
+    InputMode inputMode = Game.getActive().INPUT_SWITCH.getInputMode();
+    if (inputMode == InputMode.LOOK) {
       drawLookList(g, playerAt);
+    } else if(inputMode == InputMode.INVENTORY) {
+      drawInventoryList(g);
     } else {
       SquareDrawer.drawStringList(g, OPTIONS, new Color(93, 93, 93), SP_TEXT_SIZE, UNDERMAP_START_X,
           UNDERMAP_START_Y);
@@ -79,7 +82,7 @@ public class SidePanel extends JPanel {
 
   public static final List<String> OPTIONS = Arrays.asList(
       "L: Look Around.",
-      ""
+      "I: Inventory."
   );
 
 
@@ -99,6 +102,24 @@ public class SidePanel extends JPanel {
 
     // draw what we've found as a list under the world map
     SquareDrawer.drawPhysicalsList(g, allPhysicalsAt, SP_SQUARE_SIZE, UNDERMAP_START_X+SP_SQUARE_SIZE,
+        UNDERMAP_START_Y+SP_SQUARE_SIZE*2);
+
+  }
+
+  private void drawInventoryList(Graphics g) {
+
+    SquareDrawer.drawString(g,"(press ESC to resume)", new Color(93, 93, 93),UNDERMAP_START_X,
+        UNDERMAP_START_Y);
+    g.setFont(LARGE_TEXT);
+    SquareDrawer.drawString(g,"YOU ARE CARRYING:", new Color(150, 119, 0),UNDERMAP_START_X,
+        UNDERMAP_START_Y+SP_SQUARE_SIZE);
+
+    // determine what's there
+    List<Physical> heldItems = Game.getActive().CONTROLLERS
+        .getPlayerController().getActor().getInventory().getItemsHeld();
+
+    // draw what we've found as a list under the world map
+    SquareDrawer.drawPhysicalsList(g, heldItems, SP_SQUARE_SIZE, UNDERMAP_START_X+SP_SQUARE_SIZE,
         UNDERMAP_START_Y+SP_SQUARE_SIZE*2);
 
   }

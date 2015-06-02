@@ -54,6 +54,12 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
         this.inputMode = inputMode;
         Game.pauseGame();
 
+      } else
+      if (inputMode == InputMode.INVENTORY) {
+
+        this.inputMode = inputMode;
+        Game.pauseGame();
+
       }
 
     }

@@ -1,5 +1,6 @@
 package actor;
 
+import actor.inventory.Inventory;
 import game.Game;
 import game.Physical;
 import game.display.Appearance;
@@ -18,8 +19,10 @@ public class Actor implements Physical {
 
   private final boolean isBlocking;
 
+  private final Inventory inventory;
 
   Actor(ActorTemplate aT) {
+
     name = aT.name;
 
     char character = aT.appearance;
@@ -29,6 +32,9 @@ public class Actor implements Physical {
 
     weight = aT.weight;
     isBlocking = aT.isBlocking;
+
+    inventory = new Inventory();
+
   }
 
   @Override
@@ -59,6 +65,10 @@ public class Actor implements Physical {
   @Override
   public boolean isBlocking() {
     return isBlocking;
+  }
+
+  public Inventory getInventory() {
+    return inventory;
   }
 
 }

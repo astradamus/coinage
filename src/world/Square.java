@@ -24,7 +24,7 @@ public class Square {
   /**
    * Sort a physical into the list for this square.
    */
-  void put(Physical putting) {
+  public void put(Physical putting) {
     if (putting == null) {
       throw new IllegalArgumentException("Attempted to put null to Square.");
     }
@@ -43,7 +43,7 @@ public class Square {
   /**
    * Remove a physical from this square. Returns true if the physical was found and removed.
    */
-  boolean pull(Physical pulling) {
+  public boolean pull(Physical pulling) {
     return locatedHere.remove(pulling);
   }
 
@@ -64,7 +64,7 @@ public class Square {
   /**
    * Returns true if there are any blocking physicals here.
    */
-  boolean isBlocked() {
+  public boolean isBlocked() {
     for(Physical physical : locatedHere) {
       if (physical.isBlocking()) {
         return true;

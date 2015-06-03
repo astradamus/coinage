@@ -1,5 +1,6 @@
 package game.display;
 
+import game.Game;
 import game.Physical;
 
 import java.awt.Color;
@@ -58,10 +59,17 @@ public class SquareDrawer {
                                        int drawX, int drawY) {
 
     for (int i = 0; i < physicals.size(); i++) {
+      int adjustedY = drawY + i * squareSize;
+
 
       Physical physical = physicals.get(i);
       drawString(g, physical.getName(), physical.getAppearance().getColor(),
-          drawX, drawY + i *squareSize);
+          drawX, adjustedY);
+
+      Integer listSelectIndex = Game.getActiveInputSwitch().getListSelectIndex();
+      if (listSelectIndex != null && listSelectIndex == i) {
+        g.fillOval(drawX-squareSize,adjustedY-squareSize/2,squareSize/2,squareSize/4);
+      }
 
     }
 

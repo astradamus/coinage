@@ -42,7 +42,7 @@ public class AreaPanel extends JPanel {
 
         SquareDrawer.drawSquare(g, visible, SQUARE_SIZE, placeX, placeY);
 
-        Coordinate cursorTarget = Game.getActiveCursorTarget();
+        Coordinate cursorTarget = Game.getActiveInputSwitch().getCursorTarget();
         if (cursorTarget != null && cursorTarget.localX == x && cursorTarget.localY == y) {
           SquareDrawer.drawOval(g, GameDisplay.CURSOR, SQUARE_SIZE, placeX, placeY);
         }

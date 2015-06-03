@@ -3,6 +3,8 @@ package game.input;
 import controller.player.PlayerController;
 import game.Direction;
 import game.Game;
+import game.Physical;
+import utils.Utils;
 import world.Coordinate;
 
 import java.awt.event.KeyListener;
@@ -12,7 +14,7 @@ import java.util.List;
 /**
  *
  */
-public class GameInputSwitch implements DirectionListener, ModeListener {
+public class GameInputSwitch implements DirectionListener, ModeListener, SelectListener {
 
   private PlayerController playerController;
 
@@ -20,6 +22,9 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
 
   private Coordinate cursorTarget = null;
   private Direction cursorMovingIn = null;
+
+  private Integer listSelectIndex = null;
+  private Integer listSelectLength = null;
 
   private InputMode inputMode = InputMode.EXPLORE;
 
@@ -29,6 +34,7 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
     keyListeners = new ArrayList<>();
     keyListeners.add(new KeyboardDirectionInterpreter(this));
     keyListeners.add(new KeyboardInputModeInterpreter(this));
+    keyListeners.add(new KeyboardSelectInterpreter(this));
 
   }
 
@@ -42,6 +48,8 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
 
         cursorTarget = null;
         cursorMovingIn = null;
+        listSelectIndex = null;
+        listSelectLength = null;
         this.inputMode = inputMode;
         Game.unpauseGame();
 
@@ -54,6 +62,17 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
 
       } else
       if (inputMode == InputMode.INVENTORY) {
+
+        this.inputMode = inputMode;
+        Game.pauseGame();
+
+      } else
+      if (inputMode == InputMode.GRAB) {
+
+        cursorTarget = Game.getActivePlayer().getCoordinate();
+
+        listSelectIndex = 0;
+        listSelectLength = cursorTarget.getSquare().getAll().size();
 
         this.inputMode = inputMode;
         Game.pauseGame();
@@ -87,6 +106,30 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
 
       }
 
+    } else
+    if (inputMode == InputMode.GRAB && cursorMovingIn != null) {
+
+      if (moveDelay > 0) {
+
+        moveDelay--;
+
+      } else {
+
+        Coordinate playerAt = Game.getActivePlayer().getCoordinate();
+
+        int relativeX = (cursorTarget.globalX - playerAt.globalX) + cursorMovingIn.relativeX;
+        int relativeY = (cursorTarget.globalY - playerAt.globalY) + cursorMovingIn.relativeY;
+
+        relativeX = Utils.clamp(relativeX,-1,+1);
+        relativeY = Utils.clamp(relativeY,-1,+1);
+
+        listSelectIndex = 0;
+        cursorTarget = Game.getActiveWorld().offsetCoordinateBySquares(playerAt,relativeX,
+            relativeY);
+
+        moveDelay = 2;
+
+      }
     }
 
   }
@@ -97,7 +140,7 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
 
     if (inputMode == InputMode.EXPLORE) {
       playerController.startMoving(direction);
-    } else if (inputMode == InputMode.LOOK) {
+    } else if (inputMode == InputMode.LOOK || inputMode == InputMode.GRAB) {
       cursorMovingIn = direction;
     }
 
@@ -108,11 +151,34 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
 
     if (inputMode == InputMode.EXPLORE) {
       playerController.stopMoving();
-    } else if (inputMode == InputMode.LOOK) {
+    } else if (inputMode == InputMode.LOOK || inputMode == InputMode.GRAB) {
       cursorMovingIn = null;
     }
 
   }
+
+  @Override
+  public void receiveSelectScroll(int deltaY) {
+
+    if (inputMode == InputMode.GRAB) {
+
+      listSelectIndex = Utils.modulus(listSelectIndex + deltaY,listSelectLength);
+
+    }
+
+  }
+
+  @Override
+  public void receiveSubmitSelection() {
+
+    if (inputMode == InputMode.GRAB) {
+      Physical target = cursorTarget.getSquare().getAll().get(listSelectIndex);
+      playerController.startGrabbing(target,cursorTarget);
+      receiveMode(InputMode.EXPLORE);
+    }
+
+  }
+
 
   public void setPlayerController(PlayerController playerController) {
     this.playerController = playerController;
@@ -128,6 +194,10 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
 
   public Coordinate getCursorTarget() {
     return cursorTarget;
+  }
+
+  public Integer getListSelectIndex() {
+    return listSelectIndex;
   }
 
   public List<KeyListener> getKeyListeners() {

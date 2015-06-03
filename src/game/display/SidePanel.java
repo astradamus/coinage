@@ -3,6 +3,7 @@ package game.display;
 import game.Game;
 import game.input.InputMode;
 import game.Physical;
+import world.Area;
 import world.Coordinate;
 
 import javax.swing.*;
@@ -56,11 +57,13 @@ public class SidePanel extends JPanel {
     g.setFont(SMALL_TEXT);
 
     // if we're in look mode, draw the look list for the selected square
-    InputMode inputMode = Game.getActiveInputMode();
+    InputMode inputMode = Game.getActiveInputSwitch().getInputMode();
     if (inputMode == InputMode.LOOK) {
       drawLookList(g);
     } else if(inputMode == InputMode.INVENTORY) {
       drawInventoryList(g);
+    } else if (inputMode == InputMode.GRAB) {
+      drawGrabList(g);
     } else {
       SquareDrawer.drawStringList(g, OPTIONS, new Color(93, 93, 93), SP_TEXT_SIZE, UNDERMAP_START_X,
           UNDERMAP_START_Y);
@@ -70,7 +73,8 @@ public class SidePanel extends JPanel {
 
   public static final List<String> OPTIONS = Arrays.asList(
       "L: Look Around.",
-      "I: Inventory."
+      "I: Inventory.",
+      "G: Grab."
   );
 
 
@@ -83,7 +87,7 @@ public class SidePanel extends JPanel {
         UNDERMAP_START_Y+SP_SQUARE_SIZE);
 
     // determine where the player is 'looking'
-    Coordinate cursorLocalTarget = Game.getActiveCursorTarget();
+    Coordinate cursorLocalTarget = Game.getActiveInputSwitch().getCursorTarget();
 
     // determine what's there
     List<Physical> allPhysicalsAt = cursorLocalTarget.getSquare().getAll();
@@ -107,6 +111,26 @@ public class SidePanel extends JPanel {
 
     // draw what we've found as a list under the world map
     SquareDrawer.drawPhysicalsList(g, heldItems, SP_SQUARE_SIZE, UNDERMAP_START_X+SP_SQUARE_SIZE,
+        UNDERMAP_START_Y+SP_SQUARE_SIZE*2);
+
+  }
+
+  private void drawGrabList(Graphics g) {
+
+    SquareDrawer.drawString(g,"(press ESC to resume)", new Color(93, 93, 93),UNDERMAP_START_X,
+        UNDERMAP_START_Y);
+    g.setFont(LARGE_TEXT);
+    SquareDrawer.drawString(g,"GRAB WHAT?", new Color(150, 119, 0),UNDERMAP_START_X,
+        UNDERMAP_START_Y+SP_SQUARE_SIZE);
+
+    // determine where the player is 'looking'
+    Coordinate cursorLocalTarget = Game.getActiveInputSwitch().getCursorTarget();
+
+    // determine what's there
+    List<Physical> allPhysicalsAt = cursorLocalTarget.getSquare().getAll();
+
+    // draw what we've found as a list under the world map
+    SquareDrawer.drawPhysicalsList(g, allPhysicalsAt, SP_SQUARE_SIZE, UNDERMAP_START_X+SP_SQUARE_SIZE,
         UNDERMAP_START_Y+SP_SQUARE_SIZE*2);
 
   }

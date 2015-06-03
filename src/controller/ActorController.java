@@ -3,6 +3,7 @@ package controller;
 import actor.Actor;
 import game.Direction;
 import game.Game;
+import game.Physical;
 import world.Coordinate;
 import world.World;
 
@@ -29,10 +30,30 @@ public abstract class ActorController implements Controller {
 
 
 
-
   private Action action;
   private Direction facing;
+
+  private Physical grabbing;
+  private Coordinate grabbingAt;
+
   private int beatsToRecover = 0;
+
+  public final void startGrabbing(Physical grabbing, Coordinate grabbingAt) {
+    if (actor.getInventory() == null) {
+      System.out.println("Tried to grab for an actor without an inventory.");
+      return;
+    }
+    if (grabbing.isImmovable()) {
+      System.out.println("Tried to grab an immovable physical.");
+      return;
+    }
+
+    action = Action.GRABBING;
+
+    this.grabbing = grabbing;
+    this.grabbingAt = grabbingAt;
+
+  }
 
   public final void startMoving(Direction movingIn) {
     action = Action.MOVING;
@@ -87,7 +108,21 @@ public abstract class ActorController implements Controller {
 
       }
 
+    } else if (action == Action.GRABBING) {
+
+      if (grabbingAt.getSquare().pull(grabbing)) {
+        actor.getInventory().addItem(grabbing);
+      } else {
+        System.out.println("Tried to grab a physical that already moved.");
+      }
+
+      grabbing = null;
+      grabbingAt = null;
+      action = null;
+
     }
+
+
 
     onUpdateProcessed();
 

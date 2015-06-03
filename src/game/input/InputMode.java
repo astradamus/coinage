@@ -9,7 +9,8 @@ public enum InputMode {
 
   EXPLORE   (KeyEvent.VK_ESCAPE),
   LOOK      (KeyEvent.VK_L),
-  INVENTORY (KeyEvent.VK_I);
+  INVENTORY (KeyEvent.VK_I),
+  GRAB      (KeyEvent.VK_G);
 
   final int hotkeyCode;
 

@@ -29,14 +29,20 @@ public class AreaFactory {
 
 
     // Produce Terrain from WeightMap
-    Terrain[][] terrain = new Terrain[height][width];
+    Square[][] squares = new Square[height][width];
     for(int y = 0; y < height; y++) {
       for(int x = 0; x < width; x++) {
-        terrain[y][x] = new Terrain(biome.terrainTypes[terrainWeightMap.weightMap[y][x]]);
+        Terrain terrain = new Terrain(biome.terrainTypes[terrainWeightMap.weightMap[y][x]]);
+        Square square = new Square(terrain);
+        Physical physical = physicals[y][x];
+        if (physical != null) {
+          square.put(physical);
+        }
+        squares[y][x] = square;
       }
     }
 
-    return new Area(biome, areaSizeInSquares, terrain, physicals);
+    return new Area(biome, squares);
 
   }
 

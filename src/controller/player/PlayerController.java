@@ -4,6 +4,7 @@ import actor.Actor;
 import controller.ActorController;
 import game.Game;
 import utils.Dimension;
+import world.Coordinate;
 
 import java.awt.Point;
 
@@ -15,9 +16,9 @@ public class PlayerController extends ActorController {
   private final Component_WorldMapRevealed component_worldMapRevealed;
 
 
-  public PlayerController(Actor actor, Dimension worldSizeInAreas, Point globalStartLocation) {
+  public PlayerController(Actor actor, Dimension worldSizeInAreas, Coordinate coordinate) {
 
-    super(actor, globalStartLocation);
+    super(actor, coordinate);
 
     this.component_worldMapRevealed = new Component_WorldMapRevealed(worldSizeInAreas);
 
@@ -27,8 +28,7 @@ public class PlayerController extends ActorController {
   protected void onMoveSucceeded() {
 
     // Update WorldMapRevealed component accordingly.
-      Point worldCoord = Game.getActive().WORLD.getWorldCoordinateFromGlobalCoordinate(getGlobalCoordinate());
-      component_worldMapRevealed.setAreaIsRevealed(worldCoord.x,worldCoord.y);
+      component_worldMapRevealed.setAreaIsRevealed(getCoordinate());
 
   }
 

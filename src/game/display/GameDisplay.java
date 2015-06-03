@@ -37,8 +37,8 @@ public class GameDisplay {
   };
 
   public static void recalculateSize() {
-    int areaPanelWidth = (Game.getActive().WORLD.getAreaSizeInSquares().getWidth() + 1)* SQUARE_SIZE;
-    int areaPanelHeight = (Game.getActive().WORLD.getAreaSizeInSquares().getHeight() + 1)* SQUARE_SIZE;
+    int areaPanelWidth = (Game.getActiveWorld().getAreaSizeInSquares().getWidth() +1)*SQUARE_SIZE;
+    int areaPanelHeight = (Game.getActiveWorld().getAreaSizeInSquares().getHeight() +1)*SQUARE_SIZE;
 
     int sidePanelWidth = SidePanel.SP_SQUARES_WIDE * SidePanel.SP_SQUARE_SIZE;
 

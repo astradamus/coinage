@@ -6,6 +6,7 @@ import game.input.GameInputSwitch;
 import game.input.InputMode;
 import utils.Dimension;
 import world.Area;
+import world.Coordinate;
 import world.World;
 
 import java.awt.*;
@@ -42,21 +43,11 @@ public class Game {
     return ACTIVE.INPUT_SWITCH.getPlayerController().getWorldMapRevealedComponenet();
   }
 
-  public static Point getActivePlayerGlobalCoordinate() {
-    return ACTIVE.INPUT_SWITCH.getPlayerController().getGlobalCoordinate();
+  public static Coordinate getActivePlayerCoordinate() {
+    return ACTIVE.INPUT_SWITCH.getPlayerController().getCoordinate();
   }
 
-  public static Point getActivePlayerWorldCoordinate() {
-    return ACTIVE.WORLD.getWorldCoordinateFromGlobalCoordinate(getActivePlayerGlobalCoordinate());
-  }
-
-  public static Area getActivePlayerArea() {
-    Point activePlayerGlobalCoordinate = getActivePlayerGlobalCoordinate();
-    return ACTIVE.WORLD.getAreaByGlobalCoordinate(activePlayerGlobalCoordinate.x,
-        activePlayerGlobalCoordinate.y);
-  }
-
-  public static Point getActiveCursorTarget() {
+  public static Coordinate getActiveCursorTarget() {
     return ACTIVE.INPUT_SWITCH.getCursorTarget();
   }
 
@@ -98,13 +89,17 @@ public class Game {
 
 
   final GameInputSwitch INPUT_SWITCH;
-  public final World WORLD;
+  final World WORLD;
   final GameControllers CONTROLLERS;
 
   public Game(World world, GameControllers gameControllers, GameInputSwitch gameInputSwitch) {
     this.WORLD = world;
     this.CONTROLLERS = gameControllers;
     this.INPUT_SWITCH = gameInputSwitch;
+  }
+
+  public static World getActiveWorld() {
+    return ACTIVE.WORLD;
   }
 
 

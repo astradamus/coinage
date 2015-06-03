@@ -3,8 +3,8 @@ package game.input;
 import controller.player.PlayerController;
 import game.Direction;
 import game.Game;
+import world.Coordinate;
 
-import java.awt.*;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
 
   private final List<KeyListener> keyListeners;
 
-  private final Point cursorTarget = new Point(-1,-1);
+  private Coordinate cursorTarget = null;
   private Direction cursorMovingIn = null;
 
   private InputMode inputMode = InputMode.EXPLORE;
@@ -40,7 +40,7 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
 
       if (inputMode == InputMode.EXPLORE) {
 
-        cursorTarget.setLocation(-1,-1);
+        cursorTarget = null;
         cursorMovingIn = null;
         this.inputMode = inputMode;
         Game.unpauseGame();
@@ -48,11 +48,7 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
       } else
       if (inputMode == InputMode.LOOK) {
 
-        Point globalCoordinate = playerController.getGlobalCoordinate();
-        Point localCoordinate =
-            Game.getActive().WORLD.getAreaCoordinateFromGlobalCoordinate(globalCoordinate);
-
-        cursorTarget.setLocation(localCoordinate);
+        cursorTarget = playerController.getCoordinate();
         this.inputMode = inputMode;
         Game.pauseGame();
 
@@ -73,12 +69,14 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
         moveDelay--;
       } else {
 
-        int newX = cursorTarget.x + cursorMovingIn.relativeX;
-        int newY = cursorTarget.y + cursorMovingIn.relativeY;
+        Coordinate newCoordinate = Game.getActiveWorld().offsetCoordinateBySquares(cursorTarget,
+            cursorMovingIn.relativeX, cursorMovingIn.relativeY);
 
-        if (Game.getActive().WORLD.getAreaSizeInSquares().getCoordinateIsWithinBounds(newX, newY)) {
-          cursorTarget.setLocation(newX, newY);
+        if (newCoordinate != null) {
+
+          cursorTarget = newCoordinate;
           moveDelay = 2;
+
         }
 
       }
@@ -122,8 +120,8 @@ public class GameInputSwitch implements DirectionListener, ModeListener {
     return inputMode;
   }
 
-  public Point getCursorTarget() {
-    return new Point(cursorTarget);
+  public Coordinate getCursorTarget() {
+    return cursorTarget;
   }
 
   public List<KeyListener> getKeyListeners() {

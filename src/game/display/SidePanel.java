@@ -1,12 +1,9 @@
 package game.display;
 
-import controller.player.PlayerController;
 import game.Game;
 import game.input.InputMode;
 import game.Physical;
-import world.Area;
-import world.Biome;
-import world.World;
+import world.Coordinate;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,11 +80,10 @@ public class SidePanel extends JPanel {
         UNDERMAP_START_Y+SP_SQUARE_SIZE);
 
     // determine where the player is 'looking'
-    Point cursorLocalTarget = Game.getActiveCursorTarget();
+    Coordinate cursorLocalTarget = Game.getActiveCursorTarget();
 
     // determine what's there
-    List<Physical> allPhysicalsAt = Game.getActivePlayerArea()
-        .getPhysicalsComponent().getAllPhysicalsAt(cursorLocalTarget);
+    List<Physical> allPhysicalsAt = cursorLocalTarget.getSquare().getAll();
 
     // draw what we've found as a list under the world map
     SquareDrawer.drawPhysicalsList(g, allPhysicalsAt, SP_SQUARE_SIZE, UNDERMAP_START_X+SP_SQUARE_SIZE,
@@ -97,7 +93,7 @@ public class SidePanel extends JPanel {
 
   private void drawWorldMap(Graphics g) {
 
-    Point playerWorldXY = Game.getActivePlayerWorldCoordinate();
+    Coordinate playerAt = Game.getActivePlayerCoordinate();
 
     // draw world map outline
     g.drawRect(29, 33, MAP_SIZE_PIXELS+1, MAP_SIZE_PIXELS+1);
@@ -108,11 +104,10 @@ public class SidePanel extends JPanel {
     for (int y = 0; y < MAP_SIZE_SQUARES; y++) {
       for (int x = 0; x < MAP_SIZE_SQUARES; x++) {
 
-        int worldX = playerWorldXY.x + x - MAP_RADIUS_SQUARES;
-        int worldY = playerWorldXY.y + y - MAP_RADIUS_SQUARES;
+        Coordinate thisCoordinate = Game.getActiveWorld().offsetCoordinateByAreas
+            (playerAt, x - MAP_RADIUS_SQUARES, y - MAP_RADIUS_SQUARES);
 
-        Area thisArea = Game.getActive().WORLD.getAreaByWorldCoordinate(worldX, worldY);
-        if (thisArea == null) {
+        if (thisCoordinate == null) {
           continue; // skip null areas
         }
 
@@ -123,10 +118,10 @@ public class SidePanel extends JPanel {
 
         Appearance appearance;
 
-        if (Game.getActivePlayerWorldMapRevealedComponent().getAreaIsRevealed(worldX,worldY)) {
+        if (Game.getActivePlayerWorldMapRevealedComponent().getAreaIsRevealed(thisCoordinate)) {
 
           // if this square is revealed, use the biome's worldMapAppearance...
-          appearance = thisArea.getBiome().worldMapAppearance;
+          appearance = thisCoordinate.area.getBiome().worldMapAppearance;
 
         } else {
 
@@ -139,7 +134,7 @@ public class SidePanel extends JPanel {
         SquareDrawer.drawSquare(g, appearance, SP_SQUARE_SIZE, placeX, placeY);
 
         // draw a selection symbol over the area occupied by the player
-        if (Game.getActivePlayerArea() == thisArea) {
+        if (Game.getActivePlayerCoordinate().area == thisCoordinate.area) {
           SquareDrawer.drawOval(g, GameDisplay.CURSOR, SP_SQUARE_SIZE, placeX, placeY);
         }
 

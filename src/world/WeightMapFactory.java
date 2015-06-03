@@ -107,8 +107,8 @@ public final class WeightMapFactory {
       for(int adjX = x-patchRadius; adjX < x+patchRadius; adjX++) {
 
         // don't go outside map boundaries
-        if (adjX < 0 || adjX >= targetTerrain.length
-            || adjY < 0 || adjY >= targetTerrain[0].length) {
+        if (adjX < 0 || adjX >= targetTerrain[0].length
+            || adjY < 0 || adjY >= targetTerrain.length) {
           continue;
         }
 

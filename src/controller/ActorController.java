@@ -36,6 +36,9 @@ public abstract class ActorController implements Controller {
   private Physical grabbing;
   private Coordinate grabbingAt;
 
+  private Physical dropping;
+  private Coordinate droppingAt;
+
   private int beatsToRecover = 0;
 
   public final void startGrabbing(Physical grabbing, Coordinate grabbingAt) {
@@ -52,6 +55,19 @@ public abstract class ActorController implements Controller {
 
     this.grabbing = grabbing;
     this.grabbingAt = grabbingAt;
+
+  }
+
+  public final void startDropping(Physical dropping, Coordinate droppingAt) {
+    if (droppingAt.getSquare().isBlocked()) {
+      System.out.println("Tried to drop on a blocked square.");
+      return;
+    }
+
+    action = Action.DROPPING;
+
+    this.dropping = dropping;
+    this.droppingAt = droppingAt;
 
   }
 
@@ -114,6 +130,18 @@ public abstract class ActorController implements Controller {
         actor.getInventory().addItem(grabbing);
       } else {
         System.out.println("Tried to grab a physical that already moved.");
+      }
+
+      grabbing = null;
+      grabbingAt = null;
+      action = null;
+
+    } else if (action == Action.DROPPING) {
+
+      if (actor.getInventory().removeItem(dropping)){
+        droppingAt.getSquare().put(dropping);
+      } else {
+        System.out.println("Tried to drop a physical that actor didn't have.");
       }
 
       grabbing = null;

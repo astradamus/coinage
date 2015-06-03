@@ -64,6 +64,8 @@ public class SidePanel extends JPanel {
       drawInventoryList(g);
     } else if (inputMode == InputMode.GRAB) {
       drawGrabList(g);
+    } else if (inputMode == InputMode.DROP) {
+      drawDropList(g);
     } else {
       SquareDrawer.drawStringList(g, OPTIONS, new Color(93, 93, 93), SP_TEXT_SIZE, UNDERMAP_START_X,
           UNDERMAP_START_Y);
@@ -74,7 +76,8 @@ public class SidePanel extends JPanel {
   public static final List<String> OPTIONS = Arrays.asList(
       "L: Look Around.",
       "I: Inventory.",
-      "G: Grab."
+      "G: Grab.",
+      "D: Drop."
   );
 
 
@@ -131,6 +134,23 @@ public class SidePanel extends JPanel {
 
     // draw what we've found as a list under the world map
     SquareDrawer.drawPhysicalsList(g, allPhysicalsAt, SP_SQUARE_SIZE, UNDERMAP_START_X+SP_SQUARE_SIZE,
+        UNDERMAP_START_Y+SP_SQUARE_SIZE*2);
+
+  }
+
+  private void drawDropList(Graphics g) {
+
+    SquareDrawer.drawString(g,"(press ESC to resume)", new Color(93, 93, 93),UNDERMAP_START_X,
+        UNDERMAP_START_Y);
+    g.setFont(LARGE_TEXT);
+    SquareDrawer.drawString(g,"DROP WHAT?", new Color(150, 119, 0),UNDERMAP_START_X,
+        UNDERMAP_START_Y+SP_SQUARE_SIZE);
+
+    // determine what's there
+    List<Physical> heldItems = Game.getActivePlayer().getActor().getInventory().getItemsHeld();
+
+    // draw what we've found as a list under the world map
+    SquareDrawer.drawPhysicalsList(g, heldItems, SP_SQUARE_SIZE, UNDERMAP_START_X+SP_SQUARE_SIZE,
         UNDERMAP_START_Y+SP_SQUARE_SIZE*2);
 
   }

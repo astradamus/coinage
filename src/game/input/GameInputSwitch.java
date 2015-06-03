@@ -42,7 +42,9 @@ public class GameInputSwitch implements DirectionListener, ModeListener, SelectL
 
   @Override
   public void receiveMode(InputMode inputMode) {
-    if (this.inputMode != inputMode) {
+
+    if (this.inputMode != InputMode.EXPLORE) {
+      // if we are not exploring, accept ONLY "explore"
 
       if (inputMode == InputMode.EXPLORE) {
 
@@ -53,7 +55,10 @@ public class GameInputSwitch implements DirectionListener, ModeListener, SelectL
         this.inputMode = inputMode;
         Game.unpauseGame();
 
-      } else
+      }
+
+    } else { // if we ARE exploring, accept the following:
+
       if (inputMode == InputMode.LOOK) {
 
         cursorTarget = playerController.getCoordinate();
@@ -73,6 +78,17 @@ public class GameInputSwitch implements DirectionListener, ModeListener, SelectL
 
         listSelectIndex = 0;
         listSelectLength = cursorTarget.getSquare().getAll().size();
+
+        this.inputMode = inputMode;
+        Game.pauseGame();
+
+      } else
+      if (inputMode == InputMode.DROP) {
+
+        cursorTarget = Game.getActivePlayer().getCoordinate();
+
+        listSelectIndex = 0;
+        listSelectLength = playerController.getActor().getInventory().getItemsHeld().size();
 
         this.inputMode = inputMode;
         Game.pauseGame();
@@ -107,7 +123,7 @@ public class GameInputSwitch implements DirectionListener, ModeListener, SelectL
       }
 
     } else
-    if (inputMode == InputMode.GRAB && cursorMovingIn != null) {
+    if ((inputMode == InputMode.GRAB || inputMode == InputMode.DROP) && cursorMovingIn != null) {
 
       if (moveDelay > 0) {
 
@@ -140,7 +156,9 @@ public class GameInputSwitch implements DirectionListener, ModeListener, SelectL
 
     if (inputMode == InputMode.EXPLORE) {
       playerController.startMoving(direction);
-    } else if (inputMode == InputMode.LOOK || inputMode == InputMode.GRAB) {
+    } else if (inputMode == InputMode.LOOK
+        || inputMode == InputMode.GRAB
+        || inputMode == InputMode.DROP) {
       cursorMovingIn = direction;
     }
 
@@ -151,7 +169,9 @@ public class GameInputSwitch implements DirectionListener, ModeListener, SelectL
 
     if (inputMode == InputMode.EXPLORE) {
       playerController.stopMoving();
-    } else if (inputMode == InputMode.LOOK || inputMode == InputMode.GRAB) {
+    } else if (inputMode == InputMode.LOOK
+        || inputMode == InputMode.GRAB
+        || inputMode == InputMode.DROP) {
       cursorMovingIn = null;
     }
 
@@ -160,7 +180,8 @@ public class GameInputSwitch implements DirectionListener, ModeListener, SelectL
   @Override
   public void receiveSelectScroll(int deltaY) {
 
-    if (inputMode == InputMode.GRAB) {
+    if (inputMode == InputMode.GRAB
+        || inputMode == InputMode.DROP) {
 
       listSelectIndex = Utils.modulus(listSelectIndex + deltaY,listSelectLength);
 
@@ -172,9 +193,19 @@ public class GameInputSwitch implements DirectionListener, ModeListener, SelectL
   public void receiveSubmitSelection() {
 
     if (inputMode == InputMode.GRAB) {
+
       Physical target = cursorTarget.getSquare().getAll().get(listSelectIndex);
       playerController.startGrabbing(target,cursorTarget);
       receiveMode(InputMode.EXPLORE);
+
+    } else if (inputMode == InputMode.DROP) {
+
+      Physical dropping = playerController.getActor().getInventory().getItemsHeld()
+          .get(listSelectIndex);
+
+      playerController.startDropping(dropping,cursorTarget);
+      receiveMode(InputMode.EXPLORE);
+
     }
 
   }

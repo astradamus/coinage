@@ -35,7 +35,7 @@ public class PlayerController extends ActorController {
   }
 
 
-  public final Component_WorldMapRevealed getWorldMapRevealedComponenet() {
+  public final Component_WorldMapRevealed getWorldMapRevealedComponent() {
     return component_worldMapRevealed;
   }
 

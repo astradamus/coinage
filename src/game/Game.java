@@ -1,6 +1,7 @@
 package game;
 
 import controller.player.Component_WorldMapRevealed;
+import controller.player.PlayerController;
 import game.display.GameDisplay;
 import game.input.GameInputSwitch;
 import game.input.InputMode;
@@ -37,12 +38,8 @@ public class Game {
     return ACTIVE.INPUT_SWITCH.getInputMode();
   }
 
-  public static Component_WorldMapRevealed getActivePlayerWorldMapRevealedComponent() {
-    return ACTIVE.INPUT_SWITCH.getPlayerController().getWorldMapRevealedComponenet();
-  }
-
-  public static Coordinate getActivePlayerCoordinate() {
-    return ACTIVE.INPUT_SWITCH.getPlayerController().getCoordinate();
+  public static PlayerController getActivePlayer() {
+    return ACTIVE.INPUT_SWITCH.getPlayerController();
   }
 
   public static Coordinate getActiveCursorTarget() {

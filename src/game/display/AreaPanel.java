@@ -25,7 +25,7 @@ public class AreaPanel extends JPanel {
   public void paint(Graphics g) {
     super.paint(g);
 
-    Coordinate playerAt = Game.getActivePlayerCoordinate();
+    Coordinate playerAt = Game.getActivePlayer().getCoordinate();
 
     World world = Game.getActiveWorld();
 

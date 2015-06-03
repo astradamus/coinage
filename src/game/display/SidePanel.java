@@ -56,8 +56,11 @@ public class SidePanel extends JPanel {
     g.setFont(SMALL_TEXT);
 
     // if we're in look mode, draw the look list for the selected square
-    if (Game.getActiveInputMode() == InputMode.LOOK) {
+    InputMode inputMode = Game.getActiveInputMode();
+    if (inputMode == InputMode.LOOK) {
       drawLookList(g);
+    } else if(inputMode == InputMode.INVENTORY) {
+      drawInventoryList(g);
     } else {
       SquareDrawer.drawStringList(g, OPTIONS, new Color(93, 93, 93), SP_TEXT_SIZE, UNDERMAP_START_X,
           UNDERMAP_START_Y);
@@ -67,7 +70,7 @@ public class SidePanel extends JPanel {
 
   public static final List<String> OPTIONS = Arrays.asList(
       "L: Look Around.",
-      ""
+      "I: Inventory."
   );
 
 
@@ -91,9 +94,26 @@ public class SidePanel extends JPanel {
 
   }
 
+  private void drawInventoryList(Graphics g) {
+
+    SquareDrawer.drawString(g,"(press ESC to resume)", new Color(93, 93, 93),UNDERMAP_START_X,
+        UNDERMAP_START_Y);
+    g.setFont(LARGE_TEXT);
+    SquareDrawer.drawString(g,"YOU ARE CARRYING:", new Color(150, 119, 0),UNDERMAP_START_X,
+        UNDERMAP_START_Y+SP_SQUARE_SIZE);
+
+    // determine what's there
+    List<Physical> heldItems = Game.getActivePlayer().getActor().getInventory().getItemsHeld();
+
+    // draw what we've found as a list under the world map
+    SquareDrawer.drawPhysicalsList(g, heldItems, SP_SQUARE_SIZE, UNDERMAP_START_X+SP_SQUARE_SIZE,
+        UNDERMAP_START_Y+SP_SQUARE_SIZE*2);
+
+  }
+
   private void drawWorldMap(Graphics g) {
 
-    Coordinate playerAt = Game.getActivePlayerCoordinate();
+    Coordinate playerAt = Game.getActivePlayer().getCoordinate();
 
     // draw world map outline
     g.drawRect(29, 33, MAP_SIZE_PIXELS+1, MAP_SIZE_PIXELS+1);
@@ -118,7 +138,8 @@ public class SidePanel extends JPanel {
 
         Appearance appearance;
 
-        if (Game.getActivePlayerWorldMapRevealedComponent().getAreaIsRevealed(thisCoordinate)) {
+        if (Game.getActivePlayer().getWorldMapRevealedComponent().getAreaIsRevealed
+            (thisCoordinate)) {
 
           // if this square is revealed, use the biome's worldMapAppearance...
           appearance = thisCoordinate.area.getBiome().worldMapAppearance;
@@ -134,7 +155,7 @@ public class SidePanel extends JPanel {
         SquareDrawer.drawSquare(g, appearance, SP_SQUARE_SIZE, placeX, placeY);
 
         // draw a selection symbol over the area occupied by the player
-        if (Game.getActivePlayerCoordinate().area == thisCoordinate.area) {
+        if (Game.getActivePlayer().getCoordinate().area == thisCoordinate.area) {
           SquareDrawer.drawOval(g, GameDisplay.CURSOR, SP_SQUARE_SIZE, placeX, placeY);
         }
 

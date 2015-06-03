@@ -41,7 +41,7 @@ public class ThingTemplate {
   public static HashMap<String,ThingTemplate> LIB = new HashMap<>();
   static {
     LIB.put("UNDERGROWTH", new ThingTemplate(
-        "Undergrowth",
+        "undergrowth",
         new char[] {'#'},
         new Color[] {
             new Color(0, 49,0),
@@ -51,7 +51,7 @@ public class ThingTemplate {
         100.0, true, false
     ));
     LIB.put("TREE", new ThingTemplate(
-        "Tree",
+        "a tree",
         new char[] {916,8710},
         new Color[] {
             new Color(0, 117,0),
@@ -61,7 +61,7 @@ public class ThingTemplate {
         4500.0, true, true
     ));
     LIB.put("TREE_SWAMP", new ThingTemplate(
-        "Swamp Willow Tree",
+        "a swamp willow tree",
         new char[] {8593,8607,8670},
         new Color[] {
             new Color(0, 132, 43),
@@ -70,7 +70,7 @@ public class ThingTemplate {
         4500.0, true, true
     ));
     LIB.put("SHARKWEED", new ThingTemplate(
-        "Sharkweed",
+        "a sharkweed thicket",
         new char[] {8472,8706},
         new Color[] {
             new Color(83, 48, 93),
@@ -80,7 +80,7 @@ public class ThingTemplate {
         4500.0, true, true
     ));
     LIB.put("CACTUS", new ThingTemplate(
-        "Cactus",
+        "a cactus",
         new char[] {10013,8992},
         new Color[] {
             new Color(63, 165,0),
@@ -91,7 +91,7 @@ public class ThingTemplate {
     ));
 
     LIB.put("OOZE", new ThingTemplate(
-        "Putrid Ooze",
+        "putrid ooze",
         new char[] {8776},
         new Color[] {
             new Color(165, 58, 155),
@@ -102,7 +102,7 @@ public class ThingTemplate {
 
 
     LIB.put("BOULDER", new ThingTemplate(
-        "Boulder",
+        "a boulder",
         new char[] {1501,'o','0'},
         new Color[] {
             new Color(173, 173, 173),
@@ -113,7 +113,7 @@ public class ThingTemplate {
     ));
 
     LIB.put("DUNE", new ThingTemplate(
-        "Dune",
+        "a dune",
         new char[] {'~',8765},
         new Color[] {
             new Color(112, 115, 30),
@@ -124,7 +124,7 @@ public class ThingTemplate {
         4000.0, true, false
     ));
     LIB.put("BOULDER_SANDSTONE", new ThingTemplate(
-        "Sandstone Boulder",
+        "a sandstone boulder",
         new char[] {'a','o','0'},
         new Color[] {
             new Color(164, 84, 80),
@@ -137,7 +137,7 @@ public class ThingTemplate {
 
 
     LIB.put("STONE", new ThingTemplate(
-        "Stone",
+        "a small stone",
         new char[] {1566},
         new Color[] {
             new Color(94, 94, 94),

@@ -10,8 +10,6 @@ import world.Coordinate;
 import world.World;
 import world.WorldFactory;
 
-import java.awt.Point;
-
 /**
  *
  */

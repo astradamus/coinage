@@ -5,8 +5,6 @@ import game.Direction;
 import game.Game;
 import world.Coordinate;
 
-import java.awt.*;
-
 /**
  * Simple ActorController that wanders aimlessly, picking random directions in which to walk a
  * random distance, and chaining these walks together to form walks of random length.

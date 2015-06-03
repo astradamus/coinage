@@ -1,6 +1,5 @@
 package world;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import game.Physical;
 
 import java.util.ArrayList;

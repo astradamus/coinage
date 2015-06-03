@@ -2,11 +2,8 @@ package controller.player;
 
 import actor.Actor;
 import controller.ActorController;
-import game.Game;
 import utils.Dimension;
 import world.Coordinate;
-
-import java.awt.Point;
 
 /**
  * ActorController that enables movement of an Actor with keyboard input.

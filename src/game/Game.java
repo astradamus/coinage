@@ -5,11 +5,9 @@ import game.display.GameDisplay;
 import game.input.GameInputSwitch;
 import game.input.InputMode;
 import utils.Dimension;
-import world.Area;
 import world.Coordinate;
 import world.World;
 
-import java.awt.*;
 import java.awt.event.KeyListener;
 import java.util.List;
 import java.util.Random;

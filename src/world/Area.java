@@ -22,6 +22,9 @@ public final class Area {
   }
 
   public Square getSquare(Coordinate coordinate) {
+    if (coordinate.area != this) {
+      return null; // This coordinate does not point to a square in this area.
+    }
     return squares[coordinate.localY][coordinate.localX];
   }
 

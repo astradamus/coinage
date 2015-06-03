@@ -7,8 +7,9 @@ import java.awt.event.KeyEvent;
  */
 public enum InputMode {
 
-  EXPLORE (KeyEvent.VK_ESCAPE),
-  LOOK    (KeyEvent.VK_L);
+  EXPLORE   (KeyEvent.VK_ESCAPE),
+  LOOK      (KeyEvent.VK_L),
+  INVENTORY (KeyEvent.VK_I);
 
   final int hotkeyCode;
 

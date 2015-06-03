@@ -111,4 +111,8 @@ public abstract class ActorController implements Controller {
    */
   protected void onUpdateProcessed() { }
 
+  public Actor getActor() {
+    return actor;
+  }
+
 }

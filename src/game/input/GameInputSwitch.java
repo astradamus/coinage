@@ -43,61 +43,31 @@ public class GameInputSwitch implements DirectionListener, ModeListener, SelectL
   @Override
   public void receiveMode(InputMode inputMode) {
 
-    if (this.inputMode != InputMode.EXPLORE) {
-      // if we are not exploring, accept ONLY "explore"
+    if ((this.inputMode != InputMode.EXPLORE && inputMode == InputMode.EXPLORE)
+        || (this.inputMode == InputMode.EXPLORE && inputMode != InputMode.EXPLORE)) {
 
-      if (inputMode == InputMode.EXPLORE) {
+      this.inputMode = inputMode;
 
-        cursorTarget = null;
-        cursorMovingIn = null;
+      cursorMovingIn = null;
+      cursorTarget = inputMode.getInputSwitchCursorTarget();
+      listSelectLength = inputMode.getInputSwitchListSelectLength();
+
+      if (listSelectLength != null) {
+        listSelectIndex = 0;
+      } else {
         listSelectIndex = null;
-        listSelectLength = null;
-        this.inputMode = inputMode;
-        Game.unpauseGame();
-
       }
 
-    } else { // if we ARE exploring, accept the following:
-
-      if (inputMode == InputMode.LOOK) {
-
-        cursorTarget = playerController.getCoordinate();
-        this.inputMode = inputMode;
-        Game.pauseGame();
-
-      } else
-      if (inputMode == InputMode.INVENTORY) {
-
-        this.inputMode = inputMode;
-        Game.pauseGame();
-
-      } else
-      if (inputMode == InputMode.GRAB) {
-
-        cursorTarget = Game.getActivePlayer().getCoordinate();
-
-        listSelectIndex = 0;
-        listSelectLength = cursorTarget.getSquare().getAll().size();
-
-        this.inputMode = inputMode;
-        Game.pauseGame();
-
-      } else
-      if (inputMode == InputMode.DROP) {
-
-        cursorTarget = Game.getActivePlayer().getCoordinate();
-
-        listSelectIndex = 0;
-        listSelectLength = playerController.getActor().getInventory().getItemsHeld().size();
-
-        this.inputMode = inputMode;
-        Game.pauseGame();
-
+      if (inputMode.pauseEffect != null) {
+        if (inputMode.pauseEffect) {
+          Game.pauseGame();
+        } else {
+          Game.unpauseGame();
+        }
       }
 
     }
   }
-
 
 
 
@@ -140,8 +110,7 @@ public class GameInputSwitch implements DirectionListener, ModeListener, SelectL
         relativeY = Utils.clamp(relativeY,-1,+1);
 
         listSelectIndex = 0;
-        cursorTarget = Game.getActiveWorld().offsetCoordinateBySquares(playerAt,relativeX,
-            relativeY);
+        cursorTarget = Game.getActiveWorld().offsetCoordinateBySquares(playerAt,relativeX,relativeY);
 
         moveDelay = 2;
 

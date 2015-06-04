@@ -3,9 +3,7 @@ package game;
 import controller.player.PlayerController;
 import game.display.GameDisplay;
 import game.input.GameInputSwitch;
-import game.input.InputMode;
 import utils.Dimension;
-import world.Coordinate;
 import world.World;
 
 import java.awt.event.KeyListener;

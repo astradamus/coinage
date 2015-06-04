@@ -1,5 +1,6 @@
 package game;
 
+import controller.player.PlayerController;
 import game.display.GameDisplay;
 import game.input.GameInputSwitch;
 import utils.Dimension;
@@ -26,6 +27,18 @@ public class Game {
 
   public static Game getActive() {
     return ACTIVE;
+  }
+
+  public static World getActiveWorld() {
+    return ACTIVE.WORLD;
+  }
+
+  public static PlayerController getActivePlayer() {
+    return ACTIVE.INPUT_SWITCH.getPlayerController();
+  }
+
+  public static GameInputSwitch getActiveInputSwitch() {
+    return ACTIVE.INPUT_SWITCH;
   }
 
 
@@ -64,17 +77,15 @@ public class Game {
 
 
 
-  public final GameInputSwitch INPUT_SWITCH;
-  public final World WORLD;
-  public final GameControllers CONTROLLERS;
+  final GameInputSwitch INPUT_SWITCH;
+  final World WORLD;
+  final GameControllers CONTROLLERS;
 
-  public Game(World world, GameControllers gameControllers) {
+  public Game(World world, GameControllers gameControllers, GameInputSwitch gameInputSwitch) {
     this.WORLD = world;
     this.CONTROLLERS = gameControllers;
-    INPUT_SWITCH = new GameInputSwitch();
+    this.INPUT_SWITCH = gameInputSwitch;
   }
-
-
 
 
   void update() {

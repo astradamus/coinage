@@ -32,7 +32,7 @@ public class ActorTemplate {
   public static HashMap<String, ActorTemplate> LIB = new HashMap<>();
   static {
     LIB.put("HUMAN", new ActorTemplate(
-        "Human",
+        "a human",
         'H',
         new Color(129, 84, 51),
         new Color(40, 26, 16),
@@ -41,7 +41,7 @@ public class ActorTemplate {
         false
     ));
     LIB.put("DOG", new ActorTemplate(
-        "Dog",
+        "a dog",
         'd',
         new Color(139, 47, 16),
         new Color(32, 11, 4),
@@ -50,7 +50,7 @@ public class ActorTemplate {
         false
     ));
     LIB.put("CAT", new ActorTemplate(
-        "Cat",
+        "a cat",
         'c',
         new Color(130, 2, 0),
         new Color(37, 1, 0),

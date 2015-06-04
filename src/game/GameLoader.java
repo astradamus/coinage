@@ -4,11 +4,11 @@ import actor.Actor;
 import actor.ActorFactory;
 import controller.AnimalController;
 import controller.player.PlayerController;
+import game.input.GameInputSwitch;
 import utils.Dimension;
+import world.Coordinate;
 import world.World;
 import world.WorldFactory;
-
-import java.awt.Point;
 
 /**
  *
@@ -38,26 +38,26 @@ public class GameLoader {
       String id = (i%2 == 0) ? "DOG" : "CAT";
       Actor actor = ActorFactory.makeActor(id);
 
-      Point point = new Point(Game.RANDOM.nextInt(world.getGlobalSizeInSquares().getWidth()),
-          Game.RANDOM.nextInt(world.getGlobalSizeInSquares().getHeight()));
-      world.put(actor, point.x, point.y);
-      gameControllers.register(new AnimalController(actor, point));
+      Coordinate randomCoordinate = world.makeRandomCoordinate();
+      world.put(actor, randomCoordinate);
+      gameControllers.register(new AnimalController(actor, randomCoordinate));
     }
 
     Actor player = ActorFactory.makeActor("HUMAN");
-    int playerX = Game.RANDOM.nextInt(world.getGlobalSizeInSquares().getWidth());
-    int playerY = Game.RANDOM.nextInt(world.getGlobalSizeInSquares().getHeight());
-    Point playerLocation = new Point(playerX,playerY);
+    Coordinate randomCoordinate = world.makeRandomCoordinate();
 
-    world.put(player, playerX, playerY);
+    world.put(player, randomCoordinate);
 
     // assign the Human to a PlayerController and register it
-    PlayerController playerController =
-        new PlayerController(player,worldSizeInAreas,playerLocation);
-    gameControllers.setPlayerController(playerController);
+    PlayerController playerController = new PlayerController(player,worldSizeInAreas,randomCoordinate);
+    gameControllers.register(playerController);
+
+    // set up the GameInputSwitch
+    GameInputSwitch gameInputSwitch = new GameInputSwitch();
+    gameInputSwitch.setPlayerController(playerController);
 
     // produce Game instance and assign it to ACTIVE
-    Game.ACTIVE = new Game(world, gameControllers);
+    Game.ACTIVE = new Game(world, gameControllers, gameInputSwitch);
 
   }
 

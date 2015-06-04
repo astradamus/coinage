@@ -29,7 +29,7 @@ public class WorldFactory {
       }
     }
 
-    return new World(areas);
+    return new World(areas,areaSizeInSquares);
   }
 
 }

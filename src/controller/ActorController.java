@@ -3,10 +3,9 @@ package controller;
 import actor.Actor;
 import game.Direction;
 import game.Game;
+import game.Physical;
+import world.Coordinate;
 import world.World;
-
-import java.awt.*;
-
 
 /**
  *
@@ -14,27 +13,63 @@ import java.awt.*;
 public abstract class ActorController implements Controller {
 
   private final Actor actor;
-  private final Point globalCoordinate;
+  private Coordinate coordinate;
 
 
-  public ActorController(Actor actor, Point globalCoordinate) {
+  public ActorController(Actor actor, Coordinate coordinate) {
 
-    if (actor == null || globalCoordinate == null) {
+    if (actor == null || coordinate == null) {
       throw new IllegalArgumentException("Cannot instantiate ActorController without an actor and" +
-          " a globalCoordinate.");
+          " a coordinate.");
     }
 
     this.actor = actor;
-    this.globalCoordinate = globalCoordinate;
+    this.coordinate = coordinate;
 
   }
 
 
 
-
   private Action action;
   private Direction facing;
+
+  private Physical grabbing;
+  private Coordinate grabbingAt;
+
+  private Physical dropping;
+  private Coordinate droppingAt;
+
   private int beatsToRecover = 0;
+
+  public final void startGrabbing(Physical grabbing, Coordinate grabbingAt) {
+    if (actor.getInventory() == null) {
+      System.out.println("Tried to grab for an actor without an inventory.");
+      return;
+    }
+    if (grabbing.isImmovable()) {
+      System.out.println("Tried to grab an immovable physical.");
+      return;
+    }
+
+    action = Action.GRABBING;
+
+    this.grabbing = grabbing;
+    this.grabbingAt = grabbingAt;
+
+  }
+
+  public final void startDropping(Physical dropping, Coordinate droppingAt) {
+    if (droppingAt.getSquare().isBlocked()) {
+      System.out.println("Tried to drop on a blocked square.");
+      return;
+    }
+
+    action = Action.DROPPING;
+
+    this.dropping = dropping;
+    this.droppingAt = droppingAt;
+
+  }
 
   public final void startMoving(Direction movingIn) {
     action = Action.MOVING;
@@ -51,11 +86,11 @@ public abstract class ActorController implements Controller {
 
 
   /**
-   * @return A new Point containing this ActorController's globalCoordinate. Changes to this Point
+   * @return A new Point containing this ActorController's coordinate. Changes to this Point
    * are not reflected by this ActorController.
    */
-  public final Point getGlobalCoordinate() {
-    return new Point(globalCoordinate);
+  public final Coordinate getCoordinate() {
+    return coordinate;
   }
 
 
@@ -65,7 +100,7 @@ public abstract class ActorController implements Controller {
   @Override
   public final void onUpdate() {
 
-    World world = Game.getActive().WORLD;
+    World world = Game.getActiveWorld();
 
     if (beatsToRecover > 0) {
 
@@ -73,13 +108,12 @@ public abstract class ActorController implements Controller {
 
     } else if (action == Action.MOVING) {
 
-      int newX = globalCoordinate.x + facing.relativeX;
-      int newY = globalCoordinate.y + facing.relativeY;
+      Coordinate newCoordinate =
+          world.offsetCoordinateBySquares(coordinate, facing.relativeX, facing.relativeY);
 
+      if (newCoordinate != null && world.move(actor, coordinate, newCoordinate)) {
 
-      if (world.move(actor, globalCoordinate.x, globalCoordinate.y, newX, newY)) {
-
-        globalCoordinate.setLocation(newX, newY);
+        coordinate = newCoordinate;
         beatsToRecover = action.beatsToPerform;
 
         onMoveSucceeded();
@@ -90,7 +124,33 @@ public abstract class ActorController implements Controller {
 
       }
 
+    } else if (action == Action.GRABBING) {
+
+      if (grabbingAt.getSquare().pull(grabbing)) {
+        actor.getInventory().addItem(grabbing);
+      } else {
+        System.out.println("Tried to grab a physical that already moved.");
+      }
+
+      grabbing = null;
+      grabbingAt = null;
+      action = null;
+
+    } else if (action == Action.DROPPING) {
+
+      if (actor.getInventory().removeItem(dropping)){
+        droppingAt.getSquare().put(dropping);
+      } else {
+        System.out.println("Tried to drop a physical that actor didn't have.");
+      }
+
+      grabbing = null;
+      grabbingAt = null;
+      action = null;
+
     }
+
+
 
     onUpdateProcessed();
 
@@ -113,5 +173,9 @@ public abstract class ActorController implements Controller {
    * setup the actor for FUTURE updates, rather than the current one.
    */
   protected void onUpdateProcessed() { }
+
+  public Actor getActor() {
+    return actor;
+  }
 
 }

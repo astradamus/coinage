@@ -3,8 +3,7 @@ package controller;
 import actor.Actor;
 import game.Direction;
 import game.Game;
-
-import java.awt.*;
+import world.Coordinate;
 
 /**
  * Simple ActorController that wanders aimlessly, picking random directions in which to walk a
@@ -15,8 +14,8 @@ public class AnimalController extends ActorController {
   private int wanderChain = -1;
   private int waiting = -1;
 
-  public AnimalController(Actor actor, Point location) {
-    super(actor, location);
+  public AnimalController(Actor actor, Coordinate coordinate) {
+    super(actor, coordinate);
   }
 
 

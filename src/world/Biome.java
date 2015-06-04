@@ -13,8 +13,10 @@ public enum Biome {
     {
       terrainTypes = new TerrainType[] { TerrainType.GRASS,   TerrainType.DIRT,   TerrainType.ROCK};
       terrainWeights = new int[]                       {40,                  3,                  1};
-      featureIDs = new String[][] {               {"TREE"},           {"TREE"},        {"BOULDER"}};
-      featureFrequencies = new double[][] {         {0.02},             {0.01},            {0.002}};
+      featureIDs = new String[][] {               {"TREE"},           {"TREE"},          {"BOULDER",
+                                                                                          "STONE"}};
+      featureFrequencies = new double[][] {         {0.02},             {0.01},              {0.002,
+                                                                                           0.0001}};
     }
   },
   FOREST(4, new Appearance('F', new Color(28, 82, 0), new Color(3, 33, 0))){
@@ -22,17 +24,21 @@ public enum Biome {
       terrainTypes = new TerrainType[] { TerrainType.GRASS,   TerrainType.DIRT,   TerrainType.ROCK};
       terrainWeights = new int[]                       {32,                  2,                  1};
       featureIDs = new String[][] {                {"TREE",
-                                             "OVERGROWTH"},           {"TREE"},        {"BOULDER"}};
+                                            "UNDERGROWTH"},           {"TREE"},          {"BOULDER",
+                                                                                          "STONE"}};
       featureFrequencies = new double[][] {         {0.12,
-                                                     0.12},             {0.03},            {0.001}};
+                                                     0.12},             {0.03},              {0.001,
+                                                                                           0.0001}};
     }
   },
   CRAGS(2, new Appearance('C', new Color(205, 205, 205), new Color(85, 85, 85))){
     {
       terrainTypes = new TerrainType[] { TerrainType.GRASS,   TerrainType.DIRT,   TerrainType.ROCK};
       terrainWeights = new int[]                        {1,                  2,                 16};
-      featureIDs = new String[][] {               {"TREE"},           {"TREE"},        {"BOULDER"}};
-      featureFrequencies = new double[][] {        {0.004},            {0.002},             {0.15}};
+      featureIDs = new String[][] {               {"TREE"},           {"TREE"},          {"BOULDER",
+                                                                                          "STONE"}};
+      featureFrequencies = new double[][] {        {0.004},            {0.002},               {0.15,
+                                                                                             0.05}};
     }
   },
 
@@ -65,7 +71,7 @@ public enum Biome {
       terrainWeights = new int[]                         {2,                16};
       featureIDs = new String[][] {           {"TREE_SWAMP",
                                                "SHARKWEED"},      {"TREE_SWAMP",
-                                                                   "OVERGROWTH",
+                                                                  "UNDERGROWTH",
                                                                        "OOZE"}};
       featureFrequencies = new double[][] {            {0.02,
                                                       0.10},              {0.02,

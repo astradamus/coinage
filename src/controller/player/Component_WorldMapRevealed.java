@@ -1,6 +1,7 @@
 package controller.player;
 
 import utils.Dimension;
+import world.Coordinate;
 
 public class Component_WorldMapRevealed {
 
@@ -11,12 +12,12 @@ public class Component_WorldMapRevealed {
   }
 
 
-  public boolean getAreaIsRevealed(int worldX, int worldY) {
-    return worldMapRevealed[worldY][worldX];
+  public boolean getAreaIsRevealed(Coordinate coordinate) {
+    return worldMapRevealed[coordinate.worldY][coordinate.worldX];
   }
 
-  public void setAreaIsRevealed(int worldX, int worldY) {
-    worldMapRevealed[worldY][worldX] = true;
+  public void setAreaIsRevealed(Coordinate coordinate) {
+    worldMapRevealed[coordinate.worldY][coordinate.worldX] = true;
   }
 
 }

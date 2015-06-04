@@ -1,11 +1,7 @@
 package game.display;
 
-import game.Physical;
-
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.List;
-
 
 /**
  *
@@ -54,36 +50,10 @@ public class SquareDrawer {
     return (int) (drawY-squareSize*0.85);
   }
 
-  public static void drawPhysicalsList(Graphics g, List<Physical> physicals, int squareSize,
-                                       int drawX, int drawY) {
-
-    for (int i = 0; i < physicals.size(); i++) {
-
-      Physical physical = physicals.get(i);
-      drawString(g, physical.getName(), physical.getAppearance().getColor(),
-          drawX, drawY + i *squareSize);
-
-    }
-
-  }
-
   public static void drawString(Graphics g, String string, Color color, int drawX, int drawY) {
 
       g.setColor(color);
       g.drawString(string, drawX, drawY);
-
-  }
-
-  public static void drawStringList(Graphics g, List<String> strings, Color color, int squareSize,
-                                    int drawX, int drawY) {
-
-    for (int i = 0; i < strings.size(); i++) {
-
-      String string = strings.get(i);
-
-      drawString(g, string, color, drawX, drawY + i * squareSize);
-
-    }
 
   }
 

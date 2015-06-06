@@ -15,6 +15,8 @@ import java.util.List;
  */
 public class EventLog {
 
+  public static final double TOP_OR_BOTTOM_SWAP_LINE = 0.75;
+
 
   // VALUES IN MILLISECONDS
   public static final long EVENT_LIFESPAN = 5000;
@@ -77,8 +79,7 @@ public class EventLog {
     final int areaHeight = areaSizeInSquares.getHeight();
 
 
-
-    boolean drawingTop = (playerAt.localY > areaHeight /2);
+    boolean drawingTop = (playerAt.localY > areaHeight * TOP_OR_BOTTOM_SWAP_LINE);
 
     int linesTall = getLinesTall();
 

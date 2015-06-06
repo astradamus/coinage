@@ -4,6 +4,8 @@ import actor.Actor;
 import game.Direction;
 import game.Game;
 import game.Physical;
+import game.display.Event;
+import game.display.EventLog;
 import world.Coordinate;
 import world.World;
 
@@ -47,7 +49,7 @@ public abstract class ActorController implements Controller {
       return;
     }
     if (grabbing.isImmovable()) {
-      System.out.println("Tried to grab an immovable physical.");
+      EventLog.registerEvent(Event.INVALID_ACTION,"That can't be picked up.");
       return;
     }
 
@@ -60,7 +62,7 @@ public abstract class ActorController implements Controller {
 
   public final void startDropping(Physical dropping, Coordinate droppingAt) {
     if (droppingAt.getSquare().isBlocked()) {
-      System.out.println("Tried to drop on a blocked square.");
+      EventLog.registerEvent(Event.INVALID_ACTION, "There's no room there.");
       return;
     }
 
@@ -120,7 +122,7 @@ public abstract class ActorController implements Controller {
 
       } else {
 
-        onMoveFailed();
+        onActionFailed(Action.MOVING, "Can't move there.");
 
       }
 
@@ -129,7 +131,7 @@ public abstract class ActorController implements Controller {
       if (grabbingAt.getSquare().pull(grabbing)) {
         actor.getInventory().addItem(grabbing);
       } else {
-        System.out.println("Tried to grab a physical that already moved.");
+        onActionFailed(Action.GRABBING, "The thing you were reaching for is no longer there.");
       }
 
       grabbing = null;
@@ -141,7 +143,7 @@ public abstract class ActorController implements Controller {
       if (actor.getInventory().removeItem(dropping)){
         droppingAt.getSquare().put(dropping);
       } else {
-        System.out.println("Tried to drop a physical that actor didn't have.");
+        onActionFailed(Action.DROPPING,"You can't seem to find the thing you were trying to drop.");
       }
 
       grabbing = null;
@@ -162,10 +164,11 @@ public abstract class ActorController implements Controller {
   protected void onMoveSucceeded() { }
 
   /**
-   * Subclasses of ActorController should override this method to hook into failed movement,
-   * typically caused by colliding with a tree or some other blocking Physical.
+   * Subclasses of ActorController should override this method to hook into game updates. This
+   * function is run at the end of this ActorController's onUpdate() call, and should be used to
+   * setup the actor for FUTURE updates, rather than the current one.
    */
-  protected void onMoveFailed() { }
+  protected void onActionFailed(Action action, String message) { }
 
   /**
    * Subclasses of ActorController should override this method to hook into game updates. This

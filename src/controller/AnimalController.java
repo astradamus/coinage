@@ -67,8 +67,10 @@ public class AnimalController extends ActorController {
   }
 
   @Override
-  protected void onMoveFailed() {
-    stopWander();
+  protected void onActionFailed(Action action, String message) {
+    if (action == Action.MOVING) {
+      stopWander();
+    }
   }
 
   @Override

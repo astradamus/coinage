@@ -49,5 +49,8 @@ public class AreaPanel extends JPanel {
 
       }
     }
+
+    EventLog.drawOverlayed((Graphics2D)g);
+
   }
 }

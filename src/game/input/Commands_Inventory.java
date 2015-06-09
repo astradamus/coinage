@@ -6,6 +6,7 @@ import game.Physical;
 import world.Coordinate;
 
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 /**
  *
@@ -32,11 +33,11 @@ public enum Commands_Inventory implements Command {
 
       // Determine what we are dropping.
       Integer listSelectIndex = Game.getActiveInputSwitch().getPlayerSelection();
+      List<Physical> itemsHeld = playerController.getActor().getInventory().getItemsHeld();
 
-      if (listSelectIndex != null) {
+      if (listSelectIndex != null && !itemsHeld.isEmpty()) {
 
-        Physical placing = playerController.getActor().getInventory().getItemsHeld()
-            .get(listSelectIndex);
+        Physical placing = itemsHeld.get(listSelectIndex);
 
         // Prompt player to select a location and drop the item there.
         Game.getActiveInputSwitch().beginSelectingCoordinate(

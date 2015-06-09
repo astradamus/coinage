@@ -24,7 +24,7 @@ public class DisplayElement_SelectList extends DisplayElement_Text {
     Integer listSelectIndex = Game.getActiveInputSwitch().getPlayerSelection();
 
     // Draw a marker beside the selected coloredString in the list.
-    if (listSelectIndex != null) {
+    if (listSelectIndex != null && !texts.isEmpty()) {
       g.setColor(texts.get(listSelectIndex).getColor());
       int markerSize = getLineHeight();
       g.fillOval(originX, (int) (originY+(listSelectIndex+0.55)*markerSize),

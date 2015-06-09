@@ -4,7 +4,6 @@ import controller.player.PlayerController;
 import game.Direction;
 import game.Game;
 import game.Physical;
-import utils.Utils;
 import world.Coordinate;
 
 import java.awt.event.KeyListener;
@@ -14,121 +13,93 @@ import java.util.List;
 /**
  *
  */
-public class GameInputSwitch implements DirectionListener, ModeListener, SelectListener {
+public class GameInputSwitch implements DirectionListener, ListSelectionListener {
 
   private PlayerController playerController;
 
-  private final List<KeyListener> keyListeners;
+  private final List<KeyListener> keyListeners = new ArrayList<>();
 
-  private Coordinate cursorTarget = null;
-  private Direction cursorMovingIn = null;
 
-  private Integer listSelectIndex = null;
-  private Integer listSelectLength = null;
+  private Selector<Coordinate> coordinateSelector = null;
+  private Selector<Physical> physicalSelector = null;
 
-  private InputMode inputMode = InputMode.EXPLORE;
+  private GameMode gameMode = GameMode.EXPLORE;
+
+  private TargetCursor targetCursor = null;
+
+
 
 
   public GameInputSwitch() {
 
-    keyListeners = new ArrayList<>();
-    keyListeners.add(new KeyboardDirectionInterpreter(this));
-    keyListeners.add(new KeyboardInputModeInterpreter(this));
-    keyListeners.add(new KeyboardSelectInterpreter(this));
+    keyListeners.add(new NumpadDirectionInterpreter(this));
+    keyListeners.add(new ModeCommandInterpreter());
+    keyListeners.add(new ListSelectInterpreter(this));
 
   }
 
 
 
-  @Override
-  public void receiveMode(InputMode inputMode) {
-
-    if ((this.inputMode != InputMode.EXPLORE && inputMode == InputMode.EXPLORE)
-        || (this.inputMode == InputMode.EXPLORE && inputMode != InputMode.EXPLORE)) {
-
-      this.inputMode = inputMode;
-
-      cursorMovingIn = null;
-      cursorTarget = inputMode.getInputSwitchCursorTarget();
-      listSelectLength = inputMode.getInputSwitchListSelectLength();
-
-      if (listSelectLength != null) {
-        listSelectIndex = 0;
-      } else {
-        listSelectIndex = null;
-      }
-
-      if (inputMode.pauseEffect != null) {
-        if (inputMode.pauseEffect) {
-          Game.pauseGame();
-        } else {
-          Game.unpauseGame();
-        }
-      }
-
-    }
-  }
-
-
-
-  private int moveDelay = 0;
   public void onUpdate() {
 
-    if (inputMode == InputMode.LOOK && cursorMovingIn != null) {
-
-      if (moveDelay > 0) {
-        moveDelay--;
-      } else {
-
-        Coordinate newCoordinate = Game.getActiveWorld().offsetCoordinateBySquares(cursorTarget,
-            cursorMovingIn.relativeX, cursorMovingIn.relativeY);
-
-        if (newCoordinate != null) {
-
-          cursorTarget = newCoordinate;
-          moveDelay = 2;
-
-        }
-
-      }
-
-    } else
-    if ((inputMode == InputMode.GRAB || inputMode == InputMode.DROP) && cursorMovingIn != null) {
-
-      if (moveDelay > 0) {
-
-        moveDelay--;
-
-      } else {
-
-        Coordinate playerAt = Game.getActivePlayer().getCoordinate();
-
-        int relativeX = (cursorTarget.globalX - playerAt.globalX) + cursorMovingIn.relativeX;
-        int relativeY = (cursorTarget.globalY - playerAt.globalY) + cursorMovingIn.relativeY;
-
-        relativeX = Utils.clamp(relativeX,-1,+1);
-        relativeY = Utils.clamp(relativeY,-1,+1);
-
-        listSelectIndex = 0;
-        cursorTarget = Game.getActiveWorld().offsetCoordinateBySquares(playerAt,relativeX,relativeY);
-
-        moveDelay = 2;
-
-      }
+    if (targetCursor != null) {
+      targetCursor.onUpdate();
     }
+
 
   }
 
+  public String getCurrentPrompt() {
+    if (coordinateSelector != null) return coordinateSelector.getPrompt();
+    if (physicalSelector != null) return physicalSelector.getPrompt();
+    return gameMode.getPrompt();
+  }
+
+  private void clearSelectsAndCursor() {
+    coordinateSelector = null;
+    physicalSelector = null;
+    targetCursor = null;
+  }
+
+  public void beginSelectingCoordinate(Selector<Coordinate> coordinateSelector) {
+    clearSelectsAndCursor();
+
+    this.coordinateSelector = coordinateSelector;
+    targetCursor = TargetCursor.makeSquareTargeter(coordinateSelector.getSelectOrigin(),
+        coordinateSelector.getSelectRange());
+
+  }
+
+  public void beginSelectingPhysical(Selector<Physical> physicalSelector) {
+    clearSelectsAndCursor();
+
+    this.physicalSelector = physicalSelector;
+    targetCursor = TargetCursor.makeSquareAndListTargeter(physicalSelector.getSelectOrigin(),
+        physicalSelector.getSelectRange());
+
+  }
+
+
+  void enterMode(GameMode mode) {
+    clearSelectsAndCursor();
+    mode.onEnter();
+
+    if (mode == GameMode.EXPLORE) {
+      Game.unpauseGame();
+    } else {
+      Game.pauseGame();
+    }
+
+    this.gameMode = mode;
+  }
 
   @Override
   public void receiveDirection(Direction direction) {
 
-    if (inputMode == InputMode.EXPLORE) {
+    if (targetCursor == null) {
       playerController.startMoving(direction);
-    } else if (inputMode == InputMode.LOOK
-        || inputMode == InputMode.GRAB
-        || inputMode == InputMode.DROP) {
-      cursorMovingIn = direction;
+    } else {
+      targetCursor.setCursorMovingIn(direction);
     }
 
   }
@@ -136,12 +107,10 @@ public class GameInputSwitch implements DirectionListener, ModeListener, SelectL
   @Override
   public void receiveDirectionsCleared() {
 
-    if (inputMode == InputMode.EXPLORE) {
+    if (targetCursor == null) {
       playerController.stopMoving();
-    } else if (inputMode == InputMode.LOOK
-        || inputMode == InputMode.GRAB
-        || inputMode == InputMode.DROP) {
-      cursorMovingIn = null;
+    } else {
+      targetCursor.setCursorMovingIn(null);
     }
 
   }
@@ -149,55 +118,61 @@ public class GameInputSwitch implements DirectionListener, ModeListener, SelectL
   @Override
   public void receiveSelectScroll(int deltaY) {
 
-    if (inputMode == InputMode.GRAB
-        || inputMode == InputMode.DROP) {
-
-      listSelectIndex = Utils.modulus(listSelectIndex + deltaY,listSelectLength);
-
+    if (targetCursor != null) {
+      targetCursor.scrollSelection(deltaY);
     }
 
   }
+
 
   @Override
   public void receiveSubmitSelection() {
 
-    if (inputMode == InputMode.GRAB) {
-
-      Physical target = cursorTarget.getSquare().getAll().get(listSelectIndex);
-      playerController.startGrabbing(target,cursorTarget);
-      receiveMode(InputMode.EXPLORE);
-
-    } else if (inputMode == InputMode.DROP) {
-
-      Physical dropping = playerController.getActor().getInventory().getItemsHeld()
-          .get(listSelectIndex);
-
-      playerController.startDropping(dropping,cursorTarget);
-      receiveMode(InputMode.EXPLORE);
-
+    if (coordinateSelector != null) {
+      coordinateSelector.execute(targetCursor.getTarget());
+      coordinateSelector = null;
+    }
+    else if (physicalSelector != null) {
+      physicalSelector.execute(targetCursor.getTarget().getSquare().getAll()
+          .get(targetCursor.getListSelectIndex()));
+      physicalSelector = null;
     }
 
   }
+
 
 
   public void setPlayerController(PlayerController playerController) {
     this.playerController = playerController;
   }
 
+  public void setTargetCursor(TargetCursor targetCursor) {
+    this.targetCursor = targetCursor;
+  }
+
+
+
+  public Coordinate getPlayerTarget() {
+    if (targetCursor != null) {
+      return targetCursor.getTarget();
+    }
+    return null;
+  }
+
+  public Integer getPlayerSelection() {
+    if (targetCursor != null) {
+      return targetCursor.getListSelectIndex();
+    }
+    return null;
+  }
+
+
   public PlayerController getPlayerController() {
     return playerController;
   }
 
-  public InputMode getInputMode() {
-    return inputMode;
-  }
-
-  public Coordinate getCursorTarget() {
-    return cursorTarget;
-  }
-
-  public Integer getListSelectIndex() {
-    return listSelectIndex;
+  public GameMode getGameMode() {
+    return gameMode;
   }
 
   public List<KeyListener> getKeyListeners() {

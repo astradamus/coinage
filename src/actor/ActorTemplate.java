@@ -1,5 +1,7 @@
 package actor;
 
+import game.display.Appearance;
+
 import java.awt.*;
 import java.util.HashMap;
 
@@ -10,21 +12,17 @@ import java.util.HashMap;
 public class ActorTemplate {
 
   String name;
-  char appearance;
-  Color color;
-  Color bgColor;
+  Appearance appearance;
   Double weight;
-  boolean isImmobile;
+  boolean isImmovable;
   boolean isBlocking;
 
   public ActorTemplate(String name, char appearance, Color color, Color bgColor, Double weight,
-                       boolean isImmobile, boolean isBlocking) {
+                       boolean isImmovable, boolean isBlocking) {
     this.name = name;
-    this.appearance = appearance;
-    this.color = color;
-    this.bgColor = bgColor;
+    this.appearance = new Appearance(appearance,color,bgColor);
     this.weight = weight;
-    this.isImmobile = isImmobile;
+    this.isImmovable = isImmovable;
     this.isBlocking = isBlocking;
   }
 

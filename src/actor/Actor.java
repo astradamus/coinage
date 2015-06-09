@@ -5,8 +5,6 @@ import game.Game;
 import game.Physical;
 import game.display.Appearance;
 
-import java.awt.*;
-
 /**
  * Actors are subjects. They act upon Things and other Actors in the world. The Actor class only
  * handles the physical state of the Actor. Behavior and actions are handled by a Controller.
@@ -24,18 +22,17 @@ public class Actor implements Physical {
   Actor(ActorTemplate aT) {
 
     name = aT.name;
-
-    char character = aT.appearance;
-    Color color = aT.color;
-    Color bgColor = aT.bgColor;
-    this.appearance = new Appearance(character,color,bgColor);
-
+    this.appearance = aT.appearance;
     weight = aT.weight;
     isBlocking = aT.isBlocking;
 
     inventory = new Inventory();
 
   }
+
+
+
+
 
   @Override
   public String getName() {

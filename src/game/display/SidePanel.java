@@ -1,13 +1,16 @@
 package game.display;
 
 import game.Game;
-import game.input.InputMode;
 import game.Physical;
+import game.input.Command;
+import game.input.GameInputSwitch;
+import game.input.TargetCursor;
 import world.Coordinate;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -57,19 +60,29 @@ public class SidePanel extends JPanel {
     int pixelsDown = (MAP_SIZE_SQUARES+SP_BORDER_SQUARES_Y)*SP_SQUARE_SIZE;
 
     // if we're in look mode, draw the look list for the selected square
-    InputMode inputMode = Game.getActiveInputSwitch().getInputMode();
+    GameInputSwitch activeInputSwitch = Game.getActiveInputSwitch();
+
+    List<String> controlTexts = activeInputSwitch.getGameMode().getModeCommands().stream().map
+        (Command::getControlText).collect(Collectors.toList());
 
     drawPanelText(g, pixelsDown,
-        inputMode.sidePanelControlTexts,
-        inputMode.sidePanelHeaderTexts,
-        inputMode.getSidePanelPhysicals());
+        controlTexts,
+        activeInputSwitch.getCurrentPrompt(),
+        activeInputSwitch.getGameMode().getSidePanelPhysicals());
 
   }
 
   private int drawPanelText(Graphics g, int pixelsDown, List<String> controls,
-                            List<String> headers, List<Physical> physicals) {
+                            String header, List<Physical> physicals) {
 
     if (controls != null) {
+
+      if (Game.getActiveInputSwitch().getPlayerSelection() != null) {
+        controls.add("");
+        controls.add("(press -/+ to scroll)");
+        controls.add("(press ENTER to confirm)");
+      }
+
       for (int i = 0; i < controls.size(); i++) {
         String control = controls.get(i);
 
@@ -85,10 +98,8 @@ public class SidePanel extends JPanel {
 
     g.setFont(LARGE_TEXT);
 
-    if (headers != null) {
-      for (String header : headers) {
-        pixelsDown += drawHeader(g, pixelsDown, header);
-      }
+    if (header != null) {
+      pixelsDown += drawHeader(g, pixelsDown, header);
     }
 
     if (physicals != null) {
@@ -132,10 +143,11 @@ public class SidePanel extends JPanel {
       g.drawString(physical.getName(), SP_LEFT_EDGE+SP_SQUARE_SIZE, adjustedY);
 
       // Draw a marker beside the selected physical in the list.
-      Integer listSelectIndex = Game.getActiveInputSwitch().getListSelectIndex();
+      Integer listSelectIndex = Game.getActiveInputSwitch().getPlayerSelection();
+
       if (listSelectIndex != null && listSelectIndex == i) {
         int markerWidth = SP_SQUARE_SIZE / 2;
-        g.fillOval(SP_LEFT_EDGE,adjustedY-SP_TEXT_SIZE, markerWidth, markerWidth/2);
+        g.fillOval(SP_LEFT_EDGE, adjustedY - SP_TEXT_SIZE, markerWidth, markerWidth / 2);
       }
 
     }

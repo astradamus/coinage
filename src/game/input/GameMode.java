@@ -1,7 +1,8 @@
 package game.input;
 
 import game.Game;
-import game.Physical;
+import game.display.DisplayElement;
+import game.display.DisplayElement_Text;
 import world.Coordinate;
 
 import java.util.Arrays;
@@ -37,8 +38,13 @@ public enum GameMode {
     }
 
     @Override
-    public List<Physical> getSidePanelPhysicals() {
-      return null;
+    public List<DisplayElement> getDisplayElements() {
+
+      return Arrays.asList(
+          DisplayElement.MINIMAP,
+          DisplayElement.makeControlsList(getModeCommands(), 0)
+      );
+
     }
 
   },
@@ -66,8 +72,15 @@ public enum GameMode {
     }
 
     @Override
-    public List<Physical> getSidePanelPhysicals() {
-      return Game.getActiveInputSwitch().getPlayerTarget().getSquare().getAll();
+    public List<DisplayElement> getDisplayElements() {
+      return Arrays.asList(
+          DisplayElement.MINIMAP,
+          DisplayElement.CONTROL_ESCAPE,
+          DisplayElement.makeCurrentPrompt(),
+          DisplayElement.makePhysicalsList(Game.getActiveInputSwitch()
+                                              .getPlayerTarget().getSquare().getAll(),false),
+          DisplayElement.makeControlsList(getModeCommands(), 1)
+      );
     }
 
   },
@@ -95,9 +108,21 @@ public enum GameMode {
     }
 
     @Override
-    public List<Physical> getSidePanelPhysicals() {
+    public List<DisplayElement> getDisplayElements() {
+
+      // If there is a target, create an element for the physicals there.
       Coordinate playerTarget = Game.getActiveInputSwitch().getPlayerTarget();
-      return (playerTarget == null) ? null : playerTarget.getSquare().getAll();
+      DisplayElement_Text physicalsAtTarget = (playerTarget == null) ? null :
+          DisplayElement.makePhysicalsList(playerTarget.getSquare().getAll(),true);
+
+      return Arrays.asList(
+          DisplayElement.MINIMAP,
+          DisplayElement.CONTROL_ESCAPE,
+          DisplayElement.makeCurrentPrompt(),
+          physicalsAtTarget,
+          DisplayElement.makeControlsList(getModeCommands(), 1)
+      );
+
     }
 
   },
@@ -126,18 +151,28 @@ public enum GameMode {
     }
 
     @Override
-    public List<Physical> getSidePanelPhysicals() {
-      return Game.getActivePlayer().getActor().getInventory().getItemsHeld();
+    public List<DisplayElement> getDisplayElements() {
+
+      DisplayElement_Text itemsHeld =
+          DisplayElement.makePhysicalsList(Game.getActivePlayer().getActor().getInventory().getItemsHeld(),true);
+
+      return Arrays.asList(
+          DisplayElement.MINIMAP,
+          DisplayElement.CONTROL_ESCAPE,
+          DisplayElement.makeCurrentPrompt(),
+          itemsHeld,
+          DisplayElement.makeControlsList(getModeCommands(), 1)
+      );
+
     }
 
   };
 
 
-
   public abstract void onEnter();
-  public abstract String getPrompt();
+  abstract String getPrompt();
   public abstract List<Command> getModeCommands();
 
-  public abstract List<Physical> getSidePanelPhysicals();
+  public abstract List<DisplayElement> getDisplayElements();
 
 }

@@ -17,12 +17,12 @@ public enum Commands_Inventory implements Command {
   DROP {
     @Override
     public int getHotKeyCode() {
-      return KeyEvent.VK_D;
+      return KeyEvent.VK_P;
     }
 
     @Override
     public String getControlText() {
-      return "D: Drop item.";
+      return "P: Place item.";
     }
 
     @Override
@@ -35,16 +35,16 @@ public enum Commands_Inventory implements Command {
 
       if (listSelectIndex != null) {
 
-        Physical dropping = playerController.getActor().getInventory().getItemsHeld()
+        Physical placing = playerController.getActor().getInventory().getItemsHeld()
             .get(listSelectIndex);
 
         // Prompt player to select a location and drop the item there.
         Game.getActiveInputSwitch().beginSelectingCoordinate(
-            new Selector<>("DROP WHERE?", playerController.getCoordinate(), 1,
+            new Selector<>("PLACE WHERE?", playerController.getCoordinate(), 1,
                 new SelectCallback<Coordinate>() {
                   @Override
                   public void execute(Coordinate selected) {
-                    playerController.startDropping(dropping, selected);
+                    playerController.startPlacing(placing, selected);
                     Game.getActiveInputSwitch().enterMode(GameMode.EXPLORE);
                   }
                 }

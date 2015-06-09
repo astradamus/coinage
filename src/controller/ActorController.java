@@ -35,41 +35,41 @@ public abstract class ActorController implements Controller {
   private Action action;
   private Direction facing;
 
-  private Physical grabbing;
-  private Coordinate grabbingAt;
+  private Physical pickingUp;
+  private Coordinate pickingUpAt;
 
   private Physical dropping;
   private Coordinate droppingAt;
 
   private int beatsToRecover = 0;
 
-  public final void startGrabbing(Physical grabbing, Coordinate grabbingAt) {
+  public final void startPickingUp(Physical pickingUp, Coordinate pickingUpAt) {
     if (actor.getInventory() == null) {
       System.out.println("Tried to grab for an actor without an inventory.");
       return;
     }
-    if (grabbing.isImmovable()) {
+    if (pickingUp.isImmovable()) {
       EventLog.registerEvent(Event.INVALID_ACTION,"That can't be picked up.");
       return;
     }
 
-    action = Action.GRABBING;
+    action = Action.PICKING_UP;
 
-    this.grabbing = grabbing;
-    this.grabbingAt = grabbingAt;
+    this.pickingUp = pickingUp;
+    this.pickingUpAt = pickingUpAt;
 
   }
 
-  public final void startDropping(Physical dropping, Coordinate droppingAt) {
-    if (droppingAt.getSquare().isBlocked()) {
+  public final void startPlacing(Physical placing, Coordinate placingAt) {
+    if (placingAt.getSquare().isBlocked()) {
       EventLog.registerEvent(Event.INVALID_ACTION, "There's no room there.");
       return;
     }
 
-    action = Action.DROPPING;
+    action = Action.PLACING;
 
-    this.dropping = dropping;
-    this.droppingAt = droppingAt;
+    this.dropping = placing;
+    this.droppingAt = placingAt;
 
   }
 
@@ -86,11 +86,6 @@ public abstract class ActorController implements Controller {
     return action;
   }
 
-
-  /**
-   * @return A new Point containing this ActorController's coordinate. Changes to this Point
-   * are not reflected by this ActorController.
-   */
   public final Coordinate getCoordinate() {
     return coordinate;
   }
@@ -126,28 +121,28 @@ public abstract class ActorController implements Controller {
 
       }
 
-    } else if (action == Action.GRABBING) {
+    } else if (action == Action.PICKING_UP) {
 
-      if (grabbingAt.getSquare().pull(grabbing)) {
-        actor.getInventory().addItem(grabbing);
+      if (pickingUpAt.getSquare().pull(pickingUp)) {
+        actor.getInventory().addItem(pickingUp);
       } else {
-        onActionFailed(Action.GRABBING, "The thing you were reaching for is no longer there.");
+        onActionFailed(Action.PICKING_UP, "The thing you were reaching for is no longer there.");
       }
 
-      grabbing = null;
-      grabbingAt = null;
+      pickingUp = null;
+      pickingUpAt = null;
       action = null;
 
-    } else if (action == Action.DROPPING) {
+    } else if (action == Action.PLACING) {
 
       if (actor.getInventory().removeItem(dropping)){
         droppingAt.getSquare().put(dropping);
       } else {
-        onActionFailed(Action.DROPPING,"You can't seem to find the thing you were trying to drop.");
+        onActionFailed(Action.PLACING,"You can't seem to find the thing you were trying to drop.");
       }
 
-      grabbing = null;
-      grabbingAt = null;
+      pickingUp = null;
+      pickingUpAt = null;
       action = null;
 
     }

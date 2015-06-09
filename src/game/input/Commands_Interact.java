@@ -3,7 +3,6 @@ package game.input;
 import controller.player.PlayerController;
 import game.Game;
 import game.Physical;
-import world.Coordinate;
 
 import java.awt.event.KeyEvent;
 
@@ -37,7 +36,7 @@ public enum Commands_Interact implements Command {
               new SelectCallback<Physical>() {
                 @Override
                 public void execute(Physical selected) {
-                  playerController.startGrabbing(selected, Game.getActiveInputSwitch().getPlayerTarget());
+                  playerController.startPickingUp(selected, Game.getActiveInputSwitch().getPlayerTarget());
                   Game.getActiveInputSwitch().enterMode(GameMode.EXPLORE);
                 }
               }

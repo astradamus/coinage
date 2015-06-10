@@ -1,9 +1,15 @@
 package actor;
 
+import actor.attribute.Attribute;
+import actor.attribute.AttributeRange;
+import actor.attribute.Rank;
 import actor.inventory.Inventory;
 import game.Game;
 import game.Physical;
 import game.display.Appearance;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Actors are subjects. They act upon Things and other Actors in the world. The Actor class only
@@ -15,24 +21,29 @@ public class Actor implements Physical {
   private final Appearance appearance;
   private final Double weight;
 
-  private final boolean isBlocking;
-
+  private final Map<Attribute, Rank> attributes;
   private final Inventory inventory;
 
   Actor(ActorTemplate aT) {
 
     name = aT.name;
-    this.appearance = aT.appearance;
+    appearance = aT.appearance;
     weight = aT.weight;
-    isBlocking = aT.isBlocking;
+
+    attributes = new HashMap<>();
+
+    for (Attribute attribute : Attribute.values()) {
+      AttributeRange attributeRange = aT.baseAttributeRanges.get(attribute.ordinal());
+      attributes.put(attribute, attributeRange.getRandomWithin(Game.RANDOM));
+    }
 
     inventory = new Inventory();
 
   }
 
-
-
-
+  public Rank readAttributeLevel(Attribute attribute) {
+    return attributes.get(attribute);
+  }
 
   @Override
   public String getName() {
@@ -61,7 +72,7 @@ public class Actor implements Physical {
 
   @Override
   public boolean isBlocking() {
-    return isBlocking;
+    return true;
   }
 
   public Inventory getInventory() {

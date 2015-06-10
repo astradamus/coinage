@@ -1,13 +1,10 @@
 package game;
 
-import actor.ActorFactory;
 import controller.player.PlayerController;
 import game.display.GameDisplay;
 import game.input.GameInputSwitch;
-import game.input.TargetCursor;
 import thing.ThingFactory;
 import utils.Dimension;
-import world.Coordinate;
 import world.World;
 
 import java.awt.event.KeyListener;

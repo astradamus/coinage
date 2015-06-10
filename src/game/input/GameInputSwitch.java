@@ -1,5 +1,7 @@
 package game.input;
 
+import actor.Actor;
+import controller.action.Moving;
 import controller.player.PlayerController;
 import game.Direction;
 import game.Game;
@@ -97,7 +99,8 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
   public void receiveDirection(Direction direction) {
 
     if (targetCursor == null) {
-      playerController.startMoving(direction);
+      Actor playerActor = playerController.getActor();
+      playerController.attemptAction(new Moving(playerActor, direction));
     } else {
       targetCursor.setCursorMovingIn(direction);
     }
@@ -108,7 +111,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
   public void receiveDirectionsCleared() {
 
     if (targetCursor == null) {
-      playerController.stopMoving();
+      playerController.attemptAction(null);
     } else {
       targetCursor.setCursorMovingIn(null);
     }

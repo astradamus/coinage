@@ -1,9 +1,11 @@
 package controller;
 
+import controller.action.Action;
 import actor.Actor;
+import controller.action.ActionFlag;
+import controller.action.Moving;
 import game.Direction;
 import game.Game;
-import world.Coordinate;
 
 /**
  * Simple ActorController that wanders aimlessly, picking random directions in which to walk a
@@ -14,23 +16,21 @@ public class AnimalController extends ActorController {
   private int wanderChain = -1;
   private int waiting = -1;
 
-  public AnimalController(Actor actor, Coordinate coordinate) {
-    super(actor, coordinate);
+  public AnimalController(Actor actor) {
+    super(actor);
   }
 
 
   private void startWander() {
-    startMoving(Direction.values()[Game.RANDOM.nextInt(Direction.values().length)]);
+    Direction direction = Direction.values()[Game.RANDOM.nextInt(Direction.values().length)];
+    attemptAction(new Moving(getActor(), direction));
   }
 
   private void stopWander() {
-    stopMoving();
+    attemptAction(null);
     wanderChain = -1;
     waiting = Game.RANDOM.nextInt(40);
   }
-
-
-
 
 
   @Override
@@ -55,27 +55,28 @@ public class AnimalController extends ActorController {
   }
 
   @Override
-  protected void onMoveSucceeded() {
-    if (Game.RANDOM.nextDouble() < 0.15) {
-      if (wanderChain > 0) {
-        wanderChain--;
-        startWander();
-      } else {
+  public void onActionExecuted(Action action) {
+
+    if (action.getClass() == Moving.class) {
+
+      if (action.hasFlag(ActionFlag.SUCCEEDED)) {
+
+        if (Game.RANDOM.nextDouble() < 0.15) {
+          if (wanderChain > 0) {
+            wanderChain--;
+            startWander();
+          } else {
+            stopWander();
+          }
+        }
+
+      }
+      else if (action.hasFlag(ActionFlag.FAILED)) {
         stopWander();
       }
-    }
-  }
 
-  @Override
-  protected void onActionFailed(Action action, String message) {
-    if (action == Action.MOVING) {
-      stopWander();
     }
-  }
 
-  @Override
-  public int getRolledInitiative() {
-    return 0;
   }
 
 }

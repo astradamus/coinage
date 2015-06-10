@@ -1,5 +1,7 @@
 package game.input;
 
+import controller.action.ActionTarget;
+import controller.action.PickingUp;
 import controller.player.PlayerController;
 import game.Game;
 import game.Physical;
@@ -32,12 +34,19 @@ public enum Commands_Interact implements Command {
 
       // Have the player choose what to pick up, then start picking it up.
       Game.getActiveInputSwitch().beginSelectingPhysical(
-          new Selector<>("PICK UP WHAT?", playerController.getCoordinate(), 1,
+          new Selector<>("PICK UP WHAT?", playerController.getActor().getCoordinate(), 1,
               new SelectCallback<Physical>() {
                 @Override
                 public void execute(Physical selected) {
-                  playerController.startPickingUp(selected, Game.getActiveInputSwitch().getPlayerTarget());
+
+                  playerController.attemptAction(
+                      new PickingUp(playerController.getActor(),
+                          new ActionTarget(selected,Game.getActiveInputSwitch().getPlayerTarget())
+                      )
+                  );
+
                   Game.getActiveInputSwitch().enterMode(GameMode.EXPLORE);
+
                 }
               }
           )

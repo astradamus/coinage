@@ -33,7 +33,7 @@ public class DisplayElement_MiniMap implements DisplayElement {
   @Override
   public void drawTo(Graphics g, int originX, int originY, int width) {
 
-    Coordinate playerAt = Game.getActivePlayer().getCoordinate();
+    Coordinate playerAt = Game.getActivePlayer().getActor().getCoordinate();
 
     // draw world map outline
     g.drawRect(originX, originY+4, FULL_SIZE_IN_PIXELS, FULL_SIZE_IN_PIXELS);
@@ -70,7 +70,7 @@ public class DisplayElement_MiniMap implements DisplayElement {
         SquareDrawer.drawSquare(g, appearance, SQUARE_SIZE, placeX, placeY);
 
         // draw a selection symbol over the area occupied by the player
-        if (Game.getActivePlayer().getCoordinate().area == thisCoordinate.area) {
+        if (playerAt.area == thisCoordinate.area) {
           SquareDrawer.drawOval(g, GameDisplay.CURSOR, SQUARE_SIZE, placeX, placeY);
         }
 

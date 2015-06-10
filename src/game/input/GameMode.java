@@ -56,7 +56,7 @@ public enum GameMode {
     @Override
     public void onEnter() {
       Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareTargeter(Game
-          .getActivePlayer().getCoordinate(), null));
+          .getActivePlayer().getActor().getCoordinate(), null));
     }
 
     @Override

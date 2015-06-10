@@ -38,18 +38,29 @@ public class GameLoader {
       String id = (i%2 == 0) ? "DOG" : "CAT";
       Actor actor = ActorFactory.makeActor(id);
 
-      Coordinate randomCoordinate = world.makeRandomCoordinate();
-      world.put(actor, randomCoordinate);
-      gameControllers.register(new AnimalController(actor, randomCoordinate));
+      if (actor != null) {
+        Coordinate randomCoordinate = world.makeRandomCoordinate();
+        actor.setCoordinate(randomCoordinate);
+        world.put(actor, randomCoordinate);
+        gameControllers.register(new AnimalController(actor));
+      }
     }
 
     Actor player = ActorFactory.makeActor("HUMAN");
-    Coordinate randomCoordinate = world.makeRandomCoordinate();
 
-    world.put(player, randomCoordinate);
+    if (player == null) {
+      throw new RuntimeException("Failed to instantiate an actor for the player.");
+    }
+
+    Coordinate playerStartCoordinate = world.makeRandomCoordinate();
+    player.setCoordinate(playerStartCoordinate);
+
+    world.put(player, playerStartCoordinate);
 
     // assign the Human to a PlayerController and register it
-    PlayerController playerController = new PlayerController(player,worldSizeInAreas,randomCoordinate);
+    PlayerController playerController = new PlayerController(player,worldSizeInAreas);
+    playerController.getWorldMapRevealedComponent().setAreaIsRevealed(playerStartCoordinate);
+
     gameControllers.register(playerController);
 
     // set up the GameInputSwitch

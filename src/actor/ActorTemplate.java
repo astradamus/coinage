@@ -53,9 +53,9 @@ public class ActorTemplate {
         25.0, Arrays.asList(
           AttributeRange.fromRank(Rank.R03_INFERIOR,2),                   // MUSCLE
           AttributeRange.fromRank(Rank.R03_INFERIOR,2),                   // GRIT
-          AttributeRange.fromRank(Rank.R03_INFERIOR,1),                   // REFLEX
+          AttributeRange.fromRank(Rank.R06_ABOVE_AVERAGE,1),              // REFLEX
           new AttributeRange(Rank.R02_TERRIBLE,Rank.R03_INFERIOR),        // TALENT
-          new AttributeRange(Rank.R10_MASTERFUL,Rank.R11_HEROIC),         // PERCEPTION
+          new AttributeRange(Rank.R09_EXCEPTIONAL,Rank.R10_MASTERFUL),    // PERCEPTION
           AttributeRange.fromRank(Rank.R05_AVERAGE,1)                     // CHARM
         )
 
@@ -66,13 +66,28 @@ public class ActorTemplate {
         "a cat", 'c', new Color(130, 2, 0), new Color(37, 1, 0),
 
         25.0, Arrays.asList(
-          AttributeRange.fromRank(Rank.R02_TERRIBLE,1),                   // MUSCLE
-          new AttributeRange(Rank.R01_ABYSMAL,Rank.R02_TERRIBLE),         // GRIT
-          new AttributeRange(Rank.R10_MASTERFUL,Rank.R11_HEROIC),         // REFLEX
-          new AttributeRange(Rank.R02_TERRIBLE,Rank.R03_INFERIOR),        // TALENT
-          new AttributeRange(Rank.R09_EXCEPTIONAL,Rank.R10_MASTERFUL),    // PERCEPTION
-          AttributeRange.fromRank(Rank.R05_AVERAGE,1)                     // CHARM
-        )
+        AttributeRange.fromRank(Rank.R02_TERRIBLE,1),                   // MUSCLE
+        new AttributeRange(Rank.R01_ABYSMAL,Rank.R02_TERRIBLE),         // GRIT
+        new AttributeRange(Rank.R08_OUTSTANDING,Rank.R09_EXCEPTIONAL),  // REFLEX
+        new AttributeRange(Rank.R02_TERRIBLE,Rank.R03_INFERIOR),        // TALENT
+        new AttributeRange(Rank.R09_EXCEPTIONAL,Rank.R10_MASTERFUL),    // PERCEPTION
+        AttributeRange.fromRank(Rank.R05_AVERAGE,1)                     // CHARM
+    )
+
+    ));
+
+    LIB.put("MOUSE", new ActorTemplate(
+
+        "a mouse", 'm', new Color(0, 85, 130), new Color(0, 24, 37),
+
+        1.0, Arrays.asList(
+        AttributeRange.fromRank(Rank.R01_ABYSMAL,0),                    // MUSCLE
+        AttributeRange.fromRank(Rank.R01_ABYSMAL,0),                    // GRIT
+        AttributeRange.fromRank(Rank.R01_ABYSMAL,0),                    // REFLEX
+        AttributeRange.fromRank(Rank.R01_ABYSMAL,0),                    // TALENT
+        AttributeRange.fromRank(Rank.R02_TERRIBLE,0),                   // PERCEPTION
+        AttributeRange.fromRank(Rank.R01_ABYSMAL,0)                     // CHARM
+    )
 
     ));
 

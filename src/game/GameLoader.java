@@ -35,7 +35,12 @@ public class GameLoader {
     GameControllers gameControllers = new GameControllers();
 
     for (int i = 0; i < 500; i++) {
-      String id = (i%2 == 0) ? "DOG" : "CAT";
+      String id = null;
+      switch (i % 3) {
+        case 0: id = "DOG"; break;
+        case 1: id = "CAT"; break;
+        case 2: id = "MOUSE"; break;
+      }
       Actor actor = ActorFactory.makeActor(id);
 
       if (actor != null) {

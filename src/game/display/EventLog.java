@@ -115,5 +115,10 @@ public class EventLog {
 
   }
 
+  public static void registerEventIfPlayerIsNear(Coordinate nearTo, Color color, String message) {
+    if (Game.getActivePlayer().getActor().getCoordinate().area == nearTo.area) {
+      registerEvent(color, message);
+    }
+  }
 
 }

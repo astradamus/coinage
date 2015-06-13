@@ -1,6 +1,7 @@
 package controller.action;
 
 import actor.Actor;
+import game.Physical;
 import game.display.Event;
 import game.display.EventLog;
 import world.Coordinate;
@@ -12,7 +13,7 @@ import java.security.InvalidParameterException;
  */
 public class PickingUp extends Action {
 
-  public PickingUp(Actor actor, ActionTarget target) {
+  public PickingUp(Actor actor, ActionTarget<Physical> target) {
     super(actor, target);
 
     if (getActor().getInventory() == null) {

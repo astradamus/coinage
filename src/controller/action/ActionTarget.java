@@ -6,17 +6,17 @@ import world.Coordinate;
 /**
  *
  */
-public class ActionTarget {
+public class ActionTarget<T extends Physical> {
 
-  private final Physical target;
+  private final T target;
   private final Coordinate targetAt;
 
-  public ActionTarget(Physical target, Coordinate targetAt) {
+  public ActionTarget(T target, Coordinate targetAt) {
     this.target = target;
     this.targetAt = targetAt;
   }
 
-  public Physical getTarget() {
+  public T getTarget() {
     return target;
   }
 

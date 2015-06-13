@@ -1,16 +1,16 @@
 package controller.action;
 
 import actor.Actor;
+import game.Physical;
 import game.display.Event;
 import game.display.EventLog;
-import world.Coordinate;
 
 /**
  *
  */
 public class Placing extends Action {
 
-  public Placing(Actor actor, ActionTarget target) {
+  public Placing(Actor actor, ActionTarget<Physical> target) {
     super(actor, target);
   }
 

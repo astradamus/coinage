@@ -1,5 +1,8 @@
 package game.input;
 
+import controller.action.ActionTarget;
+import controller.action.PickingUp;
+import controller.action.Placing;
 import controller.player.PlayerController;
 import game.Game;
 import game.Physical;
@@ -41,12 +44,19 @@ public enum Commands_Inventory implements Command {
 
         // Prompt player to select a location and drop the item there.
         Game.getActiveInputSwitch().beginSelectingCoordinate(
-            new Selector<>("PLACE WHERE?", playerController.getCoordinate(), 1,
+            new Selector<>("PLACE WHERE?", playerController.getActor().getCoordinate(), 1,
                 new SelectCallback<Coordinate>() {
                   @Override
                   public void execute(Coordinate selected) {
-                    playerController.startPlacing(placing, selected);
+
+                    playerController.attemptAction(
+                        new Placing(playerController.getActor(),
+                            new ActionTarget(placing,selected)
+                        )
+                    );
+
                     Game.getActiveInputSwitch().enterMode(GameMode.EXPLORE);
+
                   }
                 }
             )

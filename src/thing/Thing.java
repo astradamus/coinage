@@ -23,11 +23,7 @@ public class Thing implements Physical {
   Thing(ThingTemplate tT) {
 
     name = tT.name;
-
-    char character = tT.getRandomCharacter();
-    Color color = tT.getRandomColor();
-    this.appearance = new Appearance(character,color);
-
+    this.appearance = new Appearance(tT.getRandomCharacter(),tT.getRandomColor());
     weight = tT.weight;
     isImmovable = tT.isImmovable;
     isBlocking = tT.isBlocking;

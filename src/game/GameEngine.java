@@ -5,7 +5,7 @@ package game;
  */
 public class GameEngine {
 
-  public static final int MILLISECONDS_PER_HEARTBEAT = 25;
+  public static final int MILLISECONDS_PER_HEARTBEAT = 20;
 
   private static Thread thread;
   private static Runnable gameLoop = new Runnable() {

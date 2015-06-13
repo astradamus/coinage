@@ -72,7 +72,7 @@ public class EventLog {
     }
 
 
-    Coordinate playerAt = Game.getActivePlayer().getCoordinate();
+    Coordinate playerAt = Game.getActivePlayer().getActor().getCoordinate();
 
     Dimension areaSizeInSquares = Game.getActiveWorld().getAreaSizeInSquares();
 

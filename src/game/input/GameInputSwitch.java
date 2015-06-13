@@ -6,6 +6,7 @@ import controller.player.PlayerController;
 import game.Direction;
 import game.Game;
 import game.Physical;
+import game.TimeMode;
 import world.Coordinate;
 
 import java.awt.event.KeyListener;
@@ -85,12 +86,6 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
   void enterMode(GameMode mode) {
     clearSelectsAndCursor();
     mode.onEnter();
-
-    if (mode == GameMode.EXPLORE) {
-      Game.unpauseGame();
-    } else {
-      Game.pauseGame();
-    }
 
     this.gameMode = mode;
   }

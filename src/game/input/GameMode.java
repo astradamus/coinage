@@ -1,6 +1,7 @@
 package game.input;
 
 import game.Game;
+import game.TimeMode;
 import game.display.DisplayElement;
 import game.display.DisplayElement_Text;
 import world.Coordinate;
@@ -21,6 +22,10 @@ public enum GameMode {
     @Override
     public void onEnter() {
 
+      if (Game.getTimeMode() == TimeMode.PAUSED) {
+        Game.revertTimeMode();
+      }
+
     }
 
     @Override
@@ -31,6 +36,7 @@ public enum GameMode {
     @Override
     public List<Command> getModeCommands() {
       return Arrays.asList(
+          Commands_EnterMode.TOGGLE_PRECISION_TIME,
           Commands_EnterMode.ENTER_MODE_LOOK,
           Commands_EnterMode.ENTER_MODE_INTERACT,
           Commands_EnterMode.ENTER_MODE_INVENTORY
@@ -57,6 +63,10 @@ public enum GameMode {
     public void onEnter() {
       Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareTargeter(Game
           .getActivePlayer().getActor().getCoordinate(), null));
+
+      if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
+        Game.setTimeMode(TimeMode.PAUSED);
+      }
     }
 
     @Override
@@ -91,7 +101,9 @@ public enum GameMode {
 
     @Override
     public void onEnter() {
-
+      if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
+        Game.setTimeMode(TimeMode.PAUSED);
+      }
     }
 
     @Override
@@ -136,6 +148,10 @@ public enum GameMode {
     public void onEnter() {
       Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeListTargeter(Game
           .getActivePlayer().getActor().getInventory().getItemsHeld().size()));
+
+      if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
+        Game.setTimeMode(TimeMode.PAUSED);
+      }
     }
 
     @Override

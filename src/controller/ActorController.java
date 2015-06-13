@@ -23,7 +23,7 @@ public abstract class ActorController implements Controller {
     this.actor = actor;
   }
 
-  protected final Action getCurrentAction() {
+  public final Action getCurrentAction() {
     return action;
   }
 
@@ -40,7 +40,10 @@ public abstract class ActorController implements Controller {
       return;
     }
 
-    if (actor.getIsReadyThisBeat() && action != null) {
+    if (!actor.isReadyToAct()) {
+      actor.decrementRecoveryTimer();
+    }
+    else if (action != null) {
 
       Action executing = action;
 
@@ -87,6 +90,10 @@ public abstract class ActorController implements Controller {
 
   public Actor getActor() {
     return actor;
+  }
+
+  public boolean isFreeToAct() {
+    return action == null && actor.isReadyToAct();
   }
 
 }

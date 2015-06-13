@@ -10,6 +10,7 @@ import world.World;
 import java.awt.event.KeyListener;
 import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 
 /**
  *
@@ -23,12 +24,36 @@ public class Game {
   public static final Random RANDOM = new Random();
 
   static Game ACTIVE;
-  private static boolean gameIsPaused;
+
+  private static Stack<TimeMode> TIME_MODE = new Stack<>();
+  static {TIME_MODE.push(TimeMode.LIVE);}
 
 
   public static Game getActive() {
     return ACTIVE;
   }
+
+  public static TimeMode getTimeMode() {
+    return TIME_MODE.peek();
+  }
+
+  public static void setTimeMode(TimeMode timeMode) {
+    if (TIME_MODE.contains(timeMode)) {
+
+      while (TIME_MODE.peek() != timeMode) {
+        TIME_MODE.pop();
+      }
+
+    } else {
+      TIME_MODE.push(timeMode);
+    }
+  }
+
+  public static void revertTimeMode() {
+    TIME_MODE.pop();
+  }
+
+
 
   public static PlayerController getActivePlayer() {
     return ACTIVE.INPUT_SWITCH.getPlayerController();
@@ -44,38 +69,6 @@ public class Game {
 
   public static GameInputSwitch getActiveInputSwitch() {
     return ACTIVE.INPUT_SWITCH;
-  }
-
-
-  /**
-   * Stops the Engine from sending updates to Game. Does NOT stop the Engine from sending updates
-   * to GameDisplay.
-   */
-  public static void pauseGame() {
-    if (!gameIsPaused) {
-      gameIsPaused = true;
-    } else {
-      System.out.println("Tried to pause game when it was already paused.");
-    }
-  }
-
-  /**
-   * Resumes sending of updates to Game.
-   */
-  public static void unpauseGame() {
-    if (gameIsPaused) {
-      gameIsPaused = false;
-    } else {
-      System.out.println("Tried to unpause game when it was already unpaused.");
-    }
-  }
-
-  /**
-   * Convenience method to toggle pause state. Should only be used for player controls. Code
-   * calling to pause/unpause the game should be aware of the pause state its in already.
-   */
-  public static void togglePauseGame() {
-    gameIsPaused = !gameIsPaused;
   }
 
 
@@ -95,8 +88,9 @@ public class Game {
 
   void update() {
 
-    // do not update controllers if the game is paused.
-    if (!gameIsPaused) {
+    TimeMode timeMode = TIME_MODE.peek();
+    if (timeMode == TimeMode.LIVE
+        || (timeMode == TimeMode.PRECISION && !getActivePlayer().isFreeToAct())) {
       CONTROLLERS.onUpdate();
     }
 

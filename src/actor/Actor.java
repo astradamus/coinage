@@ -129,7 +129,6 @@ public class Actor implements Physical {
 
 
 
-
   public void addBeatsToRecover(int addBeats) {
     this.beatsToRecover += addBeats;
   }
@@ -138,13 +137,14 @@ public class Actor implements Physical {
    * Returns true if this Actor is ready to act, or returns false and deducts one from this actor's
    * recovery time if it is still recovering.
    */
-  public boolean getIsReadyThisBeat() {
-    if (beatsToRecover > 0) {
-      beatsToRecover--;
-      return false;
-    }
-    return true;
+  public boolean isReadyToAct() {
+    return beatsToRecover <= 0;
   }
+
+  public void decrementRecoveryTimer() {
+    beatsToRecover--;
+  }
+
 
   public boolean attemptMoveTo(Coordinate newCoordinate) {
     if (newCoordinate != null && Game.getActiveWorld().move(this, coordinate, newCoordinate)) {

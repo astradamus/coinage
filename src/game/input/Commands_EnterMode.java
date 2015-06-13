@@ -1,6 +1,10 @@
 package game.input;
 
 import game.Game;
+import game.TimeMode;
+import game.display.Event;
+import game.display.EventLog;
+import utils.Utils;
 
 import java.awt.event.KeyEvent;
 
@@ -10,8 +14,43 @@ import java.awt.event.KeyEvent;
 public enum Commands_EnterMode implements Command {
 
 
+  TOGGLE_PRECISION_TIME {
+
+    @Override
+    public int getHotKeyCode() {
+      return KeyEvent.VK_SPACE;
+    }
+
+    @Override
+    public String getControlText() {
+      if (Game.getTimeMode() == TimeMode.PRECISION) {
+        return "SPACE: Exit precision mode.";
+      } else {
+        return "SPACE: Enter precision mode.";
+      }
+    }
+
+    @Override
+    public void execute() {
+
+      TimeMode next;
+      TimeMode current = Game.getTimeMode();
+
+      if (current == TimeMode.PRECISION) {
+        Game.revertTimeMode();
+        next = Game.getTimeMode();
+      } else {
+        next = TimeMode.PRECISION;
+        Game.setTimeMode(next);
+      }
+      EventLog.registerEvent(Event.INVALID_ACTION, next.getEnterText());
+
+    }
+
+  },
 
   ENTER_MODE_EXPLORE {
+
     @Override
     public int getHotKeyCode() {
       return KeyEvent.VK_ESCAPE;

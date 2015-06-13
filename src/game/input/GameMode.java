@@ -103,7 +103,8 @@ public enum GameMode {
     public List<Command> getModeCommands() {
       return Arrays.asList(
           Commands_EnterMode.ENTER_MODE_EXPLORE,
-          Commands_Interact.PICK_UP
+          Commands_Interact.PICK_UP,
+          Commands_Interact.STRIKE
       );
     }
 

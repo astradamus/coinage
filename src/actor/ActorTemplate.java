@@ -50,7 +50,7 @@ public class ActorTemplate {
 
         "a dog", 'd', new Color(139, 47, 16), new Color(32, 11, 4),
 
-        25.0, Arrays.asList(
+        20.0, Arrays.asList(
           AttributeRange.fromRank(Rank.R03_INFERIOR,2),                   // MUSCLE
           AttributeRange.fromRank(Rank.R03_INFERIOR,2),                   // GRIT
           AttributeRange.fromRank(Rank.R06_ABOVE_AVERAGE,1),              // REFLEX
@@ -65,7 +65,7 @@ public class ActorTemplate {
 
         "a cat", 'c', new Color(130, 2, 0), new Color(37, 1, 0),
 
-        25.0, Arrays.asList(
+        20.0, Arrays.asList(
         AttributeRange.fromRank(Rank.R02_TERRIBLE,1),                   // MUSCLE
         new AttributeRange(Rank.R01_ABYSMAL,Rank.R02_TERRIBLE),         // GRIT
         new AttributeRange(Rank.R08_OUTSTANDING,Rank.R09_EXCEPTIONAL),  // REFLEX
@@ -86,6 +86,23 @@ public class ActorTemplate {
         AttributeRange.fromRank(Rank.R01_ABYSMAL,0),                    // REFLEX
         AttributeRange.fromRank(Rank.R01_ABYSMAL,0),                    // TALENT
         AttributeRange.fromRank(Rank.R02_TERRIBLE,0),                   // PERCEPTION
+        AttributeRange.fromRank(Rank.R01_ABYSMAL,0)                     // CHARM
+    )
+
+    ));
+
+    LIB.put("GIBBERLING", new ActorTemplate(
+
+        "a foul gibberling", 'g',
+        new Color(43, 130, 78),
+        new Color(41, 81, 30),
+
+        60.0, Arrays.asList(
+        AttributeRange.fromRank(Rank.R05_AVERAGE,1),                    // MUSCLE
+        AttributeRange.fromRank(Rank.R03_INFERIOR,2),                   // GRIT
+        AttributeRange.fromRank(Rank.R03_INFERIOR,2),                   // REFLEX
+        AttributeRange.fromRank(Rank.R01_ABYSMAL,0),                    // TALENT
+        AttributeRange.fromRank(Rank.R03_INFERIOR,0),                   // PERCEPTION
         AttributeRange.fromRank(Rank.R01_ABYSMAL,0)                     // CHARM
     )
 

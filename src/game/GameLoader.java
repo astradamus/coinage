@@ -34,12 +34,13 @@ public class GameLoader {
     // populate with animals and a Human for the player to control
     GameControllers gameControllers = new GameControllers();
 
-    for (int i = 0; i < 500; i++) {
-      String id = null;
-      switch (i % 3) {
+    for (int i = 0; i < 750; i++) {
+      String id;
+      switch (i % 5) {
         case 0: id = "DOG"; break;
         case 1: id = "CAT"; break;
         case 2: id = "MOUSE"; break;
+        default: id = "GIBBERLING"; break;
       }
       Actor actor = ActorFactory.makeActor(id);
 

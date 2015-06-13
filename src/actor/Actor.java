@@ -4,6 +4,7 @@ import actor.attribute.Attribute;
 import actor.attribute.AttributeRange;
 import actor.attribute.Rank;
 import actor.inventory.Inventory;
+import actor.stats.Health;
 import game.Direction;
 import game.Game;
 import game.Physical;
@@ -23,10 +24,13 @@ public class Actor implements Physical {
   private final Appearance appearance;
   private final Double weight;
 
+
+  private final Health health;
   private final Map<Attribute, Rank> attributes;
   private final Inventory inventory;
 
 
+  private ActorPhysicalState physicalState = ActorPhysicalState.ALIVE;
 
   private Coordinate coordinate;
   private Direction facing;
@@ -47,18 +51,19 @@ public class Actor implements Physical {
       attributes.put(attribute, attributeRange.getRandomWithin(Game.RANDOM));
     }
 
+    health = new Health(this);
     inventory = new Inventory();
 
   }
 
   @Override
   public String getName() {
-    return name;
+    return physicalState.getQualifiedName(name);
   }
 
   @Override
   public Appearance getAppearance() {
-    return appearance;
+    return physicalState.getAdjustedAppearance(appearance);
   }
 
   @Override
@@ -73,22 +78,37 @@ public class Actor implements Physical {
 
   @Override
   public boolean isImmovable() {
-    return true;
+    return physicalState.actorIsImmovable();
   }
 
   @Override
   public boolean isBlocking() {
-    return true;
+    return physicalState.actorIsBlocking();
   }
 
 
-  public Inventory getInventory() {
-    return inventory;
+
+  public void die() {
+    physicalState = ActorPhysicalState.DEAD;
+  }
+
+  public boolean isDead() {
+    return physicalState == ActorPhysicalState.DEAD;
+  }
+
+  public Health getHealth() {
+    return health;
   }
 
   public Rank readAttributeLevel(Attribute attribute) {
     return attributes.get(attribute);
   }
+
+  public Inventory getInventory() {
+    return inventory;
+  }
+
+
 
 
   public void setFacing(Direction facing) {
@@ -99,13 +119,16 @@ public class Actor implements Physical {
     this.coordinate = coordinate;
   }
 
+  public Direction getFacing() {
+    return facing;
+  }
+
   public Coordinate getCoordinate() {
     return coordinate;
   }
 
-  public Direction getFacing() {
-    return facing;
-  }
+
+
 
   public void addBeatsToRecover(int addBeats) {
     this.beatsToRecover += addBeats;

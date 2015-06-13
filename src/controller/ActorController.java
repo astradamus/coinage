@@ -3,6 +3,7 @@ package controller;
 import controller.action.Action;
 import actor.Actor;
 import controller.action.ActionFlag;
+import game.Game;
 
 /**
  *
@@ -16,7 +17,7 @@ public abstract class ActorController implements Controller {
 
   public ActorController(Actor actor) {
     if (actor == null) {
-      throw new IllegalArgumentException("Actor cannot be null..");
+      throw new IllegalArgumentException("Actor cannot be null.");
     }
 
     this.actor = actor;
@@ -33,6 +34,11 @@ public abstract class ActorController implements Controller {
 
   @Override
   public final void onUpdate() {
+
+    if (actor.isDead()) {
+      Game.getActiveControllers().unregister(this);
+      return;
+    }
 
     if (actor.getIsReadyThisBeat() && action != null) {
 

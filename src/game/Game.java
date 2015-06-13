@@ -30,12 +30,16 @@ public class Game {
     return ACTIVE;
   }
 
+  public static PlayerController getActivePlayer() {
+    return ACTIVE.INPUT_SWITCH.getPlayerController();
+  }
+
   public static World getActiveWorld() {
     return ACTIVE.WORLD;
   }
 
-  public static PlayerController getActivePlayer() {
-    return ACTIVE.INPUT_SWITCH.getPlayerController();
+  public static GameControllers getActiveControllers() {
+    return ACTIVE.CONTROLLERS;
   }
 
   public static GameInputSwitch getActiveInputSwitch() {

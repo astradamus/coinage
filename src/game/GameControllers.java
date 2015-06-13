@@ -12,6 +12,7 @@ public class GameControllers {
 
   private final List<Controller> ACTIVE_CONTROLLERS = new ArrayList<>();
   private final List<Controller> NEW_CONTROLLERS    = new ArrayList<>();
+  private final List<Controller> DEAD_CONTROLLERS   = new ArrayList<>();
 
 
   /**
@@ -26,6 +27,7 @@ public class GameControllers {
       reregister(controller);
     }
 
+    NEW_CONTROLLERS.removeAll(DEAD_CONTROLLERS);
     ACTIVE_CONTROLLERS.addAll(NEW_CONTROLLERS);
     NEW_CONTROLLERS.clear();
   }
@@ -51,6 +53,10 @@ public class GameControllers {
     } else {
       System.out.println("Tried to reregister an unregistered controller.");
     }
+  }
+
+  public void unregister(Controller controller) {
+    DEAD_CONTROLLERS.add(controller);
   }
 
 }

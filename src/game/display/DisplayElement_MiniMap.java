@@ -23,10 +23,9 @@ public class DisplayElement_MiniMap implements DisplayElement {
 
   public static final int FULL_SIZE_IN_PIXELS = SIZE_IN_PIXELS + BORDER_THICKNESS;
 
-
   @Override
   public int getHeight() {
-    return FULL_SIZE_IN_PIXELS + SQUARE_SIZE; // Adds a one-square bottom border.
+    return FULL_SIZE_IN_PIXELS + SQUARE_SIZE;
   }
 
 
@@ -34,9 +33,6 @@ public class DisplayElement_MiniMap implements DisplayElement {
   public void drawTo(Graphics g, int originX, int originY, int width) {
 
     Coordinate playerAt = Game.getActivePlayer().getActor().getCoordinate();
-
-    // draw world map outline
-    g.drawRect(originX, originY+4, FULL_SIZE_IN_PIXELS, FULL_SIZE_IN_PIXELS);
 
     // draw the zone of Areas surrounding the player's current area, using a blank 'unknown'
     //   token for Areas that have not yet been explored by the player, and skipping any null Areas
@@ -77,6 +73,17 @@ public class DisplayElement_MiniMap implements DisplayElement {
       }
     }
 
+    // Draw map outline and clock text (if applicable) in the appropriate color for the time mode.
+    g.setColor(Game.getTimeMode().getIndicatorColor());
+    g.drawRect(originX, originY+4, FULL_SIZE_IN_PIXELS, FULL_SIZE_IN_PIXELS);
+
+    String gameClockLabel = Game.getTimeMode().getGameClockLabel();
+    if (gameClockLabel != null) {
+      g.setFont(SidePanel.CONTROLS_FONT);
+      int x = originX + FULL_SIZE_IN_PIXELS / 2 - g.getFontMetrics().stringWidth(gameClockLabel)/2;
+      int y = getHeight() + SQUARE_SIZE/2;
+      g.drawString(gameClockLabel, x, y);
+    }
 
   }
 

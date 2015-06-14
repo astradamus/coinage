@@ -4,7 +4,6 @@ import game.Game;
 import game.TimeMode;
 import game.display.Event;
 import game.display.EventLog;
-import utils.Utils;
 
 import java.awt.event.KeyEvent;
 
@@ -24,9 +23,9 @@ public enum Commands_EnterMode implements Command {
     @Override
     public String getControlText() {
       if (Game.getTimeMode() == TimeMode.PRECISION) {
-        return "SPACE: Exit precision mode.";
+        return "SPACE: Exit precision time.";
       } else {
-        return "SPACE: Enter precision mode.";
+        return "SPACE: Enter precision time.";
       }
     }
 

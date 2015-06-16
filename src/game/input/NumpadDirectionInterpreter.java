@@ -81,16 +81,16 @@ public class NumpadDirectionInterpreter implements KeyListener {
   @Override
   public void keyReleased(KeyEvent e) {
     Direction direction = Direction.fromKeyEvent(e);
-    heldDirections.remove(direction);
+    if (direction != null) {
+      heldDirections.remove(direction);
 
-    if (lastModifier == KeyModifier.SHIFT && !e.isShiftDown()) {
-      lastModifier = null;
-    }
-    else if (lastModifier == KeyModifier.CTRL && !e.isControlDown()) {
-      lastModifier = null;
-    }
+      if (lastModifier == KeyModifier.SHIFT && !e.isShiftDown()) {
+        lastModifier = null;
+      } else if (lastModifier == KeyModifier.CTRL && !e.isControlDown()) {
+        lastModifier = null;
+      }
 
-    evaluateMovingDirection();
+      evaluateMovingDirection();
+    }
   }
-
 }

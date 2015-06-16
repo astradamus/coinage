@@ -8,8 +8,11 @@ import game.Direction;
  */
 public class Turning extends Action {
 
-  public Turning(Actor actor, Direction direction) {
+  private final boolean attemptMoveAfterTurn;
+
+  public Turning(Actor actor, Direction direction, boolean attemptMoveAfterTurn) {
     super(actor, direction);
+    this.attemptMoveAfterTurn = attemptMoveAfterTurn;
   }
 
   @Override
@@ -40,9 +43,13 @@ public class Turning extends Action {
   @Override
   public Action attemptRepeat() {
     if (getActor().getFacing() == getDirection()) {
-      return null;
+      if (attemptMoveAfterTurn) {
+        return new Moving(getActor(), getDirection(), false);
+      } else {
+        return null;
+      }
     } else {
-      return new Turning(getActor(),getDirection());
+      return new Turning(getActor(), getDirection(), attemptMoveAfterTurn);
     }
   }
 

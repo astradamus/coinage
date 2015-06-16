@@ -23,7 +23,8 @@ public class AnimalController extends ActorController {
 
   private void startWander() {
     Direction direction = Direction.values()[Game.RANDOM.nextInt(Direction.values().length)];
-    attemptAction(new Moving(getActor(), direction));
+    getActor().setFacing(direction);
+    attemptAction(new Moving(getActor(), direction, false));
   }
 
   private void stopWander() {

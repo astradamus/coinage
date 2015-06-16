@@ -95,18 +95,15 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
     if (targetCursor == null) {
       Actor playerActor = playerController.getActor();
 
-      if (modifier == KeyModifier.CTRL) {
+      boolean needsToTurn = direction != playerController.getActor().getFacing();
+      boolean isMoving = modifier != KeyModifier.CTRL;
+      boolean isStrafing = modifier == KeyModifier.SHIFT;
 
-        if (direction != playerController.getActor().getFacing()) {
-          playerController.attemptAction(new Turning(playerActor, direction));
-        }
-
-      } else {
-
-        playerController.attemptAction(new Moving(playerActor, direction));
-
+      if (!isStrafing && needsToTurn) {
+        playerController.attemptAction(new Turning(playerActor, direction, isMoving));
+      } else if (isMoving) {
+        playerController.attemptAction(new Moving(playerActor, direction, isStrafing));
       }
-
 
     } else {
       targetCursor.setCursorMovingIn(direction);

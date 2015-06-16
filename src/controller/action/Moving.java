@@ -11,8 +11,11 @@ import world.Coordinate;
  */
 public class Moving extends Action {
 
-  public Moving(Actor actor, Direction direction) {
+  private final boolean isStrafing;
+
+  public Moving(Actor actor, Direction direction, boolean isStrafing) {
     super(actor, direction);
+    this.isStrafing = isStrafing;
   }
 
 
@@ -32,7 +35,13 @@ public class Moving extends Action {
 
     int distanceFromBaseline = actorReflex - BEATS_AT_BASELINE;
 
-    return BASELINE_RANK - distanceFromBaseline / DISTANCE_FROM_BASELINE_DIVISOR;
+    int baseCalculation = BASELINE_RANK - distanceFromBaseline / DISTANCE_FROM_BASELINE_DIVISOR;
+
+    if (isStrafing) {
+      baseCalculation *= 2;
+    }
+
+    return baseCalculation;
 
   }
 
@@ -49,8 +58,6 @@ public class Moving extends Action {
   @Override
   protected void apply() {
 
-    getActor().setFacing(getDirection());
-
     if (getActorAt().area != getActor().getCoordinate().area) {
       addFlag(ActionFlag.ACTOR_CHANGED_AREA);
     }
@@ -60,7 +67,7 @@ public class Moving extends Action {
   @Override
   public Moving attemptRepeat() {
 
-    return new Moving(getActor(), getDirection());
+    return new Moving(getActor(), getDirection(), isStrafing);
 
   }
 

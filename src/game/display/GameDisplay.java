@@ -14,7 +14,7 @@ public class GameDisplay {
 
   public static final Appearance CURSOR = new Appearance('X',Color.WHITE,Color.WHITE);
 
-  public static final int SQUARE_SIZE = 15;
+  public static final int SQUARE_SIZE = 16;
 
 
   private static AreaPanel PANEL_AREA = new AreaPanel();

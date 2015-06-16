@@ -48,7 +48,7 @@ public class DisplayElement_MiniMap implements DisplayElement {
         }
 
         int placeX = originX + BORDER_THICKNESS + (x * SQUARE_SIZE);
-        int placeY = originY + BORDER_THICKNESS + ((y+1) * SQUARE_SIZE);
+        int placeY = originY + BORDER_THICKNESS + (y * SQUARE_SIZE);
 
         Appearance appearance;
 
@@ -75,7 +75,7 @@ public class DisplayElement_MiniMap implements DisplayElement {
 
     // Draw map outline and clock text (if applicable) in the appropriate color for the time mode.
     g.setColor(Game.getTimeMode().getIndicatorColor());
-    g.drawRect(originX, originY+4, FULL_SIZE_IN_PIXELS, FULL_SIZE_IN_PIXELS);
+    g.drawRect(originX, originY, FULL_SIZE_IN_PIXELS, FULL_SIZE_IN_PIXELS);
 
     String gameClockLabel = Game.getTimeMode().getGameClockLabel();
     if (gameClockLabel != null) {

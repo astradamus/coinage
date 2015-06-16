@@ -38,7 +38,7 @@ public class AreaPanel extends JPanel {
         Appearance visible = thisCoordinate.getSquare().peek().getAppearance();
 
         int placeX = (x) * SQUARE_SIZE;
-        int placeY = (y + 1) * SQUARE_SIZE;
+        int placeY = (y) * SQUARE_SIZE+getInsets().top;
 
         SquareDrawer.drawSquare(g, visible, SQUARE_SIZE, placeX, placeY);
 

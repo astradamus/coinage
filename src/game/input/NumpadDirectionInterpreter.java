@@ -17,6 +17,7 @@ public class NumpadDirectionInterpreter implements KeyListener {
   private final DirectionListener directionListener;
 
   private Stack<Direction> heldDirections = new Stack<>();
+  private KeyModifier lastModifier = null;
 
   public NumpadDirectionInterpreter(DirectionListener directionListener) {
     this.directionListener = directionListener;
@@ -49,7 +50,7 @@ public class NumpadDirectionInterpreter implements KeyListener {
 
       }
 
-      directionListener.receiveDirection(movingIn);
+      directionListener.receiveDirection(movingIn,lastModifier);
 
     }
   }
@@ -61,6 +62,13 @@ public class NumpadDirectionInterpreter implements KeyListener {
 
   @Override
   public void keyPressed(KeyEvent e) {
+    if (e.isShiftDown()) {
+      lastModifier = KeyModifier.SHIFT;
+    }
+    else if (e.isControlDown()) {
+      lastModifier = KeyModifier.CTRL;
+    }
+
     Direction direction = Direction.fromKeyEvent(e);
     if (direction != null) {
       if (!heldDirections.contains(direction)){
@@ -74,6 +82,14 @@ public class NumpadDirectionInterpreter implements KeyListener {
   public void keyReleased(KeyEvent e) {
     Direction direction = Direction.fromKeyEvent(e);
     heldDirections.remove(direction);
+
+    if (lastModifier == KeyModifier.SHIFT && !e.isShiftDown()) {
+      lastModifier = null;
+    }
+    else if (lastModifier == KeyModifier.CTRL && !e.isControlDown()) {
+      lastModifier = null;
+    }
+
     evaluateMovingDirection();
   }
 

@@ -4,9 +4,7 @@ import actor.Actor;
 import controller.action.Moving;
 import controller.player.PlayerController;
 import game.Direction;
-import game.Game;
 import game.Physical;
-import game.TimeMode;
 import world.Coordinate;
 
 import java.awt.event.KeyListener;
@@ -91,7 +89,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
   }
 
   @Override
-  public void receiveDirection(Direction direction) {
+  public void receiveDirection(Direction direction, KeyModifier modifier) {
 
     if (targetCursor == null) {
       Actor playerActor = playerController.getActor();

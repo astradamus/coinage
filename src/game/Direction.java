@@ -45,5 +45,9 @@ public enum Direction {
       default: return null;
     }
   }
-  
+
+  public static Direction getRandom() {
+    return values()[Game.RANDOM.nextInt(values().length)];
+  }
+
 }

@@ -32,39 +32,37 @@ public class ActionOverlay {
 
     Direction facing = actor.getFacing();
 
-    if (facing != null) {
-      g.setColor(actor.getAppearance().getColor());
+    g.setColor(actor.getAppearance().getColor());
 
-      Coordinate actorAt = actor.getCoordinate();
+    Coordinate actorAt = actor.getCoordinate();
 
-      int[] drawX = new int[6];
-      int[] drawY = new int[6];
+    int[] drawX = new int[6];
+    int[] drawY = new int[6];
 
-      int originX = actorAt.localX * SQUARE_SIZE;
-      int originY = actorAt.localY * SQUARE_SIZE;
+    int originX = actorAt.localX * SQUARE_SIZE;
+    int originY = actorAt.localY * SQUARE_SIZE;
 
-      Point[] points = new Point[] {
-        getOffsetFor(facing.getLeftNeighbor(),0),
-        getOffsetFor(facing,0),
-        getOffsetFor(facing.getRightNeighbor(),0),
+    Point[] points = new Point[] {
+      getOffsetFor(facing.getLeftNeighbor(),0),
+      getOffsetFor(facing,0),
+      getOffsetFor(facing.getRightNeighbor(),0),
 
-        getOffsetFor(facing.getRightNeighbor(),thickness),
-        getOffsetFor(facing,thickness),
-        getOffsetFor(facing.getLeftNeighbor(),thickness)
-      };
+      getOffsetFor(facing.getRightNeighbor(),thickness),
+      getOffsetFor(facing,thickness),
+      getOffsetFor(facing.getLeftNeighbor(),thickness)
+    };
 
-      for (int i2 = 0; i2 < points.length; i2++) {
-        Point point = points[i2];
-        drawX[i2] = originX + point.x;
-        drawY[i2] = originY + point.y;
-      }
-
-      g.fillPolygon(drawX,drawY,6);
-
-
+    for (int i2 = 0; i2 < points.length; i2++) {
+      Point point = points[i2];
+      drawX[i2] = originX + point.x;
+      drawY[i2] = originY + point.y;
     }
 
+    g.fillPolygon(drawX,drawY,6);
+
+
   }
+
 
 
   private static Point getOffsetFor(Direction direction, int gap) {

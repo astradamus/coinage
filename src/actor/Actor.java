@@ -33,7 +33,7 @@ public class Actor implements Physical {
   private ActorPhysicalState physicalState = ActorPhysicalState.ALIVE;
 
   private Coordinate coordinate;
-  private Direction facing;
+  private Direction facing = Direction.getRandom();
 
   private int beatsToRecover = 0;
 

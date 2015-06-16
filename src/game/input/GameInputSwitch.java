@@ -2,6 +2,7 @@ package game.input;
 
 import actor.Actor;
 import controller.action.Moving;
+import controller.action.Turning;
 import controller.player.PlayerController;
 import game.Direction;
 import game.Physical;
@@ -93,7 +94,20 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
 
     if (targetCursor == null) {
       Actor playerActor = playerController.getActor();
-      playerController.attemptAction(new Moving(playerActor, direction));
+
+      if (modifier == KeyModifier.CTRL) {
+
+        if (direction != playerController.getActor().getFacing()) {
+          playerController.attemptAction(new Turning(playerActor, direction));
+        }
+
+      } else {
+
+        playerController.attemptAction(new Moving(playerActor, direction));
+
+      }
+
+
     } else {
       targetCursor.setCursorMovingIn(direction);
     }

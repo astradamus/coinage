@@ -30,6 +30,10 @@ public abstract class ActorController implements Controller {
 
 
   public final void attemptAction(Action action) {
+    if (action != null) {
+      actor.addBeatsToActionDelay(action.calcBeatsToPerform());
+    }
+
     this.action = action;
   }
 
@@ -42,7 +46,7 @@ public abstract class ActorController implements Controller {
     }
 
     if (!actor.isReadyToAct()) {
-      actor.decrementRecoveryTimer();
+      actor.decrementActionDelay();
     }
     else if (action != null) {
 

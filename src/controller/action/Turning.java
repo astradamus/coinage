@@ -16,7 +16,7 @@ public class Turning extends Action {
   }
 
   @Override
-  protected int calcBeatsToPerform() {
+  public int calcBeatsToPerform() {
     return 1;
   }
 

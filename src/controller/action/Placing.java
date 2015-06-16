@@ -15,8 +15,13 @@ public class Placing extends Action {
   }
 
   @Override
-  protected int calcBeatsToPerform() {
-    return 3;
+  public int calcBeatsToPerform() {
+    return 2;
+  }
+
+  @Override
+  protected int calcBeatsToRecover() {
+    return 1;
   }
 
   @Override

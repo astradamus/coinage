@@ -16,8 +16,13 @@ public class Attack extends Action {
   }
 
   @Override
-  protected int calcBeatsToPerform() {
+  public int calcBeatsToPerform() {
     return 3;
+  }
+
+  @Override
+  protected int calcBeatsToRecover() {
+    return 2;
   }
 
   @Override

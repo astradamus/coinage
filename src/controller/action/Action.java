@@ -36,7 +36,14 @@ public abstract class Action {
   }
 
 
-  protected abstract int calcBeatsToPerform();
+  public int calcBeatsToPerform() {
+    return 0;
+  }
+
+  protected int calcBeatsToRecover() {
+    return 0;
+  }
+
   protected abstract boolean validate();
   protected abstract void apply();
 
@@ -47,15 +54,17 @@ public abstract class Action {
       throw new IllegalStateException("Action has already been executed.");
     }
 
-    if (validate()) {
+    boolean valid = validate();
+
+    if (valid) {
       addFlag(ActionFlag.SUCCEEDED);
-      getActor().addBeatsToRecover(calcBeatsToPerform());
       apply();
-      return true;
     } else {
       addFlag(ActionFlag.FAILED);
-      return false;
     }
+
+    getActor().addBeatsToActionDelay(calcBeatsToRecover());
+    return valid;
 
   }
 

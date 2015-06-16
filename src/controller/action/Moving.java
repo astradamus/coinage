@@ -25,11 +25,11 @@ public class Moving extends Action {
    * less or one more beat of recovery, respectively.
    */
   private final static int BASELINE_RANK = 5;
-  private final static int BEATS_AT_BASELINE = 5;
+  private final static int BEATS_AT_BASELINE = 4;
   private final static int DISTANCE_FROM_BASELINE_DIVISOR = 2;
 
   @Override
-  protected int calcBeatsToPerform() {
+  public int calcBeatsToPerform() {
 
     int actorReflex = getActor().readAttributeLevel(Attribute.REFLEX).ordinal();
 
@@ -43,6 +43,12 @@ public class Moving extends Action {
 
     return baseCalculation;
 
+  }
+
+
+  @Override
+  protected int calcBeatsToRecover() {
+    return 1;
   }
 
   @Override

@@ -35,7 +35,7 @@ public class Actor implements Physical {
   private Coordinate coordinate;
   private Direction facing = Direction.getRandom();
 
-  private int beatsToRecover = 0;
+  private int actionDelay = 0;
 
 
   Actor(ActorTemplate aT) {
@@ -129,8 +129,8 @@ public class Actor implements Physical {
 
 
 
-  public void addBeatsToRecover(int addBeats) {
-    this.beatsToRecover += addBeats;
+  public void addBeatsToActionDelay(int addBeats) {
+    this.actionDelay += addBeats;
   }
 
   /**
@@ -138,11 +138,11 @@ public class Actor implements Physical {
    * recovery time if it is still recovering.
    */
   public boolean isReadyToAct() {
-    return beatsToRecover <= 0;
+    return actionDelay <= 0;
   }
 
-  public void decrementRecoveryTimer() {
-    beatsToRecover--;
+  public void decrementActionDelay() {
+    actionDelay--;
   }
 
 

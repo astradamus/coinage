@@ -51,7 +51,8 @@ public class AreaPanel extends JPanel {
       }
     }
 
-    EventLog.drawOverlayed((Graphics2D)g);
+    ActionOverlay.drawOverlay(g);
+    EventLog.drawOverlay((Graphics2D) g);
 
   }
 }

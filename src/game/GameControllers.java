@@ -125,4 +125,15 @@ public class GameControllers {
 
   }
 
+  public <T extends Controller> Set<T> getControllersByArea(Class<T> controllerClass, Area area) {
+    HashSet<T> set = new HashSet<>();
+
+    set.addAll(controllerLocations.get(area).stream()
+        .filter(controllerClass::isInstance)
+        .map(controllerClass::cast)
+        .collect(Collectors.toSet()));
+
+    return set;
+  }
+
 }

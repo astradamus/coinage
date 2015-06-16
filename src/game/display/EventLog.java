@@ -52,7 +52,7 @@ public class EventLog {
 
 
 
-  public static void drawOverlayed(Graphics2D g2d) {
+  public static void drawOverlay(Graphics2D g2d) {
 
     g2d.setFont(SMALL_TEXT);
 

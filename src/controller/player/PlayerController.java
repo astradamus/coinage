@@ -4,6 +4,7 @@ import actor.Actor;
 import controller.action.Action;
 import controller.ActorController;
 import controller.action.ActionFlag;
+import game.Game;
 import utils.Dimension;
 
 /**
@@ -28,6 +29,7 @@ public class PlayerController extends ActorController {
     // Update WorldMapRevealed component accordingly.
     if (action.hasFlag(ActionFlag.SUCCEEDED) && action.hasFlag(ActionFlag.ACTOR_CHANGED_AREA)) {
       component_worldMapRevealed.setAreaIsRevealed(getActor().getCoordinate());
+      Game.getActiveControllers().onPlayerChangedArea();
     }
 
   }

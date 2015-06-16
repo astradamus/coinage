@@ -13,7 +13,6 @@ public class Moving extends Action {
 
   public Moving(Actor actor, Direction direction) {
     super(actor, direction);
-    addFlag(ActionFlag.REPEAT_ON_SUCCESS);
   }
 
 
@@ -61,7 +60,6 @@ public class Moving extends Action {
   @Override
   public Moving attemptRepeat() {
 
-    // Important! We must get the actor's current (NEW) coordinate, not the one from this action.
     return new Moving(getActor(), getDirection());
 
   }

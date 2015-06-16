@@ -4,6 +4,7 @@ import controller.action.Action;
 import actor.Actor;
 import controller.action.ActionFlag;
 import game.Game;
+import world.Area;
 
 /**
  *
@@ -36,7 +37,7 @@ public abstract class ActorController implements Controller {
   public final void onUpdate() {
 
     if (actor.isDead()) {
-      Game.getActiveControllers().unregister(this);
+      Game.getActiveControllers().removeController(this);
       return;
     }
 
@@ -49,14 +50,22 @@ public abstract class ActorController implements Controller {
 
       if (executing.execute()) {
 
-        // If this action should repeat upon succeeding, attempt to do so.
-        if (executing.hasFlag(ActionFlag.REPEAT_ON_SUCCESS)) {
-          attemptAction(executing.attemptRepeat());
+
+        if (executing.hasFlag(ActionFlag.ACTOR_CHANGED_AREA)) {
+          Area from = executing.getActorAt().area;
+          Area to = actor.getCoordinate().area;
+          Game.getActiveControllers().moveController(this,from,to);
+        }
+
+        // If this action can repeat upon succeeding, attempt to do so.
+        Action repeat = executing.attemptRepeat();
+        if (repeat != null) {
+          attemptAction(repeat);
         }
 
       }
 
-      // If we haven't switched to a new action yet, start idling.
+      // If we haven't attempted a new action yet, start idling.
       if (action == executing) {
         action = null;
       }
@@ -67,6 +76,11 @@ public abstract class ActorController implements Controller {
 
     onUpdateProcessed();
 
+  }
+
+  @Override
+  public Area getLocality() {
+    return actor.getCoordinate().area;
   }
 
   @Override

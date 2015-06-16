@@ -4,6 +4,8 @@ import game.Game;
 import game.Physical;
 import utils.Dimension;
 
+import java.util.*;
+
 /**
  *
  */
@@ -90,6 +92,32 @@ public class World {
 
   public Dimension getAreaSizeInSquares() {
     return areaSizeInSquares;
+  }
+
+  public Set<Area> getAllAreas() {
+    Set<Area> all = new HashSet<>();
+    for(int y = 0; y < worldSizeInAreas.getHeight(); y++) {
+      all.addAll(Arrays.asList(areas[y]));
+    }
+    return all;
+  }
+
+  public Set<Area> getAllAreasWithinRange(Coordinate center, int radius) {
+    Set<Area> all = new HashSet<>();
+    for(int y = center.worldY - radius; y <= center.worldY+radius; y++) {
+      if (y < 0 || y >= worldSizeInAreas.getHeight()) {
+        continue;
+      }
+      for(int x = center.worldX - radius; x <= center.worldX+radius; x++) {
+        if (x < 0 || x >= worldSizeInAreas.getWidth()) {
+          continue;
+        }
+
+        all.add(areas[y][x]);
+
+      }
+    }
+    return all;
   }
 
 }

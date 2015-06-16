@@ -75,7 +75,7 @@ public abstract class Action {
     return actor;
   }
 
-  protected final Coordinate getActorAt() {
+  public final Coordinate getActorAt() {
     return actorAt;
   }
 

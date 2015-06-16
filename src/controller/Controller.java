@@ -1,15 +1,15 @@
 package controller;
 
+import world.Area;
+
 /**
- * All Controllers registered with Game.register() will have onUpdate() called every
- * frame. Most controllers will be puppeteers for Actors,
+ * All Controllers registered with GameControllers.addController() will have onUpdate() called every
+ * frame that the area returned by getLocality() is within processing range of the player, as
+ * defined within GameControllers. If null is returned from getLocality(), this controller will
+ * be considered 'non-local' and will receive updates no matter where the player is.
  */
 public interface Controller {
 
-  /**
-   * Called every frame by Game.GameEngine as long as this Controller is registered with
-   * Game.register()
-   */
   void onUpdate();
 
   /**
@@ -19,5 +19,10 @@ public interface Controller {
    * this controller to be called first or last in the order every time.
    */
   int getRolledInitiative();
+
+  /**
+   * Non-local controllers should return null.
+   */
+  Area getLocality();
 
 }

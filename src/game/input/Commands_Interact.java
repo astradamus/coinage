@@ -1,7 +1,6 @@
 package game.input;
 
 import actor.Actor;
-import controller.action.ActionTarget;
 import controller.action.Attack;
 import controller.action.PickingUp;
 import controller.player.PlayerController;
@@ -59,11 +58,8 @@ public enum Commands_Interact implements Command {
                     } else {
 
                       playerController.attemptAction(
-                          new Attack(playerActor,
-                              new ActionTarget<>((Actor) selected, Game.getActiveInputSwitch()
-                                  .getPlayerTarget())
-                          )
-                      );
+                          new Attack(playerActor,Game.getActiveInputSwitch().getPlayerTarget(),
+                              (Actor) selected));
 
                     }
                   }
@@ -110,11 +106,9 @@ public enum Commands_Interact implements Command {
 
                   playerController.attemptAction(
                       new PickingUp(playerController.getActor(),
-                          new ActionTarget<>(selected,Game.getActiveInputSwitch().getPlayerTarget())
-                      )
-                  );
+                          Game.getActiveInputSwitch().getPlayerTarget(), selected));
 
-                  Game.getActiveInputSwitch().enterMode(GameMode.EXPLORE);
+                      Game.getActiveInputSwitch().enterMode(GameMode.EXPLORE);
 
                 }
               }

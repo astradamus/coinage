@@ -39,4 +39,11 @@ public class PlayerController extends ActorController {
     return component_worldMapRevealed;
   }
 
+  public void doNotRepeatAction() {
+    Action action = getCurrentAction();
+    if (action != null) {
+      action.doNotRepeat();
+    }
+  }
+
 }

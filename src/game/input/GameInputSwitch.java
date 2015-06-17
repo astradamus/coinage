@@ -111,11 +111,12 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
 
   }
 
+
   @Override
   public void receiveDirectionsCleared() {
 
     if (targetCursor == null) {
-      playerController.attemptAction(null);
+      playerController.doNotRepeatAction();
     } else {
       targetCursor.setCursorMovingIn(null);
     }

@@ -103,7 +103,7 @@ public class Game {
 
   public static void main(String[] args) {
 
-    GameLoader.newGame(new Dimension(64, 64), new Dimension(18, 18));
+    GameLoader.newGame(new Dimension(48, 48), new Dimension(24, 24));
     GameDisplay.recalculateSize();
 
     List<KeyListener> keyListeners = ACTIVE.INPUT_SWITCH.getKeyListeners();

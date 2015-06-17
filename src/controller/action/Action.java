@@ -1,9 +1,9 @@
 package controller.action;
 
 import actor.Actor;
-import game.Direction;
 import world.Coordinate;
 
+import java.awt.*;
 import java.util.EnumSet;
 
 /**
@@ -14,39 +14,32 @@ public abstract class Action {
   private final Actor actor;
   private final Coordinate actorAt;
 
-  private final ActionTarget target;
-  private final Direction direction;
+  private final Coordinate target;
 
   private final EnumSet<ActionFlag> flags = EnumSet.noneOf(ActionFlag.class);
 
-  protected Action(Actor actor, ActionTarget target) {
+  protected Action(Actor actor, Coordinate target) {
     this.actor = actor;
     this.actorAt = actor.getCoordinate();
 
-    this.direction = null;
     this.target = target;
   }
 
-  protected Action(Actor actor, Direction direction) {
-    this.actor = actor;
-    this.actorAt = actor.getCoordinate();
 
-    this.direction = direction;
-    this.target = null;
-  }
-
-
-  public int calcBeatsToPerform() {
+  public int calcDelayToPerform() {
     return 0;
   }
 
-  protected int calcBeatsToRecover() {
+  protected int calcDelayToRecover() {
     return 0;
   }
 
   protected abstract boolean validate();
   protected abstract void apply();
 
+  public Color getIndicatorColor() {
+    return null;
+  }
 
   public final boolean execute() {
 
@@ -63,10 +56,16 @@ public abstract class Action {
       addFlag(ActionFlag.FAILED);
     }
 
-    getActor().addBeatsToActionDelay(calcBeatsToRecover());
+    getActor().addBeatsToActionDelay(calcDelayToRecover());
     return valid;
 
   }
+
+
+  public void doNotRepeat() {
+    addFlag(ActionFlag.DO_NOT_REPEAT);
+  }
+
 
   public final boolean hasFlag(ActionFlag flag) {
     return flags.contains(flag);
@@ -88,12 +87,9 @@ public abstract class Action {
     return actorAt;
   }
 
-  protected final ActionTarget getActionTarget() {
+  public final Coordinate getTarget() {
     return target;
   }
 
-  protected final Direction getDirection() {
-    return direction;
-  }
 
 }

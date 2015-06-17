@@ -5,6 +5,9 @@ import actor.Actor;
 import controller.action.ActionFlag;
 import game.Game;
 import world.Area;
+import world.Coordinate;
+
+import java.awt.*;
 
 /**
  *
@@ -24,14 +27,14 @@ public abstract class ActorController implements Controller {
     this.actor = actor;
   }
 
-  public final Action getCurrentAction() {
+  protected final Action getCurrentAction() {
     return action;
   }
 
 
   public final void attemptAction(Action action) {
     if (action != null) {
-      actor.addBeatsToActionDelay(action.calcBeatsToPerform());
+      actor.addBeatsToActionDelay(action.calcDelayToPerform());
     }
 
     this.action = action;
@@ -112,6 +115,22 @@ public abstract class ActorController implements Controller {
 
   public boolean isFreeToAct() {
     return action == null && actor.isReadyToAct();
+  }
+
+  public Color getActionIndicatorColor() {
+    if (action != null) {
+      return action.getIndicatorColor();
+    } else {
+      return null;
+    }
+  }
+
+  public Coordinate getActionTarget() {
+    if (action != null) {
+      return action.getTarget();
+    } else {
+      return null;
+    }
   }
 
 }

@@ -4,9 +4,11 @@ import actor.Actor;
 import controller.ActorController;
 import game.Direction;
 import game.Game;
+import game.TimeMode;
 import world.Coordinate;
 
 import java.awt.*;
+import java.util.Set;
 
 /**
  *
@@ -15,14 +17,27 @@ public class ActionOverlay {
 
 
   public static final int SQUARE_SIZE = GameDisplay.SQUARE_SIZE;
+  public static final Font ACTION_OVERLAY_FONT = new Font("Monospaced", Font.BOLD,
+      SQUARE_SIZE*5/7);
 
 
-  public static void drawOverlay(Graphics g) {
+  public static void drawOverlay(Graphics2D g) {
 
     // Draw an overlay on actors indicating the direction they are facing.
-    Game.getActiveControllers().getControllersByArea(ActorController.class,
-        Game.getActivePlayer().getLocality())
-        .forEach(controller -> drawFacingOverlay(g, (ActorController) controller, 3));
+    Set<ActorController> localActorControllers = Game.getActiveControllers()
+        .getControllersByArea(ActorController.class, Game.getActivePlayer().getLocality());
+
+    g.setFont(ACTION_OVERLAY_FONT);
+    g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+    for (ActorController controller : localActorControllers) {
+      if (Game.getTimeMode() == TimeMode.PRECISION || Game.getTimeMode() == TimeMode.PAUSED) {
+        drawActionIndicator(g, controller);
+      }
+    }
+    for (ActorController controller : localActorControllers) {
+      drawFacingOverlay(g, controller, 6);
+    }
+
 
   }
 
@@ -58,9 +73,35 @@ public class ActionOverlay {
       drawY[i2] = originY + point.y;
     }
 
-    g.fillPolygon(drawX,drawY,6);
+    g.fillPolygon(drawX, drawY, 6);
 
 
+  }
+
+  private static void drawActionIndicator(Graphics2D g, ActorController controller) {
+    Color color = controller.getActionIndicatorColor();
+    Coordinate target = controller.getActionTarget();
+    if (target != null) {
+
+
+      int actionDelay = controller.getActor().getActionDelay()+1;
+
+      int drawX = target.localX * SQUARE_SIZE;
+      int drawY = target.localY * SQUARE_SIZE;
+
+      char character = '+';
+
+      if (Game.getActivePlayer().isFreeToAct()) {
+        if (actionDelay < 10) {
+          character = Integer.toString(actionDelay).charAt(0);
+        }
+      }
+
+      Appearance appearance = new Appearance(character, color, color);
+
+      SquareDrawer.drawOval(g, appearance, SQUARE_SIZE, drawX, drawY);
+
+    }
   }
 
 

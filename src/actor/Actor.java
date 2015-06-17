@@ -133,13 +133,11 @@ public class Actor implements Physical {
     this.actionDelay += addBeats;
   }
 
-  /**
-   * Returns true if this Actor is ready to act, or returns false and deducts one from this actor's
-   * recovery time if it is still recovering.
-   */
   public boolean isReadyToAct() {
     return actionDelay <= 0;
   }
+
+  public int getActionDelay() { return actionDelay; }
 
   public void decrementActionDelay() {
     actionDelay--;

@@ -4,17 +4,22 @@ import actor.Actor;
 import actor.attribute.Attribute;
 import game.Direction;
 import game.Game;
-import world.Coordinate;
+
+import java.awt.*;
 
 /**
  *
  */
 public class Moving extends Action {
 
+  private final Direction direction;
   private final boolean isStrafing;
 
   public Moving(Actor actor, Direction direction, boolean isStrafing) {
-    super(actor, direction);
+    super(actor,
+        Game.getActiveWorld().offsetCoordinateBySquares(
+            actor.getCoordinate(),direction.relativeX,direction.relativeY));
+    this.direction = direction;
     this.isStrafing = isStrafing;
   }
 
@@ -29,7 +34,7 @@ public class Moving extends Action {
   private final static int DISTANCE_FROM_BASELINE_DIVISOR = 2;
 
   @Override
-  public int calcBeatsToPerform() {
+  public int calcDelayToPerform() {
 
     int actorReflex = getActor().readAttributeLevel(Attribute.REFLEX).ordinal();
 
@@ -45,26 +50,17 @@ public class Moving extends Action {
 
   }
 
-
-  @Override
-  protected int calcBeatsToRecover() {
-    return 1;
-  }
-
   @Override
   protected boolean validate() {
 
-    Coordinate newCoordinate = Game.getActiveWorld().offsetCoordinateBySquares(getActorAt(),
-        getDirection().relativeX, getDirection().relativeY);
-
-    return getActor().attemptMoveTo(newCoordinate);
+    return getActor().attemptMoveTo(getTarget());
 
   }
 
   @Override
   protected void apply() {
 
-    if (getActorAt().area != getActor().getCoordinate().area) {
+    if (getActorAt().area != getTarget().area) {
       addFlag(ActionFlag.ACTOR_CHANGED_AREA);
     }
 
@@ -72,9 +68,16 @@ public class Moving extends Action {
 
   @Override
   public Moving attemptRepeat() {
+    if (hasFlag(ActionFlag.DO_NOT_REPEAT)) {
+      return null;
+    } else {
+      return new Moving(getActor(), direction, isStrafing);
+    }
+  }
 
-    return new Moving(getActor(), getDirection(), isStrafing);
-
+  @Override
+  public Color getIndicatorColor() {
+    return Color.PINK;
   }
 
 }

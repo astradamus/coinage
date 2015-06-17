@@ -5,23 +5,29 @@ import actor.attribute.Attribute;
 import game.Game;
 import game.display.Event;
 import game.display.EventLog;
+import world.Coordinate;
+
+import java.awt.*;
 
 /**
  *
  */
 public class Attack extends Action {
 
-  public Attack(Actor actor, ActionTarget<Actor> target) {
+  private final Actor victim;
+
+  public Attack(Actor actor, Coordinate target, Actor victim) {
     super(actor, target);
+    this.victim = victim;
   }
 
   @Override
-  public int calcBeatsToPerform() {
+  public int calcDelayToPerform() {
     return 3;
   }
 
   @Override
-  protected int calcBeatsToRecover() {
+  protected int calcDelayToRecover() {
     return 2;
   }
 
@@ -29,20 +35,19 @@ public class Attack extends Action {
   protected boolean validate() {
     boolean playerIsAttacking = getActor() == Game.getActivePlayer().getActor();
 
-    Actor target = (Actor) getActionTarget().getTarget();
-    if (target.isDead()) {
+    if (victim.isDead()) {
       if (playerIsAttacking) {
         EventLog.registerEvent(Event.INVALID_ACTION, "It's already dead.");
       }
       return false;
     }
 
-    if (!getActionTarget().getTargetAt().getSquare().getAll().contains(target)) {
+    if (!getTarget().getSquare().getAll().contains(victim)) {
       if (playerIsAttacking) {
-        EventLog.registerEvent(Event.INVALID_ACTION, target.getName()+" eluded your attack.");
+        EventLog.registerEvent(Event.INVALID_ACTION, victim.getName()+" eluded your attack.");
       } else {
         EventLog.registerEventIfPlayerIsNear(getActor().getCoordinate(),Event.INVALID_ACTION,
-            target.getName()+" eluded "+getActor().getName()+"'s attack.");
+            victim.getName()+" eluded "+getActor().getName()+"'s attack.");
       }
       return false;
     }
@@ -53,7 +58,12 @@ public class Attack extends Action {
   @Override
   protected void apply() {
     int damageRange = getActor().readAttributeLevel(Attribute.MUSCLE).ordinal()*5;
-    ((Actor)getActionTarget().getTarget()).getHealth().wound(Game.RANDOM.nextInt(damageRange));
+    victim.getHealth().wound(Game.RANDOM.nextInt(damageRange));
+  }
+
+  @Override
+  public Color getIndicatorColor() {
+    return Color.RED;
   }
 
 }

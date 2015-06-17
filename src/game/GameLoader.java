@@ -34,7 +34,7 @@ public class GameLoader {
     // populate with animals and a Human for the player to control
     GameControllers gameControllers = new GameControllers(world.getAllAreas());
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 5000; i++) {
       String id;
       switch (i % 5) {
         case 0: id = "DOG"; break;

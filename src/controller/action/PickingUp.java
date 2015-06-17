@@ -13,34 +13,33 @@ import java.security.InvalidParameterException;
  */
 public class PickingUp extends Action {
 
-  public PickingUp(Actor actor, ActionTarget<Physical> target) {
+  private final Physical item;
+
+  public PickingUp(Actor actor, Coordinate target, Physical item) {
     super(actor, target);
-
-    if (getActor().getInventory() == null) {
-      throw new InvalidParameterException("Given actor has no inventory.");
-    }
+    this.item = item;
   }
 
   @Override
-  public int calcBeatsToPerform() {
-    return 2;
+  public int calcDelayToPerform() {
+    return 1;
   }
 
   @Override
-  protected int calcBeatsToRecover() {
+  protected int calcDelayToRecover() {
     return 1;
   }
 
   @Override
   protected boolean validate() {
 
-    if (getActionTarget().getTarget().isImmovable()) {
+    if (item.isImmovable()) {
       EventLog.registerEvent(Event.INVALID_ACTION, "That can't be picked up.");
       return false;
     }
 
 
-    if (getActionTarget().getTargetAt().getSquare().pull(getActionTarget().getTarget())) {
+    if (getTarget().getSquare().pull(item)) {
       return true;
     } else {
       EventLog.registerEvent(Event.INVALID_ACTION, "The thing you were reaching for is no longer there.");
@@ -52,7 +51,7 @@ public class PickingUp extends Action {
   @Override
   protected void apply() {
 
-    getActor().getInventory().addItem(getActionTarget().getTarget());
+    getActor().getInventory().addItem(item);
 
   }
 

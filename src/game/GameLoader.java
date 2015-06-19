@@ -47,7 +47,7 @@ public class GameLoader {
       if (actor != null) {
         Coordinate randomCoordinate = world.makeRandomCoordinate();
         actor.setCoordinate(randomCoordinate);
-        world.put(actor, randomCoordinate);
+        randomCoordinate.getSquare().put(actor);
         gameControllers.addController(new AnimalController(actor));
       }
     }
@@ -61,7 +61,7 @@ public class GameLoader {
     Coordinate playerStartCoordinate = world.makeRandomCoordinate();
     player.setCoordinate(playerStartCoordinate);
 
-    world.put(player, playerStartCoordinate);
+    playerStartCoordinate.getSquare().put(player);
 
     // assign the Human to a PlayerController and addController it
     PlayerController playerController = new PlayerController(player,worldSizeInAreas);

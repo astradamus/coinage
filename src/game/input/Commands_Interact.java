@@ -1,7 +1,7 @@
 package game.input;
 
 import actor.Actor;
-import controller.action.Attack;
+import controller.action.Attacking;
 import controller.action.PickingUp;
 import controller.player.PlayerController;
 import game.Game;
@@ -58,7 +58,7 @@ public enum Commands_Interact implements Command {
                     } else {
 
                       playerController.attemptAction(
-                          new Attack(playerActor,Game.getActiveInputSwitch().getPlayerTarget(),
+                          new Attacking(playerActor,Game.getActiveInputSwitch().getPlayerTarget(),
                               (Actor) selected));
 
                     }

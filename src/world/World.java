@@ -31,25 +31,6 @@ public class World {
 
   }
 
-  public void put(Physical putting, Coordinate coordinate) {
-    coordinate.getSquare().put(putting);
-  }
-
-  public boolean move(Physical moving, Coordinate from, Coordinate to) {
-
-    if (to.getSquare().isBlocked()) {
-      return false;
-    }
-    if (from.getSquare().pull(moving)) {
-      to.getSquare().put(moving);
-      return true;
-    } else {
-      return false;
-    }
-
-  }
-
-
   private Coordinate makeCoordinate(int globalX, int globalY) {
     if (!globalSizeInSquares.getCoordinateIsWithinBounds(globalX,globalY)) {
       return null;

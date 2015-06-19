@@ -1,9 +1,7 @@
 package controller;
 
-import controller.action.Action;
+import controller.action.*;
 import actor.Actor;
-import controller.action.ActionFlag;
-import controller.action.Moving;
 import game.Direction;
 import game.Game;
 
@@ -22,10 +20,21 @@ public class AnimalController extends ActorController {
 
 
   private void startWander() {
+
     Direction direction = Direction.values()[Game.RANDOM.nextInt(Direction.values().length)];
-    getActor().setFacing(direction);
-    attemptAction(new Moving(getActor(), direction, false));
+
+    Action next;
+
+    if (getActor().getFacing() != direction) {
+      next = new TurnThenMove(getActor(), direction, true);
+    } else {
+      next = new Moving(getActor(), direction, true);
+    }
+
+    attemptAction(next);
+
   }
+
 
   private void stopWander() {
     attemptAction(null);

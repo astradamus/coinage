@@ -2,6 +2,7 @@ package game.input;
 
 import actor.Actor;
 import controller.action.Moving;
+import controller.action.TurnThenMove;
 import controller.action.Turning;
 import controller.player.PlayerController;
 import game.Direction;
@@ -92,21 +93,28 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
   @Override
   public void receiveDirection(Direction direction, KeyModifier modifier) {
 
-    if (targetCursor == null) {
+    if (targetCursor != null) {
+      targetCursor.setCursorMovingIn(direction);
+
+    } else {
+
       Actor playerActor = playerController.getActor();
 
       boolean needsToTurn = direction != playerController.getActor().getFacing();
-      boolean isMoving = modifier != KeyModifier.CTRL;
-      boolean isStrafing = modifier == KeyModifier.SHIFT;
+      boolean turningWithoutMoving = modifier == KeyModifier.CTRL;
+      boolean walkingWithoutTurning = modifier == KeyModifier.SHIFT;
 
-      if (!isStrafing && needsToTurn) {
-        playerController.attemptAction(new Turning(playerActor, direction, isMoving));
-      } else if (isMoving) {
-        playerController.attemptAction(new Moving(playerActor, direction, isStrafing));
+      if (turningWithoutMoving) {
+        playerController.attemptAction(new Turning(playerActor, direction));
+
+      } else if (!needsToTurn || walkingWithoutTurning) {
+        playerController.attemptAction(new Moving(playerActor, direction, walkingWithoutTurning));
+
+      } else {
+        playerController.attemptAction(new TurnThenMove(playerActor, direction, false));
+
       }
 
-    } else {
-      targetCursor.setCursorMovingIn(direction);
     }
 
   }

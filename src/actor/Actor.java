@@ -143,13 +143,4 @@ public class Actor implements Physical {
     actionDelay--;
   }
 
-
-  public boolean attemptMoveTo(Coordinate newCoordinate) {
-    if (newCoordinate != null && Game.getActiveWorld().move(this, coordinate, newCoordinate)) {
-      coordinate = newCoordinate;
-      return true;
-    }
-    return false;
-  }
-
 }

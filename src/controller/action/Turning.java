@@ -2,75 +2,81 @@ package controller.action;
 
 import actor.Actor;
 import game.Direction;
-import game.Game;
 
 /**
- *
+ * Actors perform turns to change their facing direction. Actors can only turn one direction
+ * grade at a time, but attempts to turn more than one grade will automatically repeat until the
+ * target is reached. Passing {@code true} to {@code moveAfterTurning} will cause the complete
+ * turning chain to be finalized with a movement in the given direction.
  */
 public class Turning extends Action {
 
-  private final Direction direction;
-  private final boolean attemptMoveAfterTurn;
 
-  public Turning(Actor actor, Direction direction, boolean attemptMoveAfterTurn) {
-    super(actor,
-        Game.getActiveWorld().offsetCoordinateBySquares(
-            actor.getCoordinate(),direction.relativeX,direction.relativeY));
+  protected final Direction turningTowards;
 
-    this.direction = direction;
-    this.attemptMoveAfterTurn = attemptMoveAfterTurn;
-
+  public Turning(Actor actor, Direction turningTowards) {
+    super(actor, null);
+    this.turningTowards = turningTowards;
   }
 
+
+
+  /**
+   * Turning cannot currently fail.
+   */
   @Override
   protected boolean validate() {
     return true;
   }
 
+
+  /**
+   * Turn the actor one direction grade towards the target direction.
+   */
   @Override
   protected void apply() {
 
-    Direction actorFacing = getActor().getFacing();
+    final Direction actorFacing = getPerformer().getFacing();
 
-    int difference = actorFacing.ordinal() - direction.ordinal();
+    final int difference = actorFacing.ordinal() - turningTowards.ordinal();
 
+    // Evaluate whether turning left or right will get there faster.
     if ((difference > 0 && difference <= 4) || difference < -4) {
-      getActor().setFacing(actorFacing.getLeftNeighbor());
+      getPerformer().setFacing(actorFacing.getLeftNeighbor());
     } else {
-      getActor().setFacing(actorFacing.getRightNeighbor());
+      getPerformer().setFacing(actorFacing.getRightNeighbor());
     }
 
   }
 
+
+  /**
+   * Continue turning until the target direction is reached. Cancelling repeat does not interrupt
+   * the turn, and if we were to attempt a move after the turn, we will still always perform one
+   * movement in the target direction. The cancellation applies to any future moves.
+   *
+   * @return The next action, or null if none should follow.
+   */
   @Override
   public Action attemptRepeat() {
 
-    // todo: clean up this nightmare. The point is to have single-taps of directions we're not
-    // facing follow through with turning to that direction AND moving one step, but no more.
+    final boolean targetDirectionReached = getPerformer().getFacing() == turningTowards;
 
-    boolean repeatCancelled = false;
-
-    if (hasFlag(ActionFlag.DO_NOT_REPEAT)) {
-      repeatCancelled = true;
-    }
-
-    if (getActor().getFacing() == direction) {
-      if (attemptMoveAfterTurn) {
-        Moving moving = new Moving(getActor(), direction, false);
-        if (repeatCancelled) {
-          moving.doNotRepeat();
-        }
-        return moving;
-      } else {
-        return null;
-      }
+    if (targetDirectionReached) {
+      return null;
     } else {
-      Turning turning = new Turning(getActor(), direction, attemptMoveAfterTurn);
-      if (repeatCancelled) {
-        turning.doNotRepeat();
+
+      final Turning next = new Turning(getPerformer(), turningTowards);
+
+      if (hasFlag(ActionFlag.DO_NOT_REPEAT)) {
+        next.doNotRepeat(); // Pass repeat cancellation along the chain, if there is one.
       }
-      return turning;
+
+      return next;
+
     }
+
   }
+
 
 }

@@ -6,19 +6,20 @@ import game.display.Event;
 import game.display.EventLog;
 import world.Coordinate;
 
-import java.security.InvalidParameterException;
-
 /**
- *
+ * Actors perform pickups to move items from the world to their inventory.
  */
 public class PickingUp extends Action {
 
-  private final Physical item;
 
-  public PickingUp(Actor actor, Coordinate target, Physical item) {
-    super(actor, target);
-    this.item = item;
+  private final Physical pickingUpWhat;
+
+  public PickingUp(Actor actor, Coordinate pickingUpWhere, Physical pickingUpWhat) {
+    super(actor, pickingUpWhere);
+    this.pickingUpWhat = pickingUpWhat;
   }
+
+
 
   @Override
   public int calcDelayToPerform() {
@@ -30,29 +31,40 @@ public class PickingUp extends Action {
     return 1;
   }
 
+
+
+  /**
+   * Picking up will fail if the item is immovable, or if the item is not found at the target
+   * location.
+   */
   @Override
   protected boolean validate() {
 
-    if (item.isImmovable()) {
+    if (pickingUpWhat.isImmovable()) {
       EventLog.registerEvent(Event.INVALID_ACTION, "That can't be picked up.");
       return false;
     }
 
+    boolean itemIsAtTarget = getTarget().getSquare().getAll().contains(pickingUpWhat);
 
-    if (getTarget().getSquare().pull(item)) {
-      return true;
-    } else {
-      EventLog.registerEvent(Event.INVALID_ACTION, "The thing you were reaching for is no longer there.");
-      return false;
+    if (!itemIsAtTarget) {
+      EventLog.registerEvent(Event.INVALID_ACTION,
+          "The thing you were reaching for is no longer there.");
     }
 
+    return itemIsAtTarget;
+
   }
 
+
+  /**
+   * Upon success, the item is added to the actor's inventory.
+   */
   @Override
   protected void apply() {
-
-    getActor().getInventory().addItem(item);
-
+    getTarget().getSquare().pull(pickingUpWhat);
+    getPerformer().getInventory().addItem(pickingUpWhat);
   }
+
 
 }

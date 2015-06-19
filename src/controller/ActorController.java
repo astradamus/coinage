@@ -55,11 +55,11 @@ public abstract class ActorController implements Controller {
 
       Action executing = action;
 
-      if (executing.execute()) {
+      if (executing.perform()) {
 
 
         if (executing.hasFlag(ActionFlag.ACTOR_CHANGED_AREA)) {
-          Area from = executing.getActorAt().area;
+          Area from = executing.getOrigin().area;
           Area to = actor.getCoordinate().area;
           Game.getActiveControllers().moveController(this,from,to);
         }

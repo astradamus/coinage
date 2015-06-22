@@ -1,7 +1,7 @@
 package controller.action;
 
 import actor.Actor;
-import game.Physical;
+import game.physical.Physical;
 import game.display.Event;
 import game.display.EventLog;
 import world.Coordinate;

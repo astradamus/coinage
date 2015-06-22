@@ -88,13 +88,14 @@ public class Game {
 
   void update() {
 
+    INPUT_SWITCH.onUpdate();
+
     TimeMode timeMode = TIME_MODE.peek();
     if (timeMode == TimeMode.LIVE
         || (timeMode == TimeMode.PRECISION && !getActivePlayer().isFreeToAct())) {
       CONTROLLERS.onUpdate();
     }
 
-    INPUT_SWITCH.onUpdate();
     GameDisplay.onUpdate();
 
   }

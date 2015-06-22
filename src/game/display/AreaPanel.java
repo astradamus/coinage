@@ -1,6 +1,7 @@
 package game.display;
 
 import game.Game;
+import game.physical.Physical;
 import world.Coordinate;
 import world.World;
 
@@ -33,14 +34,18 @@ public class AreaPanel extends JPanel {
       for (int x = 0; x < world.getAreaSizeInSquares().getWidth(); x++) {
 
         Coordinate thisCoordinate = world.offsetCoordinateBySquares(playerAt,
-            x-playerAt.localX, y-playerAt.localY);
+            x - playerAt.localX, y - playerAt.localY);
 
-        Appearance visible = thisCoordinate.getSquare().peek().getAppearance();
+        final Physical visible = thisCoordinate.getSquare().peek();
+
+        final char mapSymbol = visible.getMapSymbol();
+        final Color color = visible.getColor();
+        final Color bgColor = visible.getBGColor();
 
         int placeX = (x) * SQUARE_SIZE;
         int placeY = (y) * SQUARE_SIZE+getInsets().top;
 
-        SquareDrawer.drawSquare(g, visible, SQUARE_SIZE, placeX, placeY);
+        SquareDrawer.drawSquare(g, mapSymbol, color, bgColor, SQUARE_SIZE, placeX, placeY);
 
         // Draw a cursor on the square targeted by the player.
         Coordinate target = Game.getActiveInputSwitch().getPlayerTarget();

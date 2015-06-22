@@ -4,6 +4,7 @@ import controller.action.Action;
 import actor.Actor;
 import controller.action.ActionFlag;
 import game.Game;
+import game.physical.PhysicalFlag;
 import world.Area;
 import world.Coordinate;
 
@@ -43,7 +44,7 @@ public abstract class ActorController implements Controller {
   @Override
   public final void onUpdate() {
 
-    if (actor.isDead()) {
+    if (actor.hasFlag(PhysicalFlag.DEAD)) {
       Game.getActiveControllers().removeController(this);
       return;
     }

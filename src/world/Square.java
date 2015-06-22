@@ -1,6 +1,7 @@
 package world;
 
-import game.Physical;
+import game.physical.Physical;
+import game.physical.PhysicalFlag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,8 @@ public class Square {
     for (int i = 0; i < locatedHere.size(); i++) {
       Physical comparePhysical = locatedHere.get(i);
 
-      if (putting.getVisualPriority() >= comparePhysical.getVisualPriority()) {
+      if (putting.getVisualPriority()
+          >= comparePhysical.getVisualPriority()) {
         locatedHere.add(i,putting);
         return;
       }
@@ -66,7 +68,7 @@ public class Square {
    */
   public boolean isBlocked() {
     for(Physical physical : locatedHere) {
-      if (physical.isBlocking()) {
+      if (physical.hasFlag(PhysicalFlag.BLOCKING)) {
         return true;
       }
     }

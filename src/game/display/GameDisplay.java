@@ -2,6 +2,7 @@ package game.display;
 
 
 import game.Game;
+import game.physical.Appearance;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.awt.event.KeyListener;
  */
 public class GameDisplay {
 
-  public static final Appearance CURSOR = new Appearance(' ',Color.WHITE,Color.WHITE);
+  public static final Appearance CURSOR = new Appearance(' ', Color.WHITE, Color.WHITE);
 
   public static final int SQUARE_SIZE = 20;
 

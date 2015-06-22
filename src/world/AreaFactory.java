@@ -1,7 +1,7 @@
 package world;
 
 import game.Game;
-import game.Physical;
+import game.physical.Physical;
 import thing.ThingFactory;
 import utils.Dimension;
 

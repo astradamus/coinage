@@ -4,6 +4,7 @@ import actor.Actor;
 import actor.attribute.Attribute;
 import game.display.Event;
 import game.display.EventLog;
+import game.physical.PhysicalFlag;
 
 /**
  *
@@ -22,7 +23,7 @@ public class Health {
   }
 
   public void heal(double healing) {
-    if (actor.isDead()) {
+    if (actor.hasFlag(PhysicalFlag.DEAD)) {
       return; // The dead cannot be healed.
     }
     current += healing;
@@ -32,7 +33,7 @@ public class Health {
   }
 
   public void wound(double damage) {
-    if (actor.isDead()) {
+    if (actor.hasFlag(PhysicalFlag.DEAD)) {
       return; // The dead cannot be wounded.
     }
 
@@ -45,7 +46,7 @@ public class Health {
     if (remaining <= 0) {
 
       EventLog.registerEventIfPlayerIsNear(actor.getCoordinate(), Event.ACTOR_WOUNDED,
-          actor.getName()+" has died.");
+          actor.getName() + " has died.");
 
       actor.die();
 

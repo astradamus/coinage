@@ -3,7 +3,7 @@ package game.input;
 import controller.action.Placing;
 import controller.player.PlayerController;
 import game.Game;
-import game.Physical;
+import game.physical.Physical;
 import world.Coordinate;
 
 import java.awt.event.KeyEvent;

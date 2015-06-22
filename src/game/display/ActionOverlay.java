@@ -5,6 +5,7 @@ import controller.ActorController;
 import game.Direction;
 import game.Game;
 import game.TimeMode;
+import game.physical.Appearance;
 import world.Coordinate;
 
 import java.awt.*;
@@ -47,7 +48,7 @@ public class ActionOverlay {
 
     Direction facing = actor.getFacing();
 
-    g.setColor(actor.getAppearance().getColor());
+    g.setColor(actor.getColor());
 
     Coordinate actorAt = actor.getCoordinate();
 

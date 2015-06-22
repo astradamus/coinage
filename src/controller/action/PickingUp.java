@@ -1,9 +1,10 @@
 package controller.action;
 
 import actor.Actor;
-import game.Physical;
+import game.physical.Physical;
 import game.display.Event;
 import game.display.EventLog;
+import game.physical.PhysicalFlag;
 import world.Coordinate;
 
 /**
@@ -40,7 +41,7 @@ public class PickingUp extends Action {
   @Override
   protected boolean validate() {
 
-    if (pickingUpWhat.isImmovable()) {
+    if (pickingUpWhat.hasFlag(PhysicalFlag.IMMOVABLE)) {
       EventLog.registerEvent(Event.INVALID_ACTION, "That can't be picked up.");
       return false;
     }

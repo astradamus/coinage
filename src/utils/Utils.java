@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.*;
+
 /**
  *
  */
@@ -30,5 +32,19 @@ public class Utils {
     }
     return mod;
   }
+
+
+  public static String indefiniteArticle(String of) {
+
+    if (VOWELS.contains(of.toLowerCase().charAt(0))) {
+      return "an";
+    } else {
+      return "a";
+    }
+
+  }
+
+  public static final List<Character> VOWELS =
+      Collections.unmodifiableList(Arrays.asList('a', 'e', 'i', 'o', 'u'));
 
 }

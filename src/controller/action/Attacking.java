@@ -5,6 +5,7 @@ import actor.attribute.Attribute;
 import game.Game;
 import game.display.Event;
 import game.display.EventLog;
+import game.physical.PhysicalFlag;
 import world.Coordinate;
 
 import java.awt.*;
@@ -50,13 +51,14 @@ public class Attacking extends Action {
   protected boolean validate() {
     boolean playerIsAttacking = getPerformer() == Game.getActivePlayer().getActor();
 
-    if (victim.isDead()) {
+    if (victim.hasFlag(PhysicalFlag.DEAD)) {
       if (playerIsAttacking) {
         EventLog.registerEvent(Event.INVALID_ACTION, "It's already dead.");
       }
       return false;
     }
 
+    // todo clean this up \/ \/ \/
     if (!getTarget().getSquare().getAll().contains(victim)) {
       if (playerIsAttacking) {
         EventLog.registerEvent(Event.INVALID_ACTION, victim.getName()+" eluded your attack.");

@@ -7,10 +7,11 @@ import actor.inventory.Inventory;
 import actor.stats.Health;
 import game.Direction;
 import game.Game;
-import game.Physical;
-import game.display.Appearance;
+import game.physical.Physical;
+import game.physical.PhysicalFlag;
 import world.Coordinate;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,19 +19,12 @@ import java.util.Map;
  * Actors are subjects. They act upon Things and other Actors in the world. The Actor class only
  * handles the physical state of the Actor. Behavior and actions are handled by a Controller.
  */
-public class Actor implements Physical {
-
-  private final String name;
-  private final Appearance appearance;
-  private final Double weight;
-
+public class Actor extends Physical {
 
   private final Health health;
   private final Map<Attribute, Rank> attributes;
   private final Inventory inventory;
 
-
-  private ActorPhysicalState physicalState = ActorPhysicalState.ALIVE;
 
   private Coordinate coordinate;
   private Direction facing = Direction.getRandom();
@@ -39,10 +33,13 @@ public class Actor implements Physical {
 
 
   Actor(ActorTemplate aT) {
+    super(aT.name, aT.appearance);
 
-    name = aT.name;
-    appearance = aT.appearance;
-    weight = aT.weight;
+    // todo clean up/clarify this.
+    addFlag(PhysicalFlag.BLOCKING);
+    addFlag(PhysicalFlag.IMMOVABLE);
+    aT.flags.forEach(this::addFlag);
+
 
     attributes = new HashMap<>();
 
@@ -56,44 +53,14 @@ public class Actor implements Physical {
 
   }
 
-  @Override
-  public String getName() {
-    return physicalState.getQualifiedName(name);
-  }
-
-  @Override
-  public Appearance getAppearance() {
-    return physicalState.getAdjustedAppearance(appearance);
-  }
-
-  @Override
-  public Double getWeight() {
-    return weight;
-  }
-
-  @Override
-  public int getVisualPriority() {
-    return Game.VISUAL_PRIORITY__ACTORS;
-  }
-
-  @Override
-  public boolean isImmovable() {
-    return physicalState.actorIsImmovable();
-  }
-
-  @Override
-  public boolean isBlocking() {
-    return physicalState.actorIsBlocking();
-  }
-
-
 
   public void die() {
-    physicalState = ActorPhysicalState.DEAD;
-  }
-
-  public boolean isDead() {
-    return physicalState == ActorPhysicalState.DEAD;
+    if (hasFlag(PhysicalFlag.DEAD)) {
+      return; // Already dead!
+    }
+    removeFlag(PhysicalFlag.BLOCKING);
+    removeFlag(PhysicalFlag.IMMOVABLE);
+    addFlag(PhysicalFlag.DEAD);
   }
 
   public Health getHealth() {
@@ -137,10 +104,23 @@ public class Actor implements Physical {
     return actionDelay <= 0;
   }
 
-  public int getActionDelay() { return actionDelay; }
+  public int getActionDelay() {
+    return actionDelay;
+  }
 
   public void decrementActionDelay() {
     actionDelay--;
   }
 
+
+  @Override
+  public Color getColor() {
+
+    if (hasFlag(PhysicalFlag.DEAD)) {
+      return Color.DARK_GRAY;
+    }
+
+    return super.getColor();
+
+  }
 }

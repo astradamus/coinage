@@ -1,5 +1,7 @@
 package game.display;
 
+import game.physical.Appearance;
+
 import java.awt.*;
 
 /**
@@ -7,19 +9,23 @@ import java.awt.*;
  */
 public class SquareDrawer {
 
-  public static void drawSquare(Graphics g, Appearance appearance,
-                                int squareSize, int drawX, int drawY) {
+  public static void drawSquare(Graphics g, Appearance appearance, int squareSize,
+                                int drawX, int drawY) {
 
-    char character = appearance.getCharacter();
-    Color color = appearance.getColor();
-    Color bgColor = appearance.getBGColor();
+    drawSquare(g, appearance.getMapSymbol(), appearance.getColor(), appearance.getBGColor(),
+        squareSize, drawX, drawY);
+
+  }
+
+  public static void drawSquare(Graphics g, char mapSymbol, Color color, Color bgColor,
+                                int squareSize, int drawX, int drawY) {
 
     if (bgColor != null) {
       g.setColor(bgColor);
       g.fillRect(drawX, drawY, squareSize, squareSize);
     }
 
-    String chars = String.valueOf(character);
+    String chars = String.valueOf(mapSymbol);
     g.setColor(color);
     FontMetrics fM = g.getFontMetrics();
     int centerX = drawX + (squareSize - fM.stringWidth(chars)) / 2;
@@ -29,7 +35,7 @@ public class SquareDrawer {
 
   public static void drawOval(Graphics g, Appearance appearance, int squareSize, int drawX, int drawY) {
 
-    char character = appearance.getCharacter();
+    char character = appearance.getMapSymbol();
     Color color = appearance.getColor();
     Color bgColor = appearance.getBGColor();
 

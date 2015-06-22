@@ -1,7 +1,6 @@
 package world;
 
 import game.Game;
-import game.Physical;
 import utils.Dimension;
 
 import java.util.*;

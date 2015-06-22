@@ -1,6 +1,6 @@
 package actor.inventory;
 
-import game.Physical;
+import game.physical.Physical;
 
 import java.util.ArrayList;
 import java.util.List;

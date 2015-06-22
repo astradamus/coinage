@@ -22,7 +22,7 @@ public class EventLog {
   public static final long EVENT_LIFESPAN = 5000;
 
   // VALUES IN PIXELS
-  public static final int LINE_HEIGHT = 15;
+  public static final int LINE_HEIGHT = GameDisplay.SQUARE_SIZE;
   public static final int LINE_SPACER = LINE_HEIGHT/3;
 
   // VALUES IN LINES

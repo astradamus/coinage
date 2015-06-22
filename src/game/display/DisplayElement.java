@@ -1,7 +1,7 @@
 package game.display;
 
 import game.Game;
-import game.Physical;
+import game.physical.Physical;
 import game.input.Command;
 import game.input.Commands_EnterMode;
 import utils.ColoredString;
@@ -49,7 +49,7 @@ public interface DisplayElement {
   static DisplayElement_Text makePhysicalsList(List<Physical> physicals, boolean isSelectList) {
 
     List<ColoredString> coloredStrings = physicals.stream()
-        .map(physical -> new ColoredString(physical.getAppearance().getColor(), physical.getName()))
+        .map(physical -> new ColoredString(physical.getColor(), physical.getName()))
         .collect(Collectors.toList());
 
 

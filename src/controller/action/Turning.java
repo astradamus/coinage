@@ -40,6 +40,10 @@ public class Turning extends Action {
 
     final int difference = actorFacing.ordinal() - turningTowards.ordinal();
 
+    if (difference == 0) {
+      return;
+    }
+
     // Evaluate whether turning left or right will get there faster.
     if ((difference > 0 && difference <= 4) || difference < -4) {
       getPerformer().getActor().setFacing(actorFacing.getLeftNeighbor());

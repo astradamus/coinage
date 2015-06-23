@@ -2,7 +2,7 @@ package game;
 
 import actor.Actor;
 import actor.ActorFactory;
-import controller.AnimalController;
+import controller.ai.AIController;
 import controller.player.PlayerController;
 import game.input.GameInputSwitch;
 import utils.Dimension;
@@ -48,7 +48,7 @@ public class GameLoader {
         Coordinate randomCoordinate = world.makeRandomCoordinate();
         actor.setCoordinate(randomCoordinate);
         randomCoordinate.getSquare().put(actor);
-        gameControllers.addController(new AnimalController(actor));
+        gameControllers.addController(new AIController(actor));
       }
     }
 

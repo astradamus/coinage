@@ -89,7 +89,7 @@ public abstract class ActorController implements Controller, ActorObserver {
 
     }
 
-    onUpdateFinished();
+    onActorTurnComplete();
 
   }
 

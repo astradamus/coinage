@@ -1,6 +1,7 @@
 package game.input;
 
 import actor.Actor;
+import controller.ActorController;
 import controller.action.Attacking;
 import controller.action.PickingUp;
 import controller.player.PlayerController;
@@ -10,6 +11,8 @@ import game.display.EventLog;
 import game.physical.Physical;
 
 import java.awt.event.KeyEvent;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -57,14 +60,22 @@ public enum Commands_Interact implements Command {
 
                     } else {
 
+                      // todo Change striking so player is presented with list of targets in
+                      // range, instead of being prompted to move/select manually, so that this
+                      // monstrosity is not necessary.
 
-                      EventLog.registerEvent(Event.INVALID_ACTION,
-                          "Oops! Striking is currently disabled pending better selection.");
-// todo striking should present the player a list of strikable targets instead of prompting a
-// todo targeting selecting
-//                      playerController.attemptAction(
-//                          new Attacking(playerActor,Game.getActiveInputSwitch().getPlayerTarget(),
-//                              (Actor) selected));
+                      final Set<ActorController> controllers = Game.getActiveControllers()
+                          .getControllersByArea(ActorController.class,
+                              playerActor.getCoordinate().area);
+
+                      for (ActorController controller : controllers) {
+                        if (controller.getActor() == selected) {
+                          playerController.attemptAction(
+                              new Attacking(playerController,
+                                  Game.getActiveInputSwitch().getPlayerTarget(), controller));
+                        }
+                      }
+
 
                     }
                   }

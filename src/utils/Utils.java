@@ -36,6 +36,16 @@ public class Utils {
   }
 
 
+  public static boolean getPointsAreAdjacent(int x1, int y1, int x2, int y2) {
+
+    final int deltaX = x2-x1;
+    final int deltaY = y2-y1;
+
+    return (deltaX <= 1 && deltaX >= -1 && deltaY <= 1 && deltaY >= -1);
+
+  }
+
+
   public static String indefiniteArticle(String of) {
 
     if (VOWELS.contains(of.toLowerCase().charAt(0))) {

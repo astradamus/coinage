@@ -37,7 +37,7 @@ public class Attacking extends Action {
   }
 
   @Override
-  protected int calcDelayToRecover() {
+  public int calcDelayToRecover() {
     return 2;
   }
 

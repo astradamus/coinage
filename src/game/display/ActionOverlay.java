@@ -85,7 +85,7 @@ public class ActionOverlay {
     if (target != null) {
 
 
-      int actionDelay = controller.getActor().getActionDelay()+1;
+      int actionDelay = controller.getActionDelayClock().getTotalDelay()+1;
 
       int drawX = target.localX * SQUARE_SIZE;
       int drawY = target.localY * SQUARE_SIZE;

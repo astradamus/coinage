@@ -16,6 +16,7 @@ import java.awt.*;
 public abstract class ActorController implements Controller {
 
   private final Actor actor;
+  private final ActionDelayClock actionDelayClock;
 
   private Action action;
 
@@ -26,18 +27,22 @@ public abstract class ActorController implements Controller {
     }
 
     this.actor = actor;
+    this.actionDelayClock = new ActionDelayClock();
   }
 
   protected final Action getCurrentAction() {
     return action;
   }
 
+  public final void cancelAction() {
+    actionDelayClock.cancelWarmUp();
+    action = null;
+  }
+
 
   public final void attemptAction(Action action) {
-    if (action != null) {
-      actor.addBeatsToActionDelay(action.calcDelayToPerform());
-    }
-
+    actionDelayClock.cancelWarmUp();
+    actionDelayClock.addBeatsToWarmUp(action.calcDelayToPerform());
     this.action = action;
   }
 
@@ -49,15 +54,15 @@ public abstract class ActorController implements Controller {
       return;
     }
 
-    if (!actor.isReadyToAct()) {
-      actor.decrementActionDelay();
+    if (!actionDelayClock.isReady()) {
+      actionDelayClock.decrementClock();
     }
     else if (action != null) {
 
       Action executing = action;
 
       if (executing.perform()) {
-
+        actionDelayClock.addBeatsToCoolDown(action.calcDelayToRecover());
 
         if (executing.hasFlag(ActionFlag.ACTOR_CHANGED_AREA)) {
           Area from = executing.getOrigin().area;
@@ -114,8 +119,12 @@ public abstract class ActorController implements Controller {
     return actor;
   }
 
+  public ActionDelayClock getActionDelayClock() {
+    return actionDelayClock;
+  }
+
   public boolean isFreeToAct() {
-    return action == null && actor.isReadyToAct();
+    return action == null && actionDelayClock.isReady();
   }
 
   public Color getActionIndicatorColor() {

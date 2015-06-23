@@ -45,7 +45,7 @@ public abstract class Action {
   /**
    * @return The number of updates that the actor must delay after the action has been performed.
    */
-  protected int calcDelayToRecover() {
+  public int calcDelayToRecover() {
     return 0;
   }
 
@@ -75,7 +75,6 @@ public abstract class Action {
       addFlag(ActionFlag.FAILED);
     }
 
-    getPerformer().addBeatsToActionDelay(calcDelayToRecover());
     return valid;
 
   }

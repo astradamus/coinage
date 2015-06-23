@@ -37,7 +37,7 @@ public class AnimalController extends ActorController {
 
 
   private void stopWander() {
-    attemptAction(null);
+    cancelAction();
     wanderChain = -1;
     waiting = Game.RANDOM.nextInt(50);
   }

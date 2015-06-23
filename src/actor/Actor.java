@@ -12,6 +12,7 @@ import game.physical.PhysicalFlag;
 import world.Coordinate;
 
 import java.awt.*;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +22,10 @@ import java.util.Map;
  */
 public class Actor extends Physical {
 
+  public static final EnumSet<PhysicalFlag> STANDARD_FLAGS =
+                                          EnumSet.of(PhysicalFlag.BLOCKING, PhysicalFlag.IMMOVABLE);
+
+
   private final Health health;
   private final Map<Attribute, Rank> attributes;
   private final Inventory inventory;
@@ -29,15 +34,13 @@ public class Actor extends Physical {
   private Coordinate coordinate;
   private Direction facing = Direction.getRandom();
 
-  private int actionDelay = 0;
 
 
   Actor(ActorTemplate aT) {
     super(aT.name, aT.appearance);
 
-    // todo clean up/clarify this.
-    addFlag(PhysicalFlag.BLOCKING);
-    addFlag(PhysicalFlag.IMMOVABLE);
+    // Add standard actor flags and template-specific flags.
+    STANDARD_FLAGS.forEach(this::addFlag);
     aT.flags.forEach(this::addFlag);
 
 
@@ -58,6 +61,8 @@ public class Actor extends Physical {
     if (hasFlag(PhysicalFlag.DEAD)) {
       return; // Already dead!
     }
+    coordinate = null;
+    facing = null;
     removeFlag(PhysicalFlag.BLOCKING);
     removeFlag(PhysicalFlag.IMMOVABLE);
     addFlag(PhysicalFlag.DEAD);
@@ -96,23 +101,6 @@ public class Actor extends Physical {
 
 
 
-  public void addBeatsToActionDelay(int addBeats) {
-    this.actionDelay += addBeats;
-  }
-
-  public boolean isReadyToAct() {
-    return actionDelay <= 0;
-  }
-
-  public int getActionDelay() {
-    return actionDelay;
-  }
-
-  public void decrementActionDelay() {
-    actionDelay--;
-  }
-
-
   @Override
   public Color getColor() {
 
@@ -123,4 +111,5 @@ public class Actor extends Physical {
     return super.getColor();
 
   }
+
 }

@@ -27,7 +27,7 @@ public class Placing extends Action {
   }
 
   @Override
-  protected int calcDelayToRecover() {
+  public int calcDelayToRecover() {
     return 1;
   }
 

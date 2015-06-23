@@ -1,12 +1,13 @@
 package game.display;
 
 import game.Game;
-import game.physical.Physical;
 import game.input.Command;
 import game.input.Commands_EnterMode;
+import game.physical.Physical;
 import utils.ColoredString;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.List;
 import java.util.stream.Collectors;
 

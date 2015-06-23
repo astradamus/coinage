@@ -5,8 +5,11 @@ import game.physical.Physical;
 import world.Coordinate;
 import world.World;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 /**
  *

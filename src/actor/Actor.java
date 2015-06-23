@@ -11,7 +11,7 @@ import game.physical.Physical;
 import game.physical.PhysicalFlag;
 import world.Coordinate;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;

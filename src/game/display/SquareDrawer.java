@@ -2,7 +2,9 @@ package game.display;
 
 import game.physical.Appearance;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 
 /**
  *

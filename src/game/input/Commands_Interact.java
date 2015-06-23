@@ -5,9 +5,9 @@ import controller.action.Attacking;
 import controller.action.PickingUp;
 import controller.player.PlayerController;
 import game.Game;
-import game.physical.Physical;
 import game.display.Event;
 import game.display.EventLog;
+import game.physical.Physical;
 
 import java.awt.event.KeyEvent;
 

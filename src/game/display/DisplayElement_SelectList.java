@@ -4,7 +4,8 @@ package game.display;
 import game.Game;
 import utils.ColoredString;
 
-import java.awt.*;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.util.List;
 
 /**

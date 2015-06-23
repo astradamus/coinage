@@ -1,6 +1,6 @@
 package game.display;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  *
@@ -20,4 +20,5 @@ public class Event {
     this.color = color;
     this.message = message;
   }
+
 }

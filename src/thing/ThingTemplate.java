@@ -5,7 +5,11 @@ import game.physical.Appearance;
 import game.physical.PhysicalFlag;
 
 import java.awt.Color;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * A stored Prototype from which prefab Things can be produced. Currently uses a hard-coded

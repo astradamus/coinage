@@ -8,7 +8,7 @@ import game.display.EventLog;
 import game.physical.PhysicalFlag;
 import world.Coordinate;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * Actors perform attacks to inflict damage upon other actors.

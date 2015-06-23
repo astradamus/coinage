@@ -3,7 +3,7 @@ package world;
 import game.Game;
 import game.physical.Appearance;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

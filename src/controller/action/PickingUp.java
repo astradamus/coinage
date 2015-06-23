@@ -1,9 +1,9 @@
 package controller.action;
 
 import actor.Actor;
-import game.physical.Physical;
 import game.display.Event;
 import game.display.EventLog;
+import game.physical.Physical;
 import game.physical.PhysicalFlag;
 import world.Coordinate;
 

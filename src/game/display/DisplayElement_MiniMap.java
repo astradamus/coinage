@@ -4,7 +4,8 @@ import game.Game;
 import game.physical.Appearance;
 import world.Coordinate;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 
 /**
  *

@@ -6,7 +6,7 @@ import game.Game;
 import game.physical.Appearance;
 import game.physical.PhysicalFlag;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;

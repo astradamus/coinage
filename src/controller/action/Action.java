@@ -3,7 +3,7 @@ package controller.action;
 import actor.Actor;
 import world.Coordinate;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.EnumSet;
 
 /**

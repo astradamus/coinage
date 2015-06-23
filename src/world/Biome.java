@@ -2,7 +2,7 @@ package world;
 
 import game.physical.Appearance;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  *

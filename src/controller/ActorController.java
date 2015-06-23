@@ -1,14 +1,14 @@
 package controller;
 
-import controller.action.Action;
 import actor.Actor;
+import controller.action.Action;
 import controller.action.ActionFlag;
 import game.Game;
 import game.physical.PhysicalFlag;
 import world.Area;
 import world.Coordinate;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  *

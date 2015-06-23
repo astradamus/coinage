@@ -1,6 +1,6 @@
 package game.physical;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  *

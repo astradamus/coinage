@@ -1,8 +1,8 @@
 package controller.player;
 
 import actor.Actor;
-import controller.action.Action;
 import controller.ActorController;
+import controller.action.Action;
 import controller.action.ActionFlag;
 import game.Game;
 import utils.Dimension;

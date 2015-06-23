@@ -5,7 +5,7 @@ import actor.attribute.Attribute;
 import game.Direction;
 import game.Game;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * Actors perform moves to change their own location in the world. Their movement speed is

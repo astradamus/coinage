@@ -1,7 +1,11 @@
 package controller;
 
-import controller.action.*;
 import actor.Actor;
+import controller.action.Action;
+import controller.action.ActionFlag;
+import controller.action.Moving;
+import controller.action.TurnThenMove;
+import controller.action.Turning;
 import game.Direction;
 import game.Game;
 

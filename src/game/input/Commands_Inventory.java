@@ -1,11 +1,9 @@
 package game.input;
 
-import controller.action.ActionTarget;
-import controller.action.PickingUp;
 import controller.action.Placing;
 import controller.player.PlayerController;
 import game.Game;
-import game.Physical;
+import game.physical.Physical;
 import world.Coordinate;
 
 import java.awt.event.KeyEvent;
@@ -50,9 +48,7 @@ public enum Commands_Inventory implements Command {
                   public void execute(Coordinate selected) {
 
                     playerController.attemptAction(
-                        new Placing(playerController.getActor(),
-                            new ActionTarget(placing,selected)
-                        )
+                        new Placing(playerController.getActor(), selected, placing)
                     );
 
                     Game.getActiveInputSwitch().enterMode(GameMode.EXPLORE);

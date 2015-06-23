@@ -1,8 +1,11 @@
 package world;
 
 import game.Game;
-import game.Physical;
 import utils.Dimension;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -28,25 +31,6 @@ public class World {
     this.globalSizeInSquares = new Dimension(worldWidthInSquares,worldHeightInSquares);
 
   }
-
-  public void put(Physical putting, Coordinate coordinate) {
-    coordinate.getSquare().put(putting);
-  }
-
-  public boolean move(Physical moving, Coordinate from, Coordinate to) {
-
-    if (to.getSquare().isBlocked()) {
-      return false;
-    }
-    if (from.getSquare().pull(moving)) {
-      to.getSquare().put(moving);
-      return true;
-    } else {
-      return false;
-    }
-
-  }
-
 
   private Coordinate makeCoordinate(int globalX, int globalY) {
     if (!globalSizeInSquares.getCoordinateIsWithinBounds(globalX,globalY)) {
@@ -90,6 +74,32 @@ public class World {
 
   public Dimension getAreaSizeInSquares() {
     return areaSizeInSquares;
+  }
+
+  public Set<Area> getAllAreas() {
+    Set<Area> all = new HashSet<>();
+    for(int y = 0; y < worldSizeInAreas.getHeight(); y++) {
+      all.addAll(Arrays.asList(areas[y]));
+    }
+    return all;
+  }
+
+  public Set<Area> getAllAreasWithinRange(Coordinate center, int radius) {
+    Set<Area> all = new HashSet<>();
+    for(int y = center.worldY - radius; y <= center.worldY+radius; y++) {
+      if (y < 0 || y >= worldSizeInAreas.getHeight()) {
+        continue;
+      }
+      for(int x = center.worldX - radius; x <= center.worldX+radius; x++) {
+        if (x < 0 || x >= worldSizeInAreas.getWidth()) {
+          continue;
+        }
+
+        all.add(areas[y][x]);
+
+      }
+    }
+    return all;
   }
 
 }

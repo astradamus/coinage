@@ -4,12 +4,15 @@ import actor.attribute.Attribute;
 import actor.attribute.AttributeRange;
 import actor.attribute.Rank;
 import actor.inventory.Inventory;
+import actor.stats.Health;
 import game.Direction;
 import game.Game;
-import game.Physical;
-import game.display.Appearance;
+import game.physical.Physical;
+import game.physical.PhysicalFlag;
 import world.Coordinate;
 
+import java.awt.Color;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,28 +20,29 @@ import java.util.Map;
  * Actors are subjects. They act upon Things and other Actors in the world. The Actor class only
  * handles the physical state of the Actor. Behavior and actions are handled by a Controller.
  */
-public class Actor implements Physical {
+public class Actor extends Physical {
 
-  private final String name;
-  private final Appearance appearance;
-  private final Double weight;
+  public static final EnumSet<PhysicalFlag> STANDARD_FLAGS =
+                                          EnumSet.of(PhysicalFlag.BLOCKING, PhysicalFlag.IMMOVABLE);
 
+
+  private final Health health;
   private final Map<Attribute, Rank> attributes;
   private final Inventory inventory;
 
 
-
   private Coordinate coordinate;
-  private Direction facing;
+  private Direction facing = Direction.getRandom();
 
-  private int beatsToRecover = 0;
 
 
   Actor(ActorTemplate aT) {
+    super(aT.name, aT.appearance);
 
-    name = aT.name;
-    appearance = aT.appearance;
-    weight = aT.weight;
+    // Add standard actor flags and template-specific flags.
+    STANDARD_FLAGS.forEach(this::addFlag);
+    aT.flags.forEach(this::addFlag);
+
 
     attributes = new HashMap<>();
 
@@ -47,48 +51,34 @@ public class Actor implements Physical {
       attributes.put(attribute, attributeRange.getRandomWithin(Game.RANDOM));
     }
 
+    health = new Health(this);
     inventory = new Inventory();
 
   }
 
-  @Override
-  public String getName() {
-    return name;
+
+  public void die() {
+    if (hasFlag(PhysicalFlag.DEAD)) {
+      return; // Already dead!
+    }
+    removeFlag(PhysicalFlag.BLOCKING);
+    removeFlag(PhysicalFlag.IMMOVABLE);
+    addFlag(PhysicalFlag.DEAD);
   }
 
-  @Override
-  public Appearance getAppearance() {
-    return appearance;
-  }
-
-  @Override
-  public Double getWeight() {
-    return weight;
-  }
-
-  @Override
-  public int getVisualPriority() {
-    return Game.VISUAL_PRIORITY__ACTORS;
-  }
-
-  @Override
-  public boolean isImmovable() {
-    return true;
-  }
-
-  @Override
-  public boolean isBlocking() {
-    return true;
-  }
-
-
-  public Inventory getInventory() {
-    return inventory;
+  public Health getHealth() {
+    return health;
   }
 
   public Rank readAttributeLevel(Attribute attribute) {
     return attributes.get(attribute);
   }
+
+  public Inventory getInventory() {
+    return inventory;
+  }
+
+
 
 
   public void setFacing(Direction facing) {
@@ -99,36 +89,35 @@ public class Actor implements Physical {
     this.coordinate = coordinate;
   }
 
-  public Coordinate getCoordinate() {
-    return coordinate;
-  }
-
   public Direction getFacing() {
     return facing;
   }
 
-  public void addBeatsToRecover(int addBeats) {
-    this.beatsToRecover += addBeats;
+  public Coordinate getCoordinate() {
+    return coordinate;
   }
 
-  /**
-   * Returns true if this Actor is ready to act, or returns false and deducts one from this actor's
-   * recovery time if it is still recovering.
-   */
-  public boolean getIsReadyThisBeat() {
-    if (beatsToRecover > 0) {
-      beatsToRecover--;
-      return false;
+
+  @Override
+  public String getName() {
+
+    if (hasFlag(PhysicalFlag.DEAD)) {
+      return super.getName() + "'s corpse";
     }
-    return true;
+
+    return super.getName();
+
   }
 
-  public boolean attemptMoveTo(Coordinate newCoordinate) {
-    if (newCoordinate != null && Game.getActiveWorld().move(this, coordinate, newCoordinate)) {
-      coordinate = newCoordinate;
-      return true;
+  @Override
+  public Color getColor() {
+
+    if (hasFlag(PhysicalFlag.DEAD)) {
+      return Color.DARK_GRAY;
     }
-    return false;
+
+    return super.getColor();
+
   }
 
 }

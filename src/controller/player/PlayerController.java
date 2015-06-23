@@ -1,9 +1,10 @@
 package controller.player;
 
 import actor.Actor;
-import controller.action.Action;
 import controller.ActorController;
+import controller.action.Action;
 import controller.action.ActionFlag;
+import game.Game;
 import utils.Dimension;
 
 /**
@@ -28,6 +29,7 @@ public class PlayerController extends ActorController {
     // Update WorldMapRevealed component accordingly.
     if (action.hasFlag(ActionFlag.SUCCEEDED) && action.hasFlag(ActionFlag.ACTOR_CHANGED_AREA)) {
       component_worldMapRevealed.setAreaIsRevealed(getActor().getCoordinate());
+      Game.getActiveControllers().onPlayerChangedArea();
     }
 
   }
@@ -35,6 +37,13 @@ public class PlayerController extends ActorController {
 
   public final Component_WorldMapRevealed getWorldMapRevealedComponent() {
     return component_worldMapRevealed;
+  }
+
+  public void doNotRepeatAction() {
+    Action action = getCurrentAction();
+    if (action != null) {
+      action.doNotRepeat();
+    }
   }
 
 }

@@ -3,7 +3,9 @@ package game.display;
 
 import utils.ColoredString;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

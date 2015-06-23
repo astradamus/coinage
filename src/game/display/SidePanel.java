@@ -2,8 +2,10 @@ package game.display;
 
 import game.Game;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.util.List;
 
 /**

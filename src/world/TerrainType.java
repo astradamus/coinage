@@ -1,6 +1,12 @@
 package world;
 
-import java.awt.*;
+import game.Game;
+import game.physical.Appearance;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -56,10 +62,25 @@ public enum TerrainType {
       }),
   ;
 
-  Color[] colors;
+  List<Appearance> appearances;
+
+
 
   TerrainType(Color[] colors) {
-    this.colors = colors;
+
+    final List<Appearance> appearances = new ArrayList<>();
+
+    for (char character : Terrain.chars) {
+      for (Color color : colors) {
+        appearances.add(new Appearance(character, color, null, Game.VISUAL_PRIORITY__TERRAIN));
+      }
+    }
+
+    this.appearances = Collections.unmodifiableList(appearances);
+  }
+
+  Appearance getRandomAppearance() {
+    return appearances.get(Game.RANDOM.nextInt(appearances.size()));
   }
 
 }

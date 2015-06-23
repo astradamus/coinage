@@ -1,6 +1,6 @@
 package utils;
 
-import java.awt.*;
+import java.awt.Point;
 
 /**
  * An immutable replacement for Java.awt.Dimension.

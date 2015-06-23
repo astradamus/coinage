@@ -61,6 +61,7 @@ public class NumpadDirectionInterpreter implements KeyListener {
 
   @Override
   public void keyPressed(KeyEvent e) {
+
     Direction direction = Direction.fromKeyEvent(e);
     if (direction != null) {
       if (!heldDirections.contains(direction)){
@@ -68,13 +69,16 @@ public class NumpadDirectionInterpreter implements KeyListener {
         evaluateMovingDirection();
       }
     }
+
   }
 
   @Override
   public void keyReleased(KeyEvent e) {
     Direction direction = Direction.fromKeyEvent(e);
-    heldDirections.remove(direction);
-    evaluateMovingDirection();
+    if (direction != null) {
+      heldDirections.remove(direction);
+      evaluateMovingDirection();
+    }
   }
 
 }

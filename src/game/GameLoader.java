@@ -32,22 +32,23 @@ public class GameLoader {
     World world = WorldFactory.standardGeneration(areaSizeInSquares, worldSizeInAreas);
 
     // populate with animals and a Human for the player to control
-    GameControllers gameControllers = new GameControllers();
+    GameControllers gameControllers = new GameControllers(world.getAllAreas());
 
-    for (int i = 0; i < 500; i++) {
-      String id = null;
-      switch (i % 3) {
+    for (int i = 0; i < 5000; i++) {
+      String id;
+      switch (i % 5) {
         case 0: id = "DOG"; break;
         case 1: id = "CAT"; break;
         case 2: id = "MOUSE"; break;
+        default: id = "GIBBERLING"; break;
       }
       Actor actor = ActorFactory.makeActor(id);
 
       if (actor != null) {
         Coordinate randomCoordinate = world.makeRandomCoordinate();
         actor.setCoordinate(randomCoordinate);
-        world.put(actor, randomCoordinate);
-        gameControllers.register(new AnimalController(actor));
+        randomCoordinate.getSquare().put(actor);
+        gameControllers.addController(new AnimalController(actor));
       }
     }
 
@@ -60,13 +61,13 @@ public class GameLoader {
     Coordinate playerStartCoordinate = world.makeRandomCoordinate();
     player.setCoordinate(playerStartCoordinate);
 
-    world.put(player, playerStartCoordinate);
+    playerStartCoordinate.getSquare().put(player);
 
-    // assign the Human to a PlayerController and register it
+    // assign the Human to a PlayerController and addController it
     PlayerController playerController = new PlayerController(player,worldSizeInAreas);
     playerController.getWorldMapRevealedComponent().setAreaIsRevealed(playerStartCoordinate);
 
-    gameControllers.register(playerController);
+    gameControllers.addController(playerController);
 
     // set up the GameInputSwitch
     GameInputSwitch gameInputSwitch = new GameInputSwitch();

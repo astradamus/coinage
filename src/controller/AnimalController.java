@@ -1,9 +1,11 @@
 package controller;
 
-import controller.action.Action;
 import actor.Actor;
+import controller.action.Action;
 import controller.action.ActionFlag;
 import controller.action.Moving;
+import controller.action.TurnThenMove;
+import controller.action.Turning;
 import game.Direction;
 import game.Game;
 
@@ -22,14 +24,26 @@ public class AnimalController extends ActorController {
 
 
   private void startWander() {
+
     Direction direction = Direction.values()[Game.RANDOM.nextInt(Direction.values().length)];
-    attemptAction(new Moving(getActor(), direction));
+
+    Action next;
+
+    if (getActor().getFacing() != direction) {
+      next = new TurnThenMove(getActor(), direction, true);
+    } else {
+      next = new Moving(getActor(), direction, true);
+    }
+
+    attemptAction(next);
+
   }
 
+
   private void stopWander() {
-    attemptAction(null);
+    cancelAction();
     wanderChain = -1;
-    waiting = Game.RANDOM.nextInt(40);
+    waiting = Game.RANDOM.nextInt(50);
   }
 
 
@@ -45,8 +59,18 @@ public class AnimalController extends ActorController {
       } else {
 
         // start moving in a random direction
-        startWander();
-        wanderChain = Game.RANDOM.nextInt(6);
+
+        if (Game.RANDOM.nextInt(10) > 2) {
+          Direction dir = getActor().getFacing().getLeftNeighbor();
+          if (Game.RANDOM.nextBoolean()) {
+            dir = getActor().getFacing().getRightNeighbor();
+          }
+          attemptAction(new Turning(getActor(), dir));
+          waiting = Game.RANDOM.nextInt(50);
+        } else {
+          startWander();
+          wanderChain = Game.RANDOM.nextInt(6);
+        }
 
       }
 

@@ -1,8 +1,8 @@
 package world;
 
-import game.display.Appearance;
+import game.physical.Appearance;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  *

@@ -1,9 +1,15 @@
 package thing;
 
 import game.Game;
+import game.physical.Appearance;
+import game.physical.PhysicalFlag;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * A stored Prototype from which prefab Things can be produced. Currently uses a hard-coded
@@ -11,29 +17,30 @@ import java.util.HashMap;
  */
 public class ThingTemplate {
 
-  String name;
-  char[] appearances;
-  Color[] colors;
-  Double weight;
-  boolean isImmovable;
-  boolean isBlocking;
+  final String name;
+  final List<Appearance> appearances;
+  final EnumSet<PhysicalFlag> flags;
 
-  public ThingTemplate(String name, char[] appearances, Color[] colors, Double weight,
-                       boolean isImmovable, boolean isBlocking) {
+  public ThingTemplate(String name, char[] chars, Color[] colors, EnumSet<PhysicalFlag> flags) {
+
     this.name = name;
-    this.appearances = appearances;
-    this.colors = colors;
-    this.weight = weight;
-    this.isImmovable = isImmovable;
-    this.isBlocking = isBlocking;
+
+    final List<Appearance> appearances = new ArrayList<>();
+
+    for (char character : chars) {
+      for (Color color : colors) {
+        appearances.add(new Appearance(character, color, null, Game.VISUAL_PRIORITY__THINGS));
+      }
+    }
+
+    this.appearances = Collections.unmodifiableList(appearances);
+
+    this.flags = flags;
+
   }
 
-  char getRandomCharacter() {
-    return appearances[Game.RANDOM.nextInt(appearances.length)];
-  }
-
-  Color getRandomColor() {
-    return colors[Game.RANDOM.nextInt(colors.length)];
+  Appearance getRandomAppearance() {
+    return appearances.get(Game.RANDOM.nextInt(appearances.size()));
   }
 
 
@@ -47,47 +54,42 @@ public class ThingTemplate {
             new Color(0, 49,0),
             new Color(13, 47, 0),
             new Color(11, 44, 0)
-        },
-        100.0, true, false
+        }, EnumSet.of(PhysicalFlag.IMMOVABLE)
     ));
     LIB.put("TREE", new ThingTemplate(
-        "a tree",
+      "a tree",
         new char[] {916,8710},
         new Color[] {
             new Color(0, 117,0),
             new Color(96, 149, 96),
             new Color(107, 154, 27)
-        },
-        4500.0, true, true
+        }, EnumSet.of(PhysicalFlag.BLOCKING,PhysicalFlag.IMMOVABLE)
     ));
     LIB.put("TREE_SWAMP", new ThingTemplate(
-        "a swamp willow tree",
+      "a swamp willow tree",
         new char[] {8593,8607,8670},
         new Color[] {
             new Color(0, 132, 43),
             new Color(121, 174, 31)
-        },
-        4500.0, true, true
+        }, EnumSet.of(PhysicalFlag.BLOCKING,PhysicalFlag.IMMOVABLE)
     ));
     LIB.put("SHARKWEED", new ThingTemplate(
-        "a sharkweed thicket",
+      "a sharkweed thicket",
         new char[] {8472,8706},
         new Color[] {
             new Color(83, 48, 93),
             new Color(60, 55, 84),
             new Color(74, 44, 67)
-        },
-        4500.0, true, true
+        }, EnumSet.of(PhysicalFlag.BLOCKING,PhysicalFlag.IMMOVABLE)
     ));
     LIB.put("CACTUS", new ThingTemplate(
-        "a cactus",
+      "a cactus",
         new char[] {10013,8992},
         new Color[] {
             new Color(63, 165,0),
             new Color(115, 219, 59),
             new Color(170, 228, 75)
-        },
-        4500.0, true, true
+        }, EnumSet.of(PhysicalFlag.BLOCKING,PhysicalFlag.IMMOVABLE)
     ));
 
     LIB.put("OOZE", new ThingTemplate(
@@ -96,8 +98,7 @@ public class ThingTemplate {
         new Color[] {
             new Color(165, 58, 155),
             new Color(163, 93, 185)
-        },
-        4500.0, true, false
+        }, EnumSet.of(PhysicalFlag.IMMOVABLE)
     ));
 
 
@@ -108,8 +109,7 @@ public class ThingTemplate {
             new Color(173, 173, 173),
             new Color(142, 142, 142),
             new Color(105, 103, 99)
-        },
-        3400.0, false, true
+        }, EnumSet.of(PhysicalFlag.BLOCKING)
     ));
 
     LIB.put("DUNE", new ThingTemplate(
@@ -120,8 +120,7 @@ public class ThingTemplate {
             new Color(82, 59, 1),
             new Color(77, 55, 16),
             new Color(99, 80, 0)
-        },
-        4000.0, true, false
+        }, EnumSet.of(PhysicalFlag.IMMOVABLE)
     ));
     LIB.put("BOULDER_SANDSTONE", new ThingTemplate(
         "a sandstone boulder",
@@ -130,8 +129,7 @@ public class ThingTemplate {
             new Color(164, 84, 80),
             new Color(166, 108, 100),
             new Color(185, 138, 95),
-        },
-        3400.0, false, true
+        }, EnumSet.of(PhysicalFlag.BLOCKING)
     ));
 
 
@@ -143,8 +141,7 @@ public class ThingTemplate {
             new Color(94, 94, 94),
             new Color(79, 79, 79),
             new Color(63, 63, 63)
-        },
-        1.0, false, false
+        }, EnumSet.noneOf(PhysicalFlag.class)
     ));
   }
 

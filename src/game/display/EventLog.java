@@ -5,7 +5,10 @@ import utils.Dimension;
 import utils.Utils;
 import world.Coordinate;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +25,7 @@ public class EventLog {
   public static final long EVENT_LIFESPAN = 5000;
 
   // VALUES IN PIXELS
-  public static final int LINE_HEIGHT = 15;
+  public static final int LINE_HEIGHT = GameDisplay.SQUARE_SIZE;
   public static final int LINE_SPACER = LINE_HEIGHT/3;
 
   // VALUES IN LINES
@@ -52,7 +55,7 @@ public class EventLog {
 
 
 
-  public static void drawOverlayed(Graphics2D g2d) {
+  public static void drawOverlay(Graphics2D g2d) {
 
     g2d.setFont(SMALL_TEXT);
 
@@ -115,5 +118,10 @@ public class EventLog {
 
   }
 
+  public static void registerEventIfPlayerIsNear(Coordinate nearTo, Color color, String message) {
+    if (Game.getActivePlayer().getActor().getCoordinate().area == nearTo.area) {
+      registerEvent(color, message);
+    }
+  }
 
 }

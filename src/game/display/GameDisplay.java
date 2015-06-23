@@ -2,9 +2,14 @@ package game.display;
 
 
 import game.Game;
+import game.physical.Appearance;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.KeyListener;
 
 /**
@@ -12,9 +17,9 @@ import java.awt.event.KeyListener;
  */
 public class GameDisplay {
 
-  public static final Appearance CURSOR = new Appearance('X',Color.WHITE,Color.WHITE);
+  public static final Appearance CURSOR = new Appearance(' ', Color.WHITE, Color.WHITE);
 
-  public static final int SQUARE_SIZE = 15;
+  public static final int SQUARE_SIZE = 20;
 
 
   private static AreaPanel PANEL_AREA = new AreaPanel();

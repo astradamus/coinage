@@ -61,8 +61,6 @@ public class Actor extends Physical {
     if (hasFlag(PhysicalFlag.DEAD)) {
       return; // Already dead!
     }
-    coordinate = null;
-    facing = null;
     removeFlag(PhysicalFlag.BLOCKING);
     removeFlag(PhysicalFlag.IMMOVABLE);
     addFlag(PhysicalFlag.DEAD);
@@ -100,6 +98,16 @@ public class Actor extends Physical {
   }
 
 
+  @Override
+  public String getName() {
+
+    if (hasFlag(PhysicalFlag.DEAD)) {
+      return super.getName() + "'s corpse";
+    }
+
+    return super.getName();
+
+  }
 
   @Override
   public Color getColor() {

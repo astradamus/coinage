@@ -2,6 +2,7 @@ package controller.action;
 
 import actor.Actor;
 import actor.attribute.Attribute;
+import controller.ActorController;
 import game.Direction;
 import game.Game;
 
@@ -29,10 +30,10 @@ public class Moving extends Action {
   private final Direction movingIn;
   private final boolean isWalking;
 
-  public Moving(Actor actor, Direction movingIn, boolean isWalking) {
-    super(actor,
+  public Moving(ActorController performer, Direction movingIn, boolean isWalking) {
+    super(performer,
         Game.getActiveWorld().offsetCoordinateBySquares(
-            actor.getCoordinate(), movingIn.relativeX, movingIn.relativeY));
+            performer.getActor().getCoordinate(), movingIn.relativeX, movingIn.relativeY));
     this.movingIn = movingIn;
     this.isWalking = isWalking;
   }
@@ -54,7 +55,8 @@ public class Moving extends Action {
   public int calcDelayToPerform() {
 
     // Take the actor's reflex rank.
-    final int actorReflex = getPerformer().readAttributeLevel(Attribute.REFLEX).ordinal();
+    final int actorReflex = getPerformer().getActor()
+        .readAttributeLevel(Attribute.REFLEX).ordinal();
 
     // Determine distance from BASELINE_RANK.
     final int distanceFromBaseline = actorReflex - BASELINE_RANK;
@@ -84,11 +86,11 @@ public class Moving extends Action {
   }
 
   private boolean getIsMovingInFacedDirection() {
-    return getPerformer().getFacing() == movingIn;
+    return getPerformer().getActor().getFacing() == movingIn;
   }
 
   private boolean getIsMovingInAdjacentDirection() {
-    final Direction actorFacing = getPerformer().getFacing();
+    final Direction actorFacing = getPerformer().getActor().getFacing();
     return movingIn == actorFacing.getLeftNeighbor() || movingIn == actorFacing.getRightNeighbor();
   }
 
@@ -102,9 +104,11 @@ public class Moving extends Action {
   protected boolean validate() {
 
     final boolean targetIsBlocked = getTarget() == null || getTarget().getSquare().isBlocked();
-    final boolean actorHasRelocated = !getOrigin().getSquare().getAll().contains(getPerformer());
+    final boolean performerHasNotMoved =
+        !getOrigin().getSquare().getAll().contains(getPerformer().getActor());
 
-    return !targetIsBlocked && !actorHasRelocated;
+
+    return !targetIsBlocked && !performerHasNotMoved;
 
   }
 
@@ -117,9 +121,11 @@ public class Moving extends Action {
   @Override
   protected void apply() {
 
-    getOrigin().getSquare().pull(getPerformer());
-    getTarget().getSquare().put(getPerformer());
-    getPerformer().setCoordinate(getTarget());
+    final Actor performerActor = getPerformer().getActor();
+
+    getOrigin().getSquare().pull(performerActor);
+    getTarget().getSquare().put(performerActor);
+    performerActor.setCoordinate(getTarget());
 
     if (getOrigin().area != getTarget().area) {
       addFlag(ActionFlag.ACTOR_CHANGED_AREA);

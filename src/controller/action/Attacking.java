@@ -2,6 +2,7 @@ package controller.action;
 
 import actor.Actor;
 import actor.attribute.Attribute;
+import controller.ActorController;
 import game.Game;
 import game.display.Event;
 import game.display.EventLog;
@@ -17,10 +18,10 @@ public class Attacking extends Action {
 
 
 
-  private final Actor victim;
+  private final ActorController victim;
 
-  public Attacking(Actor actor, Coordinate target, Actor victim) {
-    super(actor, target);
+  public Attacking(ActorController performer, Coordinate victimWhere, ActorController victim) {
+    super(performer, victimWhere);
     this.victim = victim;
   }
 
@@ -49,24 +50,35 @@ public class Attacking extends Action {
    */
   @Override
   protected boolean validate() {
-    boolean playerIsAttacking = getPerformer() == Game.getActivePlayer().getActor();
+    final boolean playerIsPerformer = getPerformer() == Game.getActivePlayer();
 
-    if (victim.hasFlag(PhysicalFlag.DEAD)) {
-      if (playerIsAttacking) {
+    final Actor performerActor = getPerformer().getActor();
+    final Actor victimActor = victim.getActor();
+
+    if (victimActor.hasFlag(PhysicalFlag.DEAD)) {
+      if (playerIsPerformer) {
         EventLog.registerEvent(Event.INVALID_ACTION, "It's already dead.");
+
       }
       return false;
     }
 
     // todo clean this up \/ \/ \/
-    if (!getTarget().getSquare().getAll().contains(victim)) {
-      if (playerIsAttacking) {
-        EventLog.registerEvent(Event.INVALID_ACTION, victim.getName()+" eluded your attack.");
+    final boolean targetEludedAttack = !getTarget().getSquare().getAll().contains(victimActor);
+    if (targetEludedAttack) {
+
+
+      if (playerIsPerformer) {
+        EventLog.registerEvent(Event.INVALID_ACTION, victimActor.getName()+" eluded your attack.");
+
       } else {
-        EventLog.registerEventIfPlayerIsNear(getPerformer().getCoordinate(),Event.INVALID_ACTION,
-            victim.getName()+" eluded "+ getPerformer().getName()+"'s attack.");
+        EventLog.registerEventIfPlayerIsNear(performerActor.getCoordinate(),Event.INVALID_ACTION,
+            victimActor.getName()+" eluded "+ performerActor.getName()+"'s attack.");
+
       }
+
       return false;
+
     }
 
     return true;
@@ -80,14 +92,15 @@ public class Attacking extends Action {
   @Override
   protected void apply() {
 
-    final int actorMuscleRank = getPerformer().readAttributeLevel(Attribute.MUSCLE).ordinal();
+    final int actorMuscleRank = getPerformer().getActor()
+        .readAttributeLevel(Attribute.MUSCLE).ordinal();
 
     final int damageBase  = actorMuscleRank * 3;
     final int damageRange = actorMuscleRank * 7;
 
     final double damage = damageBase + Game.RANDOM.nextInt(damageRange);
 
-    victim.getHealth().wound(damage);
+    victim.getActor().getHealth().wound(damage);
 
   }
 

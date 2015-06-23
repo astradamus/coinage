@@ -1,6 +1,6 @@
 package controller.action;
 
-import actor.Actor;
+import controller.ActorController;
 import game.Direction;
 
 /**
@@ -14,8 +14,8 @@ public class Turning extends Action {
 
   protected final Direction turningTowards;
 
-  public Turning(Actor actor, Direction turningTowards) {
-    super(actor, null);
+  public Turning(ActorController performer, Direction turningTowards) {
+    super(performer, null);
     this.turningTowards = turningTowards;
   }
 
@@ -36,15 +36,15 @@ public class Turning extends Action {
   @Override
   protected void apply() {
 
-    final Direction actorFacing = getPerformer().getFacing();
+    final Direction actorFacing = getPerformer().getActor().getFacing();
 
     final int difference = actorFacing.ordinal() - turningTowards.ordinal();
 
     // Evaluate whether turning left or right will get there faster.
     if ((difference > 0 && difference <= 4) || difference < -4) {
-      getPerformer().setFacing(actorFacing.getLeftNeighbor());
+      getPerformer().getActor().setFacing(actorFacing.getLeftNeighbor());
     } else {
-      getPerformer().setFacing(actorFacing.getRightNeighbor());
+      getPerformer().getActor().setFacing(actorFacing.getRightNeighbor());
     }
 
   }
@@ -60,7 +60,7 @@ public class Turning extends Action {
   @Override
   public Action attemptRepeat() {
 
-    final boolean targetDirectionReached = getPerformer().getFacing() == turningTowards;
+    final boolean targetDirectionReached = getPerformer().getActor().getFacing() == turningTowards;
 
     if (targetDirectionReached) {
       return null;

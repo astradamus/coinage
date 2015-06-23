@@ -1,6 +1,6 @@
 package controller.action;
 
-import actor.Actor;
+import controller.ActorController;
 import world.Coordinate;
 
 import java.awt.Color;
@@ -12,15 +12,15 @@ import java.util.EnumSet;
 public abstract class Action {
 
 
-  private final Actor performer;
+  private final ActorController performer;
   private final Coordinate origin;
   private final Coordinate target;
   private final EnumSet<ActionFlag> flags;
 
-  protected Action(Actor performer, Coordinate target) {
+  protected Action(ActorController performer, Coordinate targetWhere) {
     this.performer = performer;
-    this.origin = performer.getCoordinate();
-    this.target = target;
+    this.origin = performer.getActor().getCoordinate();
+    this.target = targetWhere;
     this.flags = EnumSet.noneOf(ActionFlag.class);
   }
 
@@ -113,7 +113,7 @@ public abstract class Action {
 
 
 
-  protected final Actor getPerformer() {
+  protected final ActorController getPerformer() {
     return performer;
   }
 

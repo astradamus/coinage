@@ -1,6 +1,6 @@
 package controller.action;
 
-import actor.Actor;
+import controller.ActorController;
 import game.Direction;
 
 /**
@@ -11,8 +11,8 @@ public class TurnThenMove extends Turning {
 
   private final boolean isWalking;
 
-  public TurnThenMove(Actor actor, Direction turningTowards, boolean isWalking) {
-    super(actor, turningTowards);
+  public TurnThenMove(ActorController performer, Direction turningTowards, boolean isWalking) {
+    super(performer, turningTowards);
     this.isWalking = isWalking;
   }
 
@@ -20,7 +20,7 @@ public class TurnThenMove extends Turning {
   @Override
   public Action attemptRepeat() {
 
-    final boolean targetDirectionReached = getPerformer().getFacing() == turningTowards;
+    final boolean targetDirectionReached = getPerformer().getActor().getFacing() == turningTowards;
 
     Action next;
 

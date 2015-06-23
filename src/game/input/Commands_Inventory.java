@@ -48,7 +48,7 @@ public enum Commands_Inventory implements Command {
                   public void execute(Coordinate selected) {
 
                     playerController.attemptAction(
-                        new Placing(playerController.getActor(), selected, placing)
+                        new Placing(playerController, selected, placing)
                     );
 
                     Game.getActiveInputSwitch().enterMode(GameMode.EXPLORE);

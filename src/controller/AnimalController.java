@@ -30,9 +30,9 @@ public class AnimalController extends ActorController {
     Action next;
 
     if (getActor().getFacing() != direction) {
-      next = new TurnThenMove(getActor(), direction, true);
+      next = new TurnThenMove(this, direction, true);
     } else {
-      next = new Moving(getActor(), direction, true);
+      next = new Moving(this, direction, true);
     }
 
     attemptAction(next);
@@ -65,7 +65,7 @@ public class AnimalController extends ActorController {
           if (Game.RANDOM.nextBoolean()) {
             dir = getActor().getFacing().getRightNeighbor();
           }
-          attemptAction(new Turning(getActor(), dir));
+          attemptAction(new Turning(this, dir));
           waiting = Game.RANDOM.nextInt(50);
         } else {
           startWander();

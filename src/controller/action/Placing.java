@@ -1,6 +1,6 @@
 package controller.action;
 
-import actor.Actor;
+import controller.ActorController;
 import game.display.Event;
 import game.display.EventLog;
 import game.physical.Physical;
@@ -14,8 +14,8 @@ public class Placing extends Action {
 
   private final Physical placingWhat;
 
-  public Placing(Actor actor, Coordinate placingWhere, Physical placingWhat) {
-    super(actor, placingWhere);
+  public Placing(ActorController performer, Coordinate placingWhere, Physical placingWhat) {
+    super(performer, placingWhere);
     this.placingWhat = placingWhat;
   }
 
@@ -45,7 +45,8 @@ public class Placing extends Action {
       return false;
     }
 
-    boolean itemIsHeldByActor = getPerformer().getInventory().getItemsHeld().contains(placingWhat);
+    final boolean itemIsHeldByActor = getPerformer().getActor().getInventory()
+        .getItemsHeld().contains(placingWhat);
 
     if (!itemIsHeldByActor){
       EventLog.registerEvent(Event.INVALID_ACTION,
@@ -62,7 +63,7 @@ public class Placing extends Action {
    */
   @Override
   protected void apply() {
-    getPerformer().getInventory().removeItem(placingWhat);
+    getPerformer().getActor().getInventory().removeItem(placingWhat);
     getTarget().getSquare().put(placingWhat);
   }
 

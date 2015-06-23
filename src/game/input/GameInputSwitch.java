@@ -60,8 +60,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
       startRepeatingMoveDelay--;
     }
     else if (startRepeatingMoveDelay == 0 && shouldDelayMoveRepeat()) {
-      final Actor playerActor = playerController.getActor();
-      playerController.attemptAction(new Moving(playerActor,delayedMoveDirection,false));
+      playerController.attemptAction(new Moving(playerController,delayedMoveDirection,false));
       terminateRepeatingMoveTimer();
     }
 
@@ -153,9 +152,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
 
 
   private void turnThenMove(Direction direction) {
-    final Actor playerActor = playerController.getActor();
-
-    final TurnThenMove action = new TurnThenMove(playerActor, direction, false);
+    final TurnThenMove action = new TurnThenMove(playerController, direction, false);
 
     if (shouldDelayMoveRepeat()) {
       delayRepeatOfMove(action, direction);
@@ -165,15 +162,13 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
   }
 
   private void turn(Direction direction) {
-    final Actor playerActor = playerController.getActor();
-    playerController.attemptAction(new Turning(playerActor, direction));
+    playerController.attemptAction(new Turning(playerController, direction));
   }
 
   private void move(Direction direction) {
-    final Actor playerActor = playerController.getActor();
     final boolean isWalking = keyModifierInterpreter.getLatestModifier() == KeyModifier.SHIFT;
 
-    final Moving moving = new Moving(playerActor, direction, isWalking);
+    final Moving moving = new Moving(playerController, direction, isWalking);
 
     if (shouldDelayMoveRepeat()) {
       delayRepeatOfMove(moving, direction);

@@ -57,9 +57,14 @@ public enum Commands_Interact implements Command {
 
                     } else {
 
-                      playerController.attemptAction(
-                          new Attacking(playerActor,Game.getActiveInputSwitch().getPlayerTarget(),
-                              (Actor) selected));
+
+                      EventLog.registerEvent(Event.INVALID_ACTION,
+                          "Oops! Striking is currently disabled pending better selection.");
+// todo striking should present the player a list of strikable targets instead of prompting a
+// todo targeting selecting
+//                      playerController.attemptAction(
+//                          new Attacking(playerActor,Game.getActiveInputSwitch().getPlayerTarget(),
+//                              (Actor) selected));
 
                     }
                   }
@@ -105,8 +110,9 @@ public enum Commands_Interact implements Command {
                 public void execute(Physical selected) {
 
                   playerController.attemptAction(
-                      new PickingUp(playerController.getActor(),
-                          Game.getActiveInputSwitch().getPlayerTarget(), selected));
+                      new PickingUp(playerController,
+                          Game.getActiveInputSwitch().getPlayerTarget(),
+                          selected));
 
                       Game.getActiveInputSwitch().enterMode(GameMode.EXPLORE);
 

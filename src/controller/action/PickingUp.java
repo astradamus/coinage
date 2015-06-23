@@ -1,6 +1,6 @@
 package controller.action;
 
-import actor.Actor;
+import controller.ActorController;
 import game.display.Event;
 import game.display.EventLog;
 import game.physical.Physical;
@@ -15,8 +15,8 @@ public class PickingUp extends Action {
 
   private final Physical pickingUpWhat;
 
-  public PickingUp(Actor actor, Coordinate pickingUpWhere, Physical pickingUpWhat) {
-    super(actor, pickingUpWhere);
+  public PickingUp(ActorController performer, Coordinate pickingUpWhere, Physical pickingUpWhat) {
+    super(performer, pickingUpWhere);
     this.pickingUpWhat = pickingUpWhat;
   }
 
@@ -64,7 +64,7 @@ public class PickingUp extends Action {
   @Override
   protected void apply() {
     getTarget().getSquare().pull(pickingUpWhat);
-    getPerformer().getInventory().addItem(pickingUpWhat);
+    getPerformer().getActor().getInventory().addItem(pickingUpWhat);
   }
 
 

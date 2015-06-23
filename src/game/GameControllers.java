@@ -114,18 +114,21 @@ public class GameControllers {
     controllerLocations.get(controller.getLocality()).remove(controller);
   }
 
-
-  private static final Comparator<Controller> CONTROLLER_COMPARATOR =
-      Comparator.comparingInt(Controller::getRolledInitiative).reversed();
+  private static final Map<Controller, Integer> INITIATIVE_ROLLS = new HashMap<>();
+  private static final Comparator<Controller> CONTROLLER_COMPARATOR = Comparator.comparing(INITIATIVE_ROLLS::get);
 
   private void performNextTurnSort() {
 
     // Clear this turn's actives.
     ACTIVE_CONTROLLERS.clear();
 
-    // Sort the next controllers into active.
+    // Add the next controllers to active.
     ACTIVE_CONTROLLERS.addAll(NEXT_CONTROLLERS);
     NEXT_CONTROLLERS.clear();
+
+    // Roll initiative for all controllers and then sort by rolls.
+    INITIATIVE_ROLLS.clear();
+    ACTIVE_CONTROLLERS.forEach(cont -> INITIATIVE_ROLLS.put(cont, cont.getRolledInitiative()));
 
     Collections.sort(ACTIVE_CONTROLLERS, CONTROLLER_COMPARATOR);
 

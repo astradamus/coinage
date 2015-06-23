@@ -3,6 +3,7 @@ package controller;
 import actor.Actor;
 import controller.action.Action;
 import controller.action.ActionFlag;
+import controller.action.Attacking;
 import game.Game;
 import game.physical.PhysicalFlag;
 import world.Area;
@@ -101,6 +102,12 @@ public abstract class ActorController implements Controller {
   public int getRolledInitiative() {
     return 0;
   }
+
+  /**
+   * Subclasses of ActorController should override this method to be aware of attackers against
+   * them.
+   */
+  public void onAttackSuffered(ActorController attacker) { }
 
   /**
    * Subclasses of ActorController should override this method to hook into successful movement.

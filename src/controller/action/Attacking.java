@@ -95,12 +95,13 @@ public class Attacking extends Action {
     final int actorMuscleRank = getPerformer().getActor()
         .readAttributeLevel(Attribute.MUSCLE).ordinal();
 
-    final int damageBase  = actorMuscleRank * 3;
-    final int damageRange = actorMuscleRank * 7;
+    final int damageBase  = actorMuscleRank * 3 / 2;
+    final int damageRange = actorMuscleRank * 7 / 2;
 
     final double damage = damageBase + Game.RANDOM.nextInt(damageRange);
 
     victim.getActor().getHealth().wound(damage);
+    victim.onAttackSuffered(getPerformer());
 
   }
 

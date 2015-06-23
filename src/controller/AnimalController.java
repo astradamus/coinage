@@ -3,6 +3,7 @@ package controller;
 import actor.Actor;
 import controller.action.Action;
 import controller.action.ActionFlag;
+import controller.action.Attacking;
 import controller.action.Moving;
 import controller.action.TurnThenMove;
 import controller.action.Turning;
@@ -76,6 +77,12 @@ public class AnimalController extends ActorController {
 
     }
 
+  }
+
+  @Override
+  public void onAttackSuffered(ActorController attacker) {
+    cancelAction();
+    attemptAction(new Attacking(this, attacker.getActor().getCoordinate(), attacker));
   }
 
   @Override

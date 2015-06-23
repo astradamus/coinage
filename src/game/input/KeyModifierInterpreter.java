@@ -37,10 +37,10 @@ public class KeyModifierInterpreter implements KeyListener {
 
   @Override
   public void keyReleased(KeyEvent e) {
-    if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+    if (!e.isShiftDown()) {
       heldModifiers.remove(KeyModifier.SHIFT);
     }
-    else if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+    if (!e.isControlDown()) {
       heldModifiers.remove(KeyModifier.CTRL);
     }
   }

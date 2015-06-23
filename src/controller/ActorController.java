@@ -59,15 +59,16 @@ public abstract class ActorController implements Controller {
     }
     else if (action != null) {
 
-      Action executing = action;
+      final Action executing = action;
+      final boolean performedSuccessfully = executing.perform();
+      actionDelayClock.addBeatsToCoolDown(action.calcDelayToRecover());
 
-      if (executing.perform()) {
-        actionDelayClock.addBeatsToCoolDown(action.calcDelayToRecover());
+      if (performedSuccessfully) {
 
         if (executing.hasFlag(ActionFlag.ACTOR_CHANGED_AREA)) {
           Area from = executing.getOrigin().area;
           Area to = actor.getCoordinate().area;
-          Game.getActiveControllers().moveController(this,from,to);
+          Game.getActiveControllers().moveController(this, from, to);
         }
 
         // If this action can repeat upon succeeding, attempt to do so.

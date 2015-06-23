@@ -101,7 +101,7 @@ public class Attacking extends Action {
     final double damage = damageBase + Game.RANDOM.nextInt(damageRange);
 
     victim.getActor().getHealth().wound(damage);
-    victim.onAttackSuffered(getPerformer());
+    victim.onVictimized(getPerformer());
 
   }
 

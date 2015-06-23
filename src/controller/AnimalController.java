@@ -49,7 +49,7 @@ public class AnimalController extends ActorController {
 
 
   @Override
-  protected void onUpdateProcessed() {
+  public void onUpdateFinished() {
 
     if (getCurrentAction() == null) {
 
@@ -80,7 +80,7 @@ public class AnimalController extends ActorController {
   }
 
   @Override
-  public void onAttackSuffered(ActorController attacker) {
+  public void onVictimized(ActorController attacker) {
     cancelAction();
     attemptAction(new Attacking(this, attacker.getActor().getCoordinate(), attacker));
   }

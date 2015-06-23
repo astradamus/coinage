@@ -18,11 +18,15 @@ public interface Controller {
    * Should not return the same value every time its called, unless we're intentionally forcing
    * this controller to be called first or last in the order every time.
    */
-  int getRolledInitiative();
+  default Integer getRolledInitiative() {
+    return 0;
+  }
 
   /**
    * Non-local controllers should return null.
    */
-  Area getLocality();
+  default Area getLocality() {
+    return null;
+  }
 
 }

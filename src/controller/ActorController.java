@@ -1,9 +1,9 @@
 package controller;
 
 import actor.Actor;
+import actor.attribute.Attribute;
 import controller.action.Action;
 import controller.action.ActionFlag;
-import controller.action.Attacking;
 import game.Game;
 import game.physical.PhysicalFlag;
 import world.Area;
@@ -14,7 +14,7 @@ import java.awt.Color;
 /**
  *
  */
-public abstract class ActorController implements Controller {
+public abstract class ActorController implements Controller, ActorObserver {
 
   private final Actor actor;
   private final ActionDelayClock actionDelayClock;
@@ -89,7 +89,7 @@ public abstract class ActorController implements Controller {
 
     }
 
-    onUpdateProcessed();
+    onUpdateFinished();
 
   }
 
@@ -99,29 +99,9 @@ public abstract class ActorController implements Controller {
   }
 
   @Override
-  public int getRolledInitiative() {
-    return 0;
+  public Integer getRolledInitiative() {
+    return Game.RANDOM.nextInt(actor.readAttributeLevel(Attribute.REFLEX).ordinal());
   }
-
-  /**
-   * Subclasses of ActorController should override this method to be aware of attackers against
-   * them.
-   */
-  public void onAttackSuffered(ActorController attacker) { }
-
-  /**
-   * Subclasses of ActorController should override this method to hook into successful movement.
-   */
-  public void onActionExecuted(Action action) {
-
-  }
-
-  /**
-   * Subclasses of ActorController should override this method to hook into game updates. This
-   * function is run at the end of this ActorController's onUpdate() call, and should be used to
-   * setup the actor for FUTURE updates, rather than the current one.
-   */
-  protected void onUpdateProcessed() { }
 
   public Actor getActor() {
     return actor;

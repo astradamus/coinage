@@ -24,6 +24,11 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
   private final List<KeyListener> keyListeners = new ArrayList<>();
 
 
+  private final KeyModifierInterpreter keyModifierInterpreter = new KeyModifierInterpreter();
+
+
+
+
   private Selector<Coordinate> coordinateSelector = null;
   private Selector<Physical> physicalSelector = null;
 
@@ -36,6 +41,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
 
   public GameInputSwitch() {
 
+    keyListeners.add(keyModifierInterpreter);
     keyListeners.add(new NumpadDirectionInterpreter(this));
     keyListeners.add(new ModeCommandInterpreter());
     keyListeners.add(new ListSelectInterpreter(this));
@@ -53,9 +59,9 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
     if (startRepeatingMoveDelay > 0) {
       startRepeatingMoveDelay--;
     }
-    else if (startRepeatingMoveDelay == 0 && playerController.isFreeToAct()) {
+    else if (startRepeatingMoveDelay == 0 && shouldDelayMoveRepeat()) {
       final Actor playerActor = playerController.getActor();
-      playerController.attemptAction(new Moving(playerActor,playerActor.getFacing(),false));
+      playerController.attemptAction(new Moving(playerActor,delayedMoveDirection,false));
       terminateRepeatingMoveTimer();
     }
 
@@ -101,59 +107,37 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
   }
 
 
-
+  private Direction delayedMoveDirection = null;
   private int startRepeatingMoveDelay = -1;
 
   @Override
-  public void receiveDirection(Direction direction, KeyModifier modifier) {
+  public void receiveDirection(Direction direction) {
 
     if (targetCursor != null) {
       targetCursor.setCursorMovingIn(direction);
 
     } else {
 
-      Actor playerActor = playerController.getActor();
+      final KeyModifier keyModifier = keyModifierInterpreter.getLatestModifier();
 
-      boolean needsToTurn = direction != playerController.getActor().getFacing();
-      boolean turningWithoutMoving = modifier == KeyModifier.CTRL;
-      boolean walkingWithoutTurning = modifier == KeyModifier.SHIFT;
+      final boolean directionIsAlreadyFaced = direction == playerController.getActor().getFacing();
 
-      if (turningWithoutMoving && needsToTurn) {
-        playerController.attemptAction(new Turning(playerActor, direction));
+      final boolean shouldTurn = !directionIsAlreadyFaced && keyModifier != KeyModifier.SHIFT;
+      final boolean shouldMove = keyModifier != KeyModifier.CTRL;
 
-      } else if (!turningWithoutMoving && (!needsToTurn || walkingWithoutTurning)) {
-        final Moving moving = new Moving(playerActor, direction, walkingWithoutTurning);
-
-        if (playerController.isFreeToAct()) {
-          delayRepeatOfMove(moving);
-        }
-
-        playerController.attemptAction(moving);
-
-      } else {
-        final TurnThenMove turnThenMove = new TurnThenMove(playerActor, direction, false);
-
-        if (playerController.isFreeToAct()) {
-          delayRepeatOfMove(turnThenMove);
-        }
-
-        playerController.attemptAction(turnThenMove);
-
+      if (shouldTurn && shouldMove) {
+        turnThenMove(direction);
+      }
+      else if (shouldTurn) {
+        turn(direction);
+      }
+      else if (shouldMove) {
+        move(direction);
       }
 
     }
 
   }
-
-  private void delayRepeatOfMove(Action action) {
-    action.doNotRepeat();
-    startRepeatingMoveDelay = 25;
-  }
-
-  private void terminateRepeatingMoveTimer() {
-    startRepeatingMoveDelay = -1;
-  }
-
 
   @Override
   public void receiveDirectionsCleared() {
@@ -165,6 +149,54 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
       targetCursor.setCursorMovingIn(null);
     }
 
+  }
+
+
+  private void turnThenMove(Direction direction) {
+    final Actor playerActor = playerController.getActor();
+
+    final TurnThenMove action = new TurnThenMove(playerActor, direction, false);
+
+    if (shouldDelayMoveRepeat()) {
+      delayRepeatOfMove(action, direction);
+    }
+
+    playerController.attemptAction(action);
+  }
+
+  private void turn(Direction direction) {
+    final Actor playerActor = playerController.getActor();
+    playerController.attemptAction(new Turning(playerActor, direction));
+  }
+
+  private void move(Direction direction) {
+    final Actor playerActor = playerController.getActor();
+    final boolean isWalking = keyModifierInterpreter.getLatestModifier() == KeyModifier.SHIFT;
+
+    final Moving moving = new Moving(playerActor, direction, isWalking);
+
+    if (shouldDelayMoveRepeat()) {
+      delayRepeatOfMove(moving, direction);
+    }
+
+    playerController.attemptAction(moving);
+  }
+
+
+  private boolean shouldDelayMoveRepeat() {
+    return playerController.isFreeToAct(); // Prevents re-delay when changing directions.
+  }
+
+  private void delayRepeatOfMove(Action action, Direction direction) {
+    action.doNotRepeat();
+    delayedMoveDirection = direction;
+    startRepeatingMoveDelay = 25;
+  }
+
+
+  private void terminateRepeatingMoveTimer() {
+    delayedMoveDirection = null;
+    startRepeatingMoveDelay = -1;
   }
 
   @Override

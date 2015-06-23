@@ -107,8 +107,9 @@ public abstract class Action {
     return flags.contains(flag);
   }
 
-  public void doNotRepeat() {
+  public Action doNotRepeat() {
     addFlag(ActionFlag.DO_NOT_REPEAT);
+    return this;
   }
 
 

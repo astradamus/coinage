@@ -104,7 +104,7 @@ public class Attacking extends Action {
         .readAttributeLevel(Attribute.MUSCLE).ordinal();
 
     final int damageBase  = actorMuscleRank * 2;
-    final int damageRange = actorMuscleRank * 5;
+    final int damageRange = actorMuscleRank * 3;
 
     final double damage = damageBase + Game.RANDOM.nextInt(damageRange);
 

@@ -18,7 +18,7 @@ public class Health {
 
   public Health(Actor actor) {
     this.actor = actor;
-    maximum = actor.readAttributeLevel(Attribute.GRIT).ordinal()*20.0;
+    maximum = actor.readAttributeLevel(Attribute.GRIT).ordinal()*10.0;
     current = maximum;
   }
 

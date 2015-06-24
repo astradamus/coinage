@@ -5,6 +5,7 @@ import actor.attribute.Attribute;
 import controller.ActorController;
 import game.Direction;
 import game.Game;
+import game.physical.PhysicalFlag;
 
 import java.awt.Color;
 
@@ -24,6 +25,7 @@ public class Moving extends Action {
   public final static int BEATS_AT_BASELINE = 4;
   public final static int DISTANCE_ADJUSTMENT_DIVISOR = 3;
 
+  public static final int FOUR_LEGGED_FULL_SPEED_BONUS = 1;
 
 
 
@@ -53,17 +55,18 @@ public class Moving extends Action {
    */
   @Override
   public int calcDelayToPerform() {
+    final Actor actor = getPerformer().getActor();
 
     // Take the actor's reflex rank.
-    final int actorReflex = getPerformer().getActor()
-        .readAttributeLevel(Attribute.REFLEX).ordinal();
+    final int actorReflex = actor.readAttributeLevel(Attribute.REFLEX).ordinal();
 
     // Determine distance from BASELINE_RANK.
     final int distanceFromBaseline = actorReflex - BASELINE_RANK;
 
     // Subtract adjustment from baseline to get normal delay to perform.
-    final int calculatedDelay =
+    int calculatedDelay =
         BEATS_AT_BASELINE - (distanceFromBaseline / DISTANCE_ADJUSTMENT_DIVISOR);
+
 
 
     // Determine facing adjustment.
@@ -72,7 +75,10 @@ public class Moving extends Action {
     }
 
     if (getIsMovingInFacedDirection()) {
-      return calculatedDelay; // No adjustment necessary.
+      if (actor.hasFlag(PhysicalFlag.FOUR_LEGGED)) {
+        calculatedDelay -= FOUR_LEGGED_FULL_SPEED_BONUS;
+      }
+      return calculatedDelay; // Full speed, no adjustment necessary.
     }
 
     if (getIsMovingInAdjacentDirection()) {

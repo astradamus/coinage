@@ -25,11 +25,16 @@ public class ActorTemplate {
   final List<AttributeRange> baseAttributeRanges;
 
   public ActorTemplate(String name, char appearance, Color color, Color bgColor,
-                       List<AttributeRange> baseAttributeRanges) {
+                       List<AttributeRange> baseAttributeRanges, EnumSet<PhysicalFlag> flags) {
     this.name = name;
     this.appearance = new Appearance(appearance,color,bgColor, Game.VISUAL_PRIORITY__ACTORS);
     this.baseAttributeRanges = baseAttributeRanges;
-    flags = EnumSet.noneOf(PhysicalFlag.class);
+    this.flags = flags;
+  }
+
+  public ActorTemplate(String name, char appearance, Color color, Color bgColor,
+                       List<AttributeRange> baseAttributeRanges) {
+    this(name, appearance, color, bgColor, baseAttributeRanges, EnumSet.noneOf(PhysicalFlag.class));
   }
 
   public static HashMap<String, ActorTemplate> LIB = new HashMap<>();
@@ -40,12 +45,12 @@ public class ActorTemplate {
         "a human", 'H', new Color(129, 84, 51), new Color(40, 26, 16),
 
         Arrays.asList(
-          AttributeRange.fromRank(Rank.R05_AVERAGE,1),        // MUSCLE
-          AttributeRange.fromRank(Rank.R05_AVERAGE,1),        // GRIT
-          AttributeRange.fromRank(Rank.R05_AVERAGE,1),        // REFLEX
-          AttributeRange.fromRank(Rank.R05_AVERAGE,1),        // TALENT
-          AttributeRange.fromRank(Rank.R05_AVERAGE,1),        // PERCEPTION
-          AttributeRange.fromRank(Rank.R05_AVERAGE,1)         // CHARM
+            AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // MUSCLE
+            AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // GRIT
+            AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // REFLEX
+            AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // TALENT
+            AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // PERCEPTION
+            AttributeRange.fromRank(Rank.R05_AVERAGE, 1)         // CHARM
         )
 
     ));
@@ -61,7 +66,9 @@ public class ActorTemplate {
           new AttributeRange(Rank.R02_TERRIBLE,Rank.R03_INFERIOR),        // TALENT
           new AttributeRange(Rank.R09_EXCEPTIONAL,Rank.R10_MASTERFUL),    // PERCEPTION
           AttributeRange.fromRank(Rank.R05_AVERAGE,1)                     // CHARM
-        )
+        ),
+
+        EnumSet.of(PhysicalFlag.FOUR_LEGGED)
 
     ));
 
@@ -76,7 +83,9 @@ public class ActorTemplate {
           new AttributeRange(Rank.R02_TERRIBLE,Rank.R03_INFERIOR),        // TALENT
           new AttributeRange(Rank.R08_OUTSTANDING,Rank.R09_EXCEPTIONAL),  // PERCEPTION
           AttributeRange.fromRank(Rank.R05_AVERAGE,1)                     // CHARM
-        )
+        ),
+
+        EnumSet.of(PhysicalFlag.FOUR_LEGGED)
 
     ));
 
@@ -91,7 +100,9 @@ public class ActorTemplate {
           AttributeRange.fromRank(Rank.R01_ABYSMAL,0),                    // TALENT
           AttributeRange.fromRank(Rank.R02_TERRIBLE,0),                   // PERCEPTION
           AttributeRange.fromRank(Rank.R01_ABYSMAL,0)                     // CHARM
-        )
+        ),
+
+        EnumSet.of(PhysicalFlag.FOUR_LEGGED)
 
     ));
 
@@ -108,7 +119,9 @@ public class ActorTemplate {
           AttributeRange.fromRank(Rank.R01_ABYSMAL,0),                    // TALENT
           AttributeRange.fromRank(Rank.R03_INFERIOR,0),                   // PERCEPTION
           AttributeRange.fromRank(Rank.R01_ABYSMAL,0)                     // CHARM
-        )
+        ),
+
+        EnumSet.of(PhysicalFlag.HAND_WALKER)
 
     ));
 

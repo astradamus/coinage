@@ -166,9 +166,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
   }
 
   private void move(Direction direction) {
-    final boolean isWalking = keyModifierInterpreter.getLatestModifier() == KeyModifier.SHIFT;
-
-    final Moving moving = new Moving(playerController, direction, isWalking);
+    final Moving moving = new Moving(playerController, direction, false);
 
     if (shouldDelayMoveRepeat()) {
       delayRepeatOfMove(moving, direction);
@@ -185,7 +183,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
   private void delayRepeatOfMove(Action action, Direction direction) {
     action.doNotRepeat();
     delayedMoveDirection = direction;
-    startRepeatingMoveDelay = 25;
+    startRepeatingMoveDelay = 15;
   }
 
 

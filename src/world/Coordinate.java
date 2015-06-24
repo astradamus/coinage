@@ -30,4 +30,8 @@ public class Coordinate {
     return area.getSquare(this);
   }
 
+  public boolean equalTo(Coordinate coordinate) {
+    return globalX == coordinate.globalX && globalY == coordinate.globalY;
+  }
+
 }

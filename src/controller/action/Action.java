@@ -1,6 +1,7 @@
 package controller.action;
 
 import controller.ActorController;
+import game.Game;
 import world.Coordinate;
 
 import java.awt.Color;
@@ -124,6 +125,10 @@ public abstract class Action {
 
   public final Coordinate getTarget() {
     return target;
+  }
+
+  protected final boolean getPlayerIsPerformer() {
+    return getPerformer() == Game.getActivePlayer();
   }
 
 

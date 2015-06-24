@@ -31,7 +31,7 @@ public class ActionOverlay {
 
     // Draw an overlay on actors indicating the direction they are facing.
     Set<ActorController> localActorControllers = Game.getActiveControllers()
-        .getControllersByArea(ActorController.class, Game.getActivePlayer().getLocality());
+        .getActorControllersInArea(Game.getActivePlayer().getLocality());
 
     g.setFont(ACTION_OVERLAY_FONT);
     g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));

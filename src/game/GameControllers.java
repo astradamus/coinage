@@ -134,15 +134,29 @@ public class GameControllers {
 
   }
 
-  public <T extends Controller> Set<T> getControllersByArea(Class<T> controllerClass, Area area) {
-    HashSet<T> set = new HashSet<>();
+  public Set<ActorController> getActorControllersInArea(Area area) {
+    HashSet<ActorController> set = new HashSet<>();
 
     set.addAll(controllerLocations.get(area).stream()
-        .filter(controllerClass::isInstance)
-        .map(controllerClass::cast)
+        .filter(ActorController.class::isInstance)
+        .map(ActorController.class::cast)
         .collect(Collectors.toSet()));
 
     return set;
+  }
+
+  public ActorController getActorControllerAt(Coordinate coordinate) {
+
+    final Set<ActorController> inArea = getActorControllersInArea(coordinate.area);
+
+    for (ActorController actorController : inArea) {
+      if (actorController.getActor().getCoordinate().equalTo(coordinate)) {
+        return actorController;
+      }
+    }
+
+    return null;
+
   }
 
 }

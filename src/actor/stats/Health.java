@@ -39,10 +39,6 @@ public class Health {
 
     double remaining = current - damage;
 
-
-    EventLog.registerEventIfPlayerIsNear(actor.getCoordinate(), Event.ACTOR_WOUNDED,
-        actor.getName() + " suffered " + Double.toString(damage)+" damage.");
-
     if (remaining <= 0) {
 
       EventLog.registerEventIfPlayerIsNear(actor.getCoordinate(), Event.ACTOR_WOUNDED,

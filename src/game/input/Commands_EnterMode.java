@@ -111,6 +111,27 @@ public enum Commands_EnterMode implements Command {
 
 
 
+  ENTER_MODE_ATTACK {
+
+    @Override
+    public int getHotKeyCode() {
+      return KeyEvent.VK_A;
+    }
+
+    @Override
+    public String getControlText() {
+      return "A: Attack.";
+    }
+
+    @Override
+    public void execute() {
+      Game.getActiveInputSwitch().enterMode(GameMode.ATTACK);
+    }
+
+  },
+
+
+
   ENTER_MODE_INVENTORY {
 
     @Override

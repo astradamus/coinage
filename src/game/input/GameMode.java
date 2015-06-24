@@ -39,7 +39,46 @@ public enum GameMode {
           Commands_EnterMode.TOGGLE_PRECISION_TIME,
           Commands_EnterMode.ENTER_MODE_LOOK,
           Commands_EnterMode.ENTER_MODE_INTERACT,
+          Commands_EnterMode.ENTER_MODE_ATTACK,
           Commands_EnterMode.ENTER_MODE_INVENTORY
+      );
+    }
+
+    @Override
+    public List<DisplayElement> getDisplayElements() {
+
+      return Arrays.asList(
+          DisplayElement.MINIMAP,
+          DisplayElement.makeControlsList(getModeCommands(), 0)
+      );
+
+    }
+
+  },
+
+
+  ATTACK {
+
+    @Override
+    public void onEnter() {
+      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareTargeter(Game
+          .getActivePlayer().getActor().getCoordinate(), 1));
+
+      if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
+        Game.setTimeMode(TimeMode.PAUSED);
+      }
+    }
+
+    @Override
+    public String getPrompt() {
+      return "ATTACK WHAT?";
+    }
+
+    @Override
+    public List<Command> getModeCommands() {
+      return Arrays.asList(
+          Commands_EnterMode.ENTER_MODE_EXPLORE,
+          Commands_Attack.STRIKE
       );
     }
 
@@ -88,7 +127,7 @@ public enum GameMode {
           DisplayElement.CONTROL_ESCAPE,
           DisplayElement.makeCurrentPrompt(),
           DisplayElement.makePhysicalsList(Game.getActiveInputSwitch()
-                                              .getPlayerTarget().getSquare().getAll(),false),
+                                              .getPlayerTarget().getSquare().getAll(), false),
           DisplayElement.makeControlsList(getModeCommands(), 1)
       );
     }
@@ -101,6 +140,9 @@ public enum GameMode {
 
     @Override
     public void onEnter() {
+      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareAndListTargeter(Game
+          .getActivePlayer().getActor().getCoordinate(), 1));
+
       if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
         Game.setTimeMode(TimeMode.PAUSED);
       }
@@ -115,8 +157,7 @@ public enum GameMode {
     public List<Command> getModeCommands() {
       return Arrays.asList(
           Commands_EnterMode.ENTER_MODE_EXPLORE,
-          Commands_Interact.PICK_UP,
-          Commands_Interact.STRIKE
+          Commands_Interact.PICK_UP
       );
     }
 

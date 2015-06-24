@@ -6,7 +6,6 @@ import controller.ActorController;
 import game.Game;
 import game.display.Event;
 import game.display.EventLog;
-import game.physical.PhysicalFlag;
 import world.Coordinate;
 
 import java.awt.Color;
@@ -18,11 +17,12 @@ public class Attacking extends Action {
 
 
 
-  private final ActorController victim;
+  private final ActorController intendedVictim;
+  private ActorController actualVictim;
 
-  public Attacking(ActorController performer, Coordinate victimWhere, ActorController victim) {
+  public Attacking(ActorController performer, Coordinate victimWhere) {
     super(performer, victimWhere);
-    this.victim = victim;
+    this.intendedVictim = Game.getActiveControllers().getActorControllerAt(victimWhere);
   }
 
   @Override
@@ -45,63 +45,81 @@ public class Attacking extends Action {
 
 
   /**
-   * Attacking will fail if the victim is already dead or if the victim is no longer at the
+   * Attacking will fail if the intendedVictim is already dead or if the intendedVictim is no longer at the
    * target location.
    */
   @Override
   protected boolean validate() {
-    final boolean playerIsPerformer = getPerformer() == Game.getActivePlayer();
 
-    final Actor performerActor = getPerformer().getActor();
-    final Actor victimActor = victim.getActor();
+    if (intendedVictim != null) {
 
-    if (victimActor.hasFlag(PhysicalFlag.DEAD)) {
-      if (playerIsPerformer) {
-        EventLog.registerEvent(Event.INVALID_ACTION, "It's already dead.");
+      final boolean intendedVictimHasMoved =
+          !getTarget().getSquare().getAll().contains(intendedVictim.getActor());
 
+      if (!intendedVictimHasMoved) {
+        // Our intended victim is right where we want them.
+        actualVictim = intendedVictim;
       }
-      return false;
-    }
-
-    // todo clean this up \/ \/ \/
-    final boolean targetEludedAttack = !getTarget().getSquare().getAll().contains(victimActor);
-    if (targetEludedAttack) {
-
-
-      if (playerIsPerformer) {
-        EventLog.registerEvent(Event.INVALID_ACTION, victimActor.getName()+" eluded your attack.");
-
-      } else {
-        EventLog.registerEventIfPlayerIsNear(performerActor.getCoordinate(),Event.INVALID_ACTION,
-            victimActor.getName()+" eluded "+ performerActor.getName()+"'s attack.");
-
-      }
-
-      return false;
 
     }
 
-    return true;
+
+    // If actualVictim is still null, then we either had no intended victim, or they're gone.
+    final boolean intendedVictimHasMovedOrWasNotProvided = actualVictim == null;
+
+    if (intendedVictimHasMovedOrWasNotProvided) {
+      // Check if there's a new victim in the target square for the attack to hit.
+      actualVictim = Game.getActiveControllers().getActorControllerAt(getTarget());
+    }
+
+
+
+    // If actualVictim is STILL null, then this attack is a miss.
+    final boolean attackWillHitSomeone = actualVictim != null;
+
+    if (!attackWillHitSomeone && getPlayerIsPerformer()) {
+        if (intendedVictim == null) {
+          EventLog.registerEvent(Event.INVALID_ACTION, "Your strike hits naught but air.");
+        } else {
+          EventLog.registerEvent(Event.INVALID_ACTION,
+              intendedVictim.getActor().getName() + " eluded your attack.");
+        }
+    }
+
+    return attackWillHitSomeone;
+
   }
 
 
   /**
    * Wound the victim, with severity based on the actor's muscle attribute. Damage ranges from
-   * {@code muscle*3} to {@code muscle*10}
+   * {@code muscle*2} to {@code muscle*5}.
    */
   @Override
   protected void apply() {
 
+    final Actor actualVictimActor = actualVictim.getActor();
+
     final int actorMuscleRank = getPerformer().getActor()
         .readAttributeLevel(Attribute.MUSCLE).ordinal();
 
-    final int damageBase  = actorMuscleRank * 3 / 2;
-    final int damageRange = actorMuscleRank * 7 / 2;
+    final int damageBase  = actorMuscleRank * 2;
+    final int damageRange = actorMuscleRank * 5;
 
     final double damage = damageBase + Game.RANDOM.nextInt(damageRange);
 
-    victim.getActor().getHealth().wound(damage);
-    victim.onVictimized(getPerformer());
+    String message = "struck "+ actualVictimActor.getName() + " for " + Double.toString(damage) + " damage.";
+
+    if (getPlayerIsPerformer()) {
+      message = "You have " + message;
+    } else {
+      message = getPerformer().getActor().getName() + " has "+ message;
+    }
+
+    EventLog.registerEventIfPlayerIsNear(actualVictimActor.getCoordinate(), Event.ACTOR_WOUNDED, message);
+
+    actualVictimActor.getHealth().wound(damage);
+    actualVictim.onVictimized(getPerformer());
 
   }
 

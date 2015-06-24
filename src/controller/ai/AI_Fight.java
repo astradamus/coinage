@@ -43,7 +43,7 @@ public class AI_Fight extends AIBehavior {
     if (actorsAdjacent) {
 
       // if adjacent, attack
-      getPuppet().attemptAction(new Attacking(getPuppet(), victim.getActor().getCoordinate(), victim));
+      getPuppet().attemptAction(new Attacking(getPuppet(), victim.getActor().getCoordinate()));
 
     } else {
 

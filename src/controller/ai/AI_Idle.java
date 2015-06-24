@@ -1,5 +1,6 @@
 package controller.ai;
 
+import controller.ActorController;
 import controller.action.Turning;
 import game.Direction;
 import game.Game;
@@ -41,6 +42,12 @@ public class AI_Idle extends AIBehavior {
   @Override
   public void onActorTurnComplete() {
     idle();
+  }
+
+
+  @Override
+  public void onVictimized(ActorController attacker) {
+    AIRoutines.fightOrFlight(getPuppet(), attacker);
   }
 
 }

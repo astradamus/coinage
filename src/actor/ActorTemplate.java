@@ -105,7 +105,7 @@ public class ActorTemplate {
           AttributeRange.fromRank(Rank.R01_ABYSMAL,0)                     // CHARM
         ),
 
-        EnumSet.of(PhysicalFlag.FOUR_LEGGED)
+        EnumSet.of(PhysicalFlag.FOUR_LEGGED, PhysicalFlag.TIMID)
 
     ));
 

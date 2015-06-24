@@ -57,4 +57,8 @@ public class AI_Wander extends AIBehavior {
     }
   }
 
+  @Override
+  public void onVictimized(ActorController attacker) {
+    AIRoutines.fightOrFlight(getPuppet(), attacker);
+  }
 }

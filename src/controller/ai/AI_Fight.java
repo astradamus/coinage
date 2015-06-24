@@ -42,13 +42,17 @@ public class AI_Fight extends AIBehavior {
 
     if (actorsAdjacent) {
 
-      // if adjacent, attack
+      // If adjacent, attack.
       getPuppet().attemptAction(new Attacking(getPuppet(), victim.getActor().getCoordinate()));
 
     } else {
 
-      // if distant, pursue
-      AIRoutines.approachOneStep(getPuppet(), enemyAt);
+      // If distant, flee (if timid) or pursue.
+      if (AIRoutines.getShouldFlee(getPuppet())) {
+        getPuppet().exhibitBehavior(new AI_Retreat(getPuppet(), victim));
+      } else {
+        AIRoutines.approachOneStep(getPuppet(), enemyAt);
+      }
 
     }
 
@@ -79,6 +83,13 @@ public class AI_Fight extends AIBehavior {
       fight();
     }
 
+  }
+
+  @Override
+  public void onVictimized(ActorController attacker) {
+    if (AIRoutines.getShouldFlee(getPuppet())) {
+      getPuppet().exhibitBehavior(new AI_Retreat(getPuppet(), victim));
+    }
   }
 
 }

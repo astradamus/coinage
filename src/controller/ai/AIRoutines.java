@@ -1,9 +1,13 @@
 package controller.ai;
 
+import actor.Actor;
+import actor.stats.Health;
+import controller.ActorController;
 import controller.action.Action;
 import controller.action.Moving;
 import controller.action.TurnThenMove;
 import game.Direction;
+import game.physical.PhysicalFlag;
 import world.Coordinate;
 
 /**
@@ -30,6 +34,24 @@ public class AIRoutines {
 
     aiController.attemptAction(action.doNotRepeat());
 
+  }
+
+  public static boolean getShouldFlee(AIController aiController) {
+    final Actor actor = aiController.getActor();
+    final Health health = actor.getHealth();
+    return  (actor.hasFlag(PhysicalFlag.TIMID) || health.getCurrent() / health.getMaximum() < 0.40);
+  }
+
+  public static void fightOrFlight(AIController aiController, ActorController attacker) {
+    AIBehavior response;
+
+    if (getShouldFlee(aiController)) {
+      response = new AI_Retreat(aiController, attacker);
+    } else {
+      response = new AI_Fight(aiController, attacker);
+    }
+
+    aiController.exhibitBehavior(response);
   }
 
 

@@ -49,17 +49,10 @@ public class AIController extends ActorController {
   @Override
   public void onVictimized(ActorController attacker) {
 
-    if (currentBehavior != null) {
-
-      Class currentBehaviorClass = currentBehavior.getClass();
-      if (currentBehaviorClass == AI_Idle.class || currentBehaviorClass == AI_Wander.class) {
-        currentBehavior = new AI_Retreat(this, attacker);
-      } else {
-        currentBehavior.onVictimized(attacker);
-      }
-
-    } else {
+    if (currentBehavior == null) {
       currentBehavior = new AI_Retreat(this, attacker);
+    } else {
+      currentBehavior.onVictimized(attacker);
     }
 
   }

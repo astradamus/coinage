@@ -74,7 +74,7 @@ public class ActorTemplate {
           new AttributeRange(Rank.R01_ABYSMAL,Rank.R02_TERRIBLE),         // GRIT
           new AttributeRange(Rank.R08_OUTSTANDING,Rank.R09_EXCEPTIONAL),  // REFLEX
           new AttributeRange(Rank.R02_TERRIBLE,Rank.R03_INFERIOR),        // TALENT
-          new AttributeRange(Rank.R09_EXCEPTIONAL,Rank.R10_MASTERFUL),    // PERCEPTION
+          new AttributeRange(Rank.R08_OUTSTANDING,Rank.R09_EXCEPTIONAL),  // PERCEPTION
           AttributeRange.fromRank(Rank.R05_AVERAGE,1)                     // CHARM
         )
 

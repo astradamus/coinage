@@ -22,7 +22,7 @@ public class Moving extends Action {
 
   public final static int BASELINE_RANK = 5;
   public final static int BEATS_AT_BASELINE = 4;
-  public final static int DISTANCE_ADJUSTMENT_DIVISOR = 2;
+  public final static int DISTANCE_ADJUSTMENT_DIVISOR = 3;
 
 
 
@@ -68,7 +68,7 @@ public class Moving extends Action {
 
     // Determine facing adjustment.
     if (isWalking) {
-      return calculatedDelay * 2; // Walking always takes twice as long.
+      return calculatedDelay * 3; // Walking always takes three times as long.
     }
 
     if (getIsMovingInFacedDirection()) {

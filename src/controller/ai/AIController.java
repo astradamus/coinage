@@ -1,19 +1,26 @@
 package controller.ai;
 
-    import actor.Actor;
-    import controller.ActorController;
-    import controller.action.Action;
+import actor.Actor;
+import controller.ActorController;
+import controller.action.Action;
+import game.Game;
 
 /**
  *
  */
 public class AIController extends ActorController {
 
-  private AI_Behavior currentBehavior = null;
+  private AIBehavior currentBehavior = null;
 
   public AIController(Actor actor) {
     super(actor);
   }
+
+
+  void exhibitBehavior(AIBehavior behavior) {
+    currentBehavior = behavior;
+  }
+
 
   @Override
   public void onActionExecuted(Action action) {
@@ -25,8 +32,14 @@ public class AIController extends ActorController {
   @Override
   public void onActorTurnComplete() {
 
-    if (currentBehavior == null || currentBehavior.isComplete()) {
-      currentBehavior = new AI_Wander(this);
+    if (currentBehavior == null || currentBehavior.getIsComplete()) {
+
+      if (Game.RANDOM.nextInt(10) < 2) {
+        currentBehavior = new AI_Wander(this);
+      } else {
+        currentBehavior = new AI_Idle(this);
+      }
+
     }
 
     currentBehavior.onActorTurnComplete();
@@ -35,9 +48,20 @@ public class AIController extends ActorController {
 
   @Override
   public void onVictimized(ActorController attacker) {
+
     if (currentBehavior != null) {
-      currentBehavior.onVictimized(attacker);
+
+      Class currentBehaviorClass = currentBehavior.getClass();
+      if (currentBehaviorClass == AI_Idle.class || currentBehaviorClass == AI_Wander.class) {
+        currentBehavior = new AI_Retreat(this, attacker);
+      } else {
+        currentBehavior.onVictimized(attacker);
+      }
+
+    } else {
+      currentBehavior = new AI_Retreat(this, attacker);
     }
+
   }
 
 }

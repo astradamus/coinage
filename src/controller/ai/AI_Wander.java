@@ -11,17 +11,14 @@ import game.Game;
 /**
  *
  */
-public class AI_Wander extends AI_Behavior {
+public class AI_Wander extends AIBehavior {
 
   public static final int WANDER_CHAIN_MAX_LENGTH = 3;
 
-  private final ActorController wanderer;
-
   private int wanderChain;
 
-  public AI_Wander(ActorController wanderer) {
+  public AI_Wander(AIController wanderer) {
     super(wanderer);
-    this.wanderer = wanderer;
 
     wanderChain = Game.RANDOM.nextInt(WANDER_CHAIN_MAX_LENGTH) + 1;
     wander();
@@ -40,6 +37,8 @@ public class AI_Wander extends AI_Behavior {
 
     Action next;
 
+    ActorController wanderer = getPuppet();
+
     if (wanderer.getActor().getFacing() != direction) {
       next = new TurnThenMove(wanderer, direction, true);
     } else {
@@ -53,7 +52,7 @@ public class AI_Wander extends AI_Behavior {
   @Override
   public void onActionExecuted(Action action) {
     if (action.hasFlag(ActionFlag.FAILED)
-        || (action.hasFlag(ActionFlag.SUCCEEDED) && Game.RANDOM.nextInt(10) < 1)) {
+        || (action.hasFlag(ActionFlag.SUCCEEDED) && Game.RANDOM.nextInt(10) < 4)) {
       wander();
     }
   }

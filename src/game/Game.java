@@ -112,9 +112,10 @@ public class Game {
       GameDisplay.addKeyListener(keyListener);
     }
 
-    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing("STONE"));
-    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing("STONE"));
-    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing("STONE"));
+    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing("CLUB"));
+    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing("SWORD"));
+    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing("AXE"));
+    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing("DAGGER"));
     GameEngine.start();
 
   }

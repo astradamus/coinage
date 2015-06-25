@@ -6,7 +6,6 @@ import game.physical.PhysicalFlag;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -18,14 +17,14 @@ import java.util.List;
 public class ThingTemplate {
 
   final String name;
-  final List<Appearance> appearances;
+  final List<Appearance> appearances = new ArrayList<>();
   final EnumSet<PhysicalFlag> flags;
+
+  final WeaponComponent weaponComponent;
 
   public ThingTemplate(String name, char[] chars, Color[] colors, EnumSet<PhysicalFlag> flags) {
 
     this.name = name;
-
-    final List<Appearance> appearances = new ArrayList<>();
 
     for (char character : chars) {
       for (Color color : colors) {
@@ -33,10 +32,17 @@ public class ThingTemplate {
       }
     }
 
-    this.appearances = Collections.unmodifiableList(appearances);
-
     this.flags = flags;
 
+    this.weaponComponent = null;
+
+  }
+
+  public ThingTemplate(String name, char mapSymbol, Color color, WeaponComponent weaponComponent) {
+    this.name = name;
+    this.appearances.add(new Appearance(mapSymbol,color,Game.VISUAL_PRIORITY__THINGS));
+    this.weaponComponent = weaponComponent;
+    this.flags = EnumSet.noneOf(PhysicalFlag.class);
   }
 
   Appearance getRandomAppearance() {
@@ -143,6 +149,9 @@ public class ThingTemplate {
             new Color(63, 63, 63)
         }, EnumSet.noneOf(PhysicalFlag.class)
     ));
+
+    WeaponTemplates.load();
+
   }
 
 }

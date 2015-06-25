@@ -204,6 +204,7 @@ public enum GameMode {
     public List<Command> getModeCommands() {
       return Arrays.asList(
           Commands_EnterMode.ENTER_MODE_EXPLORE,
+          Commands_Inventory.EQUIP,
           Commands_Inventory.DROP
       );
     }

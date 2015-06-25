@@ -9,6 +9,7 @@ import game.Direction;
 import game.Game;
 import game.physical.Physical;
 import game.physical.PhysicalFlag;
+import thing.Thing;
 import world.Coordinate;
 
 import java.awt.Color;
@@ -29,6 +30,8 @@ public class Actor extends Physical {
   private final Health health;
   private final Map<Attribute, Rank> attributes;
   private final Inventory inventory;
+
+  private Thing equippedWeapon;
 
 
   private Coordinate coordinate;
@@ -55,6 +58,13 @@ public class Actor extends Physical {
     inventory = new Inventory();
 
   }
+
+
+
+  public void setEquippedWeapon(Thing validatedWeapon) {
+    equippedWeapon = validatedWeapon;
+  }
+
 
 
   public void die() {

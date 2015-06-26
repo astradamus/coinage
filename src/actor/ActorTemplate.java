@@ -5,6 +5,7 @@ import actor.attribute.Rank;
 import game.Game;
 import game.physical.Appearance;
 import game.physical.PhysicalFlag;
+import thing.WeaponTemplates;
 
 import java.awt.Color;
 import java.util.Arrays;
@@ -21,24 +22,31 @@ public class ActorTemplate {
   final String name;
   final Appearance appearance;
 
-  final EnumSet<PhysicalFlag> flags;
   final List<AttributeRange> baseAttributeRanges;
 
+  final String naturalWeaponID;
+
+  final EnumSet<PhysicalFlag> flags;
+
   public ActorTemplate(String name, char appearance, Color color, Color bgColor,
-                       List<AttributeRange> baseAttributeRanges, EnumSet<PhysicalFlag> flags) {
+                       List<AttributeRange> baseAttributeRanges, String naturalWeaponID,
+                       EnumSet<PhysicalFlag> flags) {
     this.name = name;
     this.appearance = new Appearance(appearance,color,bgColor, Game.VISUAL_PRIORITY__ACTORS);
     this.baseAttributeRanges = baseAttributeRanges;
     this.flags = flags;
+    this.naturalWeaponID = naturalWeaponID;
   }
 
   public ActorTemplate(String name, char appearance, Color color, Color bgColor,
-                       List<AttributeRange> baseAttributeRanges) {
-    this(name, appearance, color, bgColor, baseAttributeRanges, EnumSet.noneOf(PhysicalFlag.class));
+                       List<AttributeRange> baseAttributeRanges, String naturalWeaponID) {
+    this(name, appearance, color, bgColor, baseAttributeRanges, naturalWeaponID,
+        EnumSet.noneOf(PhysicalFlag.class));
   }
 
   public static HashMap<String, ActorTemplate> LIB = new HashMap<>();
-  static {
+
+  public static void loadActors() {
 
     LIB.put("HUMAN", new ActorTemplate(
 
@@ -52,7 +60,9 @@ public class ActorTemplate {
             AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // TALENT
             AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // PERCEPTION
             AttributeRange.fromRank(Rank.R05_AVERAGE, 1)         // CHARM
-        )
+        ),
+
+        WeaponTemplates.WP_NATURAL_FISTS
 
     ));
 
@@ -69,6 +79,8 @@ public class ActorTemplate {
           new AttributeRange(Rank.R10_MASTERFUL,Rank.R11_HEROIC),         // PERCEPTION
           AttributeRange.fromRank(Rank.R03_INFERIOR,1)                    // CHARM
         ),
+
+        WeaponTemplates.WP_NATURAL_FANGS,
 
         EnumSet.of(PhysicalFlag.FOUR_LEGGED)
 
@@ -87,6 +99,8 @@ public class ActorTemplate {
           AttributeRange.fromRank(Rank.R03_INFERIOR,1)                    // CHARM
         ),
 
+        WeaponTemplates.WP_NATURAL_CLAWS,
+
         EnumSet.of(PhysicalFlag.FOUR_LEGGED)
 
     ));
@@ -104,6 +118,8 @@ public class ActorTemplate {
           AttributeRange.fromRank(Rank.R05_AVERAGE,1),                    // PERCEPTION
           AttributeRange.fromRank(Rank.R01_ABYSMAL,0)                     // CHARM
         ),
+
+        WeaponTemplates.WP_NATURAL_FANGS,
 
         EnumSet.of(PhysicalFlag.FOUR_LEGGED, PhysicalFlag.TIMID)
 

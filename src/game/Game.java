@@ -4,6 +4,7 @@ import controller.player.PlayerController;
 import game.display.GameDisplay;
 import game.input.GameInputSwitch;
 import thing.ThingFactory;
+import thing.WeaponTemplates;
 import utils.Dimension;
 import world.World;
 
@@ -112,10 +113,14 @@ public class Game {
       GameDisplay.addKeyListener(keyListener);
     }
 
-    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing("CLUB"));
-    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing("SWORD"));
-    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing("AXE"));
-    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing("DAGGER"));
+    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing
+        (WeaponTemplates.WP_CLUB));
+    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing
+        (WeaponTemplates.WP_SWORD));
+    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing
+        (WeaponTemplates.WP_AXE));
+    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing
+        (WeaponTemplates.WP_DAGGER));
     GameEngine.start();
 
   }

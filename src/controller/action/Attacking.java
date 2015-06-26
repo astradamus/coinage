@@ -39,28 +39,21 @@ public class Attacking extends Action {
   public int calcDelayToPerform() {
 
     final Actor actor = getPerformer().getActor();
-    final Thing equippedWeapon = actor.getEquippedWeapon();
+    final Thing equippedWeapon = actor.getActiveWeapon();
 
-    if (equippedWeapon != null) {
-      return equippedWeapon.getWeaponComponent()
-          .calcAttackSpeed(actor.readAttributeLevel(Attribute.REFLEX));
-    }
+    return equippedWeapon.getWeaponComponent()
+        .calcAttackSpeed(actor.readAttributeLevel(Attribute.REFLEX));
 
-    return 3;
   }
 
   @Override
   public int calcDelayToRecover() {
 
     final Actor actor = getPerformer().getActor();
-    final Thing equippedWeapon = actor.getEquippedWeapon();
+    final Thing equippedWeapon = actor.getActiveWeapon();
 
-    if (equippedWeapon != null) {
-      return equippedWeapon.getWeaponComponent()
-          .calcRecoverySpeed(actor.readAttributeLevel(Attribute.REFLEX));
-    }
-
-    return 2;
+    return equippedWeapon.getWeaponComponent()
+        .calcRecoverySpeed(actor.readAttributeLevel(Attribute.REFLEX));
   }
 
 
@@ -99,12 +92,17 @@ public class Attacking extends Action {
     final boolean attackWillHitSomeone = actualVictim != null;
 
     if (!attackWillHitSomeone && getPlayerIsPerformer()) {
+
+      final String attackTypeString = getPerformer().getActor().getActiveWeapon()
+          .getWeaponComponent().getDamageType().getAttackString();
+
         if (intendedVictim == null) {
-          EventLog.registerEvent(Event.INVALID_ACTION, "Your strike hits naught but air.");
+          EventLog.registerEvent(Event.INVALID_ACTION, "Your "+attackTypeString+" hit naught but air.");
         } else {
           EventLog.registerEvent(Event.INVALID_ACTION,
-              intendedVictim.getActor().getName() + " eluded your attack.");
+              intendedVictim.getActor().getName() + " eluded your "+attackTypeString+".");
         }
+
     }
 
     return attackWillHitSomeone;
@@ -129,8 +127,8 @@ public class Attacking extends Action {
     final double damageRange;
 
 
-    if (actor.getEquippedWeapon() != null) {
-      final WeaponComponent weapon = actor.getEquippedWeapon().getWeaponComponent();
+    if (actor.getActiveWeapon() != null) {
+      final WeaponComponent weapon = actor.getActiveWeapon().getWeaponComponent();
 
       final double minimum = weapon.calcMinimumDamage(actorMuscleRank);
       final double maximum = weapon.calcMaximumDamage(actorMuscleRank);
@@ -148,12 +146,25 @@ public class Attacking extends Action {
 
     final double damage = damageBase + Game.RANDOM.nextInt((int) damageRange);
 
-    String message = "struck "+ actualVictimActor.getName() + " for " + Double.toString(damage) + " damage.";
+
+    final Thing weapon = getPerformer().getActor().getActiveWeapon();
+    final String hitString = weapon.getWeaponComponent().getDamageType().getHitString();
+
+    String victimName = actualVictimActor.getName();
+    if (actualVictim == Game.getActivePlayer()) {
+      victimName = "you";
+    }
+
+    final String messageA = hitString + " " + victimName + " with ";
+    final String messageB = weapon.getName() + " for " + Double
+        .toString(Math.round(damage)) + " damage.";
+
+    String message;
 
     if (getPlayerIsPerformer()) {
-      message = "You have " + message;
+      message = "You have " + messageA + "your " + messageB;
     } else {
-      message = actor.getName() + " has "+ message;
+      message = actor.getName() + " has "+ messageA + "its "+ messageB;
     }
 
     EventLog.registerEventIfPlayerIsNear(actualVictimActor.getCoordinate(), Event.ACTOR_WOUNDED, message);

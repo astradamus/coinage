@@ -10,6 +10,7 @@ import game.Game;
 import game.physical.Physical;
 import game.physical.PhysicalFlag;
 import thing.Thing;
+import thing.ThingFactory;
 import world.Coordinate;
 
 import java.awt.Color;
@@ -31,6 +32,7 @@ public class Actor extends Physical {
   private final Map<Attribute, Rank> attributes;
   private final Inventory inventory;
 
+  private Thing naturalWeapon;
   private Thing equippedWeapon;
 
 
@@ -47,6 +49,8 @@ public class Actor extends Physical {
     aT.flags.forEach(this::addFlag);
 
 
+    naturalWeapon = ThingFactory.makeThing(aT.naturalWeaponID);
+
     attributes = new HashMap<>();
 
     for (Attribute attribute : Attribute.values()) {
@@ -59,8 +63,8 @@ public class Actor extends Physical {
 
   }
 
-  public Thing getEquippedWeapon() {
-    return equippedWeapon;
+  public Thing getActiveWeapon() {
+    return equippedWeapon != null ? equippedWeapon : naturalWeapon;
   }
 
   public void setEquippedWeapon(Thing validatedWeapon) {

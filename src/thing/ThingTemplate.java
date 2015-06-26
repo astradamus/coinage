@@ -52,7 +52,8 @@ public class ThingTemplate {
 
 
   public static HashMap<String,ThingTemplate> LIB = new HashMap<>();
-  static {
+
+  public static void loadThings() {
     LIB.put("UNDERGROWTH", new ThingTemplate(
         "undergrowth",
         new char[] {'#'},
@@ -150,7 +151,8 @@ public class ThingTemplate {
         }, EnumSet.noneOf(PhysicalFlag.class)
     ));
 
-    WeaponTemplates.load();
+    WeaponTemplates.loadStandardWeapons();
+    WeaponTemplates.loadNaturalWeapons();
 
   }
 

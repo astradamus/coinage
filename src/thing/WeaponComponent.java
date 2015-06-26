@@ -1,16 +1,19 @@
 package thing;
 
 import actor.attribute.Rank;
+import actor.stats.DamageType;
 
 /**
  *
  */
 public class WeaponComponent {
 
+  private final DamageType damageType;
   private final int damage;
-  private final double damageConsistency;
 
   private final double damageBonusFromMuscle;
+  private final double damageConsistency;
+
 
 
   private final int attackSpeed;
@@ -19,14 +22,19 @@ public class WeaponComponent {
   private final double speedBonusFromReflex;
   private final double recoveryBonusFromReflex;
 
-  public WeaponComponent(int damage, double damageBonusFromMuscle, double damageConsistency,
+  public WeaponComponent(DamageType damageType, int damage,
+                         double damageBonusFromMuscle, double damageConsistency,
                          int attackSpeed, double speedBonusFromReflex,
                          int recoverySpeed, double recoveryBonusFromReflex) {
+    this.damageType = damageType;
     this.damage = damage;
-    this.damageConsistency = damageConsistency;
+
     this.damageBonusFromMuscle = damageBonusFromMuscle;
+    this.damageConsistency = damageConsistency;
+
     this.attackSpeed = attackSpeed;
     this.speedBonusFromReflex = speedBonusFromReflex;
+
     this.recoverySpeed = recoverySpeed;
     this.recoveryBonusFromReflex = recoveryBonusFromReflex;
   }
@@ -65,7 +73,9 @@ public class WeaponComponent {
 
   }
 
-
+  public DamageType getDamageType() {
+    return damageType;
+  }
 
   public int getDamage() {
     return damage;

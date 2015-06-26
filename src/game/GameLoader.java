@@ -2,9 +2,11 @@ package game;
 
 import actor.Actor;
 import actor.ActorFactory;
+import actor.ActorTemplate;
 import controller.ai.AIController;
 import controller.player.PlayerController;
 import game.input.GameInputSwitch;
+import thing.ThingTemplate;
 import utils.Dimension;
 import world.Coordinate;
 import world.World;
@@ -14,6 +16,12 @@ import world.WorldFactory;
  *
  */
 public class GameLoader {
+
+  static {
+    ThingTemplate.loadThings();
+    ActorTemplate.loadActors();
+  }
+
 
   static void unload() {
     if (Game.ACTIVE == null) {

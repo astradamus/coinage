@@ -2,6 +2,7 @@ package actor.stats;
 
 import actor.Actor;
 import actor.attribute.Attribute;
+import game.Game;
 import game.display.Event;
 import game.display.EventLog;
 import game.physical.PhysicalFlag;
@@ -41,8 +42,16 @@ public class Health {
 
     if (remaining <= 0) {
 
+      final String message;
+
+      if (Game.getActivePlayer().getActor() == actor) {
+        message = "You have died.";
+      } else {
+        message = actor.getName() + " has died.";
+      }
+
       EventLog.registerEventIfPlayerIsNear(actor.getCoordinate(), Event.ACTOR_WOUNDED,
-          actor.getName() + " has died.");
+          message);
 
       actor.die();
 

@@ -22,10 +22,10 @@ public class EventLog {
 
 
   // VALUES IN MILLISECONDS
-  public static final long EVENT_LIFESPAN = 5000;
+  public static final long EVENT_LIFESPAN = 8000;
 
   // VALUES IN PIXELS
-  public static final int LINE_HEIGHT = GameDisplay.SQUARE_SIZE;
+  public static final int LINE_HEIGHT = GameDisplay.SQUARE_SIZE/9*8;
   public static final int LINE_SPACER = LINE_HEIGHT/3;
 
   // VALUES IN LINES
@@ -86,9 +86,9 @@ public class EventLog {
 
     int linesTall = getLinesTall();
 
-    int drawWidth = (int) (LINE_HEIGHT*areaSizeInSquares.getWidth()*0.65);
+    int drawWidth = (int) (GameDisplay.SQUARE_SIZE*areaSizeInSquares.getWidth()*0.70);
     int drawHeight = LINE_HEIGHT * linesTall + LINE_SPACER;
-    int drawX = areaSizeInSquares.getWidth()/2*LINE_HEIGHT - drawWidth/2;
+    int drawX = areaSizeInSquares.getWidth()/2*GameDisplay.SQUARE_SIZE - drawWidth/2;
     int drawY;
 
     if (drawingTop) {

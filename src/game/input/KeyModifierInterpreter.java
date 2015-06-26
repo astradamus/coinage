@@ -2,21 +2,14 @@ package game.input;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Stack;
 
 public class KeyModifierInterpreter implements KeyListener {
 
-  private Stack<KeyModifier> heldModifiers = new Stack<>();
+  private KeyModifier lastModifier;
 
 
   public KeyModifier getLatestModifier() {
-
-    if (heldModifiers.isEmpty()) {
-      return null;
-    }
-
-    return heldModifiers.peek();
-
+    return lastModifier;
   }
 
 
@@ -28,20 +21,18 @@ public class KeyModifierInterpreter implements KeyListener {
   @Override
   public void keyPressed(KeyEvent e) {
     if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-      heldModifiers.push(KeyModifier.SHIFT);
+      lastModifier = KeyModifier.SHIFT;
     }
     else if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
-      heldModifiers.push(KeyModifier.CTRL);
+      lastModifier = KeyModifier.CTRL;
     }
   }
 
   @Override
   public void keyReleased(KeyEvent e) {
-    if (!e.isShiftDown()) {
-      heldModifiers.remove(KeyModifier.SHIFT);
-    }
-    if (!e.isControlDown()) {
-      heldModifiers.remove(KeyModifier.CTRL);
+    if ((lastModifier == KeyModifier.SHIFT && e.getKeyCode() == KeyEvent.VK_SHIFT)
+    || (lastModifier == KeyModifier.CTRL && e.getKeyCode() == KeyEvent.VK_CONTROL)) {
+      lastModifier = null;
     }
   }
 

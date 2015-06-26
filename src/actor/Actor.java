@@ -59,7 +59,9 @@ public class Actor extends Physical {
 
   }
 
-
+  public Thing getEquippedWeapon() {
+    return equippedWeapon;
+  }
 
   public void setEquippedWeapon(Thing validatedWeapon) {
     equippedWeapon = validatedWeapon;

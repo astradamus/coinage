@@ -1,5 +1,7 @@
 package thing;
 
+import actor.attribute.Rank;
+
 /**
  *
  */
@@ -29,6 +31,42 @@ public class WeaponComponent {
     this.recoveryBonusFromReflex = recoveryBonusFromReflex;
   }
 
+
+
+  public double calcMinimumDamage(Rank actorMuscleRank) {
+    return calcMaximumDamage(actorMuscleRank) * getDamageConsistency();
+  }
+
+  public double calcMaximumDamage(Rank actorMuscleRank) {
+    return getDamage() + calcDamageFromMuscle(actorMuscleRank);
+  }
+
+
+  public double calcDamageFromMuscle(Rank actorMuscleRank) {
+    return getDamage() * (getDamageBonusFromMuscle() * actorMuscleRank.ordinal());
+  }
+
+
+  public int calcAttackSpeed(Rank actorReflexRank) {
+
+    // Cast to int truncates decimals! Reflex contributions to speed count only in whole numbers.
+    final int modifier = (int) (actorReflexRank.ordinal() * getSpeedBonusFromReflex());
+
+    return getAttackSpeed() - modifier;
+
+  }
+
+  public int calcRecoverySpeed(Rank actorReflexRank) {
+
+    // Cast to int truncates decimals! Reflex contributions to speed count only in whole numbers.
+    final int modifier = (int) (actorReflexRank.ordinal() * getRecoveryBonusFromReflex());
+
+    return getRecoverySpeed() - modifier;
+
+  }
+
+
+
   public int getDamage() {
     return damage;
   }
@@ -56,5 +94,9 @@ public class WeaponComponent {
   public double getRecoveryBonusFromReflex() {
     return recoveryBonusFromReflex;
   }
+
+
+
+
 
 }

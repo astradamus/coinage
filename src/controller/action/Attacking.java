@@ -2,10 +2,13 @@ package controller.action;
 
 import actor.Actor;
 import actor.attribute.Attribute;
+import actor.attribute.Rank;
 import controller.ActorController;
 import game.Game;
 import game.display.Event;
 import game.display.EventLog;
+import thing.Thing;
+import thing.WeaponComponent;
 import world.Coordinate;
 
 import java.awt.Color;
@@ -34,11 +37,29 @@ public class Attacking extends Action {
 
   @Override
   public int calcDelayToPerform() {
+
+    final Actor actor = getPerformer().getActor();
+    final Thing equippedWeapon = actor.getEquippedWeapon();
+
+    if (equippedWeapon != null) {
+      return equippedWeapon.getWeaponComponent()
+          .calcAttackSpeed(actor.readAttributeLevel(Attribute.REFLEX));
+    }
+
     return 3;
   }
 
   @Override
   public int calcDelayToRecover() {
+
+    final Actor actor = getPerformer().getActor();
+    final Thing equippedWeapon = actor.getEquippedWeapon();
+
+    if (equippedWeapon != null) {
+      return equippedWeapon.getWeaponComponent()
+          .calcRecoverySpeed(actor.readAttributeLevel(Attribute.REFLEX));
+    }
+
     return 2;
   }
 
@@ -100,20 +121,39 @@ public class Attacking extends Action {
 
     final Actor actualVictimActor = actualVictim.getActor();
 
-    final int actorMuscleRank = getPerformer().getActor()
-        .readAttributeLevel(Attribute.MUSCLE).ordinal();
+    final Actor actor = getPerformer().getActor();
 
-    final int damageBase  = actorMuscleRank * 2;
-    final int damageRange = actorMuscleRank * 3;
+    final Rank actorMuscleRank = actor.readAttributeLevel(Attribute.MUSCLE);
 
-    final double damage = damageBase + Game.RANDOM.nextInt(damageRange);
+    final double damageBase;
+    final double damageRange;
+
+
+    if (actor.getEquippedWeapon() != null) {
+      final WeaponComponent weapon = actor.getEquippedWeapon().getWeaponComponent();
+
+      final double minimum = weapon.calcMinimumDamage(actorMuscleRank);
+      final double maximum = weapon.calcMaximumDamage(actorMuscleRank);
+
+      damageBase = minimum;
+      damageRange = maximum-minimum;
+
+    } else {
+
+      damageBase = actorMuscleRank.ordinal() * 2;
+      damageRange = actorMuscleRank.ordinal() * 3;
+
+    }
+
+
+    final double damage = damageBase + Game.RANDOM.nextInt((int) damageRange);
 
     String message = "struck "+ actualVictimActor.getName() + " for " + Double.toString(damage) + " damage.";
 
     if (getPlayerIsPerformer()) {
       message = "You have " + message;
     } else {
-      message = getPerformer().getActor().getName() + " has "+ message;
+      message = actor.getName() + " has "+ message;
     }
 
     EventLog.registerEventIfPlayerIsNear(actualVictimActor.getCoordinate(), Event.ACTOR_WOUNDED, message);
@@ -122,6 +162,11 @@ public class Attacking extends Action {
     actualVictim.onVictimized(getPerformer());
 
   }
+
+
+
+
+
 
 
 }

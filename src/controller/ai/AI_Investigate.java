@@ -43,8 +43,6 @@ public class AI_Investigate extends AIBehavior {
     // If we can see what we're looking for, react to it.
     if (Perception.getCanSeeLocation(perception, actorFacing, actorAt, whereTargetIsNow)) {
       AIRoutines.evaluateThreat(getPuppet(), lookingFor);
-      EventLog.registerEventIfPlayerIsNear(actorAt, Color.ORANGE, actor.getName() + " sees " +
-          lookingFor.getActor().getName());
       return;
     }
 

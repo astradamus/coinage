@@ -1,6 +1,7 @@
 package controller.ai;
 
 import controller.ActorController;
+import controller.action.Action;
 import controller.action.Turning;
 import game.Direction;
 import game.Game;
@@ -40,9 +41,13 @@ public class AI_Idle extends AIBehavior {
   }
 
   @Override
+  public void onActionExecuted(Action action) {
+    AIRoutines.performSensoryScan(getPuppet());
+  }
+
+  @Override
   public void onActorTurnComplete() {
     idle();
-    AIRoutines.performSensoryScan(getPuppet());
   }
 
 

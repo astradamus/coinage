@@ -68,15 +68,11 @@ public class AIRoutines {
       // Can we see the target?
       if (Perception.getCanSeeLocation(perceptionRank, actor.getFacing(), actorAt, targetAt)) {
         AIRoutines.evaluateThreat(puppet, scanTarget);
-        EventLog.registerEventIfPlayerIsNear(actorAt, Color.ORANGE, actor.getName() + " sees " +
-            targetActor.getName());
       }
 
       // Can we hear the target?
       else if (Perception.getCanHearLocation(perceptionRank, actorAt, targetAt)) {
         puppet.exhibitBehavior(new AI_Investigate(puppet, targetAt, scanTarget));
-        EventLog.registerEventIfPlayerIsNear(actorAt, Color.ORANGE, actor.getName() + " hears " +
-            targetActor.getName());
       }
 
     }

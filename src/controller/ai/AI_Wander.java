@@ -55,10 +55,6 @@ public class AI_Wander extends AIBehavior {
         || (action.hasFlag(ActionFlag.SUCCEEDED) && Game.RANDOM.nextInt(10) < 4)) {
       wander();
     }
-  }
-
-  @Override
-  public void onActorTurnComplete() {
     AIRoutines.performSensoryScan(getPuppet());
   }
 

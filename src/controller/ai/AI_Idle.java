@@ -42,12 +42,13 @@ public class AI_Idle extends AIBehavior {
   @Override
   public void onActorTurnComplete() {
     idle();
+    AIRoutines.performSensoryScan(getPuppet());
   }
 
 
   @Override
   public void onVictimized(ActorController attacker) {
-    AIRoutines.fightOrFlight(getPuppet(), attacker);
+    AIRoutines.fightOrFlee(getPuppet(), attacker);
   }
 
 }

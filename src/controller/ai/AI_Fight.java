@@ -48,7 +48,7 @@ public class AI_Fight extends AIBehavior {
     } else {
 
       // If distant, flee (if timid) or pursue.
-      if (AIRoutines.getShouldFlee(getPuppet())) {
+      if (AIRoutines.getShouldFleeCombat(getPuppet())) {
         getPuppet().exhibitBehavior(new AI_Retreat(getPuppet(), victim));
       } else {
         AIRoutines.approachOneStep(getPuppet(), enemyAt);
@@ -87,7 +87,7 @@ public class AI_Fight extends AIBehavior {
 
   @Override
   public void onVictimized(ActorController attacker) {
-    if (AIRoutines.getShouldFlee(getPuppet())) {
+    if (AIRoutines.getShouldFleeCombat(getPuppet())) {
       getPuppet().exhibitBehavior(new AI_Retreat(getPuppet(), victim));
     }
   }

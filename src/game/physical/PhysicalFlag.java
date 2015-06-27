@@ -13,6 +13,7 @@ public enum  PhysicalFlag {
   // ACTORS
   FOUR_LEGGED,
 
+  AGGRESSIVE,
   TIMID,
 
   DEAD

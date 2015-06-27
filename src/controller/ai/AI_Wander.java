@@ -58,7 +58,13 @@ public class AI_Wander extends AIBehavior {
   }
 
   @Override
-  public void onVictimized(ActorController attacker) {
-    AIRoutines.fightOrFlight(getPuppet(), attacker);
+  public void onActorTurnComplete() {
+    AIRoutines.performSensoryScan(getPuppet());
   }
+
+  @Override
+  public void onVictimized(ActorController attacker) {
+    AIRoutines.fightOrFlee(getPuppet(), attacker);
+  }
+
 }

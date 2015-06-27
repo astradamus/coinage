@@ -56,13 +56,15 @@ public class ActorTemplate {
         Arrays.asList(
             AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // MUSCLE
             AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // GRIT
-            AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // REFLEX
+            AttributeRange.fromRank(Rank.R17_GODLIKE, 0),        // REFLEX
             AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // TALENT
             AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // PERCEPTION
             AttributeRange.fromRank(Rank.R05_AVERAGE, 1)         // CHARM
         ),
 
-        WeaponTemplates.WP_NATURAL_FISTS
+        WeaponTemplates.WP_NATURAL_FISTS,
+
+        EnumSet.of(PhysicalFlag.AGGRESSIVE)
 
     ));
 
@@ -82,7 +84,7 @@ public class ActorTemplate {
 
         WeaponTemplates.WP_NATURAL_FANGS,
 
-        EnumSet.of(PhysicalFlag.FOUR_LEGGED)
+        EnumSet.of(PhysicalFlag.FOUR_LEGGED, PhysicalFlag.AGGRESSIVE)
 
     ));
 
@@ -101,7 +103,7 @@ public class ActorTemplate {
 
         WeaponTemplates.WP_NATURAL_CLAWS,
 
-        EnumSet.of(PhysicalFlag.FOUR_LEGGED)
+        EnumSet.of(PhysicalFlag.FOUR_LEGGED, PhysicalFlag.AGGRESSIVE)
 
     ));
 

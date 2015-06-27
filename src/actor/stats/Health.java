@@ -50,8 +50,7 @@ public class Health {
         message = actor.getName() + " has died.";
       }
 
-      EventLog.registerEventIfPlayerIsNear(actor.getCoordinate(), Event.ACTOR_WOUNDED,
-          message);
+      EventLog.registerEventIfPlayerIsNear(actor.getCoordinate(), Event.ACTOR_WOUNDED, message);
 
       actor.die();
 
@@ -69,4 +68,8 @@ public class Health {
     return current;
   }
 
+  public double getFraction() {
+    return getCurrent() / getMaximum();
+  }
+  
 }

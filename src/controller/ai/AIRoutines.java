@@ -9,7 +9,6 @@ import controller.ActorController;
 import controller.action.Action;
 import controller.action.Moving;
 import controller.action.TurnThenMove;
-import controller.action.Turning;
 import game.Direction;
 import game.Game;
 import game.display.EventLog;
@@ -41,9 +40,27 @@ public class AIRoutines {
 
       final Actor targetActor = scanTarget.getActor();
 
-      if (scanTarget == puppet
-          || (actor.hasFlag(PhysicalFlag.TIMID) && targetActor.hasFlag(PhysicalFlag.TIMID))) {
-        continue; // Won't react to self, and timid actors ignore each other.
+      if  (
+          // Don't react to self.
+          scanTarget == puppet
+
+
+          // Timid actors ignore each other.
+          || (actor.hasFlag(PhysicalFlag.TIMID)
+          && targetActor.hasFlag(PhysicalFlag.TIMID))
+
+
+
+          // Ignore dead actors. Actor might be dead because ActorControllers do not unregister
+          // (and escape this loop) until they have been updated for their own turn. So in rare
+          // circumstances, a live actor could recognize the 'ghost' of a dead actor. This was
+          // happening while the standing on the corpse, and causing turns towards oneself, which
+          // causes null turns and thus crashes. Weird bug.
+          || targetActor.hasFlag(PhysicalFlag.DEAD)
+
+
+          ) {
+        continue;
       }
 
       final Coordinate targetAt = targetActor.getCoordinate();

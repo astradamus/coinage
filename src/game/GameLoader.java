@@ -9,6 +9,7 @@ import game.input.GameInputSwitch;
 import thing.ThingTemplate;
 import utils.Dimension;
 import world.Coordinate;
+import world.Square;
 import world.World;
 import world.WorldFactory;
 
@@ -52,9 +53,14 @@ public class GameLoader {
       Actor actor = ActorFactory.makeActor(id);
 
       if (actor != null) {
-        Coordinate randomCoordinate = world.makeRandomCoordinate();
+        Coordinate randomCoordinate;
+        Square square;
+        do {
+          randomCoordinate = world.makeRandomCoordinate();
+          square = randomCoordinate.getSquare();
+        } while (square.isBlocked());
+        square.put(actor);
         actor.setCoordinate(randomCoordinate);
-        randomCoordinate.getSquare().put(actor);
         gameControllers.addController(new AIController(actor));
       }
     }

@@ -6,6 +6,7 @@ import controller.action.ActionFlag;
 import controller.action.TurnThenMove;
 import game.Direction;
 import game.Game;
+import game.physical.PhysicalFlag;
 import world.Coordinate;
 
 /**
@@ -30,9 +31,24 @@ public class AI_Retreat extends AIBehavior {
 
   private void retreat() {
 
+    final boolean attackerHasDied = attacker.getActor().hasFlag(PhysicalFlag.DEAD);
+    if (attackerHasDied) {
+      markComplete();
+      return;
+    }
+
+
     final Coordinate actorAt = getPuppet().getActor().getCoordinate();
     final Coordinate attackerAt = attacker.getActor().getCoordinate();
 
+    final int deltaX = actorAt.worldX-attackerAt.worldX;
+    final int deltaY = actorAt.worldY-attackerAt.worldY;
+
+    final boolean attackerIsTwoAreasAway = deltaX > 1 || deltaX < -1 || deltaY > 1 || deltaY < -1;
+    if (attackerIsTwoAreasAway) {
+      markComplete();
+      return;
+    }
 
     final Direction toEscape = Direction.fromPointToPoint(
         attackerAt.globalX, attackerAt.globalY,
@@ -60,22 +76,7 @@ public class AI_Retreat extends AIBehavior {
   public void onActorTurnComplete() {
 
     if (getPuppet().isFreeToAct()) {
-
-      final Coordinate actorAt = getPuppet().getActor().getCoordinate();
-      final Coordinate attackerAt = attacker.getActor().getCoordinate();
-
-      final int deltaX = actorAt.worldX-attackerAt.worldX;
-      final int deltaY = actorAt.worldY-attackerAt.worldY;
-
-      final boolean attackerIsTwoAreasAway = deltaX > 1 || deltaX < -1 || deltaY > 1 || deltaY < -1;
-
-      if (attackerIsTwoAreasAway) {
-        markComplete();
-        return;
-      }
-
       retreat();
-
     }
 
   }

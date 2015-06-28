@@ -12,7 +12,7 @@ public class Perception {
                                           Coordinate from, Coordinate to) {
 
 
-    final int visionDistance = perceptionRank.ordinal()*2;
+    final int visionDistance = perceptionRank.ordinal();
 
 
     final int deltaX = Math.abs(from.globalX - to.globalX);
@@ -38,7 +38,7 @@ public class Perception {
 
   public static boolean getCanHearLocation(Rank perceptionRank, Coordinate from, Coordinate to) {
 
-    final int hearingDistance = perceptionRank.ordinal();
+    final int hearingDistance = perceptionRank.ordinal()/2;
 
     final int deltaX = Math.abs(from.globalX - to.globalX);
     final int deltaY = Math.abs(from.globalY - to.globalY);

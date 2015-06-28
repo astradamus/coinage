@@ -7,10 +7,10 @@ import actor.attribute.Rank;
 import controller.ActorController;
 import controller.action.Turning;
 import game.Direction;
+import game.Game;
+import game.display.Event;
 import game.display.EventLog;
 import world.Coordinate;
-
-import java.awt.Color;
 
 /**
  *
@@ -25,6 +25,12 @@ public class AI_Investigate extends AIBehavior {
     super(investigator);
     this.lookingAt = lookingAt;
     this.lookingFor = lookingFor;
+
+
+    if (lookingFor == Game.getActivePlayer()) {
+      EventLog.registerEvent(Event.OTHER_ACTOR_ACTIONS,
+          getPuppet().getActor().getName() + " has heard you.");
+    }
 
     investigate();
   }

@@ -6,6 +6,8 @@ import controller.action.ActionFlag;
 import controller.action.TurnThenMove;
 import game.Direction;
 import game.Game;
+import game.display.Event;
+import game.display.EventLog;
 import game.physical.PhysicalFlag;
 import world.Coordinate;
 
@@ -25,6 +27,11 @@ public class AI_Retreat extends AIBehavior {
     super(retreater);
     this.attacker = attacker;
     additionalAttacksSuffered = 0;
+
+    if (attacker == Game.getActivePlayer()) {
+      EventLog.registerEvent(Event.OTHER_ACTOR_ACTIONS,
+          getPuppet().getActor().getName() + " flees for its life.");
+    }
 
     retreat();
   }

@@ -8,6 +8,8 @@ import controller.action.Moving;
 import controller.action.TurnThenMove;
 import game.Direction;
 import game.Game;
+import game.display.Event;
+import game.display.EventLog;
 import game.physical.PhysicalFlag;
 import utils.Utils;
 import world.Coordinate;
@@ -22,6 +24,11 @@ public class AI_Fight extends AIBehavior {
   public AI_Fight(AIController fighter, ActorController victim) {
     super(fighter);
     this.victim = victim;
+
+    if (victim == Game.getActivePlayer()) {
+      EventLog.registerEvent(Event.OTHER_ACTOR_ACTIONS,
+          getPuppet().getActor().getName() + " doesn't look too friendly.");
+    }
 
     fight();
   }

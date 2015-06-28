@@ -1,7 +1,6 @@
 package controller.ai;
 
 import controller.ActorController;
-import controller.action.Action;
 import controller.action.Turning;
 import game.Direction;
 import game.Game;
@@ -10,6 +9,8 @@ import game.Game;
  *
  */
 public class AI_Idle extends AIBehavior {
+
+  public static final int SENSORY_SCAN_INTERVAL = 5;
 
   public static final int IDLE_DURATION_BASE  = 75;
   public static final int IDLE_DURATION_RANGE = 75;
@@ -29,6 +30,17 @@ public class AI_Idle extends AIBehavior {
       return;
     }
 
+
+    // Scans every once in a while. This delay can allow you to get a little closer to actors who
+    // don't see you coming--which is actually a good thing. It feels quite like sneaking up on
+    // them, or that reaction time is reasonably delayed. If your reflex is 17 you can zip right
+    // up before they even notice you.
+    if (idleTimeRemaining % SENSORY_SCAN_INTERVAL == 0) {
+      AIRoutines.performSensoryScan(getPuppet());
+    }
+
+
+
     idleTimeRemaining--;
 
     if (getPuppet().isFreeToAct() && Game.RANDOM.nextInt(100) < 1) {
@@ -40,10 +52,6 @@ public class AI_Idle extends AIBehavior {
     }
   }
 
-  @Override
-  public void onActionExecuted(Action action) {
-    AIRoutines.performSensoryScan(getPuppet());
-  }
 
   @Override
   public void onActorTurnComplete() {

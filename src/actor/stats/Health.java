@@ -8,22 +8,26 @@ import game.display.EventLog;
 import game.physical.PhysicalFlag;
 
 /**
- *
+ * Defines how much damage an actor can take before dying and how tracks how much damage an actor
+ * has already taken. Handles calls to damage or heal the actor, and notifies the parent actor
+ * class when its health has been depleted and it should die. If the dying actor is local to the
+ * player, a message will be reported to the event log.
  */
 public class Health {
 
   private final Actor actor;
 
-  private double maximum;
-  private double current;
+  private int maximum;
+  private int current;
 
   public Health(Actor actor) {
     this.actor = actor;
-    maximum = actor.readAttributeLevel(Attribute.GRIT).ordinal()*10.0;
+    maximum = actor.readAttributeLevel(Attribute.GRIT).ordinal()*10;
     current = maximum;
   }
 
-  public void heal(double healing) {
+
+  public void heal(int healing) {
     if (actor.hasFlag(PhysicalFlag.DEAD)) {
       return; // The dead cannot be healed.
     }
@@ -33,12 +37,12 @@ public class Health {
     }
   }
 
-  public void wound(double damage) {
+  public void wound(int damage) {
     if (actor.hasFlag(PhysicalFlag.DEAD)) {
       return; // The dead cannot be wounded.
     }
 
-    double remaining = current - damage;
+    int remaining = current - damage;
 
     if (remaining <= 0) {
 
@@ -60,11 +64,12 @@ public class Health {
 
   }
 
-  public double getMaximum() {
+
+  public int getMaximum() {
     return maximum;
   }
 
-  public double getCurrent() {
+  public int getCurrent() {
     return current;
   }
 

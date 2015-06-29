@@ -18,8 +18,6 @@ import java.awt.Color;
  */
 public class Attacking extends Action {
 
-
-
   private final ActorController intendedVictim;
   private ActorController actualVictim;
 
@@ -32,7 +30,6 @@ public class Attacking extends Action {
   public Color getIndicatorColor() {
     return Color.RED;
   }
-
 
 
   @Override
@@ -54,13 +51,13 @@ public class Attacking extends Action {
 
     return equippedWeapon.getWeaponComponent()
         .calcRecoverySpeed(actor.readAttributeLevel(Attribute.REFLEX));
+
   }
 
 
-
   /**
-   * Attacking will fail if the intendedVictim is already dead or if the intendedVictim is no longer at the
-   * target location.
+   * Attacking will fail if the intendedVictim is already dead or if the intendedVictim is no
+   * longer at the target location.
    */
   @Override
   protected boolean validate() {
@@ -97,7 +94,7 @@ public class Attacking extends Action {
           .getWeaponComponent().getDamageType().getAttackString();
 
         if (intendedVictim == null) {
-          EventLog.registerEvent(Event.INVALID_ACTION, "Your "+attackTypeString+" hit naught but air.");
+          EventLog.registerEvent(Event.INVALID_ACTION, "Your "+attackTypeString+" has hit naught but air.");
         } else {
           EventLog.registerEvent(Event.INVALID_ACTION,
               intendedVictim.getActor().getName() + " eluded your "+attackTypeString+".");
@@ -109,55 +106,32 @@ public class Attacking extends Action {
 
   }
 
-
   /**
-   * Wound the victim, with severity based on the actor's muscle attribute. Damage ranges from
-   * {@code muscle*2} to {@code muscle*5}.
+   * Wound the victim with the weapon equipped by this actor.
    */
   @Override
   protected void apply() {
 
-    final Actor actualVictimActor = actualVictim.getActor();
-
     final Actor actor = getPerformer().getActor();
+    final Thing weapon = actor.getActiveWeapon();
+    final WeaponComponent weaponComponent = weapon.getWeaponComponent();
 
-    final Rank actorMuscleRank = actor.readAttributeLevel(Attribute.MUSCLE);
-
-    final double damageBase;
-    final double damageRange;
-
-
-    if (actor.getActiveWeapon() != null) {
-      final WeaponComponent weapon = actor.getActiveWeapon().getWeaponComponent();
-
-      final double minimum = weapon.calcMinimumDamage(actorMuscleRank);
-      final double maximum = weapon.calcMaximumDamage(actorMuscleRank);
-
-      damageBase = minimum;
-      damageRange = maximum-minimum;
-
-    } else {
-
-      damageBase = actorMuscleRank.ordinal() * 2;
-      damageRange = actorMuscleRank.ordinal() * 3;
-
-    }
+    // Determine how much damage this attack will do.
+    final Rank muscle = actor.readAttributeLevel(Attribute.MUSCLE);
+    final int damage = weaponComponent.calculateDamageRange(muscle).getRandomWithin(Game.RANDOM);
 
 
-    final double damage = damageBase + Game.RANDOM.nextInt((int) damageRange);
+    // Construct the event log string for this attack.
+    final String hitString = weaponComponent.getDamageType().getHitString();
 
-
-    final Thing weapon = getPerformer().getActor().getActiveWeapon();
-    final String hitString = weapon.getWeaponComponent().getDamageType().getHitString();
-
+    final Actor actualVictimActor = actualVictim.getActor();
     String victimName = actualVictimActor.getName();
     if (actualVictim == Game.getActivePlayer()) {
       victimName = "you";
     }
 
     final String messageA = hitString + " " + victimName + " with ";
-    final String messageB = weapon.getName() + " for " + Double
-        .toString(Math.round(damage)) + " damage.";
+    final String messageB = weapon.getName() + " for " + Integer.toString(damage) + " damage.";
 
     String message;
 
@@ -167,17 +141,15 @@ public class Attacking extends Action {
       message = actor.getName() + " has "+ messageA + "its "+ messageB;
     }
 
-    EventLog.registerEventIfPlayerIsNear(actualVictimActor.getCoordinate(), Event.ACTOR_WOUNDED, message);
 
+    // Log the message if the player is in this area.
+    EventLog.registerEventIfPlayerIsNear(actualVictimActor.getCoordinate(),
+        Event.ACTOR_WOUNDED, message);
+
+    // Apply the damage to the victim and notify the victim's controller.
     actualVictimActor.getHealth().wound(damage);
     actualVictim.onVictimized(getPerformer());
 
   }
-
-
-
-
-
-
 
 }

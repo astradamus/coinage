@@ -6,7 +6,11 @@ import game.Direction;
 import game.Game;
 
 /**
+ * This behavior will make the puppet hold position in one spot and, on occasion, turn to look
+ * around.<br><br>
  *
+ * The puppet will perform a sensory scan every few turns at a statically defined interval, but will
+ * otherwise do nothing for the duration of the behavior.
  */
 public class AI_Idle extends AIBehavior {
 
@@ -15,53 +19,71 @@ public class AI_Idle extends AIBehavior {
   public static final int IDLE_DURATION_BASE  = 75;
   public static final int IDLE_DURATION_RANGE = 75;
 
+
   private int idleTimeRemaining;
 
   public AI_Idle(AIController idler) {
     super(idler);
     idleTimeRemaining = IDLE_DURATION_BASE + Game.RANDOM.nextInt(IDLE_DURATION_RANGE);
+  }
 
+  @Override
+  protected void onExhibit() {
     idle();
   }
 
   private void idle() {
+
+    // If the timer is up, we can stop idling.
     if (idleTimeRemaining <= 0) {
       markComplete();
-      return;
     }
 
+    else {
 
-    // Scans every once in a while. This delay can allow you to get a little closer to actors who
-    // don't see you coming--which is actually a good thing. It feels quite like sneaking up on
-    // them, or that reaction time is reasonably delayed. If your reflex is 17 you can zip right
-    // up before they even notice you.
-    if (idleTimeRemaining % SENSORY_SCAN_INTERVAL == 0) {
-      AIRoutines.performSensoryScan(getPuppet());
+      // Advance the timer.
+      idleTimeRemaining--;
+
+      // Perform a sensory scan every few updates.
+      if (idleTimeRemaining % SENSORY_SCAN_INTERVAL == 0) {
+        AIRoutines.performSensoryScan(getPuppet());
+      }
+
+      // On occasion, turn lazily (one grade) to the left or the right.
+      if (getPuppet().isFreeToAct() && Game.RANDOM.nextInt(100) < 1) {
+
+        Direction turnTo = getPuppet().getActor().getFacing();
+
+        if (Game.RANDOM.nextBoolean()) {
+          turnTo = turnTo.getLeftNeighbor();
+        }
+        else {
+          turnTo = turnTo.getRightNeighbor();
+        }
+
+        getPuppet().attemptAction(new Turning(getPuppet(), turnTo));
+
+      }
+
     }
 
-
-
-    idleTimeRemaining--;
-
-    if (getPuppet().isFreeToAct() && Game.RANDOM.nextInt(100) < 1) {
-
-      Direction turnTo = getPuppet().getActor().getFacing();
-      turnTo = Game.RANDOM.nextBoolean() ? turnTo.getLeftNeighbor() : turnTo.getRightNeighbor();
-
-      getPuppet().attemptAction(new Turning(getPuppet(), turnTo));
-    }
   }
 
 
   @Override
   public void onActorTurnComplete() {
-    idle();
-  }
 
+    // Run the main routine at the end of every update.
+    idle();
+
+  }
 
   @Override
   public void onVictimized(ActorController attacker) {
-    AIRoutines.fightOrFlee(getPuppet(), attacker);
+
+    // If we are attacked, either fight or flee.
+    AIRoutines.evaluateNewAggressor(getPuppet(), attacker);
+
   }
 
 }

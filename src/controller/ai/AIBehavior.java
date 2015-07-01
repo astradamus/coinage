@@ -1,5 +1,6 @@
 package controller.ai;
 
+import actor.Actor;
 import controller.ActorObserver;
 
 /**
@@ -8,12 +9,12 @@ import controller.ActorObserver;
  */
 public abstract class AIBehavior implements ActorObserver {
 
-  private final AIController puppet;
+  private final AIAgent agent;
 
   private boolean complete;
 
-  protected AIBehavior(AIController puppet) {
-    this.puppet = puppet;
+  protected AIBehavior(AIAgent agent) {
+    this.agent = agent;
   }
 
   /**
@@ -26,7 +27,7 @@ public abstract class AIBehavior implements ActorObserver {
 
 
   /**
-   * Called when the behavior is first adopted by the puppet. Override if the behavior needs some
+   * Called when the behavior is first adopted by the agent. Override if the behavior needs some
    * kind of initialization at this point.
    */
   protected void onExhibit() {
@@ -35,14 +36,21 @@ public abstract class AIBehavior implements ActorObserver {
 
 
   /**
-   * @return The AIController exhibiting this behavior.
+   * @return The AIAgent exhibiting this behavior.
    */
-  protected final AIController getPuppet() {
-    return puppet;
+  protected final AIAgent getAgent() {
+    return agent;
   }
 
   /**
-   * Mark this behavior as having completed its goals. Allows the AIController exhibiting this
+   * @return The actor controlled by the AIAgent exhibiting this behavior.
+   */
+  protected final Actor getActor() {
+    return agent.getActor();
+  }
+
+  /**
+   * Mark this behavior as having completed its goals. Allows the AIAgent exhibiting this
    * behavior to discard it and return to an idle state.
    */
   protected final void markComplete() {
@@ -50,7 +58,7 @@ public abstract class AIBehavior implements ActorObserver {
   }
 
   /**
-   * Check if this behavior has completed its goals. Allows the AIController exhibiting this
+   * Check if this behavior has completed its goals. Allows the AIAgent exhibiting this
    * behavior to discard it and return to an idle state.
    */
   final boolean getIsComplete() {

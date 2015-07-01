@@ -5,7 +5,7 @@ import controller.action.Action;
 import controller.action.Moving;
 import controller.action.TurnThenMove;
 import controller.action.Turning;
-import controller.player.PlayerController;
+import controller.player.PlayerAgent;
 import game.Direction;
 import game.physical.Physical;
 import world.Coordinate;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class GameInputSwitch implements DirectionListener, ListSelectionListener {
 
-  private PlayerController playerController;
+  private PlayerAgent playerController;
 
   private final List<KeyListener> keyListeners = new ArrayList<>();
 
@@ -60,7 +60,8 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
       startRepeatingMoveDelay--;
     }
     else if (startRepeatingMoveDelay == 0 && shouldDelayMoveRepeat()) {
-      playerController.attemptAction(new Moving(playerController,delayedMoveDirection,false));
+      final Actor playerActor = playerController.getActor();
+      playerActor.attemptAction(new Moving(playerActor, delayedMoveDirection, false));
       terminateRepeatingMoveTimer();
     }
 
@@ -142,7 +143,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
   public void receiveDirectionsCleared() {
 
     if (targetCursor == null) {
-      playerController.doNotRepeatAction();
+      playerController.getActor().doNotRepeatAction();
       terminateRepeatingMoveTimer();
     } else {
       targetCursor.setCursorMovingIn(null);
@@ -152,32 +153,32 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
 
 
   private void turnThenMove(Direction direction) {
-    final TurnThenMove action = new TurnThenMove(playerController, direction, false);
+    final TurnThenMove action = new TurnThenMove(playerController.getActor(), direction, false);
 
     if (shouldDelayMoveRepeat()) {
       delayRepeatOfMove(action, direction);
     }
 
-    playerController.attemptAction(action);
+    playerController.getActor().attemptAction(action);
   }
 
   private void turn(Direction direction) {
-    playerController.attemptAction(new Turning(playerController, direction));
+    playerController.getActor().attemptAction(new Turning(playerController.getActor(), direction));
   }
 
   private void move(Direction direction) {
-    final Moving moving = new Moving(playerController, direction, false);
+    final Moving moving = new Moving(playerController.getActor(), direction, false);
 
     if (shouldDelayMoveRepeat()) {
       delayRepeatOfMove(moving, direction);
     }
 
-    playerController.attemptAction(moving);
+    playerController.getActor().attemptAction(moving);
   }
 
 
   private boolean shouldDelayMoveRepeat() {
-    return playerController.isFreeToAct(); // Prevents re-delay when changing directions.
+    return playerController.getActor().isFreeToAct(); // Prevents re-delay when changing directions.
   }
 
   private void delayRepeatOfMove(Action action, Direction direction) {
@@ -219,7 +220,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
 
 
 
-  public void setPlayerController(PlayerController playerController) {
+  public void setPlayerController(PlayerAgent playerController) {
     this.playerController = playerController;
   }
 
@@ -244,7 +245,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
   }
 
 
-  public PlayerController getPlayerController() {
+  public PlayerAgent getPlayerController() {
     return playerController;
   }
 

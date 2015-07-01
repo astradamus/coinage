@@ -4,18 +4,17 @@ import actor.Actor;
 import actor.attribute.Attribute;
 import actor.attribute.Perception;
 import actor.attribute.Rank;
-import controller.ActorController;
 import controller.action.Turning;
 import game.Direction;
 import game.Game;
 import world.Coordinate;
 
 /**
- * This behavior will make the puppet respond to a sound produced by a given intruder. The puppet
+ * This behavior will make the agent respond to a sound produced by a given intruder. The agent
  * will turn towards the source of the original sound, performing a limited sensory scan each
  * update that only seeks the intruder who made the sound. This is done instead of performing a
  * regular sensory scan purely to conserve processing power. This could potentially raise weird
- * behavioral issues, where one actor causes an investigation that results in the puppet
+ * behavioral issues, where one actor causes an investigation that results in the agent
  * completely ignoring some other actor that walks up to kill it. However, as it stands now, the
  * odds of this happening are very low, and the odds of it being noticed by the player if it does
  * happen are even lower.
@@ -23,10 +22,10 @@ import world.Coordinate;
 public class AI_Investigate extends AIBehavior {
 
   private final Coordinate sourceOfSound;
-  private final ActorController intruder;
+  private final Actor intruder;
 
-  public AI_Investigate(AIController investigator, Coordinate sourceOfSound,
-                        ActorController intruder) {
+  public AI_Investigate(AIAgent investigator, Coordinate sourceOfSound,
+                        Actor intruder) {
     super(investigator);
     this.sourceOfSound = sourceOfSound;
     this.intruder = intruder;
@@ -34,8 +33,8 @@ public class AI_Investigate extends AIBehavior {
 
   @Override
   protected String getOnExhibitLogMessage() {
-    if (intruder == Game.getActivePlayer()) {
-      return getPuppet().getActor().getName() + " has heard you.";
+    if (intruder == Game.getActivePlayerActor()) {
+      return getActor().getName() + " has heard you.";
     }
     else {
       return null;
@@ -50,17 +49,15 @@ public class AI_Investigate extends AIBehavior {
 
   private void investigate() {
 
-    final Actor actor = getPuppet().getActor();
+    final Rank perception = getActor().getAttributeRank(Attribute.PERCEPTION);
+    final Direction actorFacing = getActor().getFacing();
+    final Coordinate actorAt = getActor().getCoordinate();
 
-    final Rank perception = actor.readAttributeLevel(Attribute.PERCEPTION);
-    final Direction actorFacing = actor.getFacing();
-    final Coordinate actorAt = actor.getCoordinate();
-
-    final Coordinate intruderActuallyAt = intruder.getActor().getCoordinate();
+    final Coordinate intruderActuallyAt = intruder.getCoordinate();
 
     // If we can see what we're looking for, react to it.
     if (Perception.getCanSeeLocation(perception, actorFacing, actorAt, intruderActuallyAt)) {
-      AIRoutines.evaluateOther(getPuppet(), intruder);
+      AIRoutines.evaluateOther(getAgent(), intruder);
     }
 
     else {
@@ -76,7 +73,7 @@ public class AI_Investigate extends AIBehavior {
 
       // Otherwise, try to turn towards the sound.
       else {
-        getPuppet().attemptAction(new Turning(getPuppet(), towardsSourceOfSound));
+        getActor().attemptAction(new Turning(getActor(), towardsSourceOfSound));
       }
 
     }
@@ -93,10 +90,10 @@ public class AI_Investigate extends AIBehavior {
   }
 
   @Override
-  public void onVictimized(ActorController attacker) {
+  public void onVictimized(Actor attacker) {
 
     // If we are attacked, either fight or flee.
-    AIRoutines.evaluateNewAggressor(getPuppet(), attacker);
+    AIRoutines.evaluateNewAggressor(getAgent(), attacker);
 
   }
 

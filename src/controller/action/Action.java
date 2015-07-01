@@ -1,6 +1,6 @@
 package controller.action;
 
-import controller.ActorController;
+import actor.Actor;
 import game.Game;
 import world.Coordinate;
 
@@ -12,15 +12,14 @@ import java.util.EnumSet;
  */
 public abstract class Action {
 
-
-  private final ActorController performer;
+  private final Actor actor;
   private final Coordinate origin;
   private final Coordinate target;
   private final EnumSet<ActionFlag> flags;
 
-  protected Action(ActorController performer, Coordinate targetWhere) {
-    this.performer = performer;
-    this.origin = performer.getActor().getCoordinate();
+  protected Action(Actor actor, Coordinate targetWhere) {
+    this.actor = actor;
+    this.origin = actor.getCoordinate();
     this.target = targetWhere;
     this.flags = EnumSet.noneOf(ActionFlag.class);
   }
@@ -31,9 +30,6 @@ public abstract class Action {
   public Color getIndicatorColor() {
     return null;
   }
-
-
-
 
 
   /**
@@ -49,7 +45,6 @@ public abstract class Action {
   public int calcDelayToRecover() {
     return 0;
   }
-
 
 
   /**
@@ -99,7 +94,6 @@ public abstract class Action {
   }
 
 
-
   protected final void addFlag(ActionFlag flag) {
     flags.add(flag);
   }
@@ -114,9 +108,8 @@ public abstract class Action {
   }
 
 
-
-  protected final ActorController getPerformer() {
-    return performer;
+  protected final Actor getActor() {
+    return actor;
   }
 
   public final Coordinate getOrigin() {
@@ -127,8 +120,8 @@ public abstract class Action {
     return target;
   }
 
-  protected final boolean getPlayerIsPerformer() {
-    return getPerformer() == Game.getActivePlayer();
+  protected final boolean getPlayerIsActor() {
+    return getActor() == Game.getActivePlayerActor();
   }
 
 

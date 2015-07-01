@@ -3,10 +3,11 @@ package controller.action;
 import actor.Actor;
 import actor.attribute.Attribute;
 import actor.attribute.Rank;
-import controller.ActorController;
 import game.Game;
 import game.display.Event;
 import game.display.EventLog;
+import game.physical.Physical;
+import game.physical.PhysicalFlag;
 import thing.Thing;
 import thing.WeaponComponent;
 import world.Coordinate;
@@ -18,12 +19,12 @@ import java.awt.Color;
  */
 public class Attacking extends Action {
 
-  private final ActorController intendedVictim;
-  private ActorController actualVictim;
+  private final Actor intendedVictim;
+  private Actor actualVictim;
 
-  public Attacking(ActorController performer, Coordinate victimWhere) {
-    super(performer, victimWhere);
-    this.intendedVictim = Game.getActiveControllers().getActorControllerAt(victimWhere);
+  public Attacking(Actor actor, Coordinate attackTarget) {
+    super(actor, attackTarget);
+    this.intendedVictim = getLiveTargetAt(attackTarget);
   }
 
   @Override
@@ -34,24 +35,16 @@ public class Attacking extends Action {
 
   @Override
   public int calcDelayToPerform() {
-
-    final Actor actor = getPerformer().getActor();
-    final Thing equippedWeapon = actor.getActiveWeapon();
-
+    final Thing equippedWeapon = getActor().getActiveWeapon();
     return equippedWeapon.getWeaponComponent()
-        .calcAttackSpeed(actor.readAttributeLevel(Attribute.REFLEX));
-
+        .calcAttackSpeed(getActor().getAttributeRank(Attribute.REFLEX));
   }
 
   @Override
   public int calcDelayToRecover() {
-
-    final Actor actor = getPerformer().getActor();
-    final Thing equippedWeapon = actor.getActiveWeapon();
-
+    final Thing equippedWeapon = getActor().getActiveWeapon();
     return equippedWeapon.getWeaponComponent()
-        .calcRecoverySpeed(actor.readAttributeLevel(Attribute.REFLEX));
-
+        .calcRecoverySpeed(getActor().getAttributeRank(Attribute.REFLEX));
   }
 
 
@@ -62,10 +55,10 @@ public class Attacking extends Action {
   @Override
   protected boolean validate() {
 
-    if (intendedVictim != null) {
+    if (intendedVictim != null && !intendedVictim.hasFlag(PhysicalFlag.DEAD)) {
 
       final boolean intendedVictimHasMoved =
-          !getTarget().getSquare().getAll().contains(intendedVictim.getActor());
+          !getTarget().getSquare().getAll().contains(intendedVictim);
 
       if (!intendedVictimHasMoved) {
         // Our intended victim is right where we want them.
@@ -80,24 +73,23 @@ public class Attacking extends Action {
 
     if (intendedVictimHasMovedOrWasNotProvided) {
       // Check if there's a new victim in the target square for the attack to hit.
-      actualVictim = Game.getActiveControllers().getActorControllerAt(getTarget());
+      actualVictim = getLiveTargetAt(getTarget());
     }
-
 
 
     // If actualVictim is STILL null, then this attack is a miss.
     final boolean attackWillHitSomeone = actualVictim != null;
 
-    if (!attackWillHitSomeone && getPlayerIsPerformer()) {
+    if (!attackWillHitSomeone && getPlayerIsActor()) {
 
-      final String attackTypeString = getPerformer().getActor().getActiveWeapon()
+      final String attackTypeString = getActor().getActiveWeapon()
           .getWeaponComponent().getDamageType().getAttackString();
 
         if (intendedVictim == null) {
           EventLog.registerEvent(Event.INVALID_ACTION, "Your "+attackTypeString+" has hit naught but air.");
         } else {
           EventLog.registerEvent(Event.INVALID_ACTION,
-              intendedVictim.getActor().getName() + " eluded your "+attackTypeString+".");
+              intendedVictim.getName() + " eluded your "+attackTypeString+".");
         }
 
     }
@@ -112,21 +104,19 @@ public class Attacking extends Action {
   @Override
   protected void apply() {
 
-    final Actor actor = getPerformer().getActor();
-    final Thing weapon = actor.getActiveWeapon();
+    final Thing weapon = getActor().getActiveWeapon();
     final WeaponComponent weaponComponent = weapon.getWeaponComponent();
 
     // Determine how much damage this attack will do.
-    final Rank muscle = actor.readAttributeLevel(Attribute.MUSCLE);
+    final Rank muscle = getActor().getAttributeRank(Attribute.MUSCLE);
     final int damage = weaponComponent.calculateDamageRange(muscle).getRandomWithin(Game.RANDOM);
 
 
     // Construct the event log string for this attack.
     final String hitString = weaponComponent.getDamageType().getHitString();
 
-    final Actor actualVictimActor = actualVictim.getActor();
-    String victimName = actualVictimActor.getName();
-    if (actualVictim == Game.getActivePlayer()) {
+    String victimName = actualVictim.getName();
+    if (actualVictim == Game.getActivePlayerActor()) {
       victimName = "you";
     }
 
@@ -135,20 +125,35 @@ public class Attacking extends Action {
 
     String message;
 
-    if (getPlayerIsPerformer()) {
+    if (getPlayerIsActor()) {
       message = "You have " + messageA + "your " + messageB;
     } else {
-      message = actor.getName() + " has "+ messageA + "its "+ messageB;
+      message = getActor().getName() + " has "+ messageA + "its "+ messageB;
     }
 
 
     // Log the message if the player is in this area.
-    EventLog.registerEventIfPlayerIsNear(actualVictimActor.getCoordinate(),
+    EventLog.registerEventIfPlayerIsNear(actualVictim.getCoordinate(),
         Event.ACTOR_WOUNDED, message);
 
     // Apply the damage to the victim and notify the victim's controller.
-    actualVictimActor.getHealth().wound(damage);
-    actualVictim.onVictimized(getPerformer());
+    actualVictim.getHealth().wound(damage);
+    actualVictim.getObserver().onVictimized(getActor());
+
+  }
+
+  /**
+   * @return The living actor occupying the target coordinate, or null if there isn't one.
+   */
+  private  Actor getLiveTargetAt(Coordinate coordinate) {
+
+    final Physical targetPhysical = coordinate.getSquare().getAll().get(0);
+    if (!targetPhysical.hasFlag(PhysicalFlag.DEAD) && targetPhysical.getClass() == Actor.class) {
+      return (Actor) targetPhysical;
+    }
+    else {
+      return null;
+    }
 
   }
 

@@ -15,6 +15,9 @@ import game.physical.PhysicalFlag;
  */
 public class Health {
 
+  public static final int HEALTH_PER_GRIT = 10;
+
+
   private final Actor actor;
 
   private int maximum;
@@ -22,57 +25,75 @@ public class Health {
 
   public Health(Actor actor) {
     this.actor = actor;
-    maximum = actor.readAttributeLevel(Attribute.GRIT).ordinal()*10;
+    maximum = actor.getAttributeRank(Attribute.GRIT).ordinal() * HEALTH_PER_GRIT;
     current = maximum;
   }
 
 
   public void heal(int healing) {
-    if (actor.hasFlag(PhysicalFlag.DEAD)) {
-      return; // The dead cannot be healed.
-    }
-    current += healing;
-    if (current > maximum) {
-      current = maximum;
-    }
-  }
 
-  public void wound(int damage) {
-    if (actor.hasFlag(PhysicalFlag.DEAD)) {
-      return; // The dead cannot be wounded.
-    }
+    // The dead cannot be healed.
+    if (!actor.hasFlag(PhysicalFlag.DEAD)) {
 
-    int remaining = current - damage;
+      // Apply the healing.
+      current += healing;
 
-    if (remaining <= 0) {
-
-      final String message;
-
-      if (Game.getActivePlayer().getActor() == actor) {
-        message = "You have died.";
-      } else {
-        message = actor.getName() + " has died.";
+      // Enforce the maximum.
+      if (current > maximum) {
+        current = maximum;
       }
 
-      EventLog.registerEventIfPlayerIsNear(actor.getCoordinate(), Event.ACTOR_WOUNDED, message);
+    }
 
-      actor.die();
+  }
+
+  /**
+   * Inflict damage on this actor. If this reduces the actor's current health to zero or lower,
+   * the actor is now dead.
+   */
+  public void wound(int damage) {
+
+    // The dead cannot be wounded.
+    if (!actor.hasFlag(PhysicalFlag.DEAD)) {
+
+      // Apply the damage.
+      current -= damage;
+
+      // If the actor has run out of health, they are now dead.
+      if (current <= 0) {
+
+        // Construct a log message
+        final String message;
+        if (Game.getActivePlayerActor() == actor) {
+          message = "You have died.";
+        } else {
+          message = actor.getName() + " has died.";
+        }
+
+        // Notify the player, if they are local.
+        EventLog.registerEventIfPlayerIsNear(actor.getCoordinate(), Event.ACTOR_WOUNDED, message);
+
+        // Notify the parent class.
+        actor.die();
+
+      }
 
     }
 
-    current = remaining;
-
   }
 
-
-  public int getMaximum() {
-    return maximum;
-  }
 
   public int getCurrent() {
     return current;
   }
 
+  public int getMaximum() {
+    return maximum;
+  }
+
+  /**
+   * @return A value between 0.0 and 1.0 that is equal to current health divided by maximum health.
+   */
   public double getFraction() {
     return getCurrent() / getMaximum();
   }

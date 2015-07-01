@@ -1,13 +1,13 @@
 package controller.ai;
 
-import controller.ActorController;
+import actor.Actor;
 import controller.action.Action;
 import controller.action.ActionFlag;
 import game.Direction;
 import game.Game;
 
 /**
- *  This behavior will make the puppet wander to a random point, not by picking a point and
+ *  This behavior will make the agent wander to a random point, not by picking a point and
  *  pathing to it, but by chaining together a random series of movements. We pick a direction and
  *  start moving in it. If we hit a blocked square we immediately pick a new direction. Each time
  *  we move without hitting a blocked square, there's a chance we will still pick a new direction
@@ -24,8 +24,8 @@ public class AI_Wander extends AIBehavior {
 
   private int wanderChain;
 
-  public AI_Wander(AIController wanderer) {
-    super(wanderer);
+  public AI_Wander(AIAgent agent) {
+    super(agent);
     wanderChain = Game.RANDOM.nextInt(WANDER_CHAIN_MAX_LENGTH) + 1;
   }
 
@@ -46,7 +46,7 @@ public class AI_Wander extends AIBehavior {
 
       // Pick a direction at random and start walking that way.
       final Direction randomWander = Direction.getRandom();
-      AIRoutines.turnThenMove(getPuppet(), randomWander, true, false);
+      AIRoutines.turnThenMove(getAgent(), randomWander, true, false);
 
       // Apply this wander step to the counter.
       wanderChain--;
@@ -55,6 +55,15 @@ public class AI_Wander extends AIBehavior {
 
   }
 
+
+  @Override
+  public void onActorTurnComplete() {
+
+    if (getActor().isFreeToAct()) {
+      wander();
+    }
+
+  }
 
   @Override
   public void onActionExecuted(Action action) {
@@ -67,15 +76,15 @@ public class AI_Wander extends AIBehavior {
     }
 
     // Perform a sensory scan after each of our movements.
-    AIRoutines.performSensoryScan(getPuppet());
+    AIRoutines.performSensoryScan(getAgent());
 
   }
 
   @Override
-  public void onVictimized(ActorController attacker) {
+  public void onVictimized(Actor attacker) {
 
     // If we are attacked, either fight or flee.
-    AIRoutines.evaluateNewAggressor(getPuppet(), attacker);
+    AIRoutines.evaluateNewAggressor(getAgent(), attacker);
 
   }
 

@@ -3,8 +3,8 @@ package game;
 import actor.Actor;
 import actor.ActorFactory;
 import actor.ActorTemplate;
-import controller.ai.AIController;
-import controller.player.PlayerController;
+import controller.ai.AIAgent;
+import controller.player.PlayerAgent;
 import game.input.GameInputSwitch;
 import thing.ThingTemplate;
 import utils.Dimension;
@@ -43,7 +43,7 @@ public class GameLoader {
     // populate with animals and a Human for the player to control
     GameControllers gameControllers = new GameControllers(world.getAllAreas());
 
-    for (int i = 0; i < 500; i++) {
+    for (int i = 0; i < 600; i++) {
       String id;
       switch (i % 5) {
         case 0: id = "WOLF"; break;
@@ -61,7 +61,7 @@ public class GameLoader {
         } while (square.isBlocked());
         square.put(actor);
         actor.setCoordinate(randomCoordinate);
-        gameControllers.addController(new AIController(actor));
+        gameControllers.addController(new AIAgent(actor));
       }
     }
 
@@ -76,8 +76,8 @@ public class GameLoader {
 
     playerStartCoordinate.getSquare().put(player);
 
-    // assign the Human to a PlayerController and addController it
-    PlayerController playerController = new PlayerController(player,worldSizeInAreas);
+    // assign the Human to a PlayerAgent and addController it
+    PlayerAgent playerController = new PlayerAgent(player,worldSizeInAreas);
     playerController.getWorldMapRevealedComponent().setAreaIsRevealed(playerStartCoordinate);
 
     gameControllers.addController(playerController);

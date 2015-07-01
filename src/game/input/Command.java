@@ -1,7 +1,6 @@
 package game.input;
 
 
-import controller.player.PlayerController;
 import game.Game;
 import game.physical.Physical;
 
@@ -20,11 +19,9 @@ public interface Command {
 
   static Physical getPlayerSelectedPhysical() {
 
-    PlayerController playerController = Game.getActivePlayer();
-
     // Determine what we are equipping.
     Integer listSelectIndex = Game.getActiveInputSwitch().getPlayerSelection();
-    List<Physical> itemsHeld = playerController.getActor().getInventory().getItemsHeld();
+    List<Physical> itemsHeld = Game.getActivePlayerActor().getInventory().getItemsHeld();
 
     if (listSelectIndex != null && !itemsHeld.isEmpty()) {
 

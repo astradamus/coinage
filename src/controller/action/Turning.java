@@ -1,6 +1,6 @@
 package controller.action;
 
-import controller.ActorController;
+import actor.Actor;
 import game.Direction;
 
 /**
@@ -11,14 +11,12 @@ import game.Direction;
  */
 public class Turning extends Action {
 
-
   protected final Direction turningTowards;
 
-  public Turning(ActorController performer, Direction turningTowards) {
-    super(performer, null);
+  public Turning(Actor actor, Direction turningTowards) {
+    super(actor, null);
     this.turningTowards = turningTowards;
   }
-
 
 
   /**
@@ -29,14 +27,13 @@ public class Turning extends Action {
     return true;
   }
 
-
   /**
    * Turn the actor one direction grade towards the target direction.
    */
   @Override
   protected void apply() {
 
-    final Direction actorFacing = getPerformer().getActor().getFacing();
+    final Direction actorFacing = getActor().getFacing();
 
     final int difference = actorFacing.ordinal() - turningTowards.ordinal();
 
@@ -46,13 +43,12 @@ public class Turning extends Action {
 
     // Evaluate whether turning left or right will get there faster.
     if ((difference > 0 && difference <= 4) || difference < -4) {
-      getPerformer().getActor().setFacing(actorFacing.getLeftNeighbor());
+      getActor().setFacing(actorFacing.getLeftNeighbor());
     } else {
-      getPerformer().getActor().setFacing(actorFacing.getRightNeighbor());
+      getActor().setFacing(actorFacing.getRightNeighbor());
     }
 
   }
-
 
   /**
    * Continue turning until the target direction is reached. Cancelling repeat does not interrupt
@@ -64,13 +60,13 @@ public class Turning extends Action {
   @Override
   public Action attemptRepeat() {
 
-    final boolean targetDirectionReached = getPerformer().getActor().getFacing() == turningTowards;
+    final boolean targetDirectionReached = getActor().getFacing() == turningTowards;
 
     if (targetDirectionReached) {
       return null;
     } else {
 
-      final Turning next = new Turning(getPerformer(), turningTowards);
+      final Turning next = new Turning(getActor(), turningTowards);
 
       if (hasFlag(ActionFlag.DO_NOT_REPEAT)) {
         next.doNotRepeat(); // Pass repeat cancellation along the chain, if there is one.
@@ -81,6 +77,5 @@ public class Turning extends Action {
     }
 
   }
-
 
 }

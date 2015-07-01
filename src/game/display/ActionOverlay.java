@@ -1,7 +1,6 @@
 package game.display;
 
 import actor.Actor;
-import controller.ActorController;
 import game.Direction;
 import game.Game;
 import game.TimeMode;
@@ -21,7 +20,6 @@ import java.util.Set;
  */
 public class ActionOverlay {
 
-
   public static final int SQUARE_SIZE = GameDisplay.SQUARE_SIZE;
   public static final Font ACTION_OVERLAY_FONT = new Font("Monospaced", Font.BOLD,
       SQUARE_SIZE*5/7);
@@ -29,27 +27,29 @@ public class ActionOverlay {
 
   public static void drawOverlay(Graphics2D g) {
 
+    final Actor playerActor = Game.getActivePlayerActor();
+
     // Draw an overlay on actors indicating the direction they are facing.
-    Set<ActorController> localActorControllers = Game.getActiveControllers()
-        .getActorControllersInArea(Game.getActivePlayer().getLocality());
+    Set<Actor> localActors = Game.getActiveControllers()
+        .getActorsInArea(playerActor.getCoordinate().area);
+
+    localActors.add(playerActor);
 
     g.setFont(ACTION_OVERLAY_FONT);
     g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-    for (ActorController controller : localActorControllers) {
+    for (Actor actor : localActors) {
       if (Game.getTimeMode() == TimeMode.PRECISION || Game.getTimeMode() == TimeMode.PAUSED) {
-        drawActionIndicator(g, controller);
+        drawActionIndicator(g, actor);
       }
     }
-    for (ActorController controller : localActorControllers) {
-      drawFacingOverlay(g, controller, 6);
+    for (Actor actor : localActors) {
+      drawFacingOverlay(g, actor, 6);
     }
 
 
   }
 
-  private static void drawFacingOverlay(Graphics g, ActorController controller, int thickness) {
-
-    Actor actor = controller.getActor();
+  private static void drawFacingOverlay(Graphics g, Actor actor, int thickness) {
 
     Direction facing = actor.getFacing();
 
@@ -84,20 +84,21 @@ public class ActionOverlay {
 
   }
 
-  private static void drawActionIndicator(Graphics2D g, ActorController controller) {
-    Color color = controller.getActionIndicatorColor();
-    Coordinate target = controller.getActionTarget();
+  private static void drawActionIndicator(Graphics2D g, Actor actor) {
+
+    Color color = actor.getActionIndicatorColor();
+    Coordinate target = actor.getActionTarget();
     if (target != null) {
 
 
-      int actionDelay = controller.getActionDelayClock().getTotalDelay()+1;
+      int actionDelay = actor.getTotalActionDelay()+1;
 
       int drawX = target.localX * SQUARE_SIZE;
       int drawY = target.localY * SQUARE_SIZE;
 
       char character = '+';
 
-      if (Game.getActivePlayer().isFreeToAct()) {
+      if (Game.getActivePlayerActor().isFreeToAct()) {
         if (actionDelay < 10) {
           character = Integer.toString(actionDelay).charAt(0);
         }
@@ -108,11 +109,12 @@ public class ActionOverlay {
       SquareDrawer.drawOval(g, appearance, SQUARE_SIZE, drawX, drawY);
 
     }
+
   }
 
 
-
   private static Point getOffsetFor(Direction direction, int gap) {
+
     Point offset = new Point(-gap,-gap);
 
     switch (direction) {
@@ -146,6 +148,7 @@ public class ActionOverlay {
 
     }
     return offset;
+
   }
 
 }

@@ -1,12 +1,12 @@
 package actor;
 
 import actor.attribute.Attribute;
-import actor.attribute.AttributeRange;
 import actor.attribute.Rank;
 import actor.inventory.Inventory;
 import actor.stats.Health;
+import controller.ActorObserver;
+import controller.action.Action;
 import game.Direction;
-import game.Game;
 import game.physical.Physical;
 import game.physical.PhysicalFlag;
 import thing.Thing;
@@ -15,125 +15,267 @@ import world.Coordinate;
 
 import java.awt.Color;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Actors are subjects. They act upon Things and other Actors in the world. The Actor class only
- * handles the physical state of the Actor. Behavior and actions are handled by a Controller.
+ * Actors are subjects. They represent animate beings and characters in the world, as opposed to
+ * things, which represent inanimate objects.
  */
 public class Actor extends Physical {
 
-  public static final EnumSet<PhysicalFlag> STANDARD_FLAGS =
-                                          EnumSet.of(PhysicalFlag.BLOCKING, PhysicalFlag.IMMOVABLE);
+
+  /** Defines physical flags that all actors are initialized with. */
+  public static final EnumSet<PhysicalFlag> STANDARD_FLAGS = EnumSet.of(PhysicalFlag.BLOCKING,
+      PhysicalFlag.IMMOVABLE);
 
 
-  private final Health health;
+  private ActorObserver observer;
+
   private final Map<Attribute, Rank> attributes;
+  private final Health health;
   private final Inventory inventory;
-
-  private Thing naturalWeapon;
+  private final Thing naturalWeapon;
   private Thing equippedWeapon;
-
 
   private Coordinate coordinate;
   private Direction facing = Direction.getRandom();
 
+  private final ActionTimer actionTimer;
+  private Action action;
 
-
+  /**
+   * Constructs an actor from the given template, and includes any flags in STANDARD_FLAGS.
+   */
   Actor(ActorTemplate aT) {
+
     super(aT.name, aT.appearance);
 
     // Add standard actor flags and template-specific flags.
     STANDARD_FLAGS.forEach(this::addFlag);
     aT.flags.forEach(this::addFlag);
 
-
-    naturalWeapon = ThingFactory.makeThing(aT.naturalWeaponID);
-
-    attributes = new HashMap<>();
-
-    for (Attribute attribute : Attribute.values()) {
-      AttributeRange attributeRange = aT.baseAttributeRanges.get(attribute.ordinal());
-      attributes.put(attribute, attributeRange.getRandomWithin(Game.RANDOM));
-    }
-
+    // Construct components.
+    attributes = ActorFactory.makeAttributeMap(aT);
     health = new Health(this);
     inventory = new Inventory();
+    naturalWeapon = ThingFactory.makeThing(aT.naturalWeaponID);
+    actionTimer = new ActionTimer();
 
   }
 
-  public Thing getActiveWeapon() {
-    return equippedWeapon != null ? equippedWeapon : naturalWeapon;
-  }
-
-  public void setEquippedWeapon(Thing validatedWeapon) {
-    equippedWeapon = validatedWeapon;
-  }
-
-
-
-  public void die() {
-    if (hasFlag(PhysicalFlag.DEAD)) {
-      return; // Already dead!
+  /**
+   * Called when the actor has been killed. Upon dying, actors retain their actor state, but behave
+   * in almost all respects like things--that is, they no longer block the square they occupy and
+   * they can be picked up and carried. They also disconnect from their observer, which means
+   * they stop acting and become lifeless.
+   */
+  public final void die() {
+    if (!hasFlag(PhysicalFlag.DEAD)) {
+      removeFlag(PhysicalFlag.BLOCKING);
+      removeFlag(PhysicalFlag.IMMOVABLE);
+      addFlag(PhysicalFlag.DEAD);
+      observer.disconnectObserver();
     }
-    removeFlag(PhysicalFlag.BLOCKING);
-    removeFlag(PhysicalFlag.IMMOVABLE);
-    addFlag(PhysicalFlag.DEAD);
   }
 
-  public Health getHealth() {
-    return health;
+  /**
+   * @return {@code true} if this actor's warm-up and cool-down timers are cleared and the actor
+   * does not currently have an action queued.
+   */
+  public final boolean isFreeToAct() {
+    return action == null && actionTimer.isReady();
   }
 
-  public Rank readAttributeLevel(Attribute attribute) {
+  /**
+   * Queues an action to be performed, adding that action's warm-up time to the timer. If there
+   * was already an action queued, it is replaced, and the warm-up time for that action is cleared
+   * before the new time is added. In other words, there is no penalty for switching actions,
+   * except that you lose the beats you spent warming up the replaced action.
+   */
+  public final void attemptAction(Action action) {
+    actionTimer.cancelWarmUp();
+    actionTimer.addBeatsToWarmUp(action.calcDelayToPerform());
+    this.action = action;
+  }
+
+  /**
+   * Notifies the current action that it should not repeat, if it is able.
+   */
+  public void doNotRepeatAction() {
+    if (action != null) {
+      action.doNotRepeat();
+    }
+  }
+
+  /**
+   * Called every update when it is this actor's turn to act. If the actor has any warm-up or
+   * cool-down time, then this update is spent towards that time. Otherwise, if there is an
+   * action queued, the actor will perform it. If the action is successful, an attempt will be
+   * made to repeat the action. Successful or not, the actor's observer will be notified and
+   * passed the completed action.
+   *
+   * <p>Additionally, regardless of whether an action is performed, the actor's observer will be
+   * notified at the very end of this actor's turn.</p>
+   */
+  public final void onUpdate() {
+
+    if (!actionTimer.isReady()) {
+      actionTimer.decrementClock();
+    }
+    else if (action != null) {
+
+      final Action executing = action;
+      final boolean performedSuccessfully = executing.perform();
+      actionTimer.addBeatsToCoolDown(action.calcDelayToRecover());
+
+      if (performedSuccessfully) {
+
+        // If this action can repeat upon succeeding, attempt to do so.
+        Action repeat = executing.attemptRepeat();
+        if (repeat != null) {
+          attemptAction(repeat);
+        }
+
+      }
+
+      // If we haven't attempted a new action yet, start idling.
+      if (action == executing) {
+        action = null;
+      }
+
+      observer.onActionExecuted(executing);
+
+    }
+
+    observer.onActorTurnComplete();
+
+  }
+
+
+  /**
+   * @return This actor's rank in the given attribute.
+   */
+  public final Rank getAttributeRank(Attribute attribute) {
     return attributes.get(attribute);
   }
 
-  public Inventory getInventory() {
+  /**
+   * @return This actor's health component.
+   */
+  public final Health getHealth() {
+    return health;
+  }
+
+  /**
+   * @return This actor's inventory component.
+   */
+  public final Inventory getInventory() {
     return inventory;
   }
 
-
-
-
-  public void setFacing(Direction facing) {
-    this.facing = facing;
+  /**
+   * @return The actor's equipped weapon, if it has one. Otherwise, its natural weapon.
+   */
+  public final Thing getActiveWeapon() {
+    if (equippedWeapon != null) {
+      return equippedWeapon;
+    }
+    else {
+      return naturalWeapon;
+    }
   }
 
-  public void setCoordinate(Coordinate coordinate) {
-    this.coordinate = coordinate;
+  /**
+   * Sets the actor's equipped weapon to the given thing. Does nothing if the given thing has no
+   * weapon component.
+   */
+  public final void setEquippedWeapon(Thing weapon) {
+    if (weapon.getWeaponComponent() != null) {
+      equippedWeapon = weapon;
+    }
   }
 
-  public Direction getFacing() {
+
+  public final Direction getFacing() {
     return facing;
   }
 
-  public Coordinate getCoordinate() {
+  public final void setFacing(Direction facing) {
+    this.facing = facing;
+  }
+
+  public final Coordinate getCoordinate() {
     return coordinate;
   }
 
+  public final void setCoordinate(Coordinate coordinate) {
+    this.coordinate = coordinate;
+  }
+
+  public ActorObserver getObserver() {
+    return observer;
+  }
+
+  public final void setObserver(ActorObserver observer) {
+    if (this.observer != null) {
+      this.observer.disconnectObserver();
+    }
+    this.observer = observer;
+  }
+
 
   @Override
-  public String getName() {
-
+  public final String getName() {
     if (hasFlag(PhysicalFlag.DEAD)) {
       return super.getName() + "'s corpse";
     }
-
-    return super.getName();
-
+    else {
+      return super.getName();
+    }
   }
 
   @Override
-  public Color getColor() {
-
+  public final Color getColor() {
     if (hasFlag(PhysicalFlag.DEAD)) {
       return Color.DARK_GRAY;
     }
+    else {
+      return super.getColor();
+    }
+  }
 
-    return super.getColor();
+  /**
+   * @return What color the action indicator should be for this actor's current action, or null
+   * if there is none.
+   */
+  public Color getActionIndicatorColor() {
+    if (action != null) {
+      return action.getIndicatorColor();
+    }
+    else {
+      return null;
+    }
+  }
 
+  /**
+   * @return The total amount of beats that must be spent before the actor can perform the
+   * currently queued action.
+   */
+  public int getTotalActionDelay() {
+    return actionTimer.getTotalDelay();
+  }
+
+  /**
+   * @return The coordinate that is the target of this actor's current action, or null
+   * if there is none.
+   */
+  public Coordinate getActionTarget() {
+    if (action != null) {
+      return action.getTarget();
+    }
+    else {
+      return null;
+    }
   }
 
 }

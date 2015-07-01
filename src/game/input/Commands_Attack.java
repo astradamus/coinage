@@ -2,7 +2,6 @@ package game.input;
 
 import actor.Actor;
 import controller.action.Attacking;
-import controller.player.PlayerController;
 import game.Game;
 import game.display.Event;
 import game.display.EventLog;
@@ -31,16 +30,15 @@ public enum Commands_Attack implements Command {
     @Override
     public void execute() {
 
-      PlayerController playerController = Game.getActivePlayer();
       Coordinate playerTarget = Game.getActiveInputSwitch().getPlayerTarget();
 
-      Actor playerActor = playerController.getActor();
+      Actor playerActor = Game.getActivePlayerActor();
 
       if (playerTarget.equalTo(playerActor.getCoordinate())) {
         EventLog.registerEvent(Event.INVALID_ACTION, "You smack yourself upside the head.");
       } else {
 
-        playerController.attemptAction(new Attacking(playerController,
+        playerActor.attemptAction(new Attacking(playerActor,
             Game.getActiveInputSwitch().getPlayerTarget()));
 
       }

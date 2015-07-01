@@ -34,7 +34,7 @@ public class DisplayElement_MiniMap implements DisplayElement {
   @Override
   public void drawTo(Graphics g, int originX, int originY, int width) {
 
-    Coordinate playerAt = Game.getActivePlayer().getActor().getCoordinate();
+    Coordinate playerAt = Game.getActivePlayerActor().getCoordinate();
 
     // draw the zone of Areas surrounding the player's current area, using a blank 'unknown'
     //   token for Areas that have not yet been explored by the player, and skipping any null Areas
@@ -55,8 +55,7 @@ public class DisplayElement_MiniMap implements DisplayElement {
         Appearance appearance;
 
 
-        boolean areaIsRevealed =
-            Game.getActivePlayer().getWorldMapRevealedComponent().getAreaIsRevealed(thisCoordinate);
+        boolean areaIsRevealed = Game.getActiveWorldMapAreaIsRevealed(thisCoordinate);
 
         if (areaIsRevealed) {
           appearance = thisCoordinate.area.getBiome().worldMapAppearance;

@@ -1,6 +1,6 @@
 package controller.action;
 
-import controller.ActorController;
+import actor.Actor;
 import game.display.EventLog;
 import game.physical.Physical;
 import thing.Thing;
@@ -13,13 +13,13 @@ import java.awt.Color;
 public class EquipWeapon extends Action {
 
   private final Physical weapon;
-
   private Thing validatedWeapon;
 
-  public EquipWeapon(ActorController performer, Physical weapon) {
-    super(performer, null);
+  public EquipWeapon(Actor actor, Physical weapon) {
+    super(actor, null);
     this.weapon = weapon;
   }
+
 
   @Override
   public int calcDelayToPerform() {
@@ -44,7 +44,7 @@ public class EquipWeapon extends Action {
       }
     }
 
-    if (getPlayerIsPerformer()) {
+    if (getPlayerIsActor()) {
       EventLog.registerEvent(Color.CYAN, "You can't equip " + weapon.getName() + ".");
     }
 
@@ -52,18 +52,19 @@ public class EquipWeapon extends Action {
 
   }
 
-
   /**
-   * Turn the actor one direction grade towards the target direction.
+   * Set the actor's equipped weapon. If this action was acted by the player, log an appropriate
+   * message.
    */
   @Override
   protected void apply() {
-    getPerformer().getActor().setEquippedWeapon(validatedWeapon);
 
-    if (getPlayerIsPerformer()) {
+    getActor().setEquippedWeapon(validatedWeapon);
+
+    if (getPlayerIsActor()) {
       EventLog.registerEvent(Color.CYAN, "You have equipped " + validatedWeapon.getName() + ".");
     }
-  }
 
+  }
 
 }

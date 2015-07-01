@@ -1,7 +1,7 @@
 package game.input;
 
+import actor.Actor;
 import controller.action.PickingUp;
-import controller.player.PlayerController;
 import game.Game;
 import game.physical.Physical;
 import world.Coordinate;
@@ -29,7 +29,7 @@ public enum Commands_Interact implements Command {
     @Override
     public void execute() {
 
-      PlayerController playerController = Game.getActivePlayer();
+      Actor playerActor = Game.getActivePlayerActor();
 
       // Have the player choose what to pick up, then start picking it up.
 
@@ -38,8 +38,8 @@ public enum Commands_Interact implements Command {
 
       final Physical selected = playerTarget.getSquare().getAll().get(playerSelection);
 
-      playerController.attemptAction(new PickingUp(playerController,
-              Game.getActiveInputSwitch().getPlayerTarget(), selected));
+      playerActor.attemptAction(new PickingUp(playerActor,
+          Game.getActiveInputSwitch().getPlayerTarget(), selected));
 
       Game.getActiveInputSwitch().enterMode(GameMode.EXPLORE);
 

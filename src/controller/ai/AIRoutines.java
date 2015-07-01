@@ -5,7 +5,6 @@ import actor.attribute.Attribute;
 import actor.attribute.Perception;
 import actor.attribute.Rank;
 import actor.stats.Health;
-import controller.ActorController;
 import controller.action.Action;
 import controller.action.Moving;
 import controller.action.TurnThenMove;
@@ -26,37 +25,40 @@ public class AIRoutines {
    * If we are already facing the given direction, just start moving. Otherwise, turn and then
    * move.
    */
-  public static void turnThenMove(AIController puppet, Direction goal,
+  public static void turnThenMove(AIAgent agent, Direction goal,
                                   boolean isWalking, boolean doNotRepeat) {
 
-    final boolean alreadyFacingGoal = puppet.getActor().getFacing() == goal;
+    final Actor actor = agent.getActor();
+    final boolean alreadyFacingGoal = actor.getFacing() == goal;
 
     final Action action;
 
     if (alreadyFacingGoal) {
-      action = new Moving(puppet, goal, isWalking);
+      action = new Moving(actor, goal, isWalking);
     }
     else {
-      action = new TurnThenMove(puppet, goal, isWalking);
+      action = new TurnThenMove(actor, goal, isWalking);
     }
 
     if (doNotRepeat) {
       action.doNotRepeat();
     }
 
-    puppet.attemptAction(action);
+    actor.attemptAction(action);
 
   }
 
 
   /**
-   * Makes the puppet sidestep the square directly in front of it. It will turn one direction
+   * Makes the agent sidestep the square directly in front of it. It will turn one direction
    * grade either to the left or the right (chosen at random), and step forward one square. This
    * is used as a quick way to get around obstacles in the absence of more advanced pathing.
    */
-  public static void stepAroundBlockedSquare(AIController puppet) {
+  public static void stepAroundBlockedSquare(AIAgent agent) {
 
-    Direction turningTowards = puppet.getActor().getFacing();
+    final Actor actor = agent.getActor();
+
+    Direction turningTowards = actor.getFacing();
 
     if (Game.RANDOM.nextBoolean()) {
       turningTowards = turningTowards.getLeftNeighbor();
@@ -65,74 +67,67 @@ public class AIRoutines {
       turningTowards = turningTowards.getRightNeighbor();
     }
 
-    puppet.attemptAction(new TurnThenMove(puppet, turningTowards, false).doNotRepeat());
+    actor.attemptAction(new TurnThenMove(actor, turningTowards, false).doNotRepeat());
 
   }
 
 
   /**
-   * Makes the puppet advance one square towards the given coordinate.
+   * Makes the agent advance one square towards the given coordinate.
    */
-  public static void approachOneStep(AIController puppet, Coordinate destination) {
+  public static void approachOneStep(AIAgent agent, Coordinate destination) {
 
-    final Coordinate actorAt = puppet.getActor().getCoordinate();
+    final Coordinate actorAt = agent.getActor().getCoordinate();
     final Direction toPursue = actorAt.getDirectionTo(destination);
 
-    turnThenMove(puppet, toPursue, false, true);
+    turnThenMove(agent, toPursue, false, true);
 
   }
 
 
   /**
-   * Sweeps the area in which the puppet resides for other actor controllers. The first one it
-   * finds within sensory range (as defined by the puppet's perception attribute)
+   * Sweeps the area in which the agent resides for other actor controllers. The first one it
+   * finds within sensory range (as defined by the agent's perception attribute)
    */
-  public static void performSensoryScan(AIController puppet) {
+  public static void performSensoryScan(AIAgent agent) {
 
-    final Area area = puppet.getLocality();
+    final Area area = agent.getLocality();
 
-    final Actor actor = puppet.getActor();
+    final Actor actor = agent.getActor();
     final Coordinate actorAt = actor.getCoordinate();
-    final Rank perceptionRank = actor.readAttributeLevel(Attribute.PERCEPTION);
+    final Rank perceptionRank = actor.getAttributeRank(Attribute.PERCEPTION);
 
     // Get all actor controllers in our area.
-    final Set<ActorController> actorControllers =
-        Game.getActiveControllers().getActorControllersInArea(area);
+    final Set<Actor> localActors = Game.getActiveControllers().getActorsInArea(area);
 
 
-    for (ActorController scanTarget : actorControllers) {
+    for (Actor scanTarget : localActors) {
 
-      final Actor targetActor = scanTarget.getActor();
-
-      // Scan through each, skipping any that fail one of the following tests.
+      // Scan through each, skipping any that fail either of the following tests.
       if  (
 
           // Don't react to self.
-          scanTarget != puppet
+          scanTarget != agent.getActor()
 
           // Timid actors ignore each other.
           && !(actor.hasFlag(PhysicalFlag.TIMID)
-          && targetActor.hasFlag(PhysicalFlag.TIMID))
-
-          // Ignore dead actors. Actor might be dead because ActorControllers do not unregister
-          // (and escape this loop) until they have been updated for their own turn.
-          && !targetActor.hasFlag(PhysicalFlag.DEAD)) {
+          && scanTarget.hasFlag(PhysicalFlag.TIMID))) {
 
 
       // If we've passed the tests, determine if this actor controller is within either visual or
       // auditory range (in that order). If it is, react accordingly, if not, go to the next
       // actor controller in this area.
 
-        final Coordinate targetAt = targetActor.getCoordinate();
+        final Coordinate targetAt = scanTarget.getCoordinate();
 
         // Can we see the target?
         if (Perception.getCanSeeLocation(perceptionRank, actor.getFacing(), actorAt, targetAt)) {
-          AIRoutines.evaluateOther(puppet, scanTarget);
+          AIRoutines.evaluateOther(agent, scanTarget);
         }
 
         // Can we hear the target?
         else if (Perception.getCanHearLocation(perceptionRank, actorAt, targetAt)) {
-          puppet.exhibitBehavior(new AI_Investigate(puppet, targetAt, scanTarget));
+          agent.exhibitBehavior(new AI_Investigate(agent, targetAt, scanTarget));
         }
 
       }
@@ -143,52 +138,52 @@ public class AIRoutines {
 
 
   /**
-   * Determines how the puppet should react to the given other. If either the puppet or the other
-   * have the aggressive flag, the puppet will enter fight or flee. In other words, aggressives
+   * Determines how the agent should react to the given other. If either the agent or the other
+   * have the aggressive flag, the agent will enter fight or flee. In other words, aggressives
    * will attack/flee everything they encounter, while non-aggressives will only attack/flee
    * aggressives.
    */
-  public static void evaluateOther(AIController puppet, ActorController other) {
+  public static void evaluateOther(AIAgent agent, Actor other) {
 
-    if (other.getActor().hasFlag(PhysicalFlag.AGGRESSIVE)
-        || puppet.getActor().hasFlag(PhysicalFlag.AGGRESSIVE)) {
-      evaluateNewAggressor(puppet, other);
+    if (other.hasFlag(PhysicalFlag.AGGRESSIVE)
+        || agent.getActor().hasFlag(PhysicalFlag.AGGRESSIVE)) {
+      evaluateNewAggressor(agent, other);
     }
 
   }
 
 
   /**
-   * Determines how the puppet should react to an aggressor upon first encounter. Actors with the
+   * Determines how the agent should react to an aggressor upon first encounter. Actors with the
    * timid flag will always retreat on this call. Other actors will call {@code
    * getShouldFleeCombat()} to determine if they should retreat. If they do not retreat, they
    * will begin fighting the aggressor.
    */
-  public static void evaluateNewAggressor(AIController puppet, ActorController aggressor) {
+  public static void evaluateNewAggressor(AIAgent agent, Actor aggressor) {
 
     final AIBehavior response;
 
-    if (puppet.getActor().hasFlag(PhysicalFlag.TIMID) || getShouldFleeCombat(puppet)) {
-      response = new AI_Retreat(puppet, aggressor);
+    if (agent.getActor().hasFlag(PhysicalFlag.TIMID) || getShouldFleeCombat(agent)) {
+      response = new AI_Retreat(agent, aggressor);
     }
     else {
-      response = new AI_Fight(puppet, aggressor);
+      response = new AI_Fight(agent, aggressor);
     }
 
-    puppet.exhibitBehavior(response);
+    agent.exhibitBehavior(response);
 
   }
 
 
   /**
-   * Determines if the given puppet is up for a fight or if it should retreat to nurse its wounds.
+   * Determines if the given agent is up for a fight or if it should retreat to nurse its wounds.
    * Actors with the aggressive flag will let their health get lower before fleeing, while actors
    * with the timid flag will do the opposite. Actors with neither flag will retreat somewhere in
    * the middle.
    */
-  public static boolean getShouldFleeCombat(AIController puppet) {
+  public static boolean getShouldFleeCombat(AIAgent agent) {
 
-    final Actor actor = puppet.getActor();
+    final Actor actor = agent.getActor();
     final Health health = actor.getHealth();
 
     if (actor.hasFlag(PhysicalFlag.AGGRESSIVE) && health.getFraction() < 0.20) {

@@ -1,6 +1,6 @@
 package controller.ai;
 
-import controller.ActorController;
+import actor.Actor;
 import controller.action.Action;
 import controller.action.ActionFlag;
 import game.Direction;
@@ -9,17 +9,17 @@ import game.physical.PhysicalFlag;
 import world.Coordinate;
 
 /**
- * This behavior will make the puppet move at full speed away from the given pursuer. The puppet
+ * This behavior will make the agent move at full speed away from the given pursuer. The agent
  * will attempt to place a distance of two areas between itself and its pursuer before it stops
- * running. However, if it is determined that the puppet can't escape, it will turn and fight
+ * running. However, if it is determined that the agent can't escape, it will turn and fight
  * instead.<br><br>
  *
- * This determination is made by recording the occurrences of three events. First, if the puppet
- * is victimized by the pursuer while attempting to flee. Second, if the puppet has to change the
+ * This determination is made by recording the occurrences of three events. First, if the agent
+ * is victimized by the pursuer while attempting to flee. Second, if the agent has to change the
  * direction of its escape, because the pursuer is outpacing or outmaneuvering it. Third, if the
- * puppet's path of escape is blocked. Each of these events adds a certain (statically defined)
+ * agent's path of escape is blocked. Each of these events adds a certain (statically defined)
  * value to a counter, and when that counter reaches a certain (statically defined) point, the
- * puppet will turn and fight.
+ * agent will turn and fight.
  */
 public class AI_Retreat extends AIBehavior {
 
@@ -30,12 +30,13 @@ public class AI_Retreat extends AIBehavior {
   private static final int CANT_ESCAPE_BLOCKED_VALUE = 1;
 
 
-  private final ActorController pursuer;
+  private final Actor pursuer;
+
   private int cantEscapeCounter;
   private boolean isTurningToEscape;
 
-  public AI_Retreat(AIController puppet, ActorController pursuer) {
-    super(puppet);
+  public AI_Retreat(AIAgent agent, Actor pursuer) {
+    super(agent);
     this.pursuer = pursuer;
     cantEscapeCounter = 0;
     isTurningToEscape = false;
@@ -43,8 +44,8 @@ public class AI_Retreat extends AIBehavior {
 
   @Override
   protected String getOnExhibitLogMessage() {
-    if (pursuer == Game.getActivePlayer()) {
-      return getPuppet().getActor().getName() + " flees for its life.";
+    if (pursuer == Game.getActivePlayerActor()) {
+      return getActor().getName() + " flees for its life.";
     }
     else {
       return null;
@@ -60,14 +61,14 @@ public class AI_Retreat extends AIBehavior {
   private void retreat() {
 
     // If our pursuer is dead, we can stop retreating.
-    if (pursuer.getActor().hasFlag(PhysicalFlag.DEAD)) {
+    if (pursuer.hasFlag(PhysicalFlag.DEAD)) {
       markComplete();
     }
 
     else {
 
-      final Coordinate actorAt = getPuppet().getActor().getCoordinate();
-      final Coordinate attackerAt = pursuer.getActor().getCoordinate();
+      final Coordinate actorAt = getActor().getCoordinate();
+      final Coordinate attackerAt = pursuer.getCoordinate();
 
 
       // If we are two areas away we've escaped and can stop retreating.
@@ -78,7 +79,7 @@ public class AI_Retreat extends AIBehavior {
       // Otherwise, run directly away.
       else {
         final Direction toEscape = attackerAt.getDirectionTo(actorAt);
-        AIRoutines.turnThenMove(getPuppet(), toEscape, false, false);
+        AIRoutines.turnThenMove(getAgent(), toEscape, false, false);
       }
 
     }
@@ -93,7 +94,7 @@ public class AI_Retreat extends AIBehavior {
     cantEscapeCounter += increments;
 
     if (cantEscapeCounter >= CANT_ESCAPE_COUNTER_MAX) {
-      getPuppet().exhibitBehavior(new AI_Fight(getPuppet(), pursuer));
+      getAgent().exhibitBehavior(new AI_Fight(getAgent(), pursuer));
     }
 
   }
@@ -103,7 +104,7 @@ public class AI_Retreat extends AIBehavior {
   public void onActorTurnComplete() {
 
     // If we have no action queued, retreat directly away from our pursuer.
-    if (getPuppet().isFreeToAct()) {
+    if (getActor().isFreeToAct()) {
       retreat();
     }
 
@@ -112,15 +113,15 @@ public class AI_Retreat extends AIBehavior {
     // pursuer.
     else {
 
-      final Coordinate actorAt = getPuppet().getActor().getCoordinate();
-      final Coordinate attackerAt = pursuer.getActor().getCoordinate();
+      final Coordinate actorAt = getActor().getCoordinate();
+      final Coordinate attackerAt = pursuer.getCoordinate();
 
       final boolean pursuerIsClose = actorAt.getGlobalDistance(attackerAt) <= 3;
 
       if (pursuerIsClose) {
 
         final Direction escapeDirection = attackerAt.getDirectionTo(actorAt);
-        final boolean facingEscapeDirection = getPuppet().getActor().getFacing() == escapeDirection;
+        final boolean facingEscapeDirection = getActor().getFacing() == escapeDirection;
 
         // If we are facing correct direction, any turning can stop.
         if (facingEscapeDirection) {
@@ -146,14 +147,14 @@ public class AI_Retreat extends AIBehavior {
     // If one of our movements fails, step around the blocked square, and increment the can't
     // escape counter by the appropriate value.
     if (action.hasFlag(ActionFlag.FAILED)) {
-      AIRoutines.stepAroundBlockedSquare(getPuppet());
+      AIRoutines.stepAroundBlockedSquare(getAgent());
       incrementCantEscapeCounter(CANT_ESCAPE_BLOCKED_VALUE);
     }
 
   }
 
   @Override
-  public void onVictimized(ActorController attacker) {
+  public void onVictimized(Actor attacker) {
 
     // If we are victimized by the same actor from whom we are retreating, increment the can't
     // escape counter by CANT_ESCAPE_ATTACKED_VALUE.

@@ -62,7 +62,7 @@ public enum GameMode {
     @Override
     public void onEnter() {
       Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareTargeter(Game
-          .getActivePlayer().getActor().getCoordinate(), 1));
+          .getActivePlayerActor().getCoordinate(), 1));
 
       if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
         Game.setTimeMode(TimeMode.PAUSED);
@@ -101,7 +101,7 @@ public enum GameMode {
     @Override
     public void onEnter() {
       Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareTargeter(Game
-          .getActivePlayer().getActor().getCoordinate(), null));
+          .getActivePlayerActor().getCoordinate(), null));
 
       if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
         Game.setTimeMode(TimeMode.PAUSED);
@@ -141,7 +141,7 @@ public enum GameMode {
     @Override
     public void onEnter() {
       Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareAndListTargeter(Game
-          .getActivePlayer().getActor().getCoordinate(), 1));
+          .getActivePlayerActor().getCoordinate(), 1));
 
       if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
         Game.setTimeMode(TimeMode.PAUSED);
@@ -188,7 +188,7 @@ public enum GameMode {
     @Override
     public void onEnter() {
       Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeListTargeter(Game
-          .getActivePlayer().getActor().getInventory().getItemsHeld().size()));
+          .getActivePlayerActor().getInventory().getItemsHeld().size()));
 
       if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
         Game.setTimeMode(TimeMode.PAUSED);
@@ -213,7 +213,7 @@ public enum GameMode {
     public List<DisplayElement> getDisplayElements() {
 
       DisplayElement_Text itemsHeld =
-          DisplayElement.makePhysicalsList(Game.getActivePlayer().getActor().getInventory().getItemsHeld(),true);
+          DisplayElement.makePhysicalsList(Game.getActivePlayerActor().getInventory().getItemsHeld(),true);
 
       return Arrays.asList(
           DisplayElement.MINIMAP,

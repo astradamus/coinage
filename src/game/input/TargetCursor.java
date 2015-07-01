@@ -56,7 +56,7 @@ public class TargetCursor {
     }
     else if (target != null && cursorMovingIn != null) {
 
-      Coordinate playerAt = Game.getActivePlayer().getActor().getCoordinate();
+      Coordinate playerAt = Game.getActivePlayerActor().getCoordinate();
 
       int relativeX = (target.globalX - playerAt.globalX) + cursorMovingIn.relativeX;
       int relativeY = (target.globalY - playerAt.globalY) + cursorMovingIn.relativeY;

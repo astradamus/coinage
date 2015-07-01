@@ -1,15 +1,15 @@
 package controller.ai;
 
-import controller.ActorController;
+import actor.Actor;
 import controller.action.Turning;
 import game.Direction;
 import game.Game;
 
 /**
- * This behavior will make the puppet hold position in one spot and, on occasion, turn to look
+ * This behavior will make the agent hold position in one spot and, on occasion, turn to look
  * around.<br><br>
  *
- * The puppet will perform a sensory scan every few turns at a statically defined interval, but will
+ * The agent will perform a sensory scan every few turns at a statically defined interval, but will
  * otherwise do nothing for the duration of the behavior.
  */
 public class AI_Idle extends AIBehavior {
@@ -22,8 +22,8 @@ public class AI_Idle extends AIBehavior {
 
   private int idleTimeRemaining;
 
-  public AI_Idle(AIController idler) {
-    super(idler);
+  public AI_Idle(AIAgent agent) {
+    super(agent);
     idleTimeRemaining = IDLE_DURATION_BASE + Game.RANDOM.nextInt(IDLE_DURATION_RANGE);
   }
 
@@ -46,13 +46,13 @@ public class AI_Idle extends AIBehavior {
 
       // Perform a sensory scan every few updates.
       if (idleTimeRemaining % SENSORY_SCAN_INTERVAL == 0) {
-        AIRoutines.performSensoryScan(getPuppet());
+        AIRoutines.performSensoryScan(getAgent());
       }
 
-      // On occasion, turn lazily (one grade) to the left or the right.
-      if (getPuppet().isFreeToAct() && Game.RANDOM.nextInt(100) < 1) {
+      // On occasion, turn one grade to the left or the right.
+      if (getActor().isFreeToAct() && Game.RANDOM.nextInt(100) < 1) {
 
-        Direction turnTo = getPuppet().getActor().getFacing();
+        Direction turnTo = getActor().getFacing();
 
         if (Game.RANDOM.nextBoolean()) {
           turnTo = turnTo.getLeftNeighbor();
@@ -61,7 +61,7 @@ public class AI_Idle extends AIBehavior {
           turnTo = turnTo.getRightNeighbor();
         }
 
-        getPuppet().attemptAction(new Turning(getPuppet(), turnTo));
+        getActor().attemptAction(new Turning(getActor(), turnTo));
 
       }
 
@@ -79,10 +79,10 @@ public class AI_Idle extends AIBehavior {
   }
 
   @Override
-  public void onVictimized(ActorController attacker) {
+  public void onVictimized(Actor attacker) {
 
     // If we are attacked, either fight or flee.
-    AIRoutines.evaluateNewAggressor(getPuppet(), attacker);
+    AIRoutines.evaluateNewAggressor(getAgent(), attacker);
 
   }
 

@@ -1,11 +1,12 @@
 package game;
 
-import controller.player.PlayerController;
+import actor.Actor;
 import game.display.GameDisplay;
 import game.input.GameInputSwitch;
 import thing.ThingFactory;
 import thing.WeaponTemplates;
 import utils.Dimension;
+import world.Coordinate;
 import world.World;
 
 import java.awt.event.KeyListener;
@@ -56,8 +57,8 @@ public class Game {
 
 
 
-  public static PlayerController getActivePlayer() {
-    return ACTIVE.INPUT_SWITCH.getPlayerController();
+  public static Actor getActivePlayerActor() {
+    return ACTIVE.INPUT_SWITCH.getPlayerController().getActor();
   }
 
   public static World getActiveWorld() {
@@ -72,7 +73,10 @@ public class Game {
     return ACTIVE.INPUT_SWITCH;
   }
 
-
+  public static boolean getActiveWorldMapAreaIsRevealed(Coordinate coordinate) {
+    return (getActiveInputSwitch().getPlayerController().getWorldMapRevealedComponent()
+        .getAreaIsRevealed(coordinate));
+  }
 
 
 
@@ -93,7 +97,7 @@ public class Game {
 
     TimeMode timeMode = TIME_MODE.peek();
     if (timeMode == TimeMode.LIVE
-        || (timeMode == TimeMode.PRECISION && !getActivePlayer().isFreeToAct())) {
+        || (timeMode == TimeMode.PRECISION && !getActivePlayerActor().isFreeToAct())) {
       CONTROLLERS.onUpdate();
     }
 
@@ -113,13 +117,13 @@ public class Game {
       GameDisplay.addKeyListener(keyListener);
     }
 
-    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing
+    Game.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
         (WeaponTemplates.WP_CLUB));
-    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing
+    Game.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
         (WeaponTemplates.WP_SWORD));
-    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing
+    Game.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
         (WeaponTemplates.WP_AXE));
-    Game.getActivePlayer().getActor().getInventory().addItem(ThingFactory.makeThing
+    Game.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
         (WeaponTemplates.WP_DAGGER));
     GameEngine.start();
 

@@ -1,6 +1,6 @@
 package controller.action;
 
-import controller.ActorController;
+import actor.Actor;
 import game.display.Event;
 import game.display.EventLog;
 import game.physical.Physical;
@@ -11,14 +11,12 @@ import world.Coordinate;
  */
 public class Placing extends Action {
 
-
   private final Physical placingWhat;
 
-  public Placing(ActorController performer, Coordinate placingWhere, Physical placingWhat) {
-    super(performer, placingWhere);
+  public Placing(Actor actor, Coordinate placingWhere, Physical placingWhat) {
+    super(actor, placingWhere);
     this.placingWhat = placingWhat;
   }
-
 
 
   @Override
@@ -30,7 +28,6 @@ public class Placing extends Action {
   public int calcDelayToRecover() {
     return 1;
   }
-
 
 
   /**
@@ -45,7 +42,7 @@ public class Placing extends Action {
       return false;
     }
 
-    final boolean itemIsHeldByActor = getPerformer().getActor().getInventory()
+    final boolean itemIsHeldByActor = getActor().getInventory()
         .getItemsHeld().contains(placingWhat);
 
     if (!itemIsHeldByActor){
@@ -57,15 +54,13 @@ public class Placing extends Action {
 
   }
 
-
   /**
    * Place the item at the target location.
    */
   @Override
   protected void apply() {
-    getPerformer().getActor().getInventory().removeItem(placingWhat);
+    getActor().getInventory().removeItem(placingWhat);
     getTarget().getSquare().put(placingWhat);
   }
-
 
 }

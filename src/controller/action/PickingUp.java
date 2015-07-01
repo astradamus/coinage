@@ -1,6 +1,6 @@
 package controller.action;
 
-import controller.ActorController;
+import actor.Actor;
 import game.display.Event;
 import game.display.EventLog;
 import game.physical.Physical;
@@ -12,14 +12,12 @@ import world.Coordinate;
  */
 public class PickingUp extends Action {
 
-
   private final Physical pickingUpWhat;
 
-  public PickingUp(ActorController performer, Coordinate pickingUpWhere, Physical pickingUpWhat) {
-    super(performer, pickingUpWhere);
+  public PickingUp(Actor actor, Coordinate pickingUpWhere, Physical pickingUpWhat) {
+    super(actor, pickingUpWhere);
     this.pickingUpWhat = pickingUpWhat;
   }
-
 
 
   @Override
@@ -31,7 +29,6 @@ public class PickingUp extends Action {
   public int calcDelayToRecover() {
     return 1;
   }
-
 
 
   /**
@@ -57,15 +54,13 @@ public class PickingUp extends Action {
 
   }
 
-
   /**
    * Upon success, the item is added to the actor's inventory.
    */
   @Override
   protected void apply() {
     getTarget().getSquare().pull(pickingUpWhat);
-    getPerformer().getActor().getInventory().addItem(pickingUpWhat);
+    getActor().getInventory().addItem(pickingUpWhat);
   }
-
 
 }

@@ -16,8 +16,8 @@ import java.awt.Graphics2D;
  */
 public class AreaPanel extends JPanel {
 
-
   private static final int SQUARE_SIZE = GameDisplay.SQUARE_SIZE;
+
 
   public AreaPanel() {
     setBackground(Color.BLACK);
@@ -29,7 +29,7 @@ public class AreaPanel extends JPanel {
   public void paint(Graphics g) {
     super.paint(g);
 
-    Coordinate playerAt = Game.getActivePlayer().getActor().getCoordinate();
+    Coordinate playerAt = Game.getActivePlayerActor().getCoordinate();
 
     World world = Game.getActiveWorld();
 
@@ -63,4 +63,5 @@ public class AreaPanel extends JPanel {
     EventLog.drawOverlay((Graphics2D) g);
 
   }
+
 }

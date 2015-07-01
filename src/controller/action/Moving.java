@@ -2,7 +2,6 @@ package controller.action;
 
 import actor.Actor;
 import actor.attribute.Attribute;
-import controller.ActorController;
 import game.Direction;
 import game.Game;
 import game.physical.PhysicalFlag;
@@ -20,7 +19,6 @@ import java.awt.Color;
  */
 public class Moving extends Action {
 
-
   public final static int BASELINE_RANK = 5;
   public final static int BEATS_AT_BASELINE = 4;
   public final static int DISTANCE_ADJUSTMENT_DIVISOR = 3;
@@ -28,14 +26,13 @@ public class Moving extends Action {
   public static final int FOUR_LEGGED_FULL_SPEED_BONUS = 1;
 
 
-
   private final Direction movingIn;
   private final boolean isWalking;
 
-  public Moving(ActorController performer, Direction movingIn, boolean isWalking) {
-    super(performer,
+  public Moving(Actor actor, Direction movingIn, boolean isWalking) {
+    super(actor,
         Game.getActiveWorld().offsetCoordinateBySquares(
-            performer.getActor().getCoordinate(), movingIn.relativeX, movingIn.relativeY));
+            actor.getCoordinate(), movingIn.relativeX, movingIn.relativeY));
     this.movingIn = movingIn;
     this.isWalking = isWalking;
   }
@@ -46,7 +43,6 @@ public class Moving extends Action {
   }
 
 
-
   /**
    * At {@code BASELINE_RANK} reflex, an actor will suffer a {@code BEATS_AT_BASELINE} action
    * delay. For every {@code DISTANCE_ADJUSTMENT_DIVISOR} ranks above or below
@@ -55,10 +51,9 @@ public class Moving extends Action {
    */
   @Override
   public int calcDelayToPerform() {
-    final Actor actor = getPerformer().getActor();
 
     // Take the actor's reflex rank.
-    final int actorReflex = actor.readAttributeLevel(Attribute.REFLEX).ordinal();
+    final int actorReflex = getActor().getAttributeRank(Attribute.REFLEX).ordinal();
 
     // Determine distance from BASELINE_RANK.
     final int distanceFromBaseline = actorReflex - BASELINE_RANK;
@@ -75,7 +70,7 @@ public class Moving extends Action {
     }
 
     if (getIsMovingInFacedDirection()) {
-      if (actor.hasFlag(PhysicalFlag.FOUR_LEGGED)) {
+      if (getActor().hasFlag(PhysicalFlag.FOUR_LEGGED)) {
         calculatedDelay -= FOUR_LEGGED_FULL_SPEED_BONUS;
       }
       return calculatedDelay; // Full speed, no adjustment necessary.
@@ -92,14 +87,13 @@ public class Moving extends Action {
   }
 
   private boolean getIsMovingInFacedDirection() {
-    return getPerformer().getActor().getFacing() == movingIn;
+    return getActor().getFacing() == movingIn;
   }
 
   private boolean getIsMovingInAdjacentDirection() {
-    final Direction actorFacing = getPerformer().getActor().getFacing();
+    final Direction actorFacing = getActor().getFacing();
     return movingIn == actorFacing.getLeftNeighbor() || movingIn == actorFacing.getRightNeighbor();
   }
-
 
 
   /**
@@ -110,14 +104,11 @@ public class Moving extends Action {
   protected boolean validate() {
 
     final boolean targetIsBlocked = getTarget() == null || getTarget().getSquare().isBlocked();
-    final boolean performerHasNotMoved =
-        !getOrigin().getSquare().getAll().contains(getPerformer().getActor());
-
+    final boolean performerHasNotMoved = !getOrigin().getSquare().getAll().contains(getActor());
 
     return !targetIsBlocked && !performerHasNotMoved;
 
   }
-
 
   /**
    * Remove the actor from its original location, add it to the new location, and update its stored
@@ -127,7 +118,7 @@ public class Moving extends Action {
   @Override
   protected void apply() {
 
-    final Actor performerActor = getPerformer().getActor();
+    final Actor performerActor = getActor();
 
     getOrigin().getSquare().pull(performerActor);
     getTarget().getSquare().put(performerActor);
@@ -139,7 +130,6 @@ public class Moving extends Action {
 
   }
 
-
   /**
    * Movement will always repeat on success unless {@code doNotRepeat()} is called.
    */
@@ -147,10 +137,10 @@ public class Moving extends Action {
   public Action attemptRepeat() {
     if (hasFlag(ActionFlag.DO_NOT_REPEAT)) {
       return null;
-    } else {
-      return new Moving(getPerformer(), movingIn, isWalking);
+    }
+    else {
+      return new Moving(getActor(), movingIn, isWalking);
     }
   }
-
 
 }

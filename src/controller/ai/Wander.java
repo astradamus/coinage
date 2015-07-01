@@ -17,14 +17,14 @@ import game.Game;
  *  Note that a sensory scan will be performed after each completed movement, but not in between
  *  them.
  */
-public class AI_Wander extends AIBehavior {
+public class Wander extends Behavior {
 
   public static final int WANDER_CHAIN_MAX_LENGTH = 3;
 
 
   private int wanderChain;
 
-  public AI_Wander(AIAgent agent) {
+  public Wander(AIAgent agent) {
     super(agent);
     wanderChain = Game.RANDOM.nextInt(WANDER_CHAIN_MAX_LENGTH) + 1;
   }
@@ -46,7 +46,7 @@ public class AI_Wander extends AIBehavior {
 
       // Pick a direction at random and start walking that way.
       final Direction randomWander = Direction.getRandom();
-      AIRoutines.turnThenMove(getAgent(), randomWander, true, false);
+      Routines.turnThenMove(getAgent(), randomWander, true, false);
 
       // Apply this wander step to the counter.
       wanderChain--;
@@ -76,7 +76,7 @@ public class AI_Wander extends AIBehavior {
     }
 
     // Perform a sensory scan after each of our movements.
-    AIRoutines.performSensoryScan(getAgent());
+    Routines.performSensoryScan(getAgent());
 
   }
 
@@ -84,7 +84,7 @@ public class AI_Wander extends AIBehavior {
   public void onVictimized(Actor attacker) {
 
     // If we are attacked, either fight or flee.
-    AIRoutines.evaluateNewAggressor(getAgent(), attacker);
+    Routines.evaluateNewAggressor(getAgent(), attacker);
 
   }
 

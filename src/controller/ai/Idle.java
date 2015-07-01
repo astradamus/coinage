@@ -12,7 +12,7 @@ import game.Game;
  * The agent will perform a sensory scan every few turns at a statically defined interval, but will
  * otherwise do nothing for the duration of the behavior.
  */
-public class AI_Idle extends AIBehavior {
+public class Idle extends Behavior {
 
   public static final int SENSORY_SCAN_INTERVAL = 5;
 
@@ -22,7 +22,7 @@ public class AI_Idle extends AIBehavior {
 
   private int idleTimeRemaining;
 
-  public AI_Idle(AIAgent agent) {
+  public Idle(AIAgent agent) {
     super(agent);
     idleTimeRemaining = IDLE_DURATION_BASE + Game.RANDOM.nextInt(IDLE_DURATION_RANGE);
   }
@@ -46,7 +46,7 @@ public class AI_Idle extends AIBehavior {
 
       // Perform a sensory scan every few updates.
       if (idleTimeRemaining % SENSORY_SCAN_INTERVAL == 0) {
-        AIRoutines.performSensoryScan(getAgent());
+        Routines.performSensoryScan(getAgent());
       }
 
       // On occasion, turn one grade to the left or the right.
@@ -82,7 +82,7 @@ public class AI_Idle extends AIBehavior {
   public void onVictimized(Actor attacker) {
 
     // If we are attacked, either fight or flee.
-    AIRoutines.evaluateNewAggressor(getAgent(), attacker);
+    Routines.evaluateNewAggressor(getAgent(), attacker);
 
   }
 

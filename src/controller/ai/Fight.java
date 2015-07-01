@@ -25,11 +25,11 @@ import world.Coordinate;
  * combat (they will wait until their health is lower), while timid actors are more likely to
  * flee (they will run with much higher health). Actors with neither flag lie right in the middle.
  */
-public class AI_Fight extends AIBehavior {
+public class Fight extends Behavior {
 
   private final Actor victim;
 
-  public AI_Fight(AIAgent agent, Actor victim) {
+  public Fight(AIAgent agent, Actor victim) {
     super(agent);
     this.victim = victim;
   }
@@ -78,8 +78,8 @@ public class AI_Fight extends AIBehavior {
       else {
 
         // Consider taking this opportunity to escape.
-        if (AIRoutines.getShouldFleeCombat(getAgent())) {
-          getAgent().exhibitBehavior(new AI_Retreat(getAgent(), victim));
+        if (Routines.getShouldFleeCombat(getAgent())) {
+          getAgent().exhibitBehavior(new Retreat(getAgent(), victim));
         }
 
         else {
@@ -88,7 +88,7 @@ public class AI_Fight extends AIBehavior {
 
           // If we can track our enemy, pursue them and continue the fight.
           if (Perception.getCanTrackLocation(perception, actorAt, enemyAt)) {
-            AIRoutines.approachOneStep(getAgent(), enemyAt);
+            Routines.approachOneStep(getAgent(), enemyAt);
           }
 
           // Otherwise, we have lost them and must give up.
@@ -122,7 +122,7 @@ public class AI_Fight extends AIBehavior {
 
     // Moves only fail because of blocked squares, so step around the blockage.
     if (action.hasFlag(ActionFlag.FAILED) && action.getClass() == Moving.class) {
-      AIRoutines.stepAroundBlockedSquare(getAgent());
+      Routines.stepAroundBlockedSquare(getAgent());
     }
 
   }
@@ -131,8 +131,8 @@ public class AI_Fight extends AIBehavior {
   public void onVictimized(Actor attacker) {
 
     // Each time we are attacked in combat, consider fleeing instead of continuing to fight.
-    if (AIRoutines.getShouldFleeCombat(getAgent())) {
-      getAgent().exhibitBehavior(new AI_Retreat(getAgent(), victim));
+    if (Routines.getShouldFleeCombat(getAgent())) {
+      getAgent().exhibitBehavior(new Retreat(getAgent(), victim));
     }
 
   }

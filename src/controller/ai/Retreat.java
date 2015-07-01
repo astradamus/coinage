@@ -21,7 +21,7 @@ import world.Coordinate;
  * value to a counter, and when that counter reaches a certain (statically defined) point, the
  * agent will turn and fight.
  */
-public class AI_Retreat extends AIBehavior {
+public class Retreat extends Behavior {
 
   public static final int CANT_ESCAPE_COUNTER_MAX = 30;
 
@@ -35,7 +35,7 @@ public class AI_Retreat extends AIBehavior {
   private int cantEscapeCounter;
   private boolean isTurningToEscape;
 
-  public AI_Retreat(AIAgent agent, Actor pursuer) {
+  public Retreat(AIAgent agent, Actor pursuer) {
     super(agent);
     this.pursuer = pursuer;
     cantEscapeCounter = 0;
@@ -79,7 +79,7 @@ public class AI_Retreat extends AIBehavior {
       // Otherwise, run directly away.
       else {
         final Direction toEscape = attackerAt.getDirectionTo(actorAt);
-        AIRoutines.turnThenMove(getAgent(), toEscape, false, false);
+        Routines.turnThenMove(getAgent(), toEscape, false, false);
       }
 
     }
@@ -94,7 +94,7 @@ public class AI_Retreat extends AIBehavior {
     cantEscapeCounter += increments;
 
     if (cantEscapeCounter >= CANT_ESCAPE_COUNTER_MAX) {
-      getAgent().exhibitBehavior(new AI_Fight(getAgent(), pursuer));
+      getAgent().exhibitBehavior(new Fight(getAgent(), pursuer));
     }
 
   }
@@ -147,7 +147,7 @@ public class AI_Retreat extends AIBehavior {
     // If one of our movements fails, step around the blocked square, and increment the can't
     // escape counter by the appropriate value.
     if (action.hasFlag(ActionFlag.FAILED)) {
-      AIRoutines.stepAroundBlockedSquare(getAgent());
+      Routines.stepAroundBlockedSquare(getAgent());
       incrementCantEscapeCounter(CANT_ESCAPE_BLOCKED_VALUE);
     }
 

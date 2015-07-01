@@ -19,13 +19,13 @@ import world.Coordinate;
  * odds of this happening are very low, and the odds of it being noticed by the player if it does
  * happen are even lower.
  */
-public class AI_Investigate extends AIBehavior {
+public class Investigate extends Behavior {
 
   private final Coordinate sourceOfSound;
   private final Actor intruder;
 
-  public AI_Investigate(AIAgent investigator, Coordinate sourceOfSound,
-                        Actor intruder) {
+  public Investigate(AIAgent investigator, Coordinate sourceOfSound,
+                     Actor intruder) {
     super(investigator);
     this.sourceOfSound = sourceOfSound;
     this.intruder = intruder;
@@ -57,7 +57,7 @@ public class AI_Investigate extends AIBehavior {
 
     // If we can see what we're looking for, react to it.
     if (Perception.getCanSeeLocation(perception, actorFacing, actorAt, intruderActuallyAt)) {
-      AIRoutines.evaluateOther(getAgent(), intruder);
+      Routines.evaluateOther(getAgent(), intruder);
     }
 
     else {
@@ -93,7 +93,7 @@ public class AI_Investigate extends AIBehavior {
   public void onVictimized(Actor attacker) {
 
     // If we are attacked, either fight or flee.
-    AIRoutines.evaluateNewAggressor(getAgent(), attacker);
+    Routines.evaluateNewAggressor(getAgent(), attacker);
 
   }
 

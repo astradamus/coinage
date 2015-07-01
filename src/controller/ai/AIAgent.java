@@ -10,7 +10,7 @@ import game.display.EventLog;
 import world.Area;
 
 /**
- * This actor controller uses modular {@code AIBehavior} packages to give non-player-characters
+ * This actor controller uses modular {@code Behavior} packages to give non-player-characters
  * behavior. It hands off many of its method calls to whichever behavior it is currently
  * exhibiting, so that the interpretation of that call can vary situationally. One package can
  * freely call for the controller to switch to another. All packages can flag themselves with
@@ -18,35 +18,35 @@ import world.Area;
  */
 public class AIAgent extends ActorAgent {
 
-  private AIBehavior currentAIBehavior;
+  private Behavior currentBehavior;
 
   public AIAgent(Actor actor) {
     super(actor);
-    currentAIBehavior = null;
+    currentBehavior = null;
   }
 
   /**
-   * Changes the current AIBehavior package to the one specified and starts the routine. If there
+   * Changes the current Behavior package to the one specified and starts the routine. If there
    * is a relevant event log message to be printed, do so.
    */
-  void exhibitBehavior(AIBehavior AIBehavior) {
+  void exhibitBehavior(Behavior Behavior) {
 
-    currentAIBehavior = AIBehavior;
+    currentBehavior = Behavior;
 
-    final String onExhibitLogMessage = currentAIBehavior.getOnExhibitLogMessage();
+    final String onExhibitLogMessage = currentBehavior.getOnExhibitLogMessage();
 
     if (onExhibitLogMessage != null) {
       EventLog.registerEvent(Event.OTHER_ACTOR_ACTIONS, onExhibitLogMessage);
     }
 
-    currentAIBehavior.onExhibit();
+    currentBehavior.onExhibit();
 
   }
 
   @Override
   public void disconnectObserver() {
     super.disconnectObserver();
-    currentAIBehavior = null;
+    currentBehavior = null;
   }
 
   @Override
@@ -59,8 +59,8 @@ public class AIAgent extends ActorAgent {
     }
 
     // Pass the call to our current behavior, if we have one.
-    if (currentAIBehavior != null) {
-      currentAIBehavior.onActionExecuted(action);
+    if (currentBehavior != null) {
+      currentBehavior.onActionExecuted(action);
     }
 
   }
@@ -70,16 +70,16 @@ public class AIAgent extends ActorAgent {
 
     // If we have no behavior or our current behavior is finished, enter a simple idling state
     // or, more rarely, start wandering about.
-    if (currentAIBehavior == null || currentAIBehavior.getIsComplete()) {
+    if (currentBehavior == null || currentBehavior.getIsComplete()) {
       if (Game.RANDOM.nextInt(20) < 1) {
-        currentAIBehavior = new AI_Wander(this);
+        currentBehavior = new Wander(this);
       } else {
-        currentAIBehavior = new AI_Idle(this);
+        currentBehavior = new Idle(this);
       }
     }
 
     // Pass the call to our current behavior.
-    currentAIBehavior.onActorTurnComplete();
+    currentBehavior.onActorTurnComplete();
 
   }
 
@@ -87,8 +87,8 @@ public class AIAgent extends ActorAgent {
   public void onVictimized(Actor attacker) {
 
     // Pass the call to our current behavior, if we have one.
-    if (currentAIBehavior != null) {
-      currentAIBehavior.onVictimized(attacker);
+    if (currentBehavior != null) {
+      currentBehavior.onVictimized(attacker);
     }
 
   }

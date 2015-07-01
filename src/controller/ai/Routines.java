@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * Contains common subroutines used in multiple packages.
  */
-public class AIRoutines {
+public class Routines {
 
   /**
    * If we are already facing the given direction, just start moving. Otherwise, turn and then
@@ -122,12 +122,12 @@ public class AIRoutines {
 
         // Can we see the target?
         if (Perception.getCanSeeLocation(perceptionRank, actor.getFacing(), actorAt, targetAt)) {
-          AIRoutines.evaluateOther(agent, scanTarget);
+          Routines.evaluateOther(agent, scanTarget);
         }
 
         // Can we hear the target?
         else if (Perception.getCanHearLocation(perceptionRank, actorAt, targetAt)) {
-          agent.exhibitBehavior(new AI_Investigate(agent, targetAt, scanTarget));
+          agent.exhibitBehavior(new Investigate(agent, targetAt, scanTarget));
         }
 
       }
@@ -161,13 +161,13 @@ public class AIRoutines {
    */
   public static void evaluateNewAggressor(AIAgent agent, Actor aggressor) {
 
-    final AIBehavior response;
+    final Behavior response;
 
     if (agent.getActor().hasFlag(PhysicalFlag.TIMID) || getShouldFleeCombat(agent)) {
-      response = new AI_Retreat(agent, aggressor);
+      response = new Retreat(agent, aggressor);
     }
     else {
-      response = new AI_Fight(agent, aggressor);
+      response = new Fight(agent, aggressor);
     }
 
     agent.exhibitBehavior(response);

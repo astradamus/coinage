@@ -7,13 +7,13 @@ import controller.ActorObserver;
  * Provides a set of actions and interpretations to achieve some kind of result or apparent
  * intelligence with a non-player-controlled actor.
  */
-public abstract class AIBehavior implements ActorObserver {
+public abstract class Behavior implements ActorObserver {
 
   private final AIAgent agent;
 
   private boolean complete;
 
-  protected AIBehavior(AIAgent agent) {
+  protected Behavior(AIAgent agent) {
     this.agent = agent;
   }
 

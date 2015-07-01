@@ -16,11 +16,11 @@ import world.Area;
  * freely call for the controller to switch to another. All packages can flag themselves with
  * {@code markComplete()} to tell the controller it can safely return to an idle state.
  */
-public class AIAgent extends ActorAgent {
+public class AiActorAgent extends ActorAgent {
 
   private Behavior currentBehavior;
 
-  public AIAgent(Actor actor) {
+  public AiActorAgent(Actor actor) {
     super(actor);
     currentBehavior = null;
   }
@@ -71,10 +71,10 @@ public class AIAgent extends ActorAgent {
     // If we have no behavior or our current behavior is finished, enter a simple idling state
     // or, more rarely, start wandering about.
     if (currentBehavior == null || currentBehavior.getIsComplete()) {
-      if (Game.RANDOM.nextInt(20) < 1) {
-        currentBehavior = new Wander(this);
+      if (Game.RANDOM.nextInt(10) < 1) {
+        currentBehavior = new Ai_Wander(this);
       } else {
-        currentBehavior = new Idle(this);
+        currentBehavior = new Ai_Idle(this);
       }
     }
 

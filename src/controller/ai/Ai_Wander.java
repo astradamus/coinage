@@ -17,14 +17,14 @@ import game.Game;
  *  Note that a sensory scan will be performed after each completed movement, but not in between
  *  them.
  */
-public class Wander extends Behavior {
+public class Ai_Wander extends Behavior {
 
   public static final int WANDER_CHAIN_MAX_LENGTH = 3;
 
 
   private int wanderChain;
 
-  public Wander(AIAgent agent) {
+  public Ai_Wander(AiActorAgent agent) {
     super(agent);
     wanderChain = Game.RANDOM.nextInt(WANDER_CHAIN_MAX_LENGTH) + 1;
   }

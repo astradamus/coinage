@@ -3,7 +3,7 @@ package game;
 import actor.Actor;
 import actor.ActorFactory;
 import actor.ActorTemplate;
-import controller.ai.AIAgent;
+import controller.ai.AiActorAgent;
 import controller.player.PlayerAgent;
 import game.input.GameInputSwitch;
 import thing.ThingTemplate;
@@ -61,7 +61,7 @@ public class GameLoader {
         } while (square.isBlocked());
         square.put(actor);
         actor.setCoordinate(randomCoordinate);
-        gameControllers.addController(new AIAgent(actor));
+        gameControllers.addController(new AiActorAgent(actor));
       }
     }
 

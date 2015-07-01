@@ -19,13 +19,13 @@ import world.Coordinate;
  * odds of this happening are very low, and the odds of it being noticed by the player if it does
  * happen are even lower.
  */
-public class Investigate extends Behavior {
+public class Ai_Investigate extends Behavior {
 
   private final Coordinate sourceOfSound;
   private final Actor intruder;
 
-  public Investigate(AIAgent investigator, Coordinate sourceOfSound,
-                     Actor intruder) {
+  public Ai_Investigate(AiActorAgent investigator, Coordinate sourceOfSound,
+                        Actor intruder) {
     super(investigator);
     this.sourceOfSound = sourceOfSound;
     this.intruder = intruder;

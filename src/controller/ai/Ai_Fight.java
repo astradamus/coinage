@@ -25,11 +25,11 @@ import world.Coordinate;
  * combat (they will wait until their health is lower), while timid actors are more likely to
  * flee (they will run with much higher health). Actors with neither flag lie right in the middle.
  */
-public class Fight extends Behavior {
+public class Ai_Fight extends Behavior {
 
   private final Actor victim;
 
-  public Fight(AIAgent agent, Actor victim) {
+  public Ai_Fight(AiActorAgent agent, Actor victim) {
     super(agent);
     this.victim = victim;
   }
@@ -79,7 +79,7 @@ public class Fight extends Behavior {
 
         // Consider taking this opportunity to escape.
         if (Routines.getShouldFleeCombat(getAgent())) {
-          getAgent().exhibitBehavior(new Retreat(getAgent(), victim));
+          getAgent().exhibitBehavior(new Ai_Retreat(getAgent(), victim));
         }
 
         else {
@@ -132,7 +132,7 @@ public class Fight extends Behavior {
 
     // Each time we are attacked in combat, consider fleeing instead of continuing to fight.
     if (Routines.getShouldFleeCombat(getAgent())) {
-      getAgent().exhibitBehavior(new Retreat(getAgent(), victim));
+      getAgent().exhibitBehavior(new Ai_Retreat(getAgent(), victim));
     }
 
   }

@@ -12,7 +12,7 @@ import game.Game;
  * The agent will perform a sensory scan every few turns at a statically defined interval, but will
  * otherwise do nothing for the duration of the behavior.
  */
-public class Idle extends Behavior {
+public class Ai_Idle extends Behavior {
 
   public static final int SENSORY_SCAN_INTERVAL = 5;
 
@@ -22,7 +22,7 @@ public class Idle extends Behavior {
 
   private int idleTimeRemaining;
 
-  public Idle(AIAgent agent) {
+  public Ai_Idle(AiActorAgent agent) {
     super(agent);
     idleTimeRemaining = IDLE_DURATION_BASE + Game.RANDOM.nextInt(IDLE_DURATION_RANGE);
   }

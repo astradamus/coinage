@@ -25,7 +25,7 @@ public class Routines {
    * If we are already facing the given direction, just start moving. Otherwise, turn and then
    * move.
    */
-  public static void turnThenMove(AIAgent agent, Direction goal,
+  public static void turnThenMove(AiActorAgent agent, Direction goal,
                                   boolean isWalking, boolean doNotRepeat) {
 
     final Actor actor = agent.getActor();
@@ -54,7 +54,7 @@ public class Routines {
    * grade either to the left or the right (chosen at random), and step forward one square. This
    * is used as a quick way to get around obstacles in the absence of more advanced pathing.
    */
-  public static void stepAroundBlockedSquare(AIAgent agent) {
+  public static void stepAroundBlockedSquare(AiActorAgent agent) {
 
     final Actor actor = agent.getActor();
 
@@ -75,7 +75,7 @@ public class Routines {
   /**
    * Makes the agent advance one square towards the given coordinate.
    */
-  public static void approachOneStep(AIAgent agent, Coordinate destination) {
+  public static void approachOneStep(AiActorAgent agent, Coordinate destination) {
 
     final Coordinate actorAt = agent.getActor().getCoordinate();
     final Direction toPursue = actorAt.getDirectionTo(destination);
@@ -89,7 +89,7 @@ public class Routines {
    * Sweeps the area in which the agent resides for other actor controllers. The first one it
    * finds within sensory range (as defined by the agent's perception attribute)
    */
-  public static void performSensoryScan(AIAgent agent) {
+  public static void performSensoryScan(AiActorAgent agent) {
 
     final Area area = agent.getLocality();
 
@@ -127,7 +127,7 @@ public class Routines {
 
         // Can we hear the target?
         else if (Perception.getCanHearLocation(perceptionRank, actorAt, targetAt)) {
-          agent.exhibitBehavior(new Investigate(agent, targetAt, scanTarget));
+          agent.exhibitBehavior(new Ai_Investigate(agent, targetAt, scanTarget));
         }
 
       }
@@ -143,7 +143,7 @@ public class Routines {
    * will attack/flee everything they encounter, while non-aggressives will only attack/flee
    * aggressives.
    */
-  public static void evaluateOther(AIAgent agent, Actor other) {
+  public static void evaluateOther(AiActorAgent agent, Actor other) {
 
     if (other.hasFlag(PhysicalFlag.AGGRESSIVE)
         || agent.getActor().hasFlag(PhysicalFlag.AGGRESSIVE)) {
@@ -159,15 +159,15 @@ public class Routines {
    * getShouldFleeCombat()} to determine if they should retreat. If they do not retreat, they
    * will begin fighting the aggressor.
    */
-  public static void evaluateNewAggressor(AIAgent agent, Actor aggressor) {
+  public static void evaluateNewAggressor(AiActorAgent agent, Actor aggressor) {
 
     final Behavior response;
 
     if (agent.getActor().hasFlag(PhysicalFlag.TIMID) || getShouldFleeCombat(agent)) {
-      response = new Retreat(agent, aggressor);
+      response = new Ai_Retreat(agent, aggressor);
     }
     else {
-      response = new Fight(agent, aggressor);
+      response = new Ai_Fight(agent, aggressor);
     }
 
     agent.exhibitBehavior(response);
@@ -181,7 +181,7 @@ public class Routines {
    * with the timid flag will do the opposite. Actors with neither flag will retreat somewhere in
    * the middle.
    */
-  public static boolean getShouldFleeCombat(AIAgent agent) {
+  public static boolean getShouldFleeCombat(AiActorAgent agent) {
 
     final Actor actor = agent.getActor();
     final Health health = actor.getHealth();

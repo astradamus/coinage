@@ -21,7 +21,7 @@ import world.Coordinate;
  * value to a counter, and when that counter reaches a certain (statically defined) point, the
  * agent will turn and fight.
  */
-public class Retreat extends Behavior {
+public class Ai_Retreat extends Behavior {
 
   public static final int CANT_ESCAPE_COUNTER_MAX = 30;
 
@@ -35,7 +35,7 @@ public class Retreat extends Behavior {
   private int cantEscapeCounter;
   private boolean isTurningToEscape;
 
-  public Retreat(AIAgent agent, Actor pursuer) {
+  public Ai_Retreat(AiActorAgent agent, Actor pursuer) {
     super(agent);
     this.pursuer = pursuer;
     cantEscapeCounter = 0;
@@ -94,7 +94,7 @@ public class Retreat extends Behavior {
     cantEscapeCounter += increments;
 
     if (cantEscapeCounter >= CANT_ESCAPE_COUNTER_MAX) {
-      getAgent().exhibitBehavior(new Fight(getAgent(), pursuer));
+      getAgent().exhibitBehavior(new Ai_Fight(getAgent(), pursuer));
     }
 
   }

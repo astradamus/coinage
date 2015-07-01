@@ -9,11 +9,11 @@ import controller.ActorObserver;
  */
 public abstract class Behavior implements ActorObserver {
 
-  private final AIAgent agent;
+  private final AiActorAgent agent;
 
   private boolean complete;
 
-  protected Behavior(AIAgent agent) {
+  protected Behavior(AiActorAgent agent) {
     this.agent = agent;
   }
 
@@ -36,21 +36,21 @@ public abstract class Behavior implements ActorObserver {
 
 
   /**
-   * @return The AIAgent exhibiting this behavior.
+   * @return The AiActorAgent exhibiting this behavior.
    */
-  protected final AIAgent getAgent() {
+  protected final AiActorAgent getAgent() {
     return agent;
   }
 
   /**
-   * @return The actor controlled by the AIAgent exhibiting this behavior.
+   * @return The actor controlled by the AiActorAgent exhibiting this behavior.
    */
   protected final Actor getActor() {
     return agent.getActor();
   }
 
   /**
-   * Mark this behavior as having completed its goals. Allows the AIAgent exhibiting this
+   * Mark this behavior as having completed its goals. Allows the AiActorAgent exhibiting this
    * behavior to discard it and return to an idle state.
    */
   protected final void markComplete() {
@@ -58,7 +58,7 @@ public abstract class Behavior implements ActorObserver {
   }
 
   /**
-   * Check if this behavior has completed its goals. Allows the AIAgent exhibiting this
+   * Check if this behavior has completed its goals. Allows the AiActorAgent exhibiting this
    * behavior to discard it and return to an idle state.
    */
   final boolean getIsComplete() {

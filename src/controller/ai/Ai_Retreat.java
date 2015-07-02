@@ -7,6 +7,7 @@ import game.Direction;
 import game.Game;
 import game.physical.PhysicalFlag;
 import world.Coordinate;
+import world.WorldMapCoordinate;
 
 /**
  * This behavior will make the agent move at full speed away from the given pursuer. The agent
@@ -68,17 +69,20 @@ public class Ai_Retreat extends Behavior {
     else {
 
       final Coordinate actorAt = getActor().getCoordinate();
-      final Coordinate attackerAt = pursuer.getCoordinate();
+      final Coordinate pursuerAt = pursuer.getCoordinate();
+
+      final WorldMapCoordinate actorWMC = Game.getActiveWorld().convertToWorldMapCoordinate(actorAt);
+      final WorldMapCoordinate pursuerWMC = Game.getActiveWorld().convertToWorldMapCoordinate(pursuerAt);
 
 
       // If we are two areas away we've escaped and can stop retreating.
-      if (actorAt.getWorldDistance(attackerAt) >= 2) {
+      if (actorWMC.getDistance(pursuerWMC) >= 2) {
         markComplete();
       }
 
       // Otherwise, run directly away.
       else {
-        final Direction toEscape = attackerAt.getDirectionTo(actorAt);
+        final Direction toEscape = pursuerAt.getDirectionTo(actorAt);
         Routines.turnThenMove(getAgent(), toEscape, false, false);
       }
 
@@ -116,7 +120,7 @@ public class Ai_Retreat extends Behavior {
       final Coordinate actorAt = getActor().getCoordinate();
       final Coordinate attackerAt = pursuer.getCoordinate();
 
-      final boolean pursuerIsClose = actorAt.getGlobalDistance(attackerAt) <= 3;
+      final boolean pursuerIsClose = actorAt.getDistance(attackerAt) <= 3;
 
       if (pursuerIsClose) {
 

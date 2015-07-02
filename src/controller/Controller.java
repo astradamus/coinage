@@ -1,6 +1,7 @@
 package controller;
 
 import world.Area;
+import world.Coordinate;
 
 /**
  * All Controllers registered with GameControllers.addController() will have onUpdate() called every
@@ -25,7 +26,7 @@ public interface Controller {
   /**
    * Non-local controllers should return null.
    */
-  default Area getLocality() {
+  default Coordinate getLocality() {
     return null;
   }
 

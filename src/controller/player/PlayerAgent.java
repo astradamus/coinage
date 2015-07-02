@@ -6,7 +6,7 @@ import controller.action.Action;
 import controller.action.ActionFlag;
 import game.Game;
 import utils.Dimension;
-import world.Area;
+import world.Coordinate;
 
 /**
  * ActorAgent that enables movement of an Actor with keyboard input.
@@ -37,7 +37,7 @@ public class PlayerAgent extends ActorAgent {
   }
 
   @Override
-  public Area getLocality() {
+  public Coordinate getLocality() {
     return null;  // PlayerAgents are non-local.
   }
 

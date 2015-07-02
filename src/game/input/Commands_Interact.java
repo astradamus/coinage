@@ -36,7 +36,7 @@ public enum Commands_Interact implements Command {
       final Coordinate playerTarget = Game.getActiveInputSwitch().getPlayerTarget();
       final Integer playerSelection = Game.getActiveInputSwitch().getPlayerSelection();
 
-      final Physical selected = playerTarget.getSquare().getAll().get(playerSelection);
+      final Physical selected = Game.getActiveWorld().getSquare(playerTarget).getAll().get(playerSelection);
 
       playerActor.attemptAction(new PickingUp(playerActor,
           Game.getActiveInputSwitch().getPlayerTarget(), selected));

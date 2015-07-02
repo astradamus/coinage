@@ -7,7 +7,9 @@ import controller.action.TurnThenMove;
 import controller.action.Turning;
 import controller.player.PlayerAgent;
 import game.Direction;
+import game.Game;
 import game.physical.Physical;
+import world.AreaCoordinate;
 import world.Coordinate;
 
 import java.awt.event.KeyListener;
@@ -211,7 +213,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
       coordinateSelector = null;
     }
     else if (physicalSelector != null) {
-      physicalSelector.execute(targetCursor.getTarget().getSquare().getAll()
+      physicalSelector.execute(Game.getActiveWorld().getSquare(targetCursor.getTarget()).getAll()
           .get(targetCursor.getListSelectIndex()));
       physicalSelector = null;
     }

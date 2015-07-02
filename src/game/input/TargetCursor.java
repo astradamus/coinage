@@ -3,7 +3,10 @@ package game.input;
 import game.Direction;
 import game.Game;
 import utils.Utils;
+import world.Area;
+import world.AreaCoordinate;
 import world.Coordinate;
+import world.World;
 
 /**
  *
@@ -43,9 +46,7 @@ public class TargetCursor {
   }
 
   public static TargetCursor makeSquareAndListTargeter(Coordinate targetOrigin, Integer areaRange) {
-
-    return new TargetCursor(targetOrigin, areaRange, targetOrigin.getSquare().getAll().size());
-
+    return new TargetCursor(targetOrigin, areaRange, Game.getActiveWorld().getSquare(targetOrigin).getAll().size());
   }
 
 
@@ -56,26 +57,25 @@ public class TargetCursor {
     }
     else if (target != null && cursorMovingIn != null) {
 
-      Coordinate playerAt = Game.getActivePlayerActor().getCoordinate();
+      final World world = Game.getActiveWorld();
 
-      int relativeX = (target.globalX - playerAt.globalX) + cursorMovingIn.relativeX;
-      int relativeY = (target.globalY - playerAt.globalY) + cursorMovingIn.relativeY;
+      int relativeX = (target.globalX - areaOrigin.globalX) + cursorMovingIn.relativeX;
+      int relativeY = (target.globalY - areaOrigin.globalY) + cursorMovingIn.relativeY;
 
       if (areaRange != null) {
         relativeX = Utils.clamp(relativeX,-areaRange,+areaRange);
         relativeY = Utils.clamp(relativeY,-areaRange,+areaRange);
       }
 
-      Coordinate movingTo = Game.getActiveWorld()
-          .offsetCoordinateBySquares(playerAt,relativeX,relativeY);
+      Coordinate movingTo = areaOrigin.offset(relativeX, relativeY);
 
-      if (movingTo != null && areaOrigin.area == movingTo.area) {
+      if (movingTo != null) {
         target = movingTo;
         moveDelay = 2;
 
         if (listSelectLength != null) {
           // if we're also targeting a list...
-          listSelectLength = target.getSquare().getAll().size();
+          listSelectLength = world.getSquare(target).getAll().size();
           listSelectIndex = 0;
         }
       }

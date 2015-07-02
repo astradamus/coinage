@@ -1,6 +1,7 @@
 package controller.action;
 
 import actor.Actor;
+import game.Game;
 import game.display.Event;
 import game.display.EventLog;
 import game.physical.Physical;
@@ -37,7 +38,7 @@ public class Placing extends Action {
   @Override
   protected boolean validate() {
 
-    if (getTarget().getSquare().isBlocked()) {
+    if (Game.getActiveWorld().getSquare(getTarget()).isBlocked()) {
       EventLog.registerEvent(Event.INVALID_ACTION, "There's no room there.");
       return false;
     }
@@ -60,7 +61,7 @@ public class Placing extends Action {
   @Override
   protected void apply() {
     getActor().getInventory().removeItem(placingWhat);
-    getTarget().getSquare().put(placingWhat);
+    Game.getActiveWorld().getSquare(getTarget()).put(placingWhat);
   }
 
 }

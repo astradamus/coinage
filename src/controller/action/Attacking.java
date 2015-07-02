@@ -58,7 +58,7 @@ public class Attacking extends Action {
     if (intendedVictim != null && !intendedVictim.hasFlag(PhysicalFlag.DEAD)) {
 
       final boolean intendedVictimHasMoved =
-          !getTarget().getSquare().getAll().contains(intendedVictim);
+          !Game.getActiveWorld().getSquare(getTarget()).getAll().contains(intendedVictim);
 
       if (!intendedVictimHasMoved) {
         // Our intended victim is right where we want them.
@@ -147,7 +147,7 @@ public class Attacking extends Action {
    */
   private  Actor getLiveTargetAt(Coordinate coordinate) {
 
-    final Physical targetPhysical = coordinate.getSquare().getAll().get(0);
+    final Physical targetPhysical = Game.getActiveWorld().getSquare(coordinate).getAll().get(0);
     if (!targetPhysical.hasFlag(PhysicalFlag.DEAD) && targetPhysical.getClass() == Actor.class) {
       return (Actor) targetPhysical;
     }

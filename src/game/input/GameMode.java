@@ -126,8 +126,8 @@ public enum GameMode {
           DisplayElement.MINIMAP,
           DisplayElement.CONTROL_ESCAPE,
           DisplayElement.makeCurrentPrompt(),
-          DisplayElement.makePhysicalsList(Game.getActiveInputSwitch()
-                                              .getPlayerTarget().getSquare().getAll(), false),
+          DisplayElement.makePhysicalsList(Game.getActiveWorld().getSquare(Game.getActiveInputSwitch()
+              .getPlayerTarget()).getAll(), false),
           DisplayElement.makeControlsList(getModeCommands(), 1)
       );
     }
@@ -167,7 +167,7 @@ public enum GameMode {
       // If there is a target, create an element for the physicals there.
       Coordinate playerTarget = Game.getActiveInputSwitch().getPlayerTarget();
       DisplayElement_Text physicalsAtTarget = (playerTarget == null) ? null :
-          DisplayElement.makePhysicalsList(playerTarget.getSquare().getAll(),true);
+          DisplayElement.makePhysicalsList(Game.getActiveWorld().getSquare(playerTarget).getAll(),true);
 
       return Arrays.asList(
           DisplayElement.MINIMAP,

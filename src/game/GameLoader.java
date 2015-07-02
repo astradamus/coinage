@@ -41,7 +41,7 @@ public class GameLoader {
     World world = WorldFactory.standardGeneration(areaSizeInSquares, worldSizeInAreas);
 
     // populate with animals and a Human for the player to control
-    GameControllers gameControllers = new GameControllers(world.getAllAreas());
+    GameControllers gameControllers = new GameControllers(world);
 
     for (int i = 0; i < 600; i++) {
       String id;
@@ -57,7 +57,7 @@ public class GameLoader {
         Square square;
         do {
           randomCoordinate = world.makeRandomCoordinate();
-          square = randomCoordinate.getSquare();
+          square = world.getSquare(randomCoordinate);
         } while (square.isBlocked());
         square.put(actor);
         actor.setCoordinate(randomCoordinate);
@@ -74,11 +74,14 @@ public class GameLoader {
     Coordinate playerStartCoordinate = world.makeRandomCoordinate();
     player.setCoordinate(playerStartCoordinate);
 
-    playerStartCoordinate.getSquare().put(player);
+    world.getSquare(playerStartCoordinate).put(player);
 
     // assign the Human to a PlayerAgent and addController it
     PlayerAgent playerController = new PlayerAgent(player,worldSizeInAreas);
-    playerController.getWorldMapRevealedComponent().setAreaIsRevealed(playerStartCoordinate);
+//    playerController.getWorldMapRevealedComponent().setAreaIsRevealed(playerStartCoordinate);
+    // todo Temporarily broken. Need to have init function separate from constructor so these
+    // construction-ordering-crashes stop happening. Link everything up first then start it all
+    // with a call.
 
     gameControllers.addController(playerController);
 

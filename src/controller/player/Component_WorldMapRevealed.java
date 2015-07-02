@@ -1,7 +1,9 @@
 package controller.player;
 
+import game.Game;
 import utils.Dimension;
 import world.Coordinate;
+import world.WorldMapCoordinate;
 
 public class Component_WorldMapRevealed {
 
@@ -13,11 +15,13 @@ public class Component_WorldMapRevealed {
 
 
   public boolean getAreaIsRevealed(Coordinate coordinate) {
-    return worldMapRevealed[coordinate.worldY][coordinate.worldX];
+    WorldMapCoordinate worldMapCoordinate = Game.getActiveWorld().convertToWorldMapCoordinate(coordinate);
+    return worldMapRevealed[worldMapCoordinate.worldAreasY][worldMapCoordinate.worldAreasX];
   }
 
   public void setAreaIsRevealed(Coordinate coordinate) {
-    worldMapRevealed[coordinate.worldY][coordinate.worldX] = true;
+    WorldMapCoordinate worldMapCoordinate = Game.getActiveWorld().convertToWorldMapCoordinate(coordinate);
+    worldMapRevealed[worldMapCoordinate.worldAreasY][worldMapCoordinate.worldAreasX] = true;
   }
 
 }

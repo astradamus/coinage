@@ -5,6 +5,7 @@ import game.Direction;
 import game.Game;
 import game.TimeMode;
 import game.physical.Appearance;
+import world.AreaCoordinate;
 import world.Coordinate;
 
 import java.awt.AlphaComposite;
@@ -31,7 +32,7 @@ public class ActionOverlay {
 
     // Draw an overlay on actors indicating the direction they are facing.
     Set<Actor> localActors = Game.getActiveControllers()
-        .getActorsInArea(playerActor.getCoordinate().area);
+        .getActorsInArea(Game.getActiveWorld().getArea(playerActor.getCoordinate()));
 
     localActors.add(playerActor);
 
@@ -55,13 +56,13 @@ public class ActionOverlay {
 
     g.setColor(actor.getColor());
 
-    Coordinate actorAt = actor.getCoordinate();
+    AreaCoordinate actorAt = Game.getActiveWorld().convertToAreaCoordinate(actor.getCoordinate());
 
     int[] drawX = new int[6];
     int[] drawY = new int[6];
 
-    int originX = actorAt.localX * SQUARE_SIZE;
-    int originY = actorAt.localY * SQUARE_SIZE;
+    int originX = actorAt.areaX * SQUARE_SIZE;
+    int originY = actorAt.areaY * SQUARE_SIZE;
 
     Point[] points = new Point[] {
       getOffsetFor(facing.getLeftNeighbor(),0),
@@ -87,14 +88,14 @@ public class ActionOverlay {
   private static void drawActionIndicator(Graphics2D g, Actor actor) {
 
     Color color = actor.getActionIndicatorColor();
-    Coordinate target = actor.getActionTarget();
-    if (target != null) {
+    AreaCoordinate actionTarget = Game.getActiveWorld().convertToAreaCoordinate(actor.getActionTarget());
+    if (actionTarget != null) {
 
 
       int actionDelay = actor.getTotalActionDelay()+1;
 
-      int drawX = target.localX * SQUARE_SIZE;
-      int drawY = target.localY * SQUARE_SIZE;
+      int drawX = actionTarget.areaX * SQUARE_SIZE;
+      int drawY = actionTarget.areaY * SQUARE_SIZE;
 
       char character = '+';
 

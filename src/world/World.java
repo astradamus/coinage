@@ -32,42 +32,8 @@ public class World {
 
   }
 
-  private Coordinate makeCoordinate(int globalX, int globalY) {
-    if (!globalSizeInSquares.getCoordinateIsWithinBounds(globalX,globalY)) {
-      return null;
-    }
-
-    final int worldX = globalX / areaSizeInSquares.getWidth();
-    final int worldY = globalY / areaSizeInSquares.getHeight();
-
-    final Area area = areas[worldY][worldX];
-
-    final int localX = globalX % areaSizeInSquares.getWidth();
-    final int localY = globalY % areaSizeInSquares.getHeight();
-
-    return new Coordinate(globalX,globalY,worldX,worldY,area,localX,localY);
-  }
-
-  public Coordinate offsetCoordinateBySquares(Coordinate coordinate, int offX, int offY) {
-
-    final int globalX = coordinate.globalX + offX;
-    final int globalY = coordinate.globalY + offY;
-
-    return makeCoordinate(globalX, globalY);
-
-  }
-
-  public Coordinate offsetCoordinateByAreas(Coordinate coordinate, int offX, int offY) {
-
-    final int globalX = coordinate.globalX + offX * areaSizeInSquares.getWidth();
-    final int globalY = coordinate.globalY + offY * areaSizeInSquares.getHeight();
-
-    return makeCoordinate(globalX, globalY);
-
-  }
-
   public Coordinate makeRandomCoordinate() {
-    return makeCoordinate(Game.RANDOM.nextInt(globalSizeInSquares.getWidth()),
+    return new Coordinate(Game.RANDOM.nextInt(globalSizeInSquares.getWidth()),
                           Game.RANDOM.nextInt(globalSizeInSquares.getHeight()));
   }
 
@@ -84,13 +50,14 @@ public class World {
     return all;
   }
 
-  public Set<Area> getAllAreasWithinRange(Coordinate center, int radius) {
+  public Set<Area> getAllAreasWithinRange(Coordinate target, int radius) {
+    final WorldMapCoordinate worldTarget = convertToWorldMapCoordinate(target);
     Set<Area> all = new HashSet<>();
-    for(int y = center.worldY - radius; y <= center.worldY+radius; y++) {
+    for(int y = worldTarget.worldAreasY - radius; y <= worldTarget.worldAreasY+radius; y++) {
       if (y < 0 || y >= worldSizeInAreas.getHeight()) {
         continue;
       }
-      for(int x = center.worldX - radius; x <= center.worldX+radius; x++) {
+      for(int x = worldTarget.worldAreasX - radius; x <= worldTarget.worldAreasX+radius; x++) {
         if (x < 0 || x >= worldSizeInAreas.getWidth()) {
           continue;
         }
@@ -100,6 +67,57 @@ public class World {
       }
     }
     return all;
+  }
+
+  public WorldMapCoordinate convertToWorldMapCoordinate(Coordinate coordinate) {
+    return new WorldMapCoordinate(coordinate.globalX/areaSizeInSquares.getWidth(), coordinate.globalY/areaSizeInSquares.getHeight());
+  }
+
+  public AreaCoordinate convertToAreaCoordinate(Coordinate coordinate) {
+    if (coordinate == null) {
+      return null;
+    }
+    return new AreaCoordinate(coordinate.globalX%areaSizeInSquares.getWidth(),
+        coordinate.globalY%areaSizeInSquares.getHeight());
+  }
+
+  public Area getArea(Coordinate coordinate) {
+    if (coordinate == null) {
+      return null;
+    }
+
+    try {
+      final WorldMapCoordinate worldMapCoordinate = convertToWorldMapCoordinate(coordinate);
+      return areas[worldMapCoordinate.worldAreasY][worldMapCoordinate.worldAreasX];
+    } catch (IndexOutOfBoundsException iob) {
+      return null; // Target is not valid.
+    }
+  }
+
+  public Square getSquare(Coordinate coordinate) {
+    if (coordinate == null) {
+      return null;
+    }
+
+    try {
+      final AreaCoordinate areaCoordinate = convertToAreaCoordinate(coordinate);
+      final Area area = getArea(coordinate);
+      if (area==null) {return null;}
+      return area.getSquare(areaCoordinate);
+    } catch (IndexOutOfBoundsException iob) {
+      return null; // Target is not valid.
+    }
+  }
+
+  public AreaCoordinate offsetAreaCoordinate(AreaCoordinate areaCoordinate, int offX, int offY) {
+    final AreaCoordinate offset = new AreaCoordinate(areaCoordinate.areaX+offX,areaCoordinate
+        .areaY+offY);
+    if (areaSizeInSquares.getCoordinateIsWithinBounds(offset.areaX, offset.areaY)) {
+      return offset;
+    }
+    else {
+      return null;
+    }
   }
 
 }

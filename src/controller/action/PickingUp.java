@@ -1,6 +1,7 @@
 package controller.action;
 
 import actor.Actor;
+import game.Game;
 import game.display.Event;
 import game.display.EventLog;
 import game.physical.Physical;
@@ -43,7 +44,7 @@ public class PickingUp extends Action {
       return false;
     }
 
-    boolean itemIsAtTarget = getTarget().getSquare().getAll().contains(pickingUpWhat);
+    boolean itemIsAtTarget = Game.getActiveWorld().getSquare(getTarget()).getAll().contains(pickingUpWhat);
 
     if (!itemIsAtTarget) {
       EventLog.registerEvent(Event.INVALID_ACTION,
@@ -59,7 +60,7 @@ public class PickingUp extends Action {
    */
   @Override
   protected void apply() {
-    getTarget().getSquare().pull(pickingUpWhat);
+    Game.getActiveWorld().getSquare(getTarget()).pull(pickingUpWhat);
     getActor().getInventory().addItem(pickingUpWhat);
   }
 

@@ -2,7 +2,10 @@ package game.display;
 
 import game.Game;
 import game.physical.Appearance;
+import utils.Dimension;
+import world.Area;
 import world.Coordinate;
+import world.World;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -34,7 +37,9 @@ public class DisplayElement_MiniMap implements DisplayElement {
   @Override
   public void drawTo(Graphics g, int originX, int originY, int width) {
 
+    final World world = Game.getActiveWorld();
     Coordinate playerAt = Game.getActivePlayerActor().getCoordinate();
+    final Dimension areaSizeInSquares = world.getAreaSizeInSquares();
 
     // draw the zone of Areas surrounding the player's current area, using a blank 'unknown'
     //   token for Areas that have not yet been explored by the player, and skipping any null Areas
@@ -42,10 +47,11 @@ public class DisplayElement_MiniMap implements DisplayElement {
     for (int y = 0; y < SIZE_IN_SQUARES; y++) {
       for (int x = 0; x < SIZE_IN_SQUARES; x++) {
 
-        Coordinate thisCoordinate = Game.getActiveWorld().offsetCoordinateByAreas
-            (playerAt, x - MAP_RADIUS_SQUARES, y - MAP_RADIUS_SQUARES);
+        final Coordinate thisCoordinate = playerAt.offset((x-MAP_RADIUS_SQUARES) * areaSizeInSquares.getWidth() ,
+            (y-MAP_RADIUS_SQUARES) * areaSizeInSquares.getHeight());
+        final Area area = world.getArea(thisCoordinate);
 
-        if (thisCoordinate == null) {
+        if (area == null) {
           continue; // skip null areas
         }
 
@@ -58,7 +64,7 @@ public class DisplayElement_MiniMap implements DisplayElement {
         boolean areaIsRevealed = Game.getActiveWorldMapAreaIsRevealed(thisCoordinate);
 
         if (areaIsRevealed) {
-          appearance = thisCoordinate.area.getBiome().worldMapAppearance;
+          appearance = area.getBiome().worldMapAppearance;
         } else {
           appearance = MAP_UNEXPLORED_SQUARE;
         }
@@ -67,7 +73,7 @@ public class DisplayElement_MiniMap implements DisplayElement {
         SquareDrawer.drawSquare(g, appearance, SQUARE_SIZE, placeX, placeY);
 
         // draw a selection symbol over the area occupied by the player
-        if (playerAt.area == thisCoordinate.area) {
+        if (world.getArea(playerAt) == area) {
           SquareDrawer.drawOval(g, GameDisplay.CURSOR, SQUARE_SIZE, placeX, placeY);
         }
 

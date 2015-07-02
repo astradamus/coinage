@@ -1,7 +1,10 @@
 package actor.attribute;
 
 import game.Direction;
+import game.Game;
 import world.Coordinate;
+import world.World;
+import world.WorldMapCoordinate;
 
 /**
  *
@@ -17,7 +20,7 @@ public class Perception {
                                           Coordinate from, Coordinate to) {
 
     final int visionRange = perceptionRank.ordinal()*2;
-    final int globalDistance = from.getGlobalDistance(to);
+    final int globalDistance = from.getDistance(to);
 
     if (globalDistance <= visionRange) {
 
@@ -44,7 +47,7 @@ public class Perception {
   public static boolean getCanHearLocation(Rank perceptionRank, Coordinate from, Coordinate to) {
 
     final int hearingRange = perceptionRank.ordinal();
-    final int globalDistance = from.getGlobalDistance(to);
+    final int globalDistance = from.getDistance(to);
 
     return (globalDistance <= hearingRange);
 
@@ -60,8 +63,12 @@ public class Perception {
    */
   public static boolean getCanTrackLocation(Rank perceptionRank, Coordinate from, Coordinate to) {
 
+    World world = Game.getActiveWorld();
+    WorldMapCoordinate fromWMC = world.convertToWorldMapCoordinate(from);
+    WorldMapCoordinate toWMC = world.convertToWorldMapCoordinate(to);
+
     final int trackingRange = Math.max(1, perceptionRank.ordinal() / 4);
-    final int worldDistance = from.getWorldDistance(to);
+    final int worldDistance = fromWMC.getDistance(toWMC);
 
     return (worldDistance <= trackingRange);
 

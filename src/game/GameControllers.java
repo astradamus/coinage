@@ -6,6 +6,7 @@ import controller.Controller;
 import game.physical.PhysicalFlag;
 import world.Area;
 import world.Coordinate;
+import world.World;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,11 +26,14 @@ public class GameControllers {
   public static final int CONTROLLER_PROCESS_RADIUS = 10;
 
 
+  private final World world;
+
   private final Map<Area,Set<Controller>> controllerLocations = new HashMap<>();
   private Set<Area> activeAreas = null;
 
-  public GameControllers(Set<Area> allAreas) {
-    allAreas.forEach(area -> controllerLocations.put(area, new HashSet<>()));
+  public GameControllers(World world) {
+    this.world = world;
+    world.getAllAreas().forEach(area -> controllerLocations.put(area, new HashSet<>()));
     controllerLocations.put(null, new HashSet<>()); // null contains non-local controllers
   }
 
@@ -45,12 +49,12 @@ public class GameControllers {
 
   public void addController(Controller controller) {
     NEXT_CONTROLLERS.add(controller);
-    controllerLocations.get(controller.getLocality()).add(controller);
+    controllerLocations.get(world.getArea(controller.getLocality())).add(controller);
   }
 
   public void removeController(Controller controller) {
     DEAD_CONTROLLERS.add(controller);
-    controllerLocations.get(controller.getLocality()).remove(controller);
+    controllerLocations.get(world.getArea(controller.getLocality())).remove(controller);
   }
 
 
@@ -73,7 +77,7 @@ public class GameControllers {
     // Get all active controllers that are still in processing range. By doing this we avoid
     // the complex task of removing controllers from ACTIVE on the fly, as they or the range move.
     List<Controller> activeAndInRange = ACTIVE_CONTROLLERS.stream()
-        .filter(active -> activeAreas.contains(active.getLocality()))
+        .filter(active -> activeAreas.contains(world.getArea(active.getLocality())))
         .collect(Collectors.toList());
 
 
@@ -106,7 +110,7 @@ public class GameControllers {
   private void calculateActiveAreasAndControllers() {
     Coordinate playerAt = Game.getActivePlayerActor().getCoordinate();
     activeAreas
-        = Game.getActiveWorld().getAllAreasWithinRange(playerAt, CONTROLLER_PROCESS_RADIUS);
+        = world.getAllAreasWithinRange(playerAt, CONTROLLER_PROCESS_RADIUS);
     activeAreas.add(null); // Null contains non-local controllers. Always process it!
 
     for (Area area : activeAreas) {
@@ -146,7 +150,8 @@ public class GameControllers {
 
     // If the player is here and alive, include them in the return.
     final Actor playerActor = Game.getActivePlayerActor();
-    if (!playerActor.hasFlag(PhysicalFlag.DEAD) && playerActor.getCoordinate().area == area) {
+    if (!playerActor.hasFlag(PhysicalFlag.DEAD)
+        && world.getArea(playerActor.getCoordinate()) == area) {
       set.add(playerActor);
     }
 

@@ -5,6 +5,8 @@ import actor.attribute.Attribute;
 import game.Direction;
 import game.Game;
 import game.physical.PhysicalFlag;
+import world.Square;
+import world.World;
 
 import java.awt.Color;
 
@@ -30,9 +32,7 @@ public class Moving extends Action {
   private final boolean isWalking;
 
   public Moving(Actor actor, Direction movingIn, boolean isWalking) {
-    super(actor,
-        Game.getActiveWorld().offsetCoordinateBySquares(
-            actor.getCoordinate(), movingIn.relativeX, movingIn.relativeY));
+    super(actor, actor.getCoordinate().offset(movingIn.relativeX, movingIn.relativeY));
     this.movingIn = movingIn;
     this.isWalking = isWalking;
   }
@@ -103,8 +103,9 @@ public class Moving extends Action {
   @Override
   protected boolean validate() {
 
-    final boolean targetIsBlocked = getTarget() == null || getTarget().getSquare().isBlocked();
-    final boolean performerHasNotMoved = !getOrigin().getSquare().getAll().contains(getActor());
+    final Square square = Game.getActiveWorld().getSquare(getTarget());
+    final boolean targetIsBlocked = square == null || square.isBlocked();
+    final boolean performerHasNotMoved = !Game.getActiveWorld().getSquare(getOrigin()).getAll().contains(getActor());
 
     return !targetIsBlocked && !performerHasNotMoved;
 
@@ -118,13 +119,15 @@ public class Moving extends Action {
   @Override
   protected void apply() {
 
+    final World world = Game.getActiveWorld();
+
     final Actor performerActor = getActor();
 
-    getOrigin().getSquare().pull(performerActor);
-    getTarget().getSquare().put(performerActor);
+    world.getSquare(getOrigin()).pull(performerActor);
+    world.getSquare(getTarget()).put(performerActor);
     performerActor.setCoordinate(getTarget());
 
-    if (getOrigin().area != getTarget().area) {
+    if (world.getArea(getOrigin()) != world.getArea(getTarget())) {
       addFlag(ActionFlag.ACTOR_CHANGED_AREA);
     }
 

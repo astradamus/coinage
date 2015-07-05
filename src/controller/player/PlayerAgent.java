@@ -5,19 +5,22 @@ import controller.ActorAgent;
 import controller.action.Action;
 import controller.action.ActionFlag;
 import game.Game;
-import utils.Dimension;
 import world.Coordinate;
+import world.World;
+import world.MapCoordinate;
 
 /**
  * ActorAgent that enables movement of an Actor with keyboard input.
  */
 public class PlayerAgent extends ActorAgent {
 
+  private final World world;
   private final Component_WorldMapRevealed component_worldMapRevealed;
 
-  public PlayerAgent(Actor actor, Dimension worldSizeInAreas) {
+  public PlayerAgent(Actor actor, World world) {
     super(actor);
-    this.component_worldMapRevealed = new Component_WorldMapRevealed(worldSizeInAreas);
+    this.component_worldMapRevealed = new Component_WorldMapRevealed(world.getWorldSizeInAreas());
+    this.world = world;
   }
 
   @Override
@@ -25,8 +28,11 @@ public class PlayerAgent extends ActorAgent {
 
     // Update WorldMapRevealed component accordingly.
     if (action.hasFlag(ActionFlag.ACTOR_CHANGED_AREA)) {
-      component_worldMapRevealed.setAreaIsRevealed(getActor().getCoordinate());
+
+      MapCoordinate playerAt = world.convertToMapCoordinate(getActor().getCoordinate());
+      component_worldMapRevealed.setAreaIsRevealed(playerAt);
       Game.getActiveControllers().onPlayerChangedArea();
+
     }
 
   }

@@ -3,9 +3,7 @@ package controller.action;
 import actor.Actor;
 import actor.attribute.Attribute;
 import game.Direction;
-import game.Game;
 import game.physical.PhysicalFlag;
-import world.Square;
 import world.World;
 
 import java.awt.Color;
@@ -101,13 +99,16 @@ public class Moving extends Action {
    * before completing the movement.
    */
   @Override
-  protected boolean validate() {
+  protected boolean validate(World world) {
 
-    final Square square = Game.getActiveWorld().getSquare(getTarget());
-    final boolean targetIsBlocked = square == null || square.isBlocked();
-    final boolean performerHasNotMoved = !Game.getActiveWorld().getSquare(getOrigin()).getAll().contains(getActor());
+    if (!world.validateCoordinate(getTarget())) {
+      return false;
+    }
 
-    return !targetIsBlocked && !performerHasNotMoved;
+    final boolean targetIsBlocked = world.getSquare(getTarget()).isBlocked();
+    final boolean performerHasMoved = !world.getSquare(getOrigin()).getAll().contains(getActor());
+
+    return !targetIsBlocked && !performerHasMoved;
 
   }
 
@@ -117,9 +118,7 @@ public class Moving extends Action {
    * ACTOR_CHANGED_AREA} flag.
    */
   @Override
-  protected void apply() {
-
-    final World world = Game.getActiveWorld();
+  protected void apply(World world) {
 
     final Actor performerActor = getActor();
 

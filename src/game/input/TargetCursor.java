@@ -1,10 +1,7 @@
 package game.input;
 
 import game.Direction;
-import game.Game;
 import utils.Utils;
-import world.Area;
-import world.AreaCoordinate;
 import world.Coordinate;
 import world.World;
 
@@ -12,6 +9,8 @@ import world.World;
  *
  */
 public class TargetCursor {
+
+  private final World world;
 
   private final Coordinate areaOrigin;
   private final Integer areaRange;
@@ -23,7 +22,8 @@ public class TargetCursor {
   private Coordinate target = null;
   private Integer listSelectIndex = null;
 
-  private TargetCursor(Coordinate areaOrigin, Integer areaRange, Integer listSelectLength) {
+  private TargetCursor(World world, Coordinate areaOrigin, Integer areaRange, Integer listSelectLength) {
+    this.world = world;
     this.areaOrigin = areaOrigin;
     this.target = areaOrigin;
     this.areaRange = areaRange;
@@ -33,20 +33,16 @@ public class TargetCursor {
     }
   }
 
-  public static TargetCursor makeSquareTargeter(Coordinate targetOrigin, Integer areaRange) {
-
-    return new TargetCursor(targetOrigin, areaRange, null);
-
+  public static TargetCursor makeSquareTargeter(World world, Coordinate targetOrigin, Integer areaRange) {
+    return new TargetCursor(world, targetOrigin, areaRange, null);
   }
 
-  public static TargetCursor makeListTargeter(Integer listSelectLength) {
-
-    return new TargetCursor(null, null, listSelectLength);
-
+  public static TargetCursor makeListTargeter(World world, Integer listSelectLength) {
+    return new TargetCursor(world, null, null, listSelectLength);
   }
 
-  public static TargetCursor makeSquareAndListTargeter(Coordinate targetOrigin, Integer areaRange) {
-    return new TargetCursor(targetOrigin, areaRange, Game.getActiveWorld().getSquare(targetOrigin).getAll().size());
+  public static TargetCursor makeSquareAndListTargeter(World world, Coordinate targetOrigin, Integer areaRange) {
+    return new TargetCursor(world, targetOrigin, areaRange, world.getSquare(targetOrigin).getAll().size());
   }
 
 
@@ -56,8 +52,6 @@ public class TargetCursor {
       moveDelay--;
     }
     else if (target != null && cursorMovingIn != null) {
-
-      final World world = Game.getActiveWorld();
 
       int relativeX = (target.globalX - areaOrigin.globalX) + cursorMovingIn.relativeX;
       int relativeY = (target.globalY - areaOrigin.globalY) + cursorMovingIn.relativeY;
@@ -69,7 +63,7 @@ public class TargetCursor {
 
       Coordinate movingTo = areaOrigin.offset(relativeX, relativeY);
 
-      if (movingTo != null) {
+      if (movingTo != null && world.validateCoordinate(movingTo)) {
         target = movingTo;
         moveDelay = 2;
 

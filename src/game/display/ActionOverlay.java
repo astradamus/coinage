@@ -32,7 +32,7 @@ public class ActionOverlay {
 
     // Draw an overlay on actors indicating the direction they are facing.
     Set<Actor> localActors = Game.getActiveControllers()
-        .getActorsInArea(Game.getActiveWorld().getArea(playerActor.getCoordinate()));
+        .getActorsInArea(GameDisplay.ACTIVE.getWorld().getArea(playerActor.getCoordinate()));
 
     localActors.add(playerActor);
 
@@ -56,7 +56,7 @@ public class ActionOverlay {
 
     g.setColor(actor.getColor());
 
-    AreaCoordinate actorAt = Game.getActiveWorld().convertToAreaCoordinate(actor.getCoordinate());
+    AreaCoordinate actorAt = GameDisplay.ACTIVE.getWorld().convertToAreaCoordinate(actor.getCoordinate());
 
     int[] drawX = new int[6];
     int[] drawY = new int[6];
@@ -88,14 +88,15 @@ public class ActionOverlay {
   private static void drawActionIndicator(Graphics2D g, Actor actor) {
 
     Color color = actor.getActionIndicatorColor();
-    AreaCoordinate actionTarget = Game.getActiveWorld().convertToAreaCoordinate(actor.getActionTarget());
+    final Coordinate actionTarget = actor.getActionTarget();
     if (actionTarget != null) {
 
+      AreaCoordinate actionTargetAC = GameDisplay.ACTIVE.getWorld().convertToAreaCoordinate(actionTarget);
 
       int actionDelay = actor.getTotalActionDelay()+1;
 
-      int drawX = actionTarget.areaX * SQUARE_SIZE;
-      int drawY = actionTarget.areaY * SQUARE_SIZE;
+      int drawX = actionTargetAC.areaX * SQUARE_SIZE;
+      int drawY = actionTargetAC.areaY * SQUARE_SIZE;
 
       char character = '+';
 

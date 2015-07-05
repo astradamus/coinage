@@ -1,10 +1,8 @@
 package actor.attribute;
 
 import game.Direction;
-import game.Game;
 import world.Coordinate;
-import world.World;
-import world.WorldMapCoordinate;
+import world.MapCoordinate;
 
 /**
  *
@@ -61,14 +59,10 @@ public class Perception {
    * distance--in other words, all actors can track actors in the area they are in and any
    * immediately adjacent to it.
    */
-  public static boolean getCanTrackLocation(Rank perceptionRank, Coordinate from, Coordinate to) {
-
-    World world = Game.getActiveWorld();
-    WorldMapCoordinate fromWMC = world.convertToWorldMapCoordinate(from);
-    WorldMapCoordinate toWMC = world.convertToWorldMapCoordinate(to);
+  public static boolean getCanTrackLocation(Rank perceptionRank, MapCoordinate from, MapCoordinate to) {
 
     final int trackingRange = Math.max(1, perceptionRank.ordinal() / 4);
-    final int worldDistance = fromWMC.getDistance(toWMC);
+    final int worldDistance = from.getDistance(to);
 
     return (worldDistance <= trackingRange);
 

@@ -5,6 +5,7 @@ import controller.action.PickingUp;
 import game.Game;
 import game.physical.Physical;
 import world.Coordinate;
+import world.World;
 
 import java.awt.event.KeyEvent;
 
@@ -27,7 +28,7 @@ public enum Commands_Interact implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(World world) {
 
       Actor playerActor = Game.getActivePlayerActor();
 
@@ -36,7 +37,7 @@ public enum Commands_Interact implements Command {
       final Coordinate playerTarget = Game.getActiveInputSwitch().getPlayerTarget();
       final Integer playerSelection = Game.getActiveInputSwitch().getPlayerSelection();
 
-      final Physical selected = Game.getActiveWorld().getSquare(playerTarget).getAll().get(playerSelection);
+      final Physical selected = world.getSquare(playerTarget).getAll().get(playerSelection);
 
       playerActor.attemptAction(new PickingUp(playerActor,
           Game.getActiveInputSwitch().getPlayerTarget(), selected));

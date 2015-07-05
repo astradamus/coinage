@@ -8,6 +8,7 @@ import thing.WeaponTemplates;
 import utils.Dimension;
 import world.Coordinate;
 import world.World;
+import world.MapCoordinate;
 
 import java.awt.event.KeyListener;
 import java.util.List;
@@ -19,11 +20,12 @@ import java.util.Stack;
  */
 public class Game {
 
+  public static final Random RANDOM = new Random();
+
   public static final int VISUAL_PRIORITY__TERRAIN = 0;
   public static final int VISUAL_PRIORITY__THINGS = 10;
   public static final int VISUAL_PRIORITY__ACTORS = 100;
 
-  public static final Random RANDOM = new Random();
 
   static Game ACTIVE;
 
@@ -61,10 +63,6 @@ public class Game {
     return ACTIVE.INPUT_SWITCH.getPlayerController().getActor();
   }
 
-  public static World getActiveWorld() {
-    return ACTIVE.WORLD;
-  }
-
   public static GameControllers getActiveControllers() {
     return ACTIVE.CONTROLLERS;
   }
@@ -74,8 +72,9 @@ public class Game {
   }
 
   public static boolean getActiveWorldMapAreaIsRevealed(Coordinate coordinate) {
+    MapCoordinate mapCoordinate = ACTIVE.WORLD.convertToMapCoordinate(coordinate);
     return (getActiveInputSwitch().getPlayerController().getWorldMapRevealedComponent()
-        .getAreaIsRevealed(coordinate));
+        .getAreaIsRevealed(mapCoordinate));
   }
 
 
@@ -105,7 +104,9 @@ public class Game {
 
   }
 
-
+  public World getWorld() {
+    return WORLD;
+  }
 
   public static void main(String[] args) {
 

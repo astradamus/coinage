@@ -18,6 +18,7 @@ public class World {
   private final Dimension areaSizeInSquares;
   private final Dimension globalSizeInSquares;
 
+
   World(Area[][] areas, Dimension areaSizeInSquares) {
 
     this.areas = areas;
@@ -38,9 +39,6 @@ public class World {
   }
 
 
-  public Dimension getAreaSizeInSquares() {
-    return areaSizeInSquares;
-  }
 
   public Set<Area> getAllAreas() {
     Set<Area> all = new HashSet<>();
@@ -51,7 +49,7 @@ public class World {
   }
 
   public Set<Area> getAllAreasWithinRange(Coordinate target, int radius) {
-    final WorldMapCoordinate worldTarget = convertToWorldMapCoordinate(target);
+    final MapCoordinate worldTarget = convertToMapCoordinate(target);
     Set<Area> all = new HashSet<>();
     for(int y = worldTarget.worldAreasY - radius; y <= worldTarget.worldAreasY+radius; y++) {
       if (y < 0 || y >= worldSizeInAreas.getHeight()) {
@@ -69,14 +67,40 @@ public class World {
     return all;
   }
 
-  public WorldMapCoordinate convertToWorldMapCoordinate(Coordinate coordinate) {
-    return new WorldMapCoordinate(coordinate.globalX/areaSizeInSquares.getWidth(), coordinate.globalY/areaSizeInSquares.getHeight());
+
+  public Square getSquare(Coordinate coordinate) {
+    try {
+      final Area area = getArea(coordinate);
+      if (area == null) {
+        return null;
+      }
+      return area.getSquare(convertToAreaCoordinate(coordinate));
+    } catch (IndexOutOfBoundsException iob) {
+      return null; // Target is not valid.
+    }
+  }
+
+
+
+  public boolean validateCoordinate(Coordinate coordinate) {
+    return globalSizeInSquares.getCoordinateIsWithinBounds(coordinate.globalX,coordinate.globalY);
+  }
+
+  public Dimension getWorldSizeInAreas() {
+    return worldSizeInAreas;
+  }
+
+  public Dimension getAreaSizeInSquares() {
+    return areaSizeInSquares;
+  }
+
+
+  public MapCoordinate convertToMapCoordinate(Coordinate coordinate) {
+    return new MapCoordinate(coordinate.globalX/areaSizeInSquares.getWidth(),
+        coordinate.globalY/areaSizeInSquares.getHeight());
   }
 
   public AreaCoordinate convertToAreaCoordinate(Coordinate coordinate) {
-    if (coordinate == null) {
-      return null;
-    }
     return new AreaCoordinate(coordinate.globalX%areaSizeInSquares.getWidth(),
         coordinate.globalY%areaSizeInSquares.getHeight());
   }
@@ -85,39 +109,14 @@ public class World {
     if (coordinate == null) {
       return null;
     }
-
     try {
-      final WorldMapCoordinate worldMapCoordinate = convertToWorldMapCoordinate(coordinate);
-      return areas[worldMapCoordinate.worldAreasY][worldMapCoordinate.worldAreasX];
+      final MapCoordinate mapCoordinate = convertToMapCoordinate(coordinate);
+      return areas[mapCoordinate.worldAreasY][mapCoordinate.worldAreasX];
     } catch (IndexOutOfBoundsException iob) {
       return null; // Target is not valid.
     }
   }
 
-  public Square getSquare(Coordinate coordinate) {
-    if (coordinate == null) {
-      return null;
-    }
 
-    try {
-      final AreaCoordinate areaCoordinate = convertToAreaCoordinate(coordinate);
-      final Area area = getArea(coordinate);
-      if (area==null) {return null;}
-      return area.getSquare(areaCoordinate);
-    } catch (IndexOutOfBoundsException iob) {
-      return null; // Target is not valid.
-    }
-  }
-
-  public AreaCoordinate offsetAreaCoordinate(AreaCoordinate areaCoordinate, int offX, int offY) {
-    final AreaCoordinate offset = new AreaCoordinate(areaCoordinate.areaX+offX,areaCoordinate
-        .areaY+offY);
-    if (areaSizeInSquares.getCoordinateIsWithinBounds(offset.areaX, offset.areaY)) {
-      return offset;
-    }
-    else {
-      return null;
-    }
-  }
 
 }

@@ -77,9 +77,9 @@ public class EventLog {
     }
 
 
-    final AreaCoordinate playerAt = Game.getActiveWorld().convertToAreaCoordinate(Game.getActivePlayerActor().getCoordinate());
+    final AreaCoordinate playerAt = GameDisplay.ACTIVE.getWorld().convertToAreaCoordinate(Game.getActivePlayerActor().getCoordinate());
 
-    final Dimension areaSizeInSquares = Game.getActiveWorld().getAreaSizeInSquares();
+    final Dimension areaSizeInSquares = GameDisplay.ACTIVE.getWorld().getAreaSizeInSquares();
 
     final int areaHeight = areaSizeInSquares.getHeight();
 
@@ -121,8 +121,8 @@ public class EventLog {
   }
 
   public static void registerEventIfPlayerIsNear(Coordinate nearTo, Color color, String message) {
-    final Area playerAt = Game.getActiveWorld().getArea(Game.getActivePlayerActor().getCoordinate());
-    if (playerAt == Game.getActiveWorld().getArea(nearTo)) {
+    final Area playerAt = GameDisplay.ACTIVE.getWorld().getArea(Game.getActivePlayerActor().getCoordinate());
+    if (playerAt == GameDisplay.ACTIVE.getWorld().getArea(nearTo)) {
       registerEvent(color, message);
     }
   }

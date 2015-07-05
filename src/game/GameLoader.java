@@ -5,6 +5,7 @@ import actor.ActorFactory;
 import actor.ActorTemplate;
 import controller.ai.AiActorAgent;
 import controller.player.PlayerAgent;
+import game.display.GameDisplay;
 import game.input.GameInputSwitch;
 import thing.ThingTemplate;
 import utils.Dimension;
@@ -61,7 +62,7 @@ public class GameLoader {
         } while (square.isBlocked());
         square.put(actor);
         actor.setCoordinate(randomCoordinate);
-        gameControllers.addController(new AiActorAgent(actor));
+        gameControllers.addController(new AiActorAgent(actor, world));
       }
     }
 
@@ -77,20 +78,19 @@ public class GameLoader {
     world.getSquare(playerStartCoordinate).put(player);
 
     // assign the Human to a PlayerAgent and addController it
-    PlayerAgent playerController = new PlayerAgent(player,worldSizeInAreas);
-//    playerController.getWorldMapRevealedComponent().setAreaIsRevealed(playerStartCoordinate);
-    // todo Temporarily broken. Need to have init function separate from constructor so these
-    // construction-ordering-crashes stop happening. Link everything up first then start it all
-    // with a call.
+    PlayerAgent playerController = new PlayerAgent(player, world);
+    playerController.getWorldMapRevealedComponent().setAreaIsRevealed(world.convertToMapCoordinate(playerStartCoordinate));
 
     gameControllers.addController(playerController);
 
     // set up the GameInputSwitch
-    GameInputSwitch gameInputSwitch = new GameInputSwitch();
+    GameInputSwitch gameInputSwitch = new GameInputSwitch(world);
     gameInputSwitch.setPlayerController(playerController);
 
     // produce Game instance and assign it to ACTIVE
-    Game.ACTIVE = new Game(world, gameControllers, gameInputSwitch);
+    final Game activeGame = new Game(world, gameControllers, gameInputSwitch);
+    Game.ACTIVE = activeGame;
+    GameDisplay.setActiveGame(activeGame);
 
   }
 

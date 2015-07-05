@@ -7,6 +7,7 @@ import actor.stats.Health;
 import controller.ActorObserver;
 import controller.action.Action;
 import game.Direction;
+import game.Executor;
 import game.physical.Physical;
 import game.physical.PhysicalFlag;
 import thing.Thing;
@@ -116,8 +117,12 @@ public class Actor extends Physical {
    *
    * <p>Additionally, regardless of whether an action is performed, the actor's observer will be
    * notified at the very end of this actor's turn.</p>
+   *
+   * @param executor Supplied by {@code GameControllers}, allowing this actor to pass an action
+   *                 upwards for execution, as actors lack the scope/authority to execute their own
+   *                 actions.
    */
-  public final void onUpdate() {
+  public final void onUpdate(Executor executor) {
 
     if (!actionTimer.isReady()) {
       actionTimer.decrementClock();
@@ -125,7 +130,7 @@ public class Actor extends Physical {
     else if (action != null) {
 
       final Action executing = action;
-      final boolean performedSuccessfully = executing.perform();
+      final boolean performedSuccessfully = executor.executeAction(executing);
       actionTimer.addBeatsToCoolDown(action.calcDelayToRecover());
 
       if (performedSuccessfully) {

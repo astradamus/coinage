@@ -1,6 +1,6 @@
 package controller;
 
-import world.Area;
+import game.Executor;
 import world.Coordinate;
 
 /**
@@ -11,7 +11,7 @@ import world.Coordinate;
  */
 public interface Controller {
 
-  void onUpdate();
+  void onUpdate(Executor executor);
 
   /**
    * Called between frames, after the current update() has finished. Determines the order in

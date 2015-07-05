@@ -3,6 +3,7 @@ package game.input;
 
 import game.Game;
 import game.physical.Physical;
+import world.World;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface Command {
   int getHotKeyCode();
   String getControlText();
 
-  void execute();
+  void execute(World world);
 
 
   static Physical getPlayerSelectedPhysical() {

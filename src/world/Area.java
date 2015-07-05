@@ -21,7 +21,7 @@ public final class Area {
     return biome;
   }
 
-  public Square getSquare(AreaCoordinate coordinate) {
+  Square getSquare(AreaCoordinate coordinate) {
     return squares[coordinate.areaY][coordinate.areaX];
   }
 

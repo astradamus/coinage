@@ -37,7 +37,7 @@ public class DisplayElement_MiniMap implements DisplayElement {
   @Override
   public void drawTo(Graphics g, int originX, int originY, int width) {
 
-    final World world = Game.getActiveWorld();
+    final World world = GameDisplay.ACTIVE.getWorld();
     Coordinate playerAt = Game.getActivePlayerActor().getCoordinate();
     final Dimension areaSizeInSquares = world.getAreaSizeInSquares();
 

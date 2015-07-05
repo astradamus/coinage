@@ -3,12 +3,12 @@ package world;
 /**
  *
  */
-public class WorldMapCoordinate {
+public class MapCoordinate {
 
   public final int worldAreasX;
   public final int worldAreasY;
 
-  WorldMapCoordinate(int worldAreasX, int worldAreasY) {
+  MapCoordinate(int worldAreasX, int worldAreasY) {
     this.worldAreasX = worldAreasX;
     this.worldAreasY = worldAreasY;
   }
@@ -16,7 +16,7 @@ public class WorldMapCoordinate {
   /**
    * @return The Chebyshev/"Chessboard" distance between this and another coordinate.
    */
-  public int getDistance(WorldMapCoordinate target) {
+  public int getDistance(MapCoordinate target) {
 
     final int deltaX = Math.abs(this.worldAreasX-target.worldAreasX);
     final int deltaY = Math.abs(this.worldAreasY-target.worldAreasY);

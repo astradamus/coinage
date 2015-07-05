@@ -43,7 +43,7 @@ public class SidePanel extends JPanel {
     int pixelsDown = SP_TOP_EDGE;
 
     List<DisplayElement> displayElements =
-        Game.getActiveInputSwitch().getGameMode().getDisplayElements();
+        Game.getActiveInputSwitch().getGameMode().getDisplayElements(GameDisplay.ACTIVE.getWorld());
 
     for (DisplayElement displayElement : displayElements) {
       if (displayElement == null) {

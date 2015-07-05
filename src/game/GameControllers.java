@@ -3,6 +3,7 @@ package game;
 import actor.Actor;
 import controller.ActorAgent;
 import controller.Controller;
+import controller.action.Action;
 import game.physical.PhysicalFlag;
 import world.Area;
 import world.Coordinate;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  *
  */
-public class GameControllers {
+public class GameControllers implements Executor {
 
   public static final int CONTROLLER_PROCESS_RADIUS = 10;
 
@@ -66,6 +67,13 @@ public class GameControllers {
   private final Set<Controller>  NEXT_CONTROLLERS   = new HashSet<>();
   private final Set<Controller>  DEAD_CONTROLLERS   = new HashSet<>();
 
+
+
+  @Override
+  public boolean executeAction(Action action) {
+    return action.perform(world);
+  }
+
   /**
    * Called every frame by Game.update(). Walks the list of GameControllers (in getRolledInitiative()
    * order). For each, it calls onUpdate() and then sorts the Controller anew into a second list.
@@ -84,7 +92,7 @@ public class GameControllers {
     // First, update each controller, skipping any that are dead.
     activeAndInRange.stream()
         .filter(controller -> !DEAD_CONTROLLERS.contains(controller))
-        .forEach(controller -> controller.onUpdate());
+        .forEach(controller -> controller.onUpdate(this));
 
     if (!playerChangedArea) {
 

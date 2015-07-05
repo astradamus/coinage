@@ -6,6 +6,7 @@ import controller.action.Placing;
 import game.Game;
 import game.physical.Physical;
 import world.Coordinate;
+import world.World;
 
 import java.awt.event.KeyEvent;
 
@@ -26,7 +27,7 @@ public enum Commands_Inventory implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(World world) {
 
       final Physical equipping = Command.getPlayerSelectedPhysical();
 
@@ -55,7 +56,7 @@ public enum Commands_Inventory implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(World world) {
 
 
       final Physical placing = Command.getPlayerSelectedPhysical();

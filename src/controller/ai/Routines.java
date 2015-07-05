@@ -91,7 +91,7 @@ public class Routines {
    */
   public static void performSensoryScan(AiActorAgent agent) {
 
-    final Area area = agent.getLocality();
+    final Area area = agent.getWorld().getArea(agent.getLocality());
 
     final Actor actor = agent.getActor();
     final Coordinate actorAt = actor.getCoordinate();

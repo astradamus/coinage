@@ -3,6 +3,7 @@ package game.display;
 
 import game.Game;
 import game.physical.Appearance;
+import world.World;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -21,6 +22,7 @@ public class GameDisplay {
 
   public static final int SQUARE_SIZE = 20;
 
+  static Game ACTIVE;
 
   private static AreaPanel PANEL_AREA = new AreaPanel();
   private static SidePanel PANEL_SIDE = new SidePanel();
@@ -42,8 +44,9 @@ public class GameDisplay {
   };
 
   public static void recalculateSize() {
-    int areaPanelWidth = (Game.getActiveWorld().getAreaSizeInSquares().getWidth() +1)*SQUARE_SIZE;
-    int areaPanelHeight = (Game.getActiveWorld().getAreaSizeInSquares().getHeight() +1)*SQUARE_SIZE;
+    World world = ACTIVE.getWorld();
+    int areaPanelWidth = (world.getAreaSizeInSquares().getWidth() +1)*SQUARE_SIZE;
+    int areaPanelHeight = (world.getAreaSizeInSquares().getHeight() +1)*SQUARE_SIZE;
 
     int sidePanelWidth = SidePanel.SP_SQUARES_WIDE * SidePanel.SP_SQUARE_SIZE;
 
@@ -62,4 +65,7 @@ public class GameDisplay {
     WINDOW.addKeyListener(keyListener);
   }
 
+  public static void setActiveGame(Game activeGame) {
+    GameDisplay.ACTIVE = activeGame;
+  }
 }

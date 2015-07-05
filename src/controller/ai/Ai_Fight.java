@@ -14,6 +14,8 @@ import game.display.Event;
 import game.display.EventLog;
 import game.physical.PhysicalFlag;
 import world.Coordinate;
+import world.MapCoordinate;
+import world.World;
 
 /**
  * This behavior will make the agent engage in combat with the given victim. The agent will
@@ -84,10 +86,14 @@ public class Ai_Fight extends Behavior {
 
         else {
 
+          final World world = getAgent().getWorld();
+
           final Rank perception = getActor().getAttributeRank(Attribute.PERCEPTION);
+          final MapCoordinate actorMC = world.convertToMapCoordinate(actorAt);
+          final MapCoordinate enemyMC = world.convertToMapCoordinate(enemyAt);
 
           // If we can track our enemy, pursue them and continue the fight.
-          if (Perception.getCanTrackLocation(perception, actorAt, enemyAt)) {
+          if (Perception.getCanTrackLocation(perception, actorMC, enemyMC)) {
             Routines.approachOneStep(getAgent(), enemyAt);
           }
 

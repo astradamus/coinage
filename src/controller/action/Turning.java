@@ -2,6 +2,7 @@ package controller.action;
 
 import actor.Actor;
 import game.Direction;
+import world.World;
 
 /**
  * Actors perform turns to change their facing direction. Actors can only turn one direction
@@ -23,7 +24,7 @@ public class Turning extends Action {
    * Turning cannot currently fail.
    */
   @Override
-  protected boolean validate() {
+  protected boolean validate(World world) {
     return true;
   }
 
@@ -31,7 +32,7 @@ public class Turning extends Action {
    * Turn the actor one direction grade towards the target direction.
    */
   @Override
-  protected void apply() {
+  protected void apply(World world) {
 
     final Direction actorFacing = getActor().getFacing();
 

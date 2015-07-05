@@ -3,6 +3,8 @@ package game.display;
 import game.Game;
 import utils.Dimension;
 import utils.Utils;
+import world.Area;
+import world.AreaCoordinate;
 import world.Coordinate;
 
 import java.awt.AlphaComposite;
@@ -75,14 +77,14 @@ public class EventLog {
     }
 
 
-    final Coordinate playerAt = Game.getActivePlayerActor().getCoordinate();
+    final AreaCoordinate playerAt = GameDisplay.ACTIVE.getWorld().convertToAreaCoordinate(Game.getActivePlayerActor().getCoordinate());
 
-    final Dimension areaSizeInSquares = Game.getActiveWorld().getAreaSizeInSquares();
+    final Dimension areaSizeInSquares = GameDisplay.ACTIVE.getWorld().getAreaSizeInSquares();
 
     final int areaHeight = areaSizeInSquares.getHeight();
 
 
-    boolean drawingTop = (playerAt.localY > areaHeight * TOP_OR_BOTTOM_SWAP_LINE);
+    boolean drawingTop = (playerAt.areaY > areaHeight * TOP_OR_BOTTOM_SWAP_LINE);
 
     int linesTall = getLinesTall();
 
@@ -119,7 +121,8 @@ public class EventLog {
   }
 
   public static void registerEventIfPlayerIsNear(Coordinate nearTo, Color color, String message) {
-    if (Game.getActivePlayerActor().getCoordinate().area == nearTo.area) {
+    final Area playerAt = GameDisplay.ACTIVE.getWorld().getArea(Game.getActivePlayerActor().getCoordinate());
+    if (playerAt == GameDisplay.ACTIVE.getWorld().getArea(nearTo)) {
       registerEvent(color, message);
     }
   }

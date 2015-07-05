@@ -5,6 +5,7 @@ import game.TimeMode;
 import game.display.DisplayElement;
 import game.display.DisplayElement_Text;
 import world.Coordinate;
+import world.World;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,7 +21,7 @@ public enum GameMode {
   EXPLORE {
 
     @Override
-    public void onEnter() {
+    public void onEnter(World world) {
 
       if (Game.getTimeMode() == TimeMode.PAUSED) {
         Game.revertTimeMode();
@@ -45,7 +46,7 @@ public enum GameMode {
     }
 
     @Override
-    public List<DisplayElement> getDisplayElements() {
+    public List<DisplayElement> getDisplayElements(World world) {
 
       return Arrays.asList(
           DisplayElement.MINIMAP,
@@ -60,9 +61,8 @@ public enum GameMode {
   ATTACK {
 
     @Override
-    public void onEnter() {
-      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareTargeter(Game
-          .getActivePlayerActor().getCoordinate(), 1));
+    public void onEnter(World world) {
+      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareTargeter(world, Game.getActivePlayerActor().getCoordinate(), 1));
 
       if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
         Game.setTimeMode(TimeMode.PAUSED);
@@ -83,7 +83,7 @@ public enum GameMode {
     }
 
     @Override
-    public List<DisplayElement> getDisplayElements() {
+    public List<DisplayElement> getDisplayElements(World world) {
 
       return Arrays.asList(
           DisplayElement.MINIMAP,
@@ -99,8 +99,8 @@ public enum GameMode {
   LOOK {
 
     @Override
-    public void onEnter() {
-      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareTargeter(Game
+    public void onEnter(World world) {
+      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareTargeter(world, Game
           .getActivePlayerActor().getCoordinate(), null));
 
       if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
@@ -121,13 +121,13 @@ public enum GameMode {
     }
 
     @Override
-    public List<DisplayElement> getDisplayElements() {
+    public List<DisplayElement> getDisplayElements(World world) {
       return Arrays.asList(
           DisplayElement.MINIMAP,
           DisplayElement.CONTROL_ESCAPE,
           DisplayElement.makeCurrentPrompt(),
-          DisplayElement.makePhysicalsList(Game.getActiveInputSwitch()
-                                              .getPlayerTarget().getSquare().getAll(), false),
+          DisplayElement.makePhysicalsList(world.getSquare(Game.getActiveInputSwitch()
+              .getPlayerTarget()).getAll(), false),
           DisplayElement.makeControlsList(getModeCommands(), 1)
       );
     }
@@ -139,8 +139,8 @@ public enum GameMode {
   INTERACT {
 
     @Override
-    public void onEnter() {
-      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareAndListTargeter(Game
+    public void onEnter(World world) {
+      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareAndListTargeter(world, Game
           .getActivePlayerActor().getCoordinate(), 1));
 
       if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
@@ -162,12 +162,12 @@ public enum GameMode {
     }
 
     @Override
-    public List<DisplayElement> getDisplayElements() {
+    public List<DisplayElement> getDisplayElements(World world) {
 
       // If there is a target, create an element for the physicals there.
       Coordinate playerTarget = Game.getActiveInputSwitch().getPlayerTarget();
       DisplayElement_Text physicalsAtTarget = (playerTarget == null) ? null :
-          DisplayElement.makePhysicalsList(playerTarget.getSquare().getAll(),true);
+          DisplayElement.makePhysicalsList(world.getSquare(playerTarget).getAll(), true);
 
       return Arrays.asList(
           DisplayElement.MINIMAP,
@@ -186,8 +186,8 @@ public enum GameMode {
   INVENTORY {
 
     @Override
-    public void onEnter() {
-      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeListTargeter(Game
+    public void onEnter(World world) {
+      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeListTargeter(world, Game
           .getActivePlayerActor().getInventory().getItemsHeld().size()));
 
       if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
@@ -210,7 +210,7 @@ public enum GameMode {
     }
 
     @Override
-    public List<DisplayElement> getDisplayElements() {
+    public List<DisplayElement> getDisplayElements(World world) {
 
       DisplayElement_Text itemsHeld =
           DisplayElement.makePhysicalsList(Game.getActivePlayerActor().getInventory().getItemsHeld(),true);
@@ -228,10 +228,10 @@ public enum GameMode {
   };
 
 
-  public abstract void onEnter();
+  public abstract void onEnter(World world);
   abstract String getPrompt();
   public abstract List<Command> getModeCommands();
 
-  public abstract List<DisplayElement> getDisplayElements();
+  public abstract List<DisplayElement> getDisplayElements(World world);
 
 }

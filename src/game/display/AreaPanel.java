@@ -2,6 +2,8 @@ package game.display;
 
 import game.Game;
 import game.physical.Physical;
+import world.Area;
+import world.AreaCoordinate;
 import world.Coordinate;
 import world.World;
 
@@ -29,17 +31,19 @@ public class AreaPanel extends JPanel {
   public void paint(Graphics g) {
     super.paint(g);
 
-    Coordinate playerAt = Game.getActivePlayerActor().getCoordinate();
+    final World world = GameDisplay.ACTIVE.getWorld();
 
-    World world = Game.getActiveWorld();
+    Coordinate playerAt = Game.getActivePlayerActor().getCoordinate();
+    AreaCoordinate playerAtAC = world.convertToAreaCoordinate(playerAt);
+    Coordinate playerAreaOrigin = playerAt.offset(-playerAtAC.areaX, -playerAtAC.areaY);
+
 
     for (int y = 0; y < world.getAreaSizeInSquares().getHeight(); y++) {
       for (int x = 0; x < world.getAreaSizeInSquares().getWidth(); x++) {
 
-        Coordinate thisCoordinate = world.offsetCoordinateBySquares(playerAt,
-            x - playerAt.localX, y - playerAt.localY);
+        Coordinate thisCoordinate = playerAreaOrigin.offset(x,y);
 
-        final Physical visible = thisCoordinate.getSquare().peek();
+        final Physical visible = world.getSquare(thisCoordinate).peek();
 
         final char mapSymbol = visible.getMapSymbol();
         final Color color = visible.getColor();
@@ -52,7 +56,7 @@ public class AreaPanel extends JPanel {
 
         // Draw a cursor on the square targeted by the player.
         Coordinate target = Game.getActiveInputSwitch().getPlayerTarget();
-        if (target != null && target.localX == x && target.localY == y) {
+        if (target != null && target.equalTo(thisCoordinate)) {
           SquareDrawer.drawOval(g, GameDisplay.CURSOR, SQUARE_SIZE, placeX, placeY);
         }
 

@@ -5,6 +5,7 @@ import game.display.Event;
 import game.display.EventLog;
 import game.physical.Physical;
 import world.Coordinate;
+import world.World;
 
 /**
  * Actors perform placings to move items from their inventory to the world.
@@ -35,9 +36,9 @@ public class Placing extends Action {
    * actor's inventory at the time of execution.
    */
   @Override
-  protected boolean validate() {
+  protected boolean validate(World world) {
 
-    if (getTarget().getSquare().isBlocked()) {
+    if (world.getSquare(getTarget()).isBlocked()) {
       EventLog.registerEvent(Event.INVALID_ACTION, "There's no room there.");
       return false;
     }
@@ -58,9 +59,9 @@ public class Placing extends Action {
    * Place the item at the target location.
    */
   @Override
-  protected void apply() {
+  protected void apply(World world) {
     getActor().getInventory().removeItem(placingWhat);
-    getTarget().getSquare().put(placingWhat);
+    world.getSquare(getTarget()).put(placingWhat);
   }
 
 }

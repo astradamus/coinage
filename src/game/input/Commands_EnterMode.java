@@ -4,6 +4,7 @@ import game.Game;
 import game.TimeMode;
 import game.display.Event;
 import game.display.EventLog;
+import world.World;
 
 import java.awt.event.KeyEvent;
 
@@ -30,7 +31,7 @@ public enum Commands_EnterMode implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(World world) {
 
       TimeMode next;
       TimeMode current = Game.getTimeMode();
@@ -61,7 +62,7 @@ public enum Commands_EnterMode implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(World world) {
       Game.getActiveInputSwitch().enterMode(GameMode.EXPLORE);
     }
 
@@ -82,7 +83,7 @@ public enum Commands_EnterMode implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(World world) {
       Game.getActiveInputSwitch().enterMode(GameMode.LOOK);
     }
 
@@ -103,7 +104,7 @@ public enum Commands_EnterMode implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(World world) {
       Game.getActiveInputSwitch().enterMode(GameMode.INTERACT);
     }
 
@@ -124,7 +125,7 @@ public enum Commands_EnterMode implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(World world) {
       Game.getActiveInputSwitch().enterMode(GameMode.ATTACK);
     }
 
@@ -145,7 +146,7 @@ public enum Commands_EnterMode implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(World world) {
       Game.getActiveInputSwitch().enterMode(GameMode.INVENTORY);
     }
 

@@ -7,19 +7,21 @@ import game.Direction;
 import game.Game;
 import game.physical.PhysicalFlag;
 import world.Coordinate;
+import world.MapCoordinate;
+import world.World;
 
 /**
  * This behavior will make the agent move at full speed away from the given pursuer. The agent
  * will attempt to place a distance of two areas between itself and its pursuer before it stops
  * running. However, if it is determined that the agent can't escape, it will turn and fight
- * instead.<br><br>
+ * instead.
  *
- * This determination is made by recording the occurrences of three events. First, if the agent
+ * <p>This determination is made by recording the occurrences of three events. First, if the agent
  * is victimized by the pursuer while attempting to flee. Second, if the agent has to change the
  * direction of its escape, because the pursuer is outpacing or outmaneuvering it. Third, if the
  * agent's path of escape is blocked. Each of these events adds a certain (statically defined)
  * value to a counter, and when that counter reaches a certain (statically defined) point, the
- * agent will turn and fight.
+ * agent will turn and fight.</p>
  */
 public class Ai_Retreat extends Behavior {
 
@@ -68,17 +70,21 @@ public class Ai_Retreat extends Behavior {
     else {
 
       final Coordinate actorAt = getActor().getCoordinate();
-      final Coordinate attackerAt = pursuer.getCoordinate();
+      final Coordinate pursuerAt = pursuer.getCoordinate();
+
+      final World map = getAgent().getWorld();
+      final MapCoordinate actorWMC = map.convertToMapCoordinate(actorAt);
+      final MapCoordinate pursuerWMC = map.convertToMapCoordinate(pursuerAt);
 
 
       // If we are two areas away we've escaped and can stop retreating.
-      if (actorAt.getWorldDistance(attackerAt) >= 2) {
+      if (actorWMC.getDistance(pursuerWMC) >= 2) {
         markComplete();
       }
 
       // Otherwise, run directly away.
       else {
-        final Direction toEscape = attackerAt.getDirectionTo(actorAt);
+        final Direction toEscape = pursuerAt.getDirectionTo(actorAt);
         Routines.turnThenMove(getAgent(), toEscape, false, false);
       }
 
@@ -116,7 +122,7 @@ public class Ai_Retreat extends Behavior {
       final Coordinate actorAt = getActor().getCoordinate();
       final Coordinate attackerAt = pursuer.getCoordinate();
 
-      final boolean pursuerIsClose = actorAt.getGlobalDistance(attackerAt) <= 3;
+      final boolean pursuerIsClose = actorAt.getDistance(attackerAt) <= 3;
 
       if (pursuerIsClose) {
 

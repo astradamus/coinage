@@ -3,8 +3,8 @@ package controller.action;
 import actor.Actor;
 import actor.attribute.Attribute;
 import game.Direction;
-import game.Game;
 import game.physical.PhysicalFlag;
+import world.World;
 
 import java.awt.Color;
 
@@ -30,9 +30,7 @@ public class Moving extends Action {
   private final boolean isWalking;
 
   public Moving(Actor actor, Direction movingIn, boolean isWalking) {
-    super(actor,
-        Game.getActiveWorld().offsetCoordinateBySquares(
-            actor.getCoordinate(), movingIn.relativeX, movingIn.relativeY));
+    super(actor, actor.getCoordinate().offset(movingIn.relativeX, movingIn.relativeY));
     this.movingIn = movingIn;
     this.isWalking = isWalking;
   }
@@ -101,12 +99,16 @@ public class Moving extends Action {
    * before completing the movement.
    */
   @Override
-  protected boolean validate() {
+  protected boolean validate(World world) {
 
-    final boolean targetIsBlocked = getTarget() == null || getTarget().getSquare().isBlocked();
-    final boolean performerHasNotMoved = !getOrigin().getSquare().getAll().contains(getActor());
+    if (!world.validateCoordinate(getTarget())) {
+      return false;
+    }
 
-    return !targetIsBlocked && !performerHasNotMoved;
+    final boolean targetIsBlocked = world.getSquare(getTarget()).isBlocked();
+    final boolean performerHasMoved = !world.getSquare(getOrigin()).getAll().contains(getActor());
+
+    return !targetIsBlocked && !performerHasMoved;
 
   }
 
@@ -116,15 +118,15 @@ public class Moving extends Action {
    * ACTOR_CHANGED_AREA} flag.
    */
   @Override
-  protected void apply() {
+  protected void apply(World world) {
 
     final Actor performerActor = getActor();
 
-    getOrigin().getSquare().pull(performerActor);
-    getTarget().getSquare().put(performerActor);
+    world.getSquare(getOrigin()).pull(performerActor);
+    world.getSquare(getTarget()).put(performerActor);
     performerActor.setCoordinate(getTarget());
 
-    if (getOrigin().area != getTarget().area) {
+    if (world.getArea(getOrigin()) != world.getArea(getTarget())) {
       addFlag(ActionFlag.ACTOR_CHANGED_AREA);
     }
 

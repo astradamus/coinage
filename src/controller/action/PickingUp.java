@@ -6,6 +6,7 @@ import game.display.EventLog;
 import game.physical.Physical;
 import game.physical.PhysicalFlag;
 import world.Coordinate;
+import world.World;
 
 /**
  * Actors perform pickups to move items from the world to their inventory.
@@ -36,14 +37,14 @@ public class PickingUp extends Action {
    * location.
    */
   @Override
-  protected boolean validate() {
+  protected boolean validate(World world) {
 
     if (pickingUpWhat.hasFlag(PhysicalFlag.IMMOVABLE)) {
       EventLog.registerEvent(Event.INVALID_ACTION, "That can't be picked up.");
       return false;
     }
 
-    boolean itemIsAtTarget = getTarget().getSquare().getAll().contains(pickingUpWhat);
+    boolean itemIsAtTarget = world.getSquare(getTarget()).getAll().contains(pickingUpWhat);
 
     if (!itemIsAtTarget) {
       EventLog.registerEvent(Event.INVALID_ACTION,
@@ -58,8 +59,8 @@ public class PickingUp extends Action {
    * Upon success, the item is added to the actor's inventory.
    */
   @Override
-  protected void apply() {
-    getTarget().getSquare().pull(pickingUpWhat);
+  protected void apply(World world) {
+    world.getSquare(getTarget()).pull(pickingUpWhat);
     getActor().getInventory().addItem(pickingUpWhat);
   }
 

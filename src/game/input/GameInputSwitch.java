@@ -9,6 +9,7 @@ import controller.player.PlayerAgent;
 import game.Direction;
 import game.physical.Physical;
 import world.Coordinate;
+import world.World;
 
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 public class GameInputSwitch implements DirectionListener, ListSelectionListener {
 
+  private final World world;
   private PlayerAgent playerController;
 
   private final List<KeyListener> keyListeners = new ArrayList<>();
@@ -39,11 +41,13 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
 
 
 
-  public GameInputSwitch() {
+  public GameInputSwitch(World world) {
+
+    this.world = world;
 
     keyListeners.add(keyModifierInterpreter);
     keyListeners.add(new NumpadDirectionInterpreter(this));
-    keyListeners.add(new ModeCommandInterpreter());
+    keyListeners.add(new ModeCommandInterpreter(world));
     keyListeners.add(new ListSelectInterpreter(this));
 
   }
@@ -84,7 +88,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
     clearSelectsAndCursor();
 
     this.coordinateSelector = coordinateSelector;
-    targetCursor = TargetCursor.makeSquareTargeter(coordinateSelector.getSelectOrigin(),
+    targetCursor = TargetCursor.makeSquareTargeter(world, coordinateSelector.getSelectOrigin(),
         coordinateSelector.getSelectRange());
 
   }
@@ -93,7 +97,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
     clearSelectsAndCursor();
 
     this.physicalSelector = physicalSelector;
-    targetCursor = TargetCursor.makeSquareAndListTargeter(physicalSelector.getSelectOrigin(),
+    targetCursor = TargetCursor.makeSquareAndListTargeter(world, physicalSelector.getSelectOrigin(),
         physicalSelector.getSelectRange());
 
   }
@@ -101,7 +105,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
 
   void enterMode(GameMode mode) {
     clearSelectsAndCursor();
-    mode.onEnter();
+    mode.onEnter(world);
 
     this.gameMode = mode;
   }
@@ -211,7 +215,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
       coordinateSelector = null;
     }
     else if (physicalSelector != null) {
-      physicalSelector.execute(targetCursor.getTarget().getSquare().getAll()
+      physicalSelector.execute(world.getSquare(targetCursor.getTarget()).getAll()
           .get(targetCursor.getListSelectIndex()));
       physicalSelector = null;
     }

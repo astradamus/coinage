@@ -11,6 +11,7 @@ import game.physical.PhysicalFlag;
 import thing.Thing;
 import thing.WeaponComponent;
 import world.Coordinate;
+import world.World;
 
 import java.awt.Color;
 
@@ -19,12 +20,10 @@ import java.awt.Color;
  */
 public class Attacking extends Action {
 
-  private final Actor intendedVictim;
-  private Actor actualVictim;
+  private Actor victim;
 
-  public Attacking(Actor actor, Coordinate attackTarget) {
-    super(actor, attackTarget);
-    this.intendedVictim = getLiveTargetAt(attackTarget);
+  public Attacking(Actor actor, Coordinate target) {
+    super(actor, target);
   }
 
   @Override
@@ -53,48 +52,24 @@ public class Attacking extends Action {
    * longer at the target location.
    */
   @Override
-  protected boolean validate() {
+  protected boolean validate(World world) {
 
-    if (intendedVictim != null && !intendedVictim.hasFlag(PhysicalFlag.DEAD)) {
+    // Check if there's a victim in the target square for the attack to hit.
+    victim = getLiveTargetAt(world, getTarget());
 
-      final boolean intendedVictimHasMoved =
-          !getTarget().getSquare().getAll().contains(intendedVictim);
+    // If we have a victim, then this attack is a hit.
+    final boolean attackHit = victim != null;
 
-      if (!intendedVictimHasMoved) {
-        // Our intended victim is right where we want them.
-        actualVictim = intendedVictim;
-      }
-
-    }
-
-
-    // If actualVictim is still null, then we either had no intended victim, or they're gone.
-    final boolean intendedVictimHasMovedOrWasNotProvided = actualVictim == null;
-
-    if (intendedVictimHasMovedOrWasNotProvided) {
-      // Check if there's a new victim in the target square for the attack to hit.
-      actualVictim = getLiveTargetAt(getTarget());
-    }
-
-
-    // If actualVictim is STILL null, then this attack is a miss.
-    final boolean attackWillHitSomeone = actualVictim != null;
-
-    if (!attackWillHitSomeone && getPlayerIsActor()) {
+    if (!attackHit && getPlayerIsActor()) {
 
       final String attackTypeString = getActor().getActiveWeapon()
           .getWeaponComponent().getDamageType().getAttackString();
 
-        if (intendedVictim == null) {
-          EventLog.registerEvent(Event.INVALID_ACTION, "Your "+attackTypeString+" has hit naught but air.");
-        } else {
-          EventLog.registerEvent(Event.INVALID_ACTION,
-              intendedVictim.getName() + " eluded your "+attackTypeString+".");
-        }
+      EventLog.registerEvent(Event.INVALID_ACTION, "Your "+attackTypeString+" has hit naught but air.");
 
     }
 
-    return attackWillHitSomeone;
+    return attackHit;
 
   }
 
@@ -102,7 +77,7 @@ public class Attacking extends Action {
    * Wound the victim with the weapon equipped by this actor.
    */
   @Override
-  protected void apply() {
+  protected void apply(World world) {
 
     final Thing weapon = getActor().getActiveWeapon();
     final WeaponComponent weaponComponent = weapon.getWeaponComponent();
@@ -115,8 +90,8 @@ public class Attacking extends Action {
     // Construct the event log string for this attack.
     final String hitString = weaponComponent.getDamageType().getHitString();
 
-    String victimName = actualVictim.getName();
-    if (actualVictim == Game.getActivePlayerActor()) {
+    String victimName = victim.getName();
+    if (victim == Game.getActivePlayerActor()) {
       victimName = "you";
     }
 
@@ -133,21 +108,21 @@ public class Attacking extends Action {
 
 
     // Log the message if the player is in this area.
-    EventLog.registerEventIfPlayerIsNear(actualVictim.getCoordinate(),
+    EventLog.registerEventIfPlayerIsNear(victim.getCoordinate(),
         Event.ACTOR_WOUNDED, message);
 
     // Apply the damage to the victim and notify the victim's controller.
-    actualVictim.getHealth().wound(damage);
-    actualVictim.getObserver().onVictimized(getActor());
+    victim.getHealth().wound(damage);
+    victim.getObserver().onVictimized(getActor());
 
   }
 
   /**
    * @return The living actor occupying the target coordinate, or null if there isn't one.
    */
-  private  Actor getLiveTargetAt(Coordinate coordinate) {
+  private  Actor getLiveTargetAt(World world, Coordinate coordinate) {
 
-    final Physical targetPhysical = coordinate.getSquare().getAll().get(0);
+    final Physical targetPhysical = world.getSquare(coordinate).getAll().get(0);
     if (!targetPhysical.hasFlag(PhysicalFlag.DEAD) && targetPhysical.getClass() == Actor.class) {
       return (Actor) targetPhysical;
     }

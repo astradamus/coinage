@@ -6,6 +6,7 @@ import game.Game;
 import game.display.Event;
 import game.display.EventLog;
 import world.Coordinate;
+import world.World;
 
 import java.awt.event.KeyEvent;
 
@@ -28,7 +29,7 @@ public enum Commands_Attack implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(World world) {
 
       Coordinate playerTarget = Game.getActiveInputSwitch().getPlayerTarget();
 

@@ -4,6 +4,7 @@ import actor.Actor;
 import game.display.EventLog;
 import game.physical.Physical;
 import thing.Thing;
+import world.World;
 
 import java.awt.Color;
 
@@ -35,7 +36,7 @@ public class EquipWeapon extends Action {
    * Equipping fails if the target physical is not a weapon.
    */
   @Override
-  protected boolean validate() {
+  protected boolean validate(World world) {
 
     if (weapon.getClass() == Thing.class) {
       validatedWeapon = (Thing) weapon;
@@ -57,7 +58,7 @@ public class EquipWeapon extends Action {
    * message.
    */
   @Override
-  protected void apply() {
+  protected void apply(World world) {
 
     getActor().setEquippedWeapon(validatedWeapon);
 

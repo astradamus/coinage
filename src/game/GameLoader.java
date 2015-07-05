@@ -5,6 +5,7 @@ import actor.ActorFactory;
 import actor.ActorTemplate;
 import controller.ai.AiActorAgent;
 import controller.player.PlayerAgent;
+import game.display.GameDisplay;
 import game.input.GameInputSwitch;
 import thing.ThingTemplate;
 import utils.Dimension;
@@ -41,7 +42,7 @@ public class GameLoader {
     World world = WorldFactory.standardGeneration(areaSizeInSquares, worldSizeInAreas);
 
     // populate with animals and a Human for the player to control
-    GameControllers gameControllers = new GameControllers(world.getAllAreas());
+    GameControllers gameControllers = new GameControllers(world);
 
     for (int i = 0; i < 600; i++) {
       String id;
@@ -57,11 +58,11 @@ public class GameLoader {
         Square square;
         do {
           randomCoordinate = world.makeRandomCoordinate();
-          square = randomCoordinate.getSquare();
+          square = world.getSquare(randomCoordinate);
         } while (square.isBlocked());
         square.put(actor);
         actor.setCoordinate(randomCoordinate);
-        gameControllers.addController(new AiActorAgent(actor));
+        gameControllers.addController(new AiActorAgent(actor, world));
       }
     }
 
@@ -74,20 +75,22 @@ public class GameLoader {
     Coordinate playerStartCoordinate = world.makeRandomCoordinate();
     player.setCoordinate(playerStartCoordinate);
 
-    playerStartCoordinate.getSquare().put(player);
+    world.getSquare(playerStartCoordinate).put(player);
 
     // assign the Human to a PlayerAgent and addController it
-    PlayerAgent playerController = new PlayerAgent(player,worldSizeInAreas);
-    playerController.getWorldMapRevealedComponent().setAreaIsRevealed(playerStartCoordinate);
+    PlayerAgent playerController = new PlayerAgent(player, world);
+    playerController.getWorldMapRevealedComponent().setAreaIsRevealed(world.convertToMapCoordinate(playerStartCoordinate));
 
     gameControllers.addController(playerController);
 
     // set up the GameInputSwitch
-    GameInputSwitch gameInputSwitch = new GameInputSwitch();
+    GameInputSwitch gameInputSwitch = new GameInputSwitch(world);
     gameInputSwitch.setPlayerController(playerController);
 
     // produce Game instance and assign it to ACTIVE
-    Game.ACTIVE = new Game(world, gameControllers, gameInputSwitch);
+    final Game activeGame = new Game(world, gameControllers, gameInputSwitch);
+    Game.ACTIVE = activeGame;
+    GameDisplay.setActiveGame(activeGame);
 
   }
 

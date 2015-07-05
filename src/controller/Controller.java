@@ -1,6 +1,7 @@
 package controller;
 
-import world.Area;
+import game.Executor;
+import world.Coordinate;
 
 /**
  * All Controllers registered with GameControllers.addController() will have onUpdate() called every
@@ -10,7 +11,7 @@ import world.Area;
  */
 public interface Controller {
 
-  void onUpdate();
+  void onUpdate(Executor executor);
 
   /**
    * Called between frames, after the current update() has finished. Determines the order in
@@ -25,7 +26,7 @@ public interface Controller {
   /**
    * Non-local controllers should return null.
    */
-  default Area getLocality() {
+  default Coordinate getLocality() {
     return null;
   }
 

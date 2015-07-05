@@ -18,6 +18,7 @@ public class World {
   private final Dimension areaSizeInSquares;
   private final Dimension globalSizeInSquares;
 
+
   World(Area[][] areas, Dimension areaSizeInSquares) {
 
     this.areas = areas;
@@ -32,49 +33,12 @@ public class World {
 
   }
 
-  private Coordinate makeCoordinate(int globalX, int globalY) {
-    if (!globalSizeInSquares.getCoordinateIsWithinBounds(globalX,globalY)) {
-      return null;
-    }
-
-    final int worldX = globalX / areaSizeInSquares.getWidth();
-    final int worldY = globalY / areaSizeInSquares.getHeight();
-
-    final Area area = areas[worldY][worldX];
-
-    final int localX = globalX % areaSizeInSquares.getWidth();
-    final int localY = globalY % areaSizeInSquares.getHeight();
-
-    return new Coordinate(globalX,globalY,worldX,worldY,area,localX,localY);
-  }
-
-  public Coordinate offsetCoordinateBySquares(Coordinate coordinate, int offX, int offY) {
-
-    final int globalX = coordinate.globalX + offX;
-    final int globalY = coordinate.globalY + offY;
-
-    return makeCoordinate(globalX, globalY);
-
-  }
-
-  public Coordinate offsetCoordinateByAreas(Coordinate coordinate, int offX, int offY) {
-
-    final int globalX = coordinate.globalX + offX * areaSizeInSquares.getWidth();
-    final int globalY = coordinate.globalY + offY * areaSizeInSquares.getHeight();
-
-    return makeCoordinate(globalX, globalY);
-
-  }
-
   public Coordinate makeRandomCoordinate() {
-    return makeCoordinate(Game.RANDOM.nextInt(globalSizeInSquares.getWidth()),
+    return new Coordinate(Game.RANDOM.nextInt(globalSizeInSquares.getWidth()),
                           Game.RANDOM.nextInt(globalSizeInSquares.getHeight()));
   }
 
 
-  public Dimension getAreaSizeInSquares() {
-    return areaSizeInSquares;
-  }
 
   public Set<Area> getAllAreas() {
     Set<Area> all = new HashSet<>();
@@ -84,13 +48,14 @@ public class World {
     return all;
   }
 
-  public Set<Area> getAllAreasWithinRange(Coordinate center, int radius) {
+  public Set<Area> getAllAreasWithinRange(Coordinate target, int radius) {
+    final MapCoordinate worldTarget = convertToMapCoordinate(target);
     Set<Area> all = new HashSet<>();
-    for(int y = center.worldY - radius; y <= center.worldY+radius; y++) {
+    for(int y = worldTarget.worldAreasY - radius; y <= worldTarget.worldAreasY+radius; y++) {
       if (y < 0 || y >= worldSizeInAreas.getHeight()) {
         continue;
       }
-      for(int x = center.worldX - radius; x <= center.worldX+radius; x++) {
+      for(int x = worldTarget.worldAreasX - radius; x <= worldTarget.worldAreasX+radius; x++) {
         if (x < 0 || x >= worldSizeInAreas.getWidth()) {
           continue;
         }
@@ -101,5 +66,57 @@ public class World {
     }
     return all;
   }
+
+
+  public Square getSquare(Coordinate coordinate) {
+    try {
+      final Area area = getArea(coordinate);
+      if (area == null) {
+        return null;
+      }
+      return area.getSquare(convertToAreaCoordinate(coordinate));
+    } catch (IndexOutOfBoundsException iob) {
+      return null; // Target is not valid.
+    }
+  }
+
+
+
+  public boolean validateCoordinate(Coordinate coordinate) {
+    return globalSizeInSquares.getCoordinateIsWithinBounds(coordinate.globalX,coordinate.globalY);
+  }
+
+  public Dimension getWorldSizeInAreas() {
+    return worldSizeInAreas;
+  }
+
+  public Dimension getAreaSizeInSquares() {
+    return areaSizeInSquares;
+  }
+
+
+  public MapCoordinate convertToMapCoordinate(Coordinate coordinate) {
+    return new MapCoordinate(coordinate.globalX/areaSizeInSquares.getWidth(),
+        coordinate.globalY/areaSizeInSquares.getHeight());
+  }
+
+  public AreaCoordinate convertToAreaCoordinate(Coordinate coordinate) {
+    return new AreaCoordinate(coordinate.globalX%areaSizeInSquares.getWidth(),
+        coordinate.globalY%areaSizeInSquares.getHeight());
+  }
+
+  public Area getArea(Coordinate coordinate) {
+    if (coordinate == null) {
+      return null;
+    }
+    try {
+      final MapCoordinate mapCoordinate = convertToMapCoordinate(coordinate);
+      return areas[mapCoordinate.worldAreasY][mapCoordinate.worldAreasX];
+    } catch (IndexOutOfBoundsException iob) {
+      return null; // Target is not valid.
+    }
+  }
+
+
 
 }

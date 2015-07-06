@@ -22,7 +22,7 @@ public interface Command {
 
     // Determine what we are equipping.
     Integer listSelectIndex = Game.getActiveInputSwitch().getPlayerSelection();
-    List<Physical> itemsHeld = Game.getActivePlayerActor().getInventory().getItemsHeld();
+    List<Physical> itemsHeld = Game.getActiveInputSwitch().getPlayerController().getActor().getInventory().getItemsHeld();
 
     if (listSelectIndex != null && !itemsHeld.isEmpty()) {
 

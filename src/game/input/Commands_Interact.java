@@ -30,7 +30,7 @@ public enum Commands_Interact implements Command {
     @Override
     public void execute(World world) {
 
-      Actor playerActor = Game.getActivePlayerActor();
+      Actor playerActor = Game.getActiveInputSwitch().getPlayerController().getActor();
 
       // Have the player choose what to pick up, then start picking it up.
 
@@ -39,7 +39,7 @@ public enum Commands_Interact implements Command {
 
       final Physical selected = world.getSquare(playerTarget).getAll().get(playerSelection);
 
-      playerActor.attemptAction(new PickingUp(playerActor,
+      Game.getActiveInputSwitch().getPlayerController().attemptAction(new PickingUp(playerActor,
           Game.getActiveInputSwitch().getPlayerTarget(), selected));
 
       Game.getActiveInputSwitch().enterMode(GameMode.EXPLORE);

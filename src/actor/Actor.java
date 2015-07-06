@@ -6,6 +6,7 @@ import actor.inventory.Inventory;
 import actor.stats.Health;
 import controller.ActorObserver;
 import controller.action.Action;
+import controller.action.ActionFlag;
 import game.Direction;
 import game.Executor;
 import game.physical.Physical;
@@ -93,7 +94,7 @@ public class Actor extends Physical {
    * before the new time is added. In other words, there is no penalty for switching actions,
    * except that you lose the beats you spent warming up the replaced action.
    */
-  public final void attemptAction(Action action) {
+  public final void startAction(Action action) {
     actionTimer.cancelWarmUp();
     actionTimer.addBeatsToWarmUp(action.calcDelayToPerform());
     this.action = action;
@@ -138,7 +139,13 @@ public class Actor extends Physical {
         // If this action can repeat upon succeeding, attempt to do so.
         Action repeat = executing.attemptRepeat();
         if (repeat != null) {
-          attemptAction(repeat);
+
+          // Copy repeating flag(s).
+          if (repeat.hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
+            repeat.playerIsActor();
+          }
+
+          startAction(repeat);
         }
 
       }

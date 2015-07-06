@@ -38,7 +38,7 @@ public class Ai_Fight extends Behavior {
 
   @Override
   protected String getOnExhibitLogMessage() {
-    if (victim == Game.getActivePlayerActor()) {
+    if (victim == Game.getActiveInputSwitch().getPlayerController().getActor()) {
       return getActor().getName() + " doesn't look too friendly.";
     }
     else {
@@ -51,7 +51,7 @@ public class Ai_Fight extends Behavior {
 
     fight();
 
-    if (victim == Game.getActivePlayerActor() && Game.getTimeMode() == TimeMode.LIVE) {
+    if (victim == Game.getActiveInputSwitch().getPlayerController().getActor() && Game.getTimeMode() == TimeMode.LIVE) {
       Game.setTimeMode(TimeMode.PRECISION);
       EventLog.registerEvent(Event.INVALID_ACTION,
           "Precision mode has been enabled because you are under attack.");
@@ -74,7 +74,7 @@ public class Ai_Fight extends Behavior {
 
       // If we are adjacent to our enemy, attack them.
       if (actorAt.getIsAdjacentTo(enemyAt)) {
-        getActor().attemptAction(new Attacking(getActor(), victim.getCoordinate()));
+        getAgent().attemptAction(new Attacking(getActor(), victim.getCoordinate()));
       }
 
       else {

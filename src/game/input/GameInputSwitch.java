@@ -1,6 +1,5 @@
 package game.input;
 
-import actor.Actor;
 import controller.action.Action;
 import controller.action.Moving;
 import controller.action.TurnThenMove;
@@ -9,6 +8,7 @@ import controller.player.PlayerAgent;
 import game.Direction;
 import game.physical.Physical;
 import world.Coordinate;
+import world.MapCoordinate;
 import world.World;
 
 import java.awt.event.KeyListener;
@@ -53,6 +53,10 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
   }
 
 
+  public boolean getActiveWorldMapAreaIsRevealed(Coordinate coordinate) {
+    MapCoordinate mapCoordinate = world.convertToMapCoordinate(coordinate);
+    return (getPlayerController().getWorldMapRevealedComponent().getAreaIsRevealed(mapCoordinate));
+  }
 
   public void onUpdate() {
 
@@ -64,8 +68,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
       startRepeatingMoveDelay--;
     }
     else if (startRepeatingMoveDelay == 0 && shouldDelayMoveRepeat()) {
-      final Actor playerActor = playerController.getActor();
-      playerActor.attemptAction(new Moving(playerActor, delayedMoveDirection, false));
+      playerController.attemptAction(new Moving(playerController.getActor(), delayedMoveDirection, false));
       terminateRepeatingMoveTimer();
     }
 
@@ -163,11 +166,11 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
       delayRepeatOfMove(action, direction);
     }
 
-    playerController.getActor().attemptAction(action);
+    playerController.attemptAction(action);
   }
 
   private void turn(Direction direction) {
-    playerController.getActor().attemptAction(new Turning(playerController.getActor(), direction));
+    playerController.attemptAction(new Turning(playerController.getActor(), direction));
   }
 
   private void move(Direction direction) {
@@ -177,7 +180,7 @@ public class GameInputSwitch implements DirectionListener, ListSelectionListener
       delayRepeatOfMove(moving, direction);
     }
 
-    playerController.getActor().attemptAction(moving);
+    playerController.attemptAction(moving);
   }
 
 

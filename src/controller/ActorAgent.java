@@ -2,6 +2,7 @@ package controller;
 
 import actor.Actor;
 import actor.attribute.Attribute;
+import controller.action.Action;
 import game.Executor;
 import game.Game;
 
@@ -38,6 +39,12 @@ public abstract class ActorAgent implements Controller, ActorObserver {
   public Actor getActor() {
     return actor;
   }
+
+
+  public void attemptAction(Action action) {
+    actor.startAction(action);
+  }
+
 
   @Override
   public void onUpdate(Executor executor) {

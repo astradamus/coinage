@@ -62,7 +62,7 @@ public enum GameMode {
 
     @Override
     public void onEnter(World world) {
-      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareTargeter(world, Game.getActivePlayerActor().getCoordinate(), 1));
+      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareTargeter(world, Game.getActiveInputSwitch().getPlayerController().getActor().getCoordinate(), 1));
 
       if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
         Game.setTimeMode(TimeMode.PAUSED);
@@ -100,8 +100,7 @@ public enum GameMode {
 
     @Override
     public void onEnter(World world) {
-      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareTargeter(world, Game
-          .getActivePlayerActor().getCoordinate(), null));
+      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareTargeter(world, Game.getActiveInputSwitch().getPlayerController().getActor().getCoordinate(), null));
 
       if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
         Game.setTimeMode(TimeMode.PAUSED);
@@ -140,8 +139,7 @@ public enum GameMode {
 
     @Override
     public void onEnter(World world) {
-      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareAndListTargeter(world, Game
-          .getActivePlayerActor().getCoordinate(), 1));
+      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeSquareAndListTargeter(world, Game.getActiveInputSwitch().getPlayerController().getActor().getCoordinate(), 1));
 
       if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
         Game.setTimeMode(TimeMode.PAUSED);
@@ -187,8 +185,7 @@ public enum GameMode {
 
     @Override
     public void onEnter(World world) {
-      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeListTargeter(world, Game
-          .getActivePlayerActor().getInventory().getItemsHeld().size()));
+      Game.getActiveInputSwitch().setTargetCursor(TargetCursor.makeListTargeter(world, Game.getActiveInputSwitch().getPlayerController().getActor().getInventory().getItemsHeld().size()));
 
       if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
         Game.setTimeMode(TimeMode.PAUSED);
@@ -213,7 +210,7 @@ public enum GameMode {
     public List<DisplayElement> getDisplayElements(World world) {
 
       DisplayElement_Text itemsHeld =
-          DisplayElement.makePhysicalsList(Game.getActivePlayerActor().getInventory().getItemsHeld(),true);
+          DisplayElement.makePhysicalsList(Game.getActiveInputSwitch().getPlayerController().getActor().getInventory().getItemsHeld(),true);
 
       return Arrays.asList(
           DisplayElement.MINIMAP,

@@ -46,7 +46,7 @@ public class Ai_Retreat extends Behavior {
 
   @Override
   protected String getOnExhibitLogMessage() {
-    if (pursuer == Game.getActivePlayerActor()) {
+    if (pursuer == Game.getActiveInputSwitch().getPlayerController().getActor()) {
       return getActor().getName() + " flees for its life.";
     }
     else {

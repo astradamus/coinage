@@ -3,6 +3,7 @@ package game.input;
 import actor.Actor;
 import controller.action.EquipWeapon;
 import controller.action.Placing;
+import controller.player.PlayerAgent;
 import game.Game;
 import game.physical.Physical;
 import world.Coordinate;
@@ -33,8 +34,8 @@ public enum Commands_Inventory implements Command {
 
       if (equipping != null) {
 
-        final Actor player = Game.getActivePlayerActor();
-        player.attemptAction(new EquipWeapon(player, equipping));
+        final PlayerAgent player = Game.getActiveInputSwitch().getPlayerController();
+        player.attemptAction(new EquipWeapon(player.getActor(), equipping));
 
         Game.getActiveInputSwitch().enterMode(GameMode.EXPLORE);
 
@@ -63,16 +64,16 @@ public enum Commands_Inventory implements Command {
 
       if (placing != null) {
 
-        final Actor player = Game.getActivePlayerActor();
+        final PlayerAgent player = Game.getActiveInputSwitch().getPlayerController();
 
         // Prompt player to select a location and drop the item there.
         Game.getActiveInputSwitch().beginSelectingCoordinate(
-            new Selector<>("PLACE WHERE?", player.getCoordinate(), 1,
+            new Selector<>("PLACE WHERE?", player.getActor().getCoordinate(), 1,
                 new SelectCallback<Coordinate>() {
                   @Override
                   public void execute(Coordinate selected) {
 
-                    player.attemptAction(new Placing(player, selected, placing));
+                    player.attemptAction(new Placing(player.getActor(), selected, placing));
 
                     Game.getActiveInputSwitch().enterMode(GameMode.EXPLORE);
 

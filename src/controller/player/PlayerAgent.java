@@ -23,6 +23,11 @@ public class PlayerAgent extends ActorAgent {
   }
 
   @Override
+  public void attemptAction(Action action) {
+    getActor().startAction(action.playerIsActor());
+  }
+
+  @Override
   public void onActionExecuted(Action action) {
 
     // Update WorldMapRevealed component accordingly.

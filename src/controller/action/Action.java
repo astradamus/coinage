@@ -113,6 +113,11 @@ public abstract class Action {
     return this;
   }
 
+  public Action playerIsActor() {
+    addFlag(ActionFlag.PLAYER_IS_ACTOR);
+    return this;
+  }
+
 
   protected final Actor getActor() {
     return actor;
@@ -125,10 +130,5 @@ public abstract class Action {
   public final Coordinate getTarget() {
     return target;
   }
-
-  protected final boolean getPlayerIsActor() {
-    return getActor() == Game.getActivePlayerActor();
-  }
-
 
 }

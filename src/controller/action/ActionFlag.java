@@ -10,6 +10,6 @@ public enum ActionFlag {
   SUCCEEDED,
   FAILED,
 
-  ACTOR_CHANGED_AREA
+  PLAYER_IS_ACTOR, ACTOR_CHANGED_AREA
 
 }

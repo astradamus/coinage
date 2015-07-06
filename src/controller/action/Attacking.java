@@ -60,7 +60,7 @@ public class Attacking extends Action {
     // If we have a victim, then this attack is a hit.
     final boolean attackHit = victim != null;
 
-    if (!attackHit && getPlayerIsActor()) {
+    if (!attackHit && hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
 
       final String attackTypeString = getActor().getActiveWeapon()
           .getWeaponComponent().getDamageType().getAttackString();
@@ -91,7 +91,7 @@ public class Attacking extends Action {
     final String hitString = weaponComponent.getDamageType().getHitString();
 
     String victimName = victim.getName();
-    if (victim == Game.getActivePlayerActor()) {
+    if (victim == Game.getActiveInputSwitch().getPlayerController().getActor()) {
       victimName = "you";
     }
 
@@ -100,7 +100,7 @@ public class Attacking extends Action {
 
     String message;
 
-    if (getPlayerIsActor()) {
+    if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
       message = "You have " + messageA + "your " + messageB;
     } else {
       message = getActor().getName() + " has "+ messageA + "its "+ messageB;

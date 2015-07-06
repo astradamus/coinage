@@ -129,7 +129,7 @@ public class GameControllers implements Executor, ControllerInterface {
 
 
   private void calculateActiveAreasAndControllers() {
-    final Coordinate playerAt = Game.getActivePlayerActor().getCoordinate();
+    final Coordinate playerAt = Game.getActiveInputSwitch().getPlayerController().getActor().getCoordinate();
     activeAreas = world.getAllAreasWithinRange(playerAt, CONTROLLER_PROCESS_RADIUS);
     activeAreas.add(null); // Null contains non-local controllers. Always process it!
 
@@ -175,7 +175,7 @@ public class GameControllers implements Executor, ControllerInterface {
         .collect(Collectors.toSet()));
 
     // If the player is here and alive, include them in the return.
-    final Actor playerActor = Game.getActivePlayerActor();
+    final Actor playerActor = Game.getActiveInputSwitch().getPlayerController().getActor();
     if (!playerActor.hasFlag(PhysicalFlag.DEAD)
         && world.getArea(playerActor.getCoordinate()) == area) {
       set.add(playerActor);

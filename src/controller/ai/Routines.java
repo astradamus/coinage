@@ -44,7 +44,7 @@ public class Routines {
       action.doNotRepeat();
     }
 
-    actor.attemptAction(action);
+    agent.attemptAction(action);
 
   }
 
@@ -67,7 +67,7 @@ public class Routines {
       turningTowards = turningTowards.getRightNeighbor();
     }
 
-    actor.attemptAction(new TurnThenMove(actor, turningTowards, false).doNotRepeat());
+    agent.attemptAction(new TurnThenMove(actor, turningTowards, false).doNotRepeat());
 
   }
 

@@ -64,7 +64,7 @@ public class Health {
 
         // Construct a log message
         final String message;
-        if (Game.getActivePlayerActor() == actor) {
+        if (Game.getActiveInputSwitch().getPlayerController().getActor() == actor) {
           message = "You have died.";
         } else {
           message = actor.getName() + " has died.";

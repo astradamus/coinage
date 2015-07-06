@@ -28,7 +28,7 @@ public class ActionOverlay {
 
   public static void drawOverlay(Graphics2D g) {
 
-    final Actor playerActor = Game.getActivePlayerActor();
+    final Actor playerActor = Game.getActiveInputSwitch().getPlayerController().getActor();
 
     // Draw an overlay on actors indicating the direction they are facing.
     final Game active = GameDisplay.ACTIVE;
@@ -101,7 +101,7 @@ public class ActionOverlay {
 
       char character = '+';
 
-      if (Game.getActivePlayerActor().isFreeToAct()) {
+      if (Game.getActiveInputSwitch().getPlayerController().getActor().isFreeToAct()) {
         if (actionDelay < 10) {
           character = Integer.toString(actionDelay).charAt(0);
         }

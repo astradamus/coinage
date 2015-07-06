@@ -58,19 +58,8 @@ public class Game {
   }
 
 
-
-  public static Actor getActivePlayerActor() {
-    return ACTIVE.INPUT_SWITCH.getPlayerController().getActor();
-  }
-
   public static GameInputSwitch getActiveInputSwitch() {
     return ACTIVE.INPUT_SWITCH;
-  }
-
-  public static boolean getActiveWorldMapAreaIsRevealed(Coordinate coordinate) {
-    MapCoordinate mapCoordinate = ACTIVE.WORLD.convertToMapCoordinate(coordinate);
-    return (getActiveInputSwitch().getPlayerController().getWorldMapRevealedComponent()
-        .getAreaIsRevealed(mapCoordinate));
   }
 
 
@@ -108,6 +97,10 @@ public class Game {
     return CONTROLLERS;
   }
 
+  public Actor getActivePlayerActor() {
+    return INPUT_SWITCH.getPlayerController().getActor();
+  }
+
   public static void main(String[] args) {
 
     GameLoader.newGame(new Dimension(48, 48), new Dimension(24, 24));
@@ -118,13 +111,13 @@ public class Game {
       GameDisplay.addKeyListener(keyListener);
     }
 
-    Game.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
+    ACTIVE.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
         (WeaponTemplates.WP_CLUB));
-    Game.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
+    ACTIVE.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
         (WeaponTemplates.WP_SWORD));
-    Game.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
+    ACTIVE.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
         (WeaponTemplates.WP_AXE));
-    Game.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
+    ACTIVE.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
         (WeaponTemplates.WP_DAGGER));
     GameEngine.start();
 

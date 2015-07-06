@@ -45,7 +45,7 @@ public class EquipWeapon extends Action {
       }
     }
 
-    if (getPlayerIsActor()) {
+    if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
       EventLog.registerEvent(Color.CYAN, "You can't equip " + weapon.getName() + ".");
     }
 
@@ -62,7 +62,7 @@ public class EquipWeapon extends Action {
 
     getActor().setEquippedWeapon(validatedWeapon);
 
-    if (getPlayerIsActor()) {
+    if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
       EventLog.registerEvent(Color.CYAN, "You have equipped " + validatedWeapon.getName() + ".");
     }
 

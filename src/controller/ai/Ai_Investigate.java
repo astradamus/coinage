@@ -33,7 +33,7 @@ public class Ai_Investigate extends Behavior {
 
   @Override
   protected String getOnExhibitLogMessage() {
-    if (intruder == Game.getActivePlayerActor()) {
+    if (intruder == Game.getActiveInputSwitch().getPlayerController().getActor()) {
       return getActor().getName() + " has heard you.";
     }
     else {
@@ -73,7 +73,7 @@ public class Ai_Investigate extends Behavior {
 
       // Otherwise, try to turn towards the sound.
       else {
-        getActor().attemptAction(new Turning(getActor(), towardsSourceOfSound));
+        getAgent().attemptAction(new Turning(getActor(), towardsSourceOfSound));
       }
 
     }

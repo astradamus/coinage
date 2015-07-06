@@ -33,7 +33,7 @@ public class AreaPanel extends JPanel {
 
     final World world = GameDisplay.ACTIVE.getWorld();
 
-    Coordinate playerAt = Game.getActivePlayerActor().getCoordinate();
+    Coordinate playerAt = Game.getActiveInputSwitch().getPlayerController().getActor().getCoordinate();
     AreaCoordinate playerAtAC = world.convertToAreaCoordinate(playerAt);
     Coordinate playerAreaOrigin = playerAt.offset(-playerAtAC.areaX, -playerAtAC.areaY);
 

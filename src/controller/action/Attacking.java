@@ -113,7 +113,7 @@ public class Attacking extends Action {
 
     // Apply the damage to the victim and notify the victim's controller.
     victim.getHealth().wound(damage);
-    victim.getObserver().onVictimized(getActor());
+    victim.getActorObserver().onVictimized(getActor());
 
   }
 

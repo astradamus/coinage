@@ -63,10 +63,6 @@ public class Game {
     return ACTIVE.INPUT_SWITCH.getPlayerController().getActor();
   }
 
-  public static GameControllers getActiveControllers() {
-    return ACTIVE.CONTROLLERS;
-  }
-
   public static GameInputSwitch getActiveInputSwitch() {
     return ACTIVE.INPUT_SWITCH;
   }
@@ -106,6 +102,10 @@ public class Game {
 
   public World getWorld() {
     return WORLD;
+  }
+
+  public GameControllers getControllers() {
+    return CONTROLLERS;
   }
 
   public static void main(String[] args) {

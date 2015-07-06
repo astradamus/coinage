@@ -4,8 +4,7 @@ import actor.Actor;
 import controller.ActorAgent;
 import controller.action.Action;
 import controller.action.ActionFlag;
-import game.Game;
-import world.Coordinate;
+import world.Area;
 import world.World;
 import world.MapCoordinate;
 
@@ -31,7 +30,7 @@ public class PlayerAgent extends ActorAgent {
 
       MapCoordinate playerAt = world.convertToMapCoordinate(getActor().getCoordinate());
       component_worldMapRevealed.setAreaIsRevealed(playerAt);
-      Game.getActiveControllers().onPlayerChangedArea();
+      getControllerInterface().reevaluateActiveAreas();
 
     }
 
@@ -43,7 +42,7 @@ public class PlayerAgent extends ActorAgent {
   }
 
   @Override
-  public Coordinate getLocality() {
+  public Area getLocality(World world) {
     return null;  // PlayerAgents are non-local.
   }
 

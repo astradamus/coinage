@@ -8,8 +8,10 @@ import game.Game;
 import game.display.Event;
 import game.display.EventLog;
 import world.Area;
-import world.Coordinate;
 import world.World;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * This actor controller uses modular {@code Behavior} packages to give non-player-characters
@@ -48,8 +50,7 @@ public class AiActorAgent extends ActorAgent {
   }
 
   @Override
-  public void disconnectObserver() {
-    super.disconnectObserver();
+  protected void onActorObserverDisconnected() {
     currentBehavior = null;
   }
 
@@ -59,7 +60,7 @@ public class AiActorAgent extends ActorAgent {
     if (action.hasFlag(ActionFlag.ACTOR_CHANGED_AREA)) {
       Area from = world.getArea(action.getOrigin());
       Area to = world.getArea(getActor().getCoordinate());
-      Game.getActiveControllers().moveController(this, from, to);
+      getControllerInterface().onLocalityChanged(this, from, to);
     }
 
     // Pass the call to our current behavior, if we have one.
@@ -97,14 +98,17 @@ public class AiActorAgent extends ActorAgent {
 
   }
 
-
   World getWorld() {
     return world;
   }
 
   @Override
-  public Coordinate getLocality() {
-    return getActor().getCoordinate();
+  public Area getLocality(World world) {
+    return world.getArea(getActor().getCoordinate());
+  }
+
+  Set<Actor> requestActorsInMyArea() {
+    return getControllerInterface().requestActorsInMyArea(this);
   }
 
 }

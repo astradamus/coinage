@@ -8,7 +8,9 @@ import controller.action.Action;
  */
 public interface ActorObserver {
 
-  default void disconnectObserver() { }
+  default void disconnectActorObserver() {
+    throw new IllegalStateException("Does not implement disconnect.");
+  }
 
   default void onActorTurnComplete() { }
 

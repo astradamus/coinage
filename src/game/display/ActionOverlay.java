@@ -31,8 +31,9 @@ public class ActionOverlay {
     final Actor playerActor = Game.getActivePlayerActor();
 
     // Draw an overlay on actors indicating the direction they are facing.
-    Set<Actor> localActors = Game.getActiveControllers()
-        .getActorsInArea(GameDisplay.ACTIVE.getWorld().getArea(playerActor.getCoordinate()));
+    final Game active = GameDisplay.ACTIVE;
+    Set<Actor> localActors = active.getControllers()
+        .getActorsInArea(active.getWorld().getArea(playerActor.getCoordinate()));
 
     localActors.add(playerActor);
 

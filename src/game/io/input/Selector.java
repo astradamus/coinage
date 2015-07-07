@@ -5,7 +5,7 @@ import world.Coordinate;
 /**
  *
  */
-public class Selector<Selecting> {
+class Selector<Selecting> {
 
   private final String prompt;
   private final Coordinate selectOrigin;

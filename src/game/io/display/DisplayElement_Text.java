@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
  */
 public class DisplayElement_Text implements DisplayElement {
 
-  protected final List<ColoredString> texts;
+  final List<ColoredString> texts;
 
-  protected final Font font;
-  protected final int paddingLeft;
+  private final Font font;
+  private final int paddingLeft;
 
 
   public DisplayElement_Text(int paddingLeft, Font font, List<ColoredString> texts) {
@@ -64,7 +64,7 @@ public class DisplayElement_Text implements DisplayElement {
   }
 
 
-  public int getLineHeight() {
+  int getLineHeight( ) {
     return font.getSize();
   }
 

@@ -9,13 +9,14 @@ import java.util.function.Function;
  */
 public abstract class Range<E> {
 
-  protected final Function<E, Integer> getOrdinal;
-  protected final Function<Integer, E> getTypeValue;
+  private final Function<E, Integer> getOrdinal;
+  private final Function<Integer, E> getTypeValue;
 
   private final Integer minimum;
   private final Integer maximum;
 
-  public Range(Function<E,Integer> getOrdinal, Function<Integer,E> getTypeValue, E minimum, E maximum) {
+  protected Range(Function<E, Integer> getOrdinal, Function<Integer, E> getTypeValue, E minimum,
+                  E maximum) {
     this.getOrdinal = getOrdinal;
     this.getTypeValue = getTypeValue;
     this.minimum = getOrdinal.apply(minimum);

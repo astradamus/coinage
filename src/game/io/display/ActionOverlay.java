@@ -20,10 +20,10 @@ import java.util.Set;
 /**
  *
  */
-public class ActionOverlay {
+class ActionOverlay {
 
-  public static final int SQUARE_SIZE = GameDisplay.SQUARE_SIZE;
-  public static final Font ACTION_OVERLAY_FONT = new Font("Monospaced", Font.BOLD, SQUARE_SIZE*5/7);
+  private static final int SQUARE_SIZE = GameDisplay.SQUARE_SIZE;
+  private static final Font ACTION_OVERLAY_FONT = new Font("Monospaced", Font.BOLD, SQUARE_SIZE*5/7);
 
 
   public static void drawOverlay(Graphics2D g) {

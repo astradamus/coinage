@@ -24,7 +24,7 @@ import world.World;
  */
 public class Ai_Retreat extends Behavior {
 
-  public static final int CANT_ESCAPE_COUNTER_MAX = 30;
+  private static final int CANT_ESCAPE_COUNTER_MAX = 30;
 
   private static final int CANT_ESCAPE_ATTACKED_VALUE = 20;
   private static final int CANT_ESCAPE_REDIRECTED_VALUE = 8;

@@ -19,22 +19,22 @@ import java.util.List;
  */
 public class EventLog {
 
-  public static final double TOP_OR_BOTTOM_SWAP_LINE = 0.75;
+  private static final double TOP_OR_BOTTOM_SWAP_LINE = 0.75;
 
 
   // VALUES IN MILLISECONDS
-  public static final long EVENT_LIFESPAN = 8000;
+  private static final long EVENT_LIFESPAN = 8000;
 
   // VALUES IN PIXELS
-  public static final int LINE_HEIGHT = GameDisplay.SQUARE_SIZE/9*8;
-  public static final int LINE_SPACER = LINE_HEIGHT/3;
+  private static final int LINE_HEIGHT = GameDisplay.SQUARE_SIZE/9*8;
+  private static final int LINE_SPACER = LINE_HEIGHT/3;
 
   // VALUES IN LINES
-  public static final int MINIMUM_HEIGHT = 5;
-  public static final int MAXIMUM_HEIGHT = 10;
+  private static final int MINIMUM_HEIGHT = 5;
+  private static final int MAXIMUM_HEIGHT = 10;
 
 
-  public static final Font SMALL_TEXT = new Font("Monospaced", Font.PLAIN, LINE_HEIGHT);
+  private static final Font SMALL_TEXT = new Font("Monospaced", Font.PLAIN, LINE_HEIGHT);
 
 
 

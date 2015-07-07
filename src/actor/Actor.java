@@ -27,7 +27,7 @@ public class Actor extends Physical {
 
 
   /** Defines physical flags that all actors are initialized with. */
-  public static final EnumSet<PhysicalFlag> STANDARD_FLAGS = EnumSet.of(PhysicalFlag.BLOCKING,
+  private static final EnumSet<PhysicalFlag> STANDARD_FLAGS = EnumSet.of(PhysicalFlag.BLOCKING,
       PhysicalFlag.IMMOVABLE);
 
 

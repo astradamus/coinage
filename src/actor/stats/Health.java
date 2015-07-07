@@ -14,7 +14,7 @@ import game.physical.PhysicalFlag;
  */
 public class Health {
 
-  public static final int HEALTH_PER_GRIT = 10;
+  private static final int HEALTH_PER_GRIT = 10;
 
 
   private final Actor actor;
@@ -77,11 +77,11 @@ public class Health {
   }
 
 
-  public int getCurrent() {
+  private int getCurrent( ) {
     return current;
   }
 
-  public int getMaximum() {
+  private int getMaximum( ) {
     return maximum;
   }
 

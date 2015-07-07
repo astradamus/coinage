@@ -9,7 +9,7 @@ import java.awt.Graphics;
 /**
  *
  */
-public class SquareDrawer {
+class SquareDrawer {
 
   public static void drawSquare(Graphics g, Appearance appearance, int squareSize,
                                 int drawX, int drawY) {

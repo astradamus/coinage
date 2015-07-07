@@ -13,7 +13,7 @@ import java.util.Stack;
  */
 public class GameEngine {
 
-  public static final int MILLISECONDS_PER_HEARTBEAT = 20;
+  private static final int MILLISECONDS_PER_HEARTBEAT = 20;
 
 
   private static Stack<TimeMode> TIME_MODE = new Stack<>();

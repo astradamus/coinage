@@ -17,12 +17,12 @@ import java.util.List;
 public class ThingTemplate {
 
   final String name;
-  final List<Appearance> appearances = new ArrayList<>();
+  private final List<Appearance> appearances = new ArrayList<>();
   final EnumSet<PhysicalFlag> flags;
 
   final WeaponComponent weaponComponent;
 
-  public ThingTemplate(String name, char[] chars, Color[] colors, EnumSet<PhysicalFlag> flags) {
+  private ThingTemplate(String name, char[] chars, Color[] colors, EnumSet<PhysicalFlag> flags) {
 
     this.name = name;
 

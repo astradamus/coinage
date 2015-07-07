@@ -16,7 +16,7 @@ import java.awt.Graphics2D;
 /**
  *
  */
-public class AreaPanel extends JPanel {
+class AreaPanel extends JPanel {
 
   private static final int SQUARE_SIZE = GameDisplay.SQUARE_SIZE;
 

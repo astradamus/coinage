@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  */
 public class GameControllers implements Executor, ControllerInterface {
 
-  public static final int CONTROLLER_PROCESS_RADIUS = 10;
+  private static final int CONTROLLER_PROCESS_RADIUS = 10;
 
 
   private final Game game;

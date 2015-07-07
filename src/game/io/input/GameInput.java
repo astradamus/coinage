@@ -119,7 +119,7 @@ public class GameInput {
     targetCursor = null;
   }
 
-  public static void beginSelectingCoordinate(Selector<Coordinate> coordinateSelector) {
+  static void beginSelectingCoordinate(Selector<Coordinate> coordinateSelector) {
     clearSelectsAndCursor();
 
     GameInput.coordinateSelector = coordinateSelector;
@@ -150,7 +150,7 @@ public class GameInput {
   private static Direction delayedMoveDirection = null;
   private static int startRepeatingMoveDelay = -1;
 
-  public static void receiveDirection(Direction direction) {
+  private static void receiveDirection(Direction direction) {
 
     if (targetCursor != null) {
       targetCursor.setCursorMovingIn(direction);
@@ -178,7 +178,7 @@ public class GameInput {
 
   }
 
-  public static void receiveDirectionsCleared() {
+  private static void receiveDirectionsCleared( ) {
 
     if (targetCursor == null) {
       runningGame.getActivePlayerActor().doNotRepeatAction();
@@ -231,7 +231,7 @@ public class GameInput {
     startRepeatingMoveDelay = -1;
   }
 
-  public static void receiveSelectScroll(int deltaY) {
+  private static void receiveSelectScroll(int deltaY) {
 
     if (targetCursor != null) {
       targetCursor.scrollSelection(deltaY);
@@ -240,7 +240,7 @@ public class GameInput {
   }
 
 
-  public static void receiveSubmitSelection() {
+  private static void receiveSubmitSelection( ) {
 
     if (coordinateSelector != null) {
       coordinateSelector.execute(targetCursor.getTarget());
@@ -254,7 +254,7 @@ public class GameInput {
 
   }
 
-  public static void setTargetCursor(TargetCursor targetCursor) {
+  static void setTargetCursor(TargetCursor targetCursor) {
     GameInput.targetCursor = targetCursor;
   }
 

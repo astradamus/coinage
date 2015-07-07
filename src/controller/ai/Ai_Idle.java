@@ -14,10 +14,10 @@ import game.Game;
  */
 public class Ai_Idle extends Behavior {
 
-  public static final int SENSORY_SCAN_INTERVAL = 5;
+  private static final int SENSORY_SCAN_INTERVAL = 5;
 
-  public static final int IDLE_DURATION_BASE  = 75;
-  public static final int IDLE_DURATION_RANGE = 75;
+  private static final int IDLE_DURATION_BASE  = 75;
+  private static final int IDLE_DURATION_RANGE = 75;
 
 
   private int idleTimeRemaining;

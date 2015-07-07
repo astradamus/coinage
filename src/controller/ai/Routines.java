@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * Contains common subroutines used in multiple packages.
  */
-public class Routines {
+class Routines {
 
   /**
    * If we are already facing the given direction, just start moving. Otherwise, turn and then

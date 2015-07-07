@@ -11,7 +11,7 @@ import utils.Dimension;
 /**
  *
  */
-public class GameLoader {
+class GameLoader {
 
   static {
 
@@ -26,7 +26,7 @@ public class GameLoader {
 
   private static Game runningGame;
 
-  static void load(Game game) {
+  private static void load(Game game) {
     if (runningGame != null) {
       throw new IllegalStateException("Already running a game, must first call unload().");
     }

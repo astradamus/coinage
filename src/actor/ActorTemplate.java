@@ -27,9 +27,9 @@ public class ActorTemplate {
 
   final EnumSet<PhysicalFlag> flags;
 
-  public ActorTemplate(String name, char appearance, Color color, Color bgColor,
-                       List<AttributeRange> baseAttributeRanges, String naturalWeaponID,
-                       EnumSet<PhysicalFlag> flags) {
+  private ActorTemplate(String name, char appearance, Color color, Color bgColor,
+                        List<AttributeRange> baseAttributeRanges, String naturalWeaponID,
+                        EnumSet<PhysicalFlag> flags) {
     this.name = name;
     this.appearance = new Appearance(appearance,color,bgColor, Appearance.VISUAL_PRIORITY__ACTORS);
     this.baseAttributeRanges = baseAttributeRanges;

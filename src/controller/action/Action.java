@@ -23,7 +23,7 @@ public abstract class Action {
   private final Coordinate target;
   private final EnumSet<ActionFlag> flags;
 
-  protected Action(Actor actor, Coordinate targetWhere) {
+  Action(Actor actor, Coordinate targetWhere) {
     this.actor = actor;
     this.origin = actor.getCoordinate();
     this.target = targetWhere;
@@ -100,7 +100,7 @@ public abstract class Action {
   }
 
 
-  protected final void addFlag(ActionFlag flag) {
+  final void addFlag(ActionFlag flag) {
     flags.add(flag);
   }
 
@@ -124,7 +124,7 @@ public abstract class Action {
   }
 
 
-  protected final Actor getActor() {
+  final Actor getActor( ) {
     return actor;
   }
 

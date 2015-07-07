@@ -7,8 +7,8 @@ import utils.Dimension;
  */
 public class WorldFactory {
 
-  public static final int    STDGEN_PATCH_RADIUS_LIMIT = 4;
-  public static final double STDGEN_PATCH_PATCHINESS = 0.000; // % of patch candidates are discarded
+  private static final int    STDGEN_PATCH_RADIUS_LIMIT = 4;
+  private static final double STDGEN_PATCH_PATCHINESS = 0.000; // % of patch candidates are discarded
 
   public static World standardGeneration(Dimension areaSizeInSquares, Dimension worldSizeInAreas) {
 

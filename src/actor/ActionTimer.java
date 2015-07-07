@@ -9,7 +9,7 @@ package actor;
  * This timer stores both values and exposes methods for incrementing them, decrementing them, and
  * easily translating them into the information the game needs.
  */
-public class ActionTimer {
+class ActionTimer {
 
   private int actionWarmUp = 0;
   private int actionCoolDown = 0;

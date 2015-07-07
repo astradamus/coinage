@@ -19,11 +19,11 @@ import java.awt.Color;
  */
 public class Moving extends Action {
 
-  public final static int BASELINE_RANK = 5;
-  public final static int BEATS_AT_BASELINE = 4;
-  public final static int DISTANCE_ADJUSTMENT_DIVISOR = 3;
+  private final static int BASELINE_RANK = 5;
+  private final static int BEATS_AT_BASELINE = 4;
+  private final static int DISTANCE_ADJUSTMENT_DIVISOR = 3;
 
-  public static final int FOUR_LEGGED_FULL_SPEED_BONUS = 1;
+  private static final int FOUR_LEGGED_FULL_SPEED_BONUS = 1;
 
 
   private final Direction movingIn;

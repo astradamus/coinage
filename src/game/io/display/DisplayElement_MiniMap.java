@@ -16,18 +16,18 @@ import java.awt.Graphics;
  */
 public class DisplayElement_MiniMap implements DisplayElement {
 
-  public static final int SQUARE_SIZE = 30;
+  private static final int SQUARE_SIZE = 30;
 
-  public static final Appearance MAP_UNEXPLORED_SQUARE =
+  private static final Appearance MAP_UNEXPLORED_SQUARE =
       new Appearance('?',new Color(25,25,25),new Color(11,11,11));
 
-  public static final int BORDER_THICKNESS = 1;
+  private static final int BORDER_THICKNESS = 1;
 
-  public static final int MAP_RADIUS_SQUARES = 5;
-  public static final int SIZE_IN_SQUARES = MAP_RADIUS_SQUARES * 2 + 1;
-  public static final int SIZE_IN_PIXELS = SIZE_IN_SQUARES * SQUARE_SIZE;
+  private static final int MAP_RADIUS_SQUARES = 5;
+  private static final int SIZE_IN_SQUARES = MAP_RADIUS_SQUARES * 2 + 1;
+  private static final int SIZE_IN_PIXELS = SIZE_IN_SQUARES * SQUARE_SIZE;
 
-  public static final int FULL_SIZE_IN_PIXELS = SIZE_IN_PIXELS + BORDER_THICKNESS;
+  private static final int FULL_SIZE_IN_PIXELS = SIZE_IN_PIXELS + BORDER_THICKNESS;
 
   @Override
   public int getHeight() {

@@ -19,7 +19,7 @@ import game.Game;
  */
 public class Ai_Wander extends Behavior {
 
-  public static final int WANDER_CHAIN_MAX_LENGTH = 3;
+  private static final int WANDER_CHAIN_MAX_LENGTH = 3;
 
 
   private int wanderChain;

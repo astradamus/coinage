@@ -12,7 +12,7 @@ import world.World;
  */
 public class Turning extends Action {
 
-  protected final Direction turningTowards;
+  final Direction turningTowards;
 
   public Turning(Actor actor, Direction turningTowards) {
     super(actor, null);

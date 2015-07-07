@@ -56,7 +56,7 @@ public class Utils {
 
   }
 
-  public static final List<Character> VOWELS =
+  private static final List<Character> VOWELS =
       Collections.unmodifiableList(Arrays.asList('a', 'e', 'i', 'o', 'u'));
 
 }

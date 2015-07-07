@@ -5,6 +5,7 @@ import game.TimeMode;
 import game.io.display.GameDisplay;
 import game.io.input.GameInput;
 
+import java.security.InvalidParameterException;
 import java.util.Stack;
 
 /**
@@ -96,8 +97,23 @@ public class GameEngine {
     }
   }
 
-  public static void setRunningGame(Game runningGame) {
+  public static void loadRunningGame(Game runningGame) {
+    if (GameEngine.runningGame != null) {
+      throw new IllegalStateException("Already running a game, must first call unloadRunningGame().");
+    }
     GameEngine.runningGame = runningGame;
+  }
+
+  /**
+   * @param runningGame Must be supplied to ensure this method is only called from high places.
+   * @throws InvalidParameterException If the supplied game is null or does not match the currently
+   *                    running game.
+   */
+  public static void unloadRunningGame(Game runningGame) {
+    if (GameEngine.runningGame != runningGame) {
+      throw new InvalidParameterException("Game parameter does not match currently running game.");
+    }
+    GameEngine.runningGame = null;
   }
 
 }

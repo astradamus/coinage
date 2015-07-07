@@ -31,10 +31,10 @@ public class GameLoader {
       throw new IllegalStateException("Already running a game, must first call unload().");
     }
     runningGame = game;
-    GameInput.setRunningGame(game);
-    GameDisplay.setRunningGame(game);
+    GameInput.loadRunningGame(game);
+    GameDisplay.loadRunningGame(game);
     GameDisplay.recalculateSize();
-    GameEngine.setRunningGame(game);
+    GameEngine.loadRunningGame(game);
     GameEngine.start();
   }
 
@@ -43,12 +43,11 @@ public class GameLoader {
       throw new IllegalStateException("No active Game to unload!");
     }
     GameEngine.stop();
-    GameEngine.setRunningGame(null);
-    GameDisplay.setRunningGame(null);
-    GameInput.setRunningGame(null);
+    GameEngine.unloadRunningGame(runningGame);
+    GameDisplay.unloadRunningGame(runningGame);
+    GameInput.unloadRunningGame(runningGame);
     runningGame = null;
   }
-
 
 
   public static void main(String[] args) {

@@ -12,6 +12,7 @@ import javax.swing.WindowConstants;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyListener;
+import java.security.InvalidParameterException;
 import java.util.List;
 
 /**
@@ -66,8 +67,23 @@ public class GameDisplay {
     PANEL_SIDE.repaint();
   }
 
-  public static void setRunningGame(Game activeGame) {
+  public static void loadRunningGame(Game activeGame) {
+    if (GameDisplay.runningGame != null) {
+      throw new IllegalStateException("Already running a game, must first call unloadRunningGame().");
+    }
     GameDisplay.runningGame = activeGame;
+  }
+
+  /**
+   * @param runningGame Must be supplied to ensure this method is only called from high places.
+   * @throws InvalidParameterException If the supplied game is null or does not match the currently
+   *                    running game.
+   */
+  public static void unloadRunningGame(Game runningGame) {
+    if (GameDisplay.runningGame != runningGame) {
+      throw new InvalidParameterException("Game parameter does not match currently running game.");
+    }
+    GameDisplay.runningGame = null;
   }
 
   public static void addKeyListeners(List<KeyListener> keyListeners) {

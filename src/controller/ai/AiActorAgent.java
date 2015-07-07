@@ -5,11 +5,12 @@ import controller.ActorAgent;
 import controller.action.Action;
 import controller.action.ActionFlag;
 import game.Game;
-import game.display.Event;
-import game.display.EventLog;
+import game.io.display.Event;
+import game.io.display.EventLog;
 import world.Area;
-import world.Coordinate;
 import world.World;
+
+import java.util.Set;
 
 /**
  * This actor controller uses modular {@code Behavior} packages to give non-player-characters
@@ -20,12 +21,12 @@ import world.World;
  */
 public class AiActorAgent extends ActorAgent {
 
-  private World world;
+  private Game.Reporter gameReporter;
   private Behavior currentBehavior;
 
-  public AiActorAgent(Actor actor, World world) {
+  public AiActorAgent(Actor actor, Game.Reporter gameReporter) {
     super(actor);
-    this.world = world;
+    this.gameReporter = gameReporter;
     currentBehavior = null;
   }
 
@@ -48,8 +49,7 @@ public class AiActorAgent extends ActorAgent {
   }
 
   @Override
-  public void disconnectObserver() {
-    super.disconnectObserver();
+  protected void onActorObserverDisconnected() {
     currentBehavior = null;
   }
 
@@ -57,9 +57,10 @@ public class AiActorAgent extends ActorAgent {
   public void onActionExecuted(Action action) {
 
     if (action.hasFlag(ActionFlag.ACTOR_CHANGED_AREA)) {
+      final World world = gameReporter.getWorld();
       Area from = world.getArea(action.getOrigin());
       Area to = world.getArea(getActor().getCoordinate());
-      Game.getActiveControllers().moveController(this, from, to);
+      getControllerInterface().onLocalityChanged(this, from, to);
     }
 
     // Pass the call to our current behavior, if we have one.
@@ -97,14 +98,17 @@ public class AiActorAgent extends ActorAgent {
 
   }
 
-
-  World getWorld() {
-    return world;
+  Game.Reporter getGameReporter() {
+    return gameReporter;
   }
 
   @Override
-  public Coordinate getLocality() {
-    return getActor().getCoordinate();
+  public Area getLocality(World world) {
+    return world.getArea(getActor().getCoordinate());
+  }
+
+  Set<Actor> requestActorsInMyArea() {
+    return getControllerInterface().requestActorsInMyArea(this);
   }
 
 }

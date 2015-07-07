@@ -5,7 +5,9 @@ import controller.ActorAgent;
 import controller.action.Action;
 import controller.action.ActionFlag;
 import game.Game;
-import world.Coordinate;
+import game.io.display.Event;
+import game.io.display.EventLog;
+import world.Area;
 import world.World;
 import world.MapCoordinate;
 
@@ -24,6 +26,11 @@ public class PlayerAgent extends ActorAgent {
   }
 
   @Override
+  public void attemptAction(Action action) {
+    getActor().startAction(action.playerIsActor());
+  }
+
+  @Override
   public void onActionExecuted(Action action) {
 
     // Update WorldMapRevealed component accordingly.
@@ -31,19 +38,23 @@ public class PlayerAgent extends ActorAgent {
 
       MapCoordinate playerAt = world.convertToMapCoordinate(getActor().getCoordinate());
       component_worldMapRevealed.setAreaIsRevealed(playerAt);
-      Game.getActiveControllers().onPlayerChangedArea();
+      getControllerInterface().reevaluateActiveAreas();
 
     }
 
   }
 
+  @Override
+  protected void onActorObserverDisconnected() {
+    EventLog.registerEvent(Event.INVALID_ACTION, "You are dead. Game over.");
+  }
 
   public final Component_WorldMapRevealed getWorldMapRevealedComponent() {
     return component_worldMapRevealed;
   }
 
   @Override
-  public Coordinate getLocality() {
+  public Area getLocality(World world) {
     return null;  // PlayerAgents are non-local.
   }
 

@@ -7,6 +7,10 @@ import java.awt.Color;
  */
 public class Appearance {
 
+  public static final int VISUAL_PRIORITY__TERRAIN = 0;
+  public static final int VISUAL_PRIORITY__THINGS = 10;
+  public static final int VISUAL_PRIORITY__ACTORS = 100;
+
 
   private final char mapSymbol;
   private final Color color;

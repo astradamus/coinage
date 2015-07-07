@@ -3,11 +3,11 @@ package game;
 import actor.Actor;
 import controller.ActorAgent;
 import controller.Controller;
+import controller.ControllerInterface;
 import controller.action.Action;
 import game.physical.PhysicalFlag;
 import world.Area;
 import world.Coordinate;
-import world.World;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,56 +22,52 @@ import java.util.stream.Collectors;
 /**
  *
  */
-public class GameControllers implements Executor {
+public class GameControllers implements Executor, ControllerInterface {
 
   public static final int CONTROLLER_PROCESS_RADIUS = 10;
 
 
-  private final World world;
+  private final Game game;
 
   private final Map<Area,Set<Controller>> controllerLocations = new HashMap<>();
   private Set<Area> activeAreas = null;
 
-  public GameControllers(World world) {
-    this.world = world;
-    world.getAllAreas().forEach(area -> controllerLocations.put(area, new HashSet<>()));
+  public GameControllers(Game game) {
+    this.game = game;
+    game.getWorld().getAllAreas().forEach(area -> controllerLocations.put(area, new HashSet<>()));
     controllerLocations.put(null, new HashSet<>()); // null contains non-local controllers
   }
 
-  public void onPlayerChangedArea() {
-    playerChangedArea = true;
+  @Override
+  public void reevaluateActiveAreas() {
+    reevaluateActives = true;
   }
 
-  public void moveController(ActorAgent actorAgent, Area from, Area to) {
-    if (controllerLocations.get(from).remove(actorAgent)) {
-      controllerLocations.get(to).add(actorAgent);
+  @Override
+  public void onLocalityChanged(Controller controller, Area from, Area to) {
+    if (controllerLocations.get(from).remove(controller)) {
+      controllerLocations.get(to).add(controller);
     }
   }
 
   public void addController(Controller controller) {
     NEXT_CONTROLLERS.add(controller);
-    controllerLocations.get(world.getArea(controller.getLocality())).add(controller);
+    controllerLocations.get(controller.getLocality(game.getWorld())).add(controller);
+    controller.setControllerInterface(this);
   }
-
-  public void removeController(Controller controller) {
-    DEAD_CONTROLLERS.add(controller);
-    controllerLocations.get(world.getArea(controller.getLocality())).remove(controller);
-  }
-
 
 
   // Starts true so we calculate active areas on first update.
-  private boolean playerChangedArea = true;
+  private boolean reevaluateActives = true;
 
   private final List<Controller> ACTIVE_CONTROLLERS = new ArrayList<>();
   private final Set<Controller>  NEXT_CONTROLLERS   = new HashSet<>();
-  private final Set<Controller>  DEAD_CONTROLLERS   = new HashSet<>();
 
 
 
   @Override
   public boolean executeAction(Action action) {
-    return action.perform(world);
+    return action.perform(game.getWorld());
   }
 
   /**
@@ -85,40 +81,55 @@ public class GameControllers implements Executor {
     // Get all active controllers that are still in processing range. By doing this we avoid
     // the complex task of removing controllers from ACTIVE on the fly, as they or the range move.
     List<Controller> activeAndInRange = ACTIVE_CONTROLLERS.stream()
-        .filter(active -> activeAreas.contains(world.getArea(active.getLocality())))
+        .filter(active -> activeAreas.contains(active.getLocality(game.getWorld())))
         .collect(Collectors.toList());
 
 
-    // First, update each controller, skipping any that are dead.
+    // Update each controller, skipping any that are dead. Don't bother pruning the dead yet, because controllers can
+    // die after we've already passed them in this loop.
     activeAndInRange.stream()
-        .filter(controller -> !DEAD_CONTROLLERS.contains(controller))
+        .filter(controller -> controller.getIsStillRunning())
         .forEach(controller -> controller.onUpdate(this));
 
-    if (!playerChangedArea) {
+    // Prune all dead controllers.
+    pruneDeadControllers(activeAndInRange);
 
-      // If player didn't change area, register same actives for next turn.
+    if (!reevaluateActives) {
+
+      // Register the same actives for the next turn
       activeAndInRange.forEach(NEXT_CONTROLLERS::add);
 
     } else {
 
       // If player changed area, update active areas and register all controllers therein.
       calculateActiveAreasAndControllers();
-      playerChangedArea = false;
+      reevaluateActives = false;
 
     }
-
-    // Prune any controllers marked dead with removeController().
-    DEAD_CONTROLLERS.forEach(NEXT_CONTROLLERS::remove);
 
     performNextTurnSort();
 
   }
 
+  private void pruneDeadControllers(List<Controller> listToPrune) {
+    for (int i = 0; i < listToPrune.size(); i++) {
+      Controller cont = listToPrune.get(i);
+
+      if (!cont.getIsStillRunning()) {
+        listToPrune.remove(i);
+        i--;
+
+        controllerLocations.get(cont.getLocality(game.getWorld())).remove(cont);
+        cont.setControllerInterface(null);
+      }
+
+    }
+  }
+
 
   private void calculateActiveAreasAndControllers() {
-    Coordinate playerAt = Game.getActivePlayerActor().getCoordinate();
-    activeAreas
-        = world.getAllAreasWithinRange(playerAt, CONTROLLER_PROCESS_RADIUS);
+    final Coordinate playerAt = game.getActivePlayerActor().getCoordinate();
+    activeAreas = game.getWorld().getAllAreasWithinRange(playerAt, CONTROLLER_PROCESS_RADIUS);
     activeAreas.add(null); // Null contains non-local controllers. Always process it!
 
     for (Area area : activeAreas) {
@@ -147,6 +158,12 @@ public class GameControllers implements Executor {
 
   }
 
+  @Override
+  public Set<Actor> requestActorsInMyArea(ActorAgent actorAgent) {
+    final Area area = actorAgent.getLocality(game.getWorld());
+    return getActorsInArea(area);
+  }
+
   public Set<Actor> getActorsInArea(Area area) {
 
     HashSet<Actor> set = new HashSet<>();
@@ -157,9 +174,9 @@ public class GameControllers implements Executor {
         .collect(Collectors.toSet()));
 
     // If the player is here and alive, include them in the return.
-    final Actor playerActor = Game.getActivePlayerActor();
+    final Actor playerActor = game.getActivePlayerActor();
     if (!playerActor.hasFlag(PhysicalFlag.DEAD)
-        && world.getArea(playerActor.getCoordinate()) == area) {
+        && game.getWorld().getArea(playerActor.getCoordinate()) == area) {
       set.add(playerActor);
     }
 

@@ -61,7 +61,7 @@ public class Ai_Idle extends Behavior {
           turnTo = turnTo.getRightNeighbor();
         }
 
-        getActor().attemptAction(new Turning(getActor(), turnTo));
+        getAgent().attemptAction(new Turning(getActor(), turnTo));
 
       }
 

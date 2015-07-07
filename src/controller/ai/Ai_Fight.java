@@ -8,10 +8,10 @@ import controller.action.Action;
 import controller.action.ActionFlag;
 import controller.action.Attacking;
 import controller.action.Moving;
-import game.Game;
 import game.TimeMode;
-import game.display.Event;
-import game.display.EventLog;
+import game.io.GameEngine;
+import game.io.display.Event;
+import game.io.display.EventLog;
 import game.physical.PhysicalFlag;
 import world.Coordinate;
 import world.MapCoordinate;
@@ -38,7 +38,7 @@ public class Ai_Fight extends Behavior {
 
   @Override
   protected String getOnExhibitLogMessage() {
-    if (victim == Game.getActivePlayerActor()) {
+    if (getAgent().getGameReporter().getActorIsPlayer(victim)) {
       return getActor().getName() + " doesn't look too friendly.";
     }
     else {
@@ -51,8 +51,8 @@ public class Ai_Fight extends Behavior {
 
     fight();
 
-    if (victim == Game.getActivePlayerActor() && Game.getTimeMode() == TimeMode.LIVE) {
-      Game.setTimeMode(TimeMode.PRECISION);
+    if (getAgent().getGameReporter().getActorIsPlayer(victim) && GameEngine.getTimeMode() == TimeMode.LIVE) {
+      GameEngine.setTimeMode(TimeMode.PRECISION);
       EventLog.registerEvent(Event.INVALID_ACTION,
           "Precision mode has been enabled because you are under attack.");
     }
@@ -74,7 +74,13 @@ public class Ai_Fight extends Behavior {
 
       // If we are adjacent to our enemy, attack them.
       if (actorAt.getIsAdjacentTo(enemyAt)) {
-        getActor().attemptAction(new Attacking(getActor(), victim.getCoordinate()));
+        final Attacking action = new Attacking(getActor(), victim.getCoordinate());
+
+        if (getAgent().getGameReporter().getActorIsPlayer(victim)) {
+          action.playerIsTarget();
+        }
+
+        getAgent().attemptAction(action);
       }
 
       else {
@@ -86,7 +92,7 @@ public class Ai_Fight extends Behavior {
 
         else {
 
-          final World world = getAgent().getWorld();
+          final World world = getAgent().getGameReporter().getWorld();
 
           final Rank perception = getActor().getAttributeRank(Attribute.PERCEPTION);
           final MapCoordinate actorMC = world.convertToMapCoordinate(actorAt);

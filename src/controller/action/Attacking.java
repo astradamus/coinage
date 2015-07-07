@@ -4,8 +4,8 @@ import actor.Actor;
 import actor.attribute.Attribute;
 import actor.attribute.Rank;
 import game.Game;
-import game.display.Event;
-import game.display.EventLog;
+import game.io.display.Event;
+import game.io.display.EventLog;
 import game.physical.Physical;
 import game.physical.PhysicalFlag;
 import thing.Thing;
@@ -60,7 +60,7 @@ public class Attacking extends Action {
     // If we have a victim, then this attack is a hit.
     final boolean attackHit = victim != null;
 
-    if (!attackHit && getPlayerIsActor()) {
+    if (!attackHit && hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
 
       final String attackTypeString = getActor().getActiveWeapon()
           .getWeaponComponent().getDamageType().getAttackString();
@@ -91,7 +91,7 @@ public class Attacking extends Action {
     final String hitString = weaponComponent.getDamageType().getHitString();
 
     String victimName = victim.getName();
-    if (victim == Game.getActivePlayerActor()) {
+    if (hasFlag(ActionFlag.PLAYER_IS_TARGET)) {
       victimName = "you";
     }
 
@@ -100,7 +100,7 @@ public class Attacking extends Action {
 
     String message;
 
-    if (getPlayerIsActor()) {
+    if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
       message = "You have " + messageA + "your " + messageB;
     } else {
       message = getActor().getName() + " has "+ messageA + "its "+ messageB;
@@ -113,7 +113,7 @@ public class Attacking extends Action {
 
     // Apply the damage to the victim and notify the victim's controller.
     victim.getHealth().wound(damage);
-    victim.getObserver().onVictimized(getActor());
+    victim.getActorObserver().onVictimized(getActor());
 
   }
 

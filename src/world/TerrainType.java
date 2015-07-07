@@ -72,7 +72,7 @@ public enum TerrainType {
 
     for (char character : Terrain.chars) {
       for (Color color : colors) {
-        appearances.add(new Appearance(character, color, null, Game.VISUAL_PRIORITY__TERRAIN));
+        appearances.add(new Appearance(character, color, null, Appearance.VISUAL_PRIORITY__TERRAIN));
       }
     }
 

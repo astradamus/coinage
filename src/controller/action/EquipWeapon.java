@@ -1,7 +1,7 @@
 package controller.action;
 
 import actor.Actor;
-import game.display.EventLog;
+import game.io.display.EventLog;
 import game.physical.Physical;
 import thing.Thing;
 import world.World;
@@ -45,7 +45,7 @@ public class EquipWeapon extends Action {
       }
     }
 
-    if (getPlayerIsActor()) {
+    if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
       EventLog.registerEvent(Color.CYAN, "You can't equip " + weapon.getName() + ".");
     }
 
@@ -62,7 +62,7 @@ public class EquipWeapon extends Action {
 
     getActor().setEquippedWeapon(validatedWeapon);
 
-    if (getPlayerIsActor()) {
+    if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
       EventLog.registerEvent(Color.CYAN, "You have equipped " + validatedWeapon.getName() + ".");
     }
 

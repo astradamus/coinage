@@ -6,6 +6,7 @@ import actor.inventory.Inventory;
 import actor.stats.Health;
 import controller.ActorObserver;
 import controller.action.Action;
+import controller.action.ActionFlag;
 import game.Direction;
 import game.Executor;
 import game.physical.Physical;
@@ -30,7 +31,7 @@ public class Actor extends Physical {
       PhysicalFlag.IMMOVABLE);
 
 
-  private ActorObserver observer;
+  private ActorObserver actorObserver;
 
   private final Map<Attribute, Rank> attributes;
   private final Health health;
@@ -67,7 +68,7 @@ public class Actor extends Physical {
   /**
    * Called when the actor has been killed. Upon dying, actors retain their actor state, but behave
    * in almost all respects like things--that is, they no longer block the square they occupy and
-   * they can be picked up and carried. They also disconnect from their observer, which means
+   * they can be picked up and carried. They also disconnect from their actorObserver, which means
    * they stop acting and become lifeless.
    */
   public final void die() {
@@ -75,7 +76,7 @@ public class Actor extends Physical {
       removeFlag(PhysicalFlag.BLOCKING);
       removeFlag(PhysicalFlag.IMMOVABLE);
       addFlag(PhysicalFlag.DEAD);
-      observer.disconnectObserver();
+      actorObserver.disconnectActorObserver();
     }
   }
 
@@ -93,7 +94,7 @@ public class Actor extends Physical {
    * before the new time is added. In other words, there is no penalty for switching actions,
    * except that you lose the beats you spent warming up the replaced action.
    */
-  public final void attemptAction(Action action) {
+  public final void startAction(Action action) {
     actionTimer.cancelWarmUp();
     actionTimer.addBeatsToWarmUp(action.calcDelayToPerform());
     this.action = action;
@@ -112,10 +113,10 @@ public class Actor extends Physical {
    * Called every update when it is this actor's turn to act. If the actor has any warm-up or
    * cool-down time, then this update is spent towards that time. Otherwise, if there is an
    * action queued, the actor will perform it. If the action is successful, an attempt will be
-   * made to repeat the action. Successful or not, the actor's observer will be notified and
+   * made to repeat the action. Successful or not, the actor's actorObserver will be notified and
    * passed the completed action.
    *
-   * <p>Additionally, regardless of whether an action is performed, the actor's observer will be
+   * <p>Additionally, regardless of whether an action is performed, the actor's actorObserver will be
    * notified at the very end of this actor's turn.</p>
    *
    * @param executor Supplied by {@code GameControllers}, allowing this actor to pass an action
@@ -138,7 +139,13 @@ public class Actor extends Physical {
         // If this action can repeat upon succeeding, attempt to do so.
         Action repeat = executing.attemptRepeat();
         if (repeat != null) {
-          attemptAction(repeat);
+
+          // Copy repeating flag(s).
+          if (repeat.hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
+            repeat.playerIsActor();
+          }
+
+          startAction(repeat);
         }
 
       }
@@ -148,11 +155,11 @@ public class Actor extends Physical {
         action = null;
       }
 
-      observer.onActionExecuted(executing);
+      actorObserver.onActionExecuted(executing);
 
     }
 
-    observer.onActorTurnComplete();
+    actorObserver.onActorTurnComplete();
 
   }
 
@@ -217,15 +224,15 @@ public class Actor extends Physical {
     this.coordinate = coordinate;
   }
 
-  public ActorObserver getObserver() {
-    return observer;
+  public ActorObserver getActorObserver() {
+    return actorObserver;
   }
 
-  public final void setObserver(ActorObserver observer) {
-    if (this.observer != null) {
-      this.observer.disconnectObserver();
+  public final void setActorObserver(ActorObserver actorObserver) {
+    if (this.actorObserver != null) {
+      this.actorObserver.disconnectActorObserver();
     }
-    this.observer = observer;
+    this.actorObserver = actorObserver;
   }
 
 

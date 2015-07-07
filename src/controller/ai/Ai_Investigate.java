@@ -6,7 +6,6 @@ import actor.attribute.Perception;
 import actor.attribute.Rank;
 import controller.action.Turning;
 import game.Direction;
-import game.Game;
 import world.Coordinate;
 
 /**
@@ -33,7 +32,7 @@ public class Ai_Investigate extends Behavior {
 
   @Override
   protected String getOnExhibitLogMessage() {
-    if (intruder == Game.getActivePlayerActor()) {
+    if (getAgent().getGameReporter().getActorIsPlayer(intruder)) {
       return getActor().getName() + " has heard you.";
     }
     else {
@@ -73,7 +72,7 @@ public class Ai_Investigate extends Behavior {
 
       // Otherwise, try to turn towards the sound.
       else {
-        getActor().attemptAction(new Turning(getActor(), towardsSourceOfSound));
+        getAgent().attemptAction(new Turning(getActor(), towardsSourceOfSound));
       }
 
     }

@@ -44,7 +44,7 @@ public class Routines {
       action.doNotRepeat();
     }
 
-    actor.attemptAction(action);
+    agent.attemptAction(action);
 
   }
 
@@ -67,7 +67,7 @@ public class Routines {
       turningTowards = turningTowards.getRightNeighbor();
     }
 
-    actor.attemptAction(new TurnThenMove(actor, turningTowards, false).doNotRepeat());
+    agent.attemptAction(new TurnThenMove(actor, turningTowards, false).doNotRepeat());
 
   }
 
@@ -91,14 +91,12 @@ public class Routines {
    */
   public static void performSensoryScan(AiActorAgent agent) {
 
-    final Area area = agent.getWorld().getArea(agent.getLocality());
-
     final Actor actor = agent.getActor();
     final Coordinate actorAt = actor.getCoordinate();
     final Rank perceptionRank = actor.getAttributeRank(Attribute.PERCEPTION);
 
     // Get all actor controllers in our area.
-    final Set<Actor> localActors = Game.getActiveControllers().getActorsInArea(area);
+    final Set<Actor> localActors = agent.requestActorsInMyArea();
 
 
     for (Actor scanTarget : localActors) {

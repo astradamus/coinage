@@ -28,7 +28,7 @@ public class ThingTemplate {
 
     for (char character : chars) {
       for (Color color : colors) {
-        appearances.add(new Appearance(character, color, null, Game.VISUAL_PRIORITY__THINGS));
+        appearances.add(new Appearance(character, color, null, Appearance.VISUAL_PRIORITY__THINGS));
       }
     }
 
@@ -40,7 +40,7 @@ public class ThingTemplate {
 
   public ThingTemplate(String name, char mapSymbol, Color color, WeaponComponent weaponComponent) {
     this.name = name;
-    this.appearances.add(new Appearance(mapSymbol,color,Game.VISUAL_PRIORITY__THINGS));
+    this.appearances.add(new Appearance(mapSymbol,color, Appearance.VISUAL_PRIORITY__THINGS));
     this.weaponComponent = weaponComponent;
     this.flags = EnumSet.noneOf(PhysicalFlag.class);
   }

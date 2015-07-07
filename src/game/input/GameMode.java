@@ -4,6 +4,7 @@ import game.Game;
 import game.TimeMode;
 import game.display.DisplayElement;
 import game.display.DisplayElement_Text;
+import game.display.EventLog;
 import world.Coordinate;
 
 import java.util.Arrays;
@@ -21,7 +22,7 @@ public enum GameMode {
 
     @Override
     public void onEnter() {
-
+      EventLog.hideEventLog();
       if (Game.getTimeMode() == TimeMode.PAUSED) {
         Game.revertTimeMode();
       }
@@ -39,7 +40,8 @@ public enum GameMode {
           Commands_EnterMode.TOGGLE_PRECISION_TIME,
           Commands_EnterMode.ENTER_MODE_LOOK,
           Commands_EnterMode.ENTER_MODE_INTERACT,
-          Commands_EnterMode.ENTER_MODE_INVENTORY
+          Commands_EnterMode.ENTER_MODE_INVENTORY,
+          Commands_EnterMode.ENTER_MODE_EVENTLOG
       );
     }
 
@@ -183,7 +185,42 @@ public enum GameMode {
 
     }
 
+  },
+
+  EVENTLOG {
+
+    @Override
+    public void onEnter() {
+      EventLog.showEventLog();
+    }
+
+    @Override
+    public String getPrompt() {
+      return null;
+    }
+
+    @Override
+    public List<Command> getModeCommands() {
+      return Arrays.asList(
+              Commands_EnterMode.ENTER_MODE_EXPLORE,
+              Commands_EventLog.SCROLL_DOWN,
+              Commands_EventLog.SCROLL_UP
+      );
+    }
+
+    @Override
+    public List<DisplayElement> getDisplayElements() {
+
+      return Arrays.asList(
+              DisplayElement.MINIMAP,
+              DisplayElement.CONTROL_ESCAPE,
+              DisplayElement.makeControlsList(getModeCommands(), 1)
+      );
+
+    }
+
   };
+
 
 
   public abstract void onEnter();

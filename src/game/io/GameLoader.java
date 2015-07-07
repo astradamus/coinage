@@ -13,6 +13,8 @@ import utils.Dimension;
  */
 class GameLoader {
 
+  private static Game runningGame;
+
   static {
 
     ThingTemplate.loadThings();
@@ -21,10 +23,8 @@ class GameLoader {
     GameInput.initialize();
 
     GameDisplay.addKeyListeners(GameInput.getKeyListeners());
-
   }
 
-  private static Game runningGame;
 
   private static void load(Game game) {
     if (runningGame != null) {
@@ -37,6 +37,7 @@ class GameLoader {
     GameEngine.loadRunningGame(game);
     GameEngine.start();
   }
+
 
   static void unload() {
     if (runningGame == null) {
@@ -53,5 +54,4 @@ class GameLoader {
   public static void main(String[] args) {
     load(GameBuilder.newGame(new Dimension(48, 48), new Dimension(24, 24)));
   }
-
 }

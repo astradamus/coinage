@@ -26,22 +26,28 @@ public class GameControllers implements Executor, ControllerInterface {
 
   private static final int CONTROLLER_PROCESS_RADIUS = 10;
 
+  private static final Map<Controller, Integer> INITIATIVE_ROLLS = new HashMap<>();
+  private static final Comparator<Controller> CONTROLLER_COMPARATOR =
+      Comparator.comparing(INITIATIVE_ROLLS::get);
+
 
   private final Game game;
+  private final Map<Area, Set<Controller>> controllerLocations = new HashMap<>();
 
-  private final Map<Area,Set<Controller>> controllerLocations = new HashMap<>();
+  private final List<Controller> ACTIVE_CONTROLLERS = new ArrayList<>();
+  private final Set<Controller> NEXT_CONTROLLERS = new HashSet<>();
+
   private Set<Area> activeAreas = null;
+  private boolean reevaluateActives;
+
 
   public GameControllers(Game game) {
     this.game = game;
     game.getWorld().getAllAreas().forEach(area -> controllerLocations.put(area, new HashSet<>()));
     controllerLocations.put(null, new HashSet<>()); // null contains non-local controllers
+    reevaluateActives = true; // Starts true so we calculate active areas on first update.
   }
 
-  @Override
-  public void reevaluateActiveAreas() {
-    reevaluateActives = true;
-  }
 
   @Override
   public void onLocalityChanged(Controller controller, Area from, Area to) {
@@ -50,6 +56,20 @@ public class GameControllers implements Executor, ControllerInterface {
     }
   }
 
+
+  @Override
+  public void reevaluateActiveAreas() {
+    reevaluateActives = true;
+  }
+
+
+  @Override
+  public Set<Actor> requestActorsInMyArea(ActorAgent actorAgent) {
+    final Area area = actorAgent.getLocality(game.getWorld());
+    return getActorsInArea(area);
+  }
+
+
   public void addController(Controller controller) {
     NEXT_CONTROLLERS.add(controller);
     controllerLocations.get(controller.getLocality(game.getWorld())).add(controller);
@@ -57,26 +77,19 @@ public class GameControllers implements Executor, ControllerInterface {
   }
 
 
-  // Starts true so we calculate active areas on first update.
-  private boolean reevaluateActives = true;
-
-  private final List<Controller> ACTIVE_CONTROLLERS = new ArrayList<>();
-  private final Set<Controller>  NEXT_CONTROLLERS   = new HashSet<>();
-
-
-
   @Override
   public boolean executeAction(Action action) {
     return action.perform(game.getWorld());
   }
 
+
   /**
-   * Called every frame by Game.update(). Walks the list of GameControllers (in getRolledInitiative()
-   * order). For each, it calls onUpdate() and then sorts the Controller anew into a second list.
-   * After the initial list is walked, the second list becomes the initial list for the next frame.
+   * Called every frame by Game.update(). Walks the list of GameControllers (in
+   * getRolledInitiative() order). For each, it calls onUpdate() and then sorts the Controller anew
+   * into a second list. After the initial list is walked, the second list becomes the initial list
+   * for the next frame.
    */
   public void onUpdate() {
-
 
     // Get all active controllers that are still in processing range. By doing this we avoid
     // the complex task of removing controllers from ACTIVE on the fly, as they or the range move.
@@ -84,11 +97,10 @@ public class GameControllers implements Executor, ControllerInterface {
         .filter(active -> activeAreas.contains(active.getLocality(game.getWorld())))
         .collect(Collectors.toList());
 
-
-    // Update each controller, skipping any that are dead. Don't bother pruning the dead yet, because controllers can
+    // Update each controller, skipping any that are dead. Don't bother pruning the dead yet,
+    // because controllers can
     // die after we've already passed them in this loop.
-    activeAndInRange.stream()
-        .filter(controller -> controller.getIsStillRunning())
+    activeAndInRange.stream().filter(controller -> controller.getIsStillRunning())
         .forEach(controller -> controller.onUpdate(this));
 
     // Prune all dead controllers.
@@ -98,18 +110,17 @@ public class GameControllers implements Executor, ControllerInterface {
 
       // Register the same actives for the next turn
       activeAndInRange.forEach(NEXT_CONTROLLERS::add);
-
-    } else {
+    }
+    else {
 
       // If player changed area, update active areas and register all controllers therein.
       calculateActiveAreasAndControllers();
       reevaluateActives = false;
-
     }
 
     performNextTurnSort();
-
   }
+
 
   private void pruneDeadControllers(List<Controller> listToPrune) {
     for (int i = 0; i < listToPrune.size(); i++) {
@@ -122,7 +133,6 @@ public class GameControllers implements Executor, ControllerInterface {
         controllerLocations.get(cont.getLocality(game.getWorld())).remove(cont);
         cont.setControllerInterface(null);
       }
-
     }
   }
 
@@ -138,9 +148,6 @@ public class GameControllers implements Executor, ControllerInterface {
   }
 
 
-  private static final Map<Controller, Integer> INITIATIVE_ROLLS = new HashMap<>();
-  private static final Comparator<Controller> CONTROLLER_COMPARATOR = Comparator.comparing(INITIATIVE_ROLLS::get);
-
   private void performNextTurnSort() {
 
     // Clear this turn's actives.
@@ -155,14 +162,8 @@ public class GameControllers implements Executor, ControllerInterface {
     ACTIVE_CONTROLLERS.forEach(cont -> INITIATIVE_ROLLS.put(cont, cont.getRolledInitiative()));
 
     Collections.sort(ACTIVE_CONTROLLERS, CONTROLLER_COMPARATOR);
-
   }
 
-  @Override
-  public Set<Actor> requestActorsInMyArea(ActorAgent actorAgent) {
-    final Area area = actorAgent.getLocality(game.getWorld());
-    return getActorsInArea(area);
-  }
 
   public Set<Actor> getActorsInArea(Area area) {
 
@@ -181,7 +182,5 @@ public class GameControllers implements Executor, ControllerInterface {
     }
 
     return set;
-
   }
-
 }

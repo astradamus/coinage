@@ -12,11 +12,12 @@ public class Inventory {
 
   private final List<Physical> itemsHeld;
 
+
   public Inventory() {
 
     itemsHeld = new ArrayList<>();
-
   }
+
 
   public boolean addItem(Physical item) {
 
@@ -24,20 +25,19 @@ public class Inventory {
 
       itemsHeld.add(item);
       return true;
-
-    } else {
+    }
+    else {
 
       return false;
-
     }
-
   }
+
 
   public boolean removeItem(Physical item) {
 
     return itemsHeld.remove(item);
-
   }
+
 
   /**
    * @return A new List containing all Physicals carried in this inventory. Modifications to this
@@ -46,7 +46,5 @@ public class Inventory {
   public List<Physical> getItemsHeld() {
 
     return new ArrayList<>(itemsHeld);
-
   }
-
 }

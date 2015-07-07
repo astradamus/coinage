@@ -25,31 +25,30 @@ import java.util.Map;
  */
 public class Actor extends Physical {
 
-
   /** Defines physical flags that all actors are initialized with. */
-  private static final EnumSet<PhysicalFlag> STANDARD_FLAGS = EnumSet.of(PhysicalFlag.BLOCKING,
-      PhysicalFlag.IMMOVABLE);
-
-
-  private ActorObserver actorObserver;
+  private static final EnumSet<PhysicalFlag> STANDARD_FLAGS =
+      EnumSet.of(PhysicalFlag.BLOCKING, PhysicalFlag.IMMOVABLE);
 
   private final Map<Attribute, Rank> attributes;
   private final Health health;
+  private final ActionTimer actionTimer;
+
   private final Inventory inventory;
   private final Thing naturalWeapon;
-  private Thing equippedWeapon;
+
+  private ActorObserver actorObserver;
 
   private Coordinate coordinate;
   private Direction facing = Direction.getRandom();
-
-  private final ActionTimer actionTimer;
   private Action action;
+
+  private Thing equippedWeapon;
+
 
   /**
    * Constructs an actor from the given template, and includes any flags in STANDARD_FLAGS.
    */
   Actor(ActorTemplate aT) {
-
     super(aT.name, aT.appearance);
 
     // Add standard actor flags and template-specific flags.
@@ -62,8 +61,8 @@ public class Actor extends Physical {
     inventory = new Inventory();
     naturalWeapon = ThingFactory.makeThing(aT.naturalWeaponID);
     actionTimer = new ActionTimer();
-
   }
+
 
   /**
    * Called when the actor has been killed. Upon dying, actors retain their actor state, but behave
@@ -80,6 +79,7 @@ public class Actor extends Physical {
     }
   }
 
+
   /**
    * @return {@code true} if this actor's warm-up and cool-down timers are cleared and the actor
    * does not currently have an action queued.
@@ -88,17 +88,19 @@ public class Actor extends Physical {
     return action == null && actionTimer.isReady();
   }
 
+
   /**
-   * Queues an action to be performed, adding that action's warm-up time to the timer. If there
-   * was already an action queued, it is replaced, and the warm-up time for that action is cleared
-   * before the new time is added. In other words, there is no penalty for switching actions,
-   * except that you lose the beats you spent warming up the replaced action.
+   * Queues an action to be performed, adding that action's warm-up time to the timer. If there was
+   * already an action queued, it is replaced, and the warm-up time for that action is cleared
+   * before the new time is added. In other words, there is no penalty for switching actions, except
+   * that you lose the beats you spent warming up the replaced action.
    */
   public final void startAction(Action action) {
     actionTimer.cancelWarmUp();
     actionTimer.addBeatsToWarmUp(action.calcDelayToPerform());
     this.action = action;
   }
+
 
   /**
    * Notifies the current action that it should not repeat, if it is able.
@@ -109,15 +111,14 @@ public class Actor extends Physical {
     }
   }
 
+
   /**
    * Called every update when it is this actor's turn to act. If the actor has any warm-up or
-   * cool-down time, then this update is spent towards that time. Otherwise, if there is an
-   * action queued, the actor will perform it. If the action is successful, an attempt will be
-   * made to repeat the action. Successful or not, the actor's actorObserver will be notified and
-   * passed the completed action.
-   *
-   * <p>Additionally, regardless of whether an action is performed, the actor's actorObserver will be
-   * notified at the very end of this actor's turn.</p>
+   * cool-down time, then this update is spent towards that time. Otherwise, if there is an action
+   * queued, the actor will perform it. If the action is successful, an attempt will be made to
+   * repeat the action. Successful or not, the actor's actorObserver will be notified and passed the
+   * completed action. <p> <p>Additionally, regardless of whether an action is performed, the
+   * actor's actorObserver will be notified at the very end of this actor's turn.</p>
    *
    * @param executor Supplied by {@code GameControllers}, allowing this actor to pass an action
    *                 upwards for execution, as actors lack the scope/authority to execute their own
@@ -147,7 +148,6 @@ public class Actor extends Physical {
 
           startAction(repeat);
         }
-
       }
 
       // If we haven't attempted a new action yet, start idling.
@@ -156,11 +156,9 @@ public class Actor extends Physical {
       }
 
       actorObserver.onActionExecuted(executing);
-
     }
 
     actorObserver.onActorTurnComplete();
-
   }
 
 
@@ -171,6 +169,7 @@ public class Actor extends Physical {
     return attributes.get(attribute);
   }
 
+
   /**
    * @return This actor's health component.
    */
@@ -178,12 +177,14 @@ public class Actor extends Physical {
     return health;
   }
 
+
   /**
    * @return This actor's inventory component.
    */
   public final Inventory getInventory() {
     return inventory;
   }
+
 
   /**
    * @return The actor's equipped weapon, if it has one. Otherwise, its natural weapon.
@@ -196,6 +197,7 @@ public class Actor extends Physical {
       return naturalWeapon;
     }
   }
+
 
   /**
    * Sets the actor's equipped weapon to the given thing. Does nothing if the given thing has no
@@ -212,21 +214,26 @@ public class Actor extends Physical {
     return facing;
   }
 
+
   public final void setFacing(Direction facing) {
     this.facing = facing;
   }
+
 
   public final Coordinate getCoordinate() {
     return coordinate;
   }
 
+
   public final void setCoordinate(Coordinate coordinate) {
     this.coordinate = coordinate;
   }
 
+
   public ActorObserver getActorObserver() {
     return actorObserver;
   }
+
 
   public final void setActorObserver(ActorObserver actorObserver) {
     if (this.actorObserver != null) {
@@ -246,6 +253,7 @@ public class Actor extends Physical {
     }
   }
 
+
   @Override
   public final Color getColor() {
     if (hasFlag(PhysicalFlag.DEAD)) {
@@ -256,9 +264,10 @@ public class Actor extends Physical {
     }
   }
 
+
   /**
-   * @return What color the action indicator should be for this actor's current action, or null
-   * if there is none.
+   * @return What color the action indicator should be for this actor's current action, or null if
+   * there is none.
    */
   public Color getActionIndicatorColor() {
     if (action != null) {
@@ -269,17 +278,19 @@ public class Actor extends Physical {
     }
   }
 
+
   /**
-   * @return The total amount of beats that must be spent before the actor can perform the
-   * currently queued action.
+   * @return The total amount of beats that must be spent before the actor can perform the currently
+   * queued action.
    */
   public int getTotalActionDelay() {
     return actionTimer.getTotalDelay();
   }
 
+
   /**
-   * @return The coordinate that is the target of this actor's current action, or null
-   * if there is none.
+   * @return The coordinate that is the target of this actor's current action, or null if there is
+   * none.
    */
   public Coordinate getActionTarget() {
     if (action != null) {
@@ -289,5 +300,4 @@ public class Actor extends Physical {
       return null;
     }
   }
-
 }

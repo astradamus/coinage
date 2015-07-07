@@ -19,11 +19,19 @@ import java.util.List;
  */
 public class GameInput {
 
+  private static final List<KeyListener> keyListeners = new ArrayList<>();
+  private static final KeyModifierInterpreter keyModifierInterpreter = new KeyModifierInterpreter();
+
   private static Game runningGame;
   private static GameMode gameMode = GameMode.EXPLORE;
 
-  private static final List<KeyListener> keyListeners = new ArrayList<>();
-  private static final KeyModifierInterpreter keyModifierInterpreter = new KeyModifierInterpreter();
+  private static Selector<Coordinate> coordinateSelector = null;
+  private static Selector<Physical> physicalSelector = null;
+  private static TargetCursor targetCursor = null;
+
+  private static Direction delayedMoveDirection = null;
+  private static int startRepeatingMoveDelay = -1;
+
 
   public static void initialize() {
 
@@ -32,6 +40,7 @@ public class GameInput {
       public void receiveDirection(Direction direction) {
         GameInput.receiveDirection(direction);
       }
+
 
       @Override
       public void receiveDirectionsCleared() {
@@ -45,6 +54,7 @@ public class GameInput {
         GameInput.receiveSelectScroll(deltaY);
       }
 
+
       @Override
       public void receiveSubmitSelection() {
         GameInput.receiveSubmitSelection();
@@ -55,28 +65,22 @@ public class GameInput {
     keyListeners.add(new NumpadDirectionInterpreter(directionListener));
     keyListeners.add(new ListSelectInterpreter(listSelectionListener));
     keyListeners.add(new ModeCommandInterpreter());
-
   }
-
-
-
-  private static Selector<Coordinate> coordinateSelector = null;
-  private static Selector<Physical> physicalSelector = null;
-
-  private static TargetCursor targetCursor = null;
 
 
   public static void loadRunningGame(Game runningGame) {
     if (GameInput.runningGame != null) {
-      throw new IllegalStateException("Already running a game, must first call unloadRunningGame().");
+      throw new IllegalStateException(
+          "Already running a game, must first call unloadRunningGame().");
     }
     GameInput.runningGame = runningGame;
   }
 
+
   /**
    * @param runningGame Must be supplied to ensure this method is only called from high places.
    * @throws InvalidParameterException If the supplied game is null or does not match the currently
-   *                    running game.
+   *                                   running game.
    */
   public static void unloadRunningGame(Game runningGame) {
     if (GameInput.runningGame != runningGame) {
@@ -84,6 +88,7 @@ public class GameInput {
     }
     GameInput.runningGame = null;
   }
+
 
   static Game getRunningGame() {
     return GameInput.runningGame;
@@ -100,18 +105,23 @@ public class GameInput {
       startRepeatingMoveDelay--;
     }
     else if (startRepeatingMoveDelay == 0 && shouldDelayMoveRepeat()) {
-      runningGame.getPlayerAgent().attemptAction(new Moving(runningGame.getActivePlayerActor(), delayedMoveDirection, false));
+      runningGame.getPlayerAgent().attemptAction(
+          new Moving(runningGame.getActivePlayerActor(), delayedMoveDirection, false));
       terminateRepeatingMoveTimer();
     }
-
   }
 
 
   public static String getCurrentPrompt() {
-    if (coordinateSelector != null) return coordinateSelector.getPrompt();
-    if (physicalSelector != null) return physicalSelector.getPrompt();
+    if (coordinateSelector != null) {
+      return coordinateSelector.getPrompt();
+    }
+    if (physicalSelector != null) {
+      return physicalSelector.getPrompt();
+    }
     return gameMode.getPrompt();
   }
+
 
   private static void clearSelectsAndCursor() {
     coordinateSelector = null;
@@ -119,23 +129,24 @@ public class GameInput {
     targetCursor = null;
   }
 
+
   static void beginSelectingCoordinate(Selector<Coordinate> coordinateSelector) {
     clearSelectsAndCursor();
 
     GameInput.coordinateSelector = coordinateSelector;
-    targetCursor = TargetCursor.makeSquareTargeter(runningGame.getWorld(), coordinateSelector.getSelectOrigin(),
-        coordinateSelector.getSelectRange());
-
+    targetCursor = TargetCursor
+        .makeSquareTargeter(runningGame.getWorld(), coordinateSelector.getSelectOrigin(),
+            coordinateSelector.getSelectRange());
   }
+
 
   public static void beginSelectingPhysical(Selector<Physical> physicalSelector) {
     clearSelectsAndCursor();
 
     GameInput.physicalSelector = physicalSelector;
-    targetCursor = TargetCursor.makeSquareAndListTargeter(runningGame.getWorld(), physicalSelector
-            .getSelectOrigin(),
-        physicalSelector.getSelectRange());
-
+    targetCursor = TargetCursor
+        .makeSquareAndListTargeter(runningGame.getWorld(), physicalSelector.getSelectOrigin(),
+            physicalSelector.getSelectRange());
   }
 
 
@@ -147,19 +158,17 @@ public class GameInput {
   }
 
 
-  private static Direction delayedMoveDirection = null;
-  private static int startRepeatingMoveDelay = -1;
-
   private static void receiveDirection(Direction direction) {
 
     if (targetCursor != null) {
       targetCursor.setCursorMovingIn(direction);
-
-    } else {
+    }
+    else {
 
       final KeyModifier keyModifier = keyModifierInterpreter.getLatestModifier();
 
-      final boolean directionIsAlreadyFaced = direction == runningGame.getActivePlayerActor().getFacing();
+      final boolean directionIsAlreadyFaced =
+          direction == runningGame.getActivePlayerActor().getFacing();
 
       final boolean shouldTurn = !directionIsAlreadyFaced && keyModifier != KeyModifier.SHIFT;
       final boolean shouldMove = keyModifier != KeyModifier.CTRL;
@@ -173,25 +182,25 @@ public class GameInput {
       else if (shouldMove) {
         move(direction);
       }
-
     }
-
   }
 
-  private static void receiveDirectionsCleared( ) {
+
+  private static void receiveDirectionsCleared() {
 
     if (targetCursor == null) {
       runningGame.getActivePlayerActor().doNotRepeatAction();
       terminateRepeatingMoveTimer();
-    } else {
+    }
+    else {
       targetCursor.setCursorMovingIn(null);
     }
-
   }
 
 
   private static void turnThenMove(Direction direction) {
-    final TurnThenMove action = new TurnThenMove(runningGame.getActivePlayerActor(), direction, false);
+    final TurnThenMove action =
+        new TurnThenMove(runningGame.getActivePlayerActor(), direction, false);
 
     if (shouldDelayMoveRepeat()) {
       delayRepeatOfMove(action, direction);
@@ -200,9 +209,12 @@ public class GameInput {
     runningGame.getPlayerAgent().attemptAction(action);
   }
 
+
   private static void turn(Direction direction) {
-    runningGame.getPlayerAgent().attemptAction(new Turning(runningGame.getActivePlayerActor(), direction));
+    runningGame.getPlayerAgent()
+        .attemptAction(new Turning(runningGame.getActivePlayerActor(), direction));
   }
+
 
   private static void move(Direction direction) {
     final Moving moving = new Moving(runningGame.getActivePlayerActor(), direction, false);
@@ -216,8 +228,10 @@ public class GameInput {
 
 
   private static boolean shouldDelayMoveRepeat() {
-    return runningGame.getActivePlayerActor().isFreeToAct(); // Prevents re-delay when changing directions.
+    return runningGame.getActivePlayerActor()
+        .isFreeToAct(); // Prevents re-delay when changing directions.
   }
+
 
   private static void delayRepeatOfMove(Action action, Direction direction) {
     action.doNotRepeat();
@@ -231,16 +245,16 @@ public class GameInput {
     startRepeatingMoveDelay = -1;
   }
 
+
   private static void receiveSelectScroll(int deltaY) {
 
     if (targetCursor != null) {
       targetCursor.scrollSelection(deltaY);
     }
-
   }
 
 
-  private static void receiveSubmitSelection( ) {
+  private static void receiveSubmitSelection() {
 
     if (coordinateSelector != null) {
       coordinateSelector.execute(targetCursor.getTarget());
@@ -251,13 +265,12 @@ public class GameInput {
           .get(targetCursor.getListSelectIndex()));
       physicalSelector = null;
     }
-
   }
+
 
   static void setTargetCursor(TargetCursor targetCursor) {
     GameInput.targetCursor = targetCursor;
   }
-
 
 
   public static Coordinate getPlayerTarget() {
@@ -266,6 +279,7 @@ public class GameInput {
     }
     return null;
   }
+
 
   public static Integer getPlayerSelection() {
     if (targetCursor != null) {
@@ -279,8 +293,8 @@ public class GameInput {
     return gameMode;
   }
 
+
   public static List<KeyListener> getKeyListeners() {
     return keyListeners;
   }
-
 }

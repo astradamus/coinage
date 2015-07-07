@@ -14,6 +14,7 @@ public class Placing extends Action {
 
   private final Physical placingWhat;
 
+
   public Placing(Actor actor, Coordinate placingWhere, Physical placingWhat) {
     super(actor, placingWhere);
     this.placingWhat = placingWhat;
@@ -25,6 +26,7 @@ public class Placing extends Action {
     return 1;
   }
 
+
   @Override
   public int calcDelayToRecover() {
     return 1;
@@ -32,8 +34,8 @@ public class Placing extends Action {
 
 
   /**
-   * Placing will fail if the target location is blocked, or if the item is no longer in the
-   * actor's inventory at the time of execution.
+   * Placing will fail if the target location is blocked, or if the item is no longer in the actor's
+   * inventory at the time of execution.
    */
   @Override
   protected boolean validate(World world) {
@@ -43,17 +45,17 @@ public class Placing extends Action {
       return false;
     }
 
-    final boolean itemIsHeldByActor = getActor().getInventory()
-        .getItemsHeld().contains(placingWhat);
+    final boolean itemIsHeldByActor =
+        getActor().getInventory().getItemsHeld().contains(placingWhat);
 
-    if (!itemIsHeldByActor){
+    if (!itemIsHeldByActor) {
       EventLog.registerEvent(Event.INVALID_ACTION,
           "You can't seem to find the item you were trying to drop.");
     }
 
     return itemIsHeldByActor;
-
   }
+
 
   /**
    * Place the item at the target location.
@@ -63,5 +65,4 @@ public class Placing extends Action {
     getActor().getInventory().removeItem(placingWhat);
     world.getSquare(getTarget()).put(placingWhat);
   }
-
 }

@@ -24,8 +24,8 @@ class Routines {
    * If we are already facing the given direction, just start moving. Otherwise, turn and then
    * move.
    */
-  public static void turnThenMove(AiActorAgent agent, Direction goal,
-                                  boolean isWalking, boolean doNotRepeat) {
+  public static void turnThenMove(AiActorAgent agent, Direction goal, boolean isWalking,
+      boolean doNotRepeat) {
 
     final Actor actor = agent.getActor();
     final boolean alreadyFacingGoal = actor.getFacing() == goal;
@@ -44,14 +44,13 @@ class Routines {
     }
 
     agent.attemptAction(action);
-
   }
 
 
   /**
-   * Makes the agent sidestep the square directly in front of it. It will turn one direction
-   * grade either to the left or the right (chosen at random), and step forward one square. This
-   * is used as a quick way to get around obstacles in the absence of more advanced pathing.
+   * Makes the agent sidestep the square directly in front of it. It will turn one direction grade
+   * either to the left or the right (chosen at random), and step forward one square. This is used
+   * as a quick way to get around obstacles in the absence of more advanced pathing.
    */
   public static void stepAroundBlockedSquare(AiActorAgent agent) {
 
@@ -67,7 +66,6 @@ class Routines {
     }
 
     agent.attemptAction(new TurnThenMove(actor, turningTowards, false).doNotRepeat());
-
   }
 
 
@@ -80,13 +78,12 @@ class Routines {
     final Direction toPursue = actorAt.getDirectionTo(destination);
 
     turnThenMove(agent, toPursue, false, true);
-
   }
 
 
   /**
-   * Sweeps the area in which the agent resides for other actor controllers. The first one it
-   * finds within sensory range (as defined by the agent's perception attribute)
+   * Sweeps the area in which the agent resides for other actor controllers. The first one it finds
+   * within sensory range (as defined by the agent's perception attribute)
    */
   public static void performSensoryScan(AiActorAgent agent) {
 
@@ -97,23 +94,20 @@ class Routines {
     // Get all actor controllers in our area.
     final Set<Actor> localActors = agent.requestActorsInMyArea();
 
-
     for (Actor scanTarget : localActors) {
 
       // Scan through each, skipping any that fail either of the following tests.
-      if  (
+      if (
 
-          // Don't react to self.
+        // Don't react to self.
           scanTarget != agent.getActor()
 
-          // Timid actors ignore each other.
-          && !(actor.hasFlag(PhysicalFlag.TIMID)
-          && scanTarget.hasFlag(PhysicalFlag.TIMID))) {
+              // Timid actors ignore each other.
+              && !(actor.hasFlag(PhysicalFlag.TIMID) && scanTarget.hasFlag(PhysicalFlag.TIMID))) {
 
-
-      // If we've passed the tests, determine if this actor controller is within either visual or
-      // auditory range (in that order). If it is, react accordingly, if not, go to the next
-      // actor controller in this area.
+        // If we've passed the tests, determine if this actor controller is within either visual or
+        // auditory range (in that order). If it is, react accordingly, if not, go to the next
+        // actor controller in this area.
 
         final Coordinate targetAt = scanTarget.getCoordinate();
 
@@ -126,35 +120,31 @@ class Routines {
         else if (Perception.getCanHearLocation(perceptionRank, actorAt, targetAt)) {
           agent.exhibitBehavior(new Ai_Investigate(agent, targetAt, scanTarget));
         }
-
       }
-
     }
-
   }
 
 
   /**
-   * Determines how the agent should react to the given other. If either the agent or the other
-   * have the aggressive flag, the agent will enter fight or flee. In other words, aggressives
-   * will attack/flee everything they encounter, while non-aggressives will only attack/flee
+   * Determines how the agent should react to the given other. If either the agent or the other have
+   * the aggressive flag, the agent will enter fight or flee. In other words, aggressives will
+   * attack/flee everything they encounter, while non-aggressives will only attack/flee
    * aggressives.
    */
   public static void evaluateOther(AiActorAgent agent, Actor other) {
 
-    if (other.hasFlag(PhysicalFlag.AGGRESSIVE)
-        || agent.getActor().hasFlag(PhysicalFlag.AGGRESSIVE)) {
+    if (other.hasFlag(PhysicalFlag.AGGRESSIVE) || agent.getActor()
+        .hasFlag(PhysicalFlag.AGGRESSIVE)) {
       evaluateNewAggressor(agent, other);
     }
-
   }
 
 
   /**
    * Determines how the agent should react to an aggressor upon first encounter. Actors with the
    * timid flag will always retreat on this call. Other actors will call {@code
-   * getShouldFleeCombat()} to determine if they should retreat. If they do not retreat, they
-   * will begin fighting the aggressor.
+   * getShouldFleeCombat()} to determine if they should retreat. If they do not retreat, they will
+   * begin fighting the aggressor.
    */
   public static void evaluateNewAggressor(AiActorAgent agent, Actor aggressor) {
 
@@ -168,7 +158,6 @@ class Routines {
     }
 
     agent.exhibitBehavior(response);
-
   }
 
 
@@ -194,7 +183,5 @@ class Routines {
     }
 
     return false;
-
   }
-
 }

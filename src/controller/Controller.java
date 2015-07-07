@@ -7,8 +7,8 @@ import world.World;
 /**
  * All Controllers registered with GameControllers.addController() will have onUpdate() called every
  * frame that the area returned by getLocality() is within processing range of the player, as
- * defined within GameControllers. If null is returned from getLocality(), this controller will
- * be considered 'non-local' and will receive updates no matter where the player is.
+ * defined within GameControllers. If null is returned from getLocality(), this controller will be
+ * considered 'non-local' and will receive updates no matter where the player is.
  */
 public interface Controller {
 
@@ -19,10 +19,10 @@ public interface Controller {
   boolean getIsStillRunning();
 
   /**
-   * Called between frames, after the current update() has finished. Determines the order in
-   * which Controllers will have onUpdate() called for the next frame--higher returns go first.
-   * Should not return the same value every time its called, unless we're intentionally forcing
-   * this controller to be called first or last in the order every time.
+   * Called between frames, after the current update() has finished. Determines the order in which
+   * Controllers will have onUpdate() called for the next frame--higher returns go first. Should not
+   * return the same value every time its called, unless we're intentionally forcing this controller
+   * to be called first or last in the order every time.
    */
   default Integer getRolledInitiative() {
     return 0;
@@ -34,5 +34,4 @@ public interface Controller {
   default Area getLocality(World world) {
     return null;
   }
-
 }

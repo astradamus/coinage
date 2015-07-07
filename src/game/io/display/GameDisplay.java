@@ -1,6 +1,5 @@
 package game.io.display;
 
-
 import game.Game;
 import game.physical.Appearance;
 import world.World;
@@ -21,15 +20,10 @@ import java.util.List;
 public class GameDisplay {
 
   public static final Appearance CURSOR = new Appearance(' ', Color.WHITE, Color.WHITE);
-
   public static final int SQUARE_SIZE = 20;
-
-  private static Game runningGame;
 
   private static final AreaPanel PANEL_AREA = new AreaPanel();
   private static final SidePanel PANEL_SIDE = new SidePanel();
-
-
   private static final JFrame WINDOW = new JFrame("Coinage") {
     {
       JPanel container = new JPanel();
@@ -45,39 +39,42 @@ public class GameDisplay {
     }
   };
 
-  public static Game getRunningGame() {
-    return runningGame;
-  }
+  private static Game runningGame;
+
 
   public static void recalculateSize() {
     World world = runningGame.getWorld();
-    int areaPanelWidth = (world.getAreaSizeInSquares().getWidth() +1)*SQUARE_SIZE;
-    int areaPanelHeight = (world.getAreaSizeInSquares().getHeight() +1)*SQUARE_SIZE;
+    int areaPanelWidth = (world.getAreaSizeInSquares().getWidth() + 1) * SQUARE_SIZE;
+    int areaPanelHeight = (world.getAreaSizeInSquares().getHeight() + 1) * SQUARE_SIZE;
 
     int sidePanelWidth = SidePanel.SP_SQUARES_WIDE * SidePanel.SP_SQUARE_SIZE;
 
-    PANEL_AREA.setMaximumSize(new Dimension(areaPanelWidth,areaPanelHeight));
-    PANEL_SIDE.setMaximumSize(new Dimension(sidePanelWidth,areaPanelHeight));
+    PANEL_AREA.setMaximumSize(new Dimension(areaPanelWidth, areaPanelHeight));
+    PANEL_SIDE.setMaximumSize(new Dimension(sidePanelWidth, areaPanelHeight));
 
     WINDOW.setSize(areaPanelWidth + sidePanelWidth, areaPanelHeight + WINDOW.getInsets().top);
   }
+
 
   public static void onUpdate() {
     PANEL_AREA.repaint();
     PANEL_SIDE.repaint();
   }
 
+
   public static void loadRunningGame(Game activeGame) {
     if (GameDisplay.runningGame != null) {
-      throw new IllegalStateException("Already running a game, must first call unloadRunningGame().");
+      throw new IllegalStateException(
+          "Already running a game, must first call unloadRunningGame().");
     }
     GameDisplay.runningGame = activeGame;
   }
 
+
   /**
    * @param runningGame Must be supplied to ensure this method is only called from high places.
    * @throws InvalidParameterException If the supplied game is null or does not match the currently
-   *                    running game.
+   *                                   running game.
    */
   public static void unloadRunningGame(Game runningGame) {
     if (GameDisplay.runningGame != runningGame) {
@@ -86,8 +83,13 @@ public class GameDisplay {
     GameDisplay.runningGame = null;
   }
 
+
+  public static Game getRunningGame() {
+    return runningGame;
+  }
+
+
   public static void addKeyListeners(List<KeyListener> keyListeners) {
     keyListeners.forEach(WINDOW::addKeyListener);
   }
-
 }

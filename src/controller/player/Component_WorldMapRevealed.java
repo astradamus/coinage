@@ -7,6 +7,7 @@ public class Component_WorldMapRevealed {
 
   private final boolean[][] worldMapRevealed;
 
+
   public Component_WorldMapRevealed(Dimension worldSizeInAreas) {
     worldMapRevealed = new boolean[worldSizeInAreas.getHeight()][worldSizeInAreas.getWidth()];
   }
@@ -16,8 +17,8 @@ public class Component_WorldMapRevealed {
     return worldMapRevealed[mapCoordinate.worldAreasY][mapCoordinate.worldAreasX];
   }
 
+
   public void setAreaIsRevealed(MapCoordinate mapCoordinate) {
     worldMapRevealed[mapCoordinate.worldAreasY][mapCoordinate.worldAreasX] = true;
   }
-
 }

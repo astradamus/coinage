@@ -59,20 +59,20 @@ public class Game {
   }
 
 
-  private final Reporter reporter = new Reporter();
+  private final Informer informer = new Informer();
 
-  public Reporter getReporter() {
-    return reporter;
+  public Informer getInformer() {
+    return informer;
   }
 
-  public final class Reporter {
+  public final class Informer {
 
     public boolean getActorIsPlayer(Actor actor) {
       return  (getActivePlayerActor() == actor);
     }
 
-    public World getWorld() {
-      return world; // todo Set up a world reporter that offers only immutable view of world.
+    public World.Informer getWorldInformer() {
+      return world.getInformer();
     }
 
   }

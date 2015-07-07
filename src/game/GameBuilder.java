@@ -47,7 +47,7 @@ public class GameBuilder {
         } while (square.isBlocked());
         square.put(actor);
         actor.setCoordinate(randomCoordinate);
-        gameControllers.addController(new AiActorAgent(actor, newGame.getReporter()));
+        gameControllers.addController(new AiActorAgent(actor, newGame.getInformer()));
       }
     }
 

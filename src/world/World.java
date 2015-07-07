@@ -118,5 +118,22 @@ public class World {
   }
 
 
+  private final Informer informer = new Informer();
+
+  public Informer getInformer() {
+    return informer;
+  }
+
+  public class Informer {
+
+    public MapCoordinate convertToMapCoordinate(Coordinate coordinate) {
+      return World.this.convertToMapCoordinate(coordinate);
+    }
+
+    public Area getArea(Coordinate coordinate) {
+      return World.this.getArea(coordinate);
+    }
+
+  }
 
 }

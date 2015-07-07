@@ -32,7 +32,7 @@ public class Ai_Investigate extends Behavior {
 
   @Override
   protected String getOnExhibitLogMessage() {
-    if (getAgent().getGameReporter().getActorIsPlayer(intruder)) {
+    if (getAgent().getGameInformer().getActorIsPlayer(intruder)) {
       return getActor().getName() + " has heard you.";
     }
     else {

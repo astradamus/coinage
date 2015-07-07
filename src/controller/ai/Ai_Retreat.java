@@ -4,7 +4,6 @@ import actor.Actor;
 import controller.action.Action;
 import controller.action.ActionFlag;
 import game.Direction;
-import game.Game;
 import game.physical.PhysicalFlag;
 import world.Coordinate;
 import world.MapCoordinate;
@@ -46,7 +45,7 @@ public class Ai_Retreat extends Behavior {
 
   @Override
   protected String getOnExhibitLogMessage() {
-    if (getAgent().getGameReporter().getActorIsPlayer(pursuer)) {
+    if (getAgent().getGameInformer().getActorIsPlayer(pursuer)) {
       return getActor().getName() + " flees for its life.";
     }
     else {
@@ -72,9 +71,9 @@ public class Ai_Retreat extends Behavior {
       final Coordinate actorAt = getActor().getCoordinate();
       final Coordinate pursuerAt = pursuer.getCoordinate();
 
-      final World world = getAgent().getGameReporter().getWorld();
-      final MapCoordinate actorWMC = world.convertToMapCoordinate(actorAt);
-      final MapCoordinate pursuerWMC = world.convertToMapCoordinate(pursuerAt);
+      final World.Informer worldInformer = getAgent().getGameInformer().getWorldInformer();
+      final MapCoordinate actorWMC = worldInformer.convertToMapCoordinate(actorAt);
+      final MapCoordinate pursuerWMC = worldInformer.convertToMapCoordinate(pursuerAt);
 
 
       // If we are two areas away we've escaped and can stop retreating.

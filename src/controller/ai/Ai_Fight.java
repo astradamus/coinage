@@ -38,7 +38,7 @@ public class Ai_Fight extends Behavior {
 
   @Override
   protected String getOnExhibitLogMessage() {
-    if (getAgent().getGameReporter().getActorIsPlayer(victim)) {
+    if (getAgent().getGameInformer().getActorIsPlayer(victim)) {
       return getActor().getName() + " doesn't look too friendly.";
     }
     else {
@@ -51,7 +51,7 @@ public class Ai_Fight extends Behavior {
 
     fight();
 
-    if (getAgent().getGameReporter().getActorIsPlayer(victim) && GameEngine.getTimeMode() == TimeMode.LIVE) {
+    if (getAgent().getGameInformer().getActorIsPlayer(victim) && GameEngine.getTimeMode() == TimeMode.LIVE) {
       GameEngine.setTimeMode(TimeMode.PRECISION);
       EventLog.registerEvent(Event.INVALID_ACTION,
           "Precision mode has been enabled because you are under attack.");
@@ -76,7 +76,7 @@ public class Ai_Fight extends Behavior {
       if (actorAt.getIsAdjacentTo(enemyAt)) {
         final Attacking action = new Attacking(getActor(), victim.getCoordinate());
 
-        if (getAgent().getGameReporter().getActorIsPlayer(victim)) {
+        if (getAgent().getGameInformer().getActorIsPlayer(victim)) {
           action.playerIsTarget();
         }
 
@@ -92,11 +92,11 @@ public class Ai_Fight extends Behavior {
 
         else {
 
-          final World world = getAgent().getGameReporter().getWorld();
+          final World.Informer worldInformer = getAgent().getGameInformer().getWorldInformer();
 
           final Rank perception = getActor().getAttributeRank(Attribute.PERCEPTION);
-          final MapCoordinate actorMC = world.convertToMapCoordinate(actorAt);
-          final MapCoordinate enemyMC = world.convertToMapCoordinate(enemyAt);
+          final MapCoordinate actorMC = worldInformer.convertToMapCoordinate(actorAt);
+          final MapCoordinate enemyMC = worldInformer.convertToMapCoordinate(enemyAt);
 
           // If we can track our enemy, pursue them and continue the fight.
           if (Perception.getCanTrackLocation(perception, actorMC, enemyMC)) {

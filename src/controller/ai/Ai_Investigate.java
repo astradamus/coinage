@@ -9,36 +9,37 @@ import game.Direction;
 import world.Coordinate;
 
 /**
- * This behavior will make the agent respond to a sound produced by a given intruder. The agent
- * will turn towards the source of the original sound, performing a limited sensory scan each
- * update that only seeks the intruder who made the sound. This is done instead of performing a
- * regular sensory scan purely to conserve processing power. This could potentially raise weird
- * behavioral issues, where one actor causes an investigation that results in the agent
- * completely ignoring some other actor that walks up to kill it. However, as it stands now, the
- * odds of this happening are very low, and the odds of it being noticed by the player if it does
- * happen are even lower.
+ * This behavior will make the agent respond to a sound produced by a given intruder. The agent will
+ * turn towards the source of the original sound, performing a limited sensory scan each update that
+ * only seeks the intruder who made the sound. This is done instead of performing a regular sensory
+ * scan purely to conserve processing power. This could potentially raise weird behavioral issues,
+ * where one actor causes an investigation that results in the agent completely ignoring some other
+ * actor that walks up to kill it. However, as it stands now, the odds of this happening are very
+ * low, and the odds of it being noticed by the player if it does happen are even lower.
  */
 public class Ai_Investigate extends Behavior {
 
   private final Coordinate sourceOfSound;
   private final Actor intruder;
 
-  public Ai_Investigate(AiActorAgent investigator, Coordinate sourceOfSound,
-                        Actor intruder) {
+
+  public Ai_Investigate(AiActorAgent investigator, Coordinate sourceOfSound, Actor intruder) {
     super(investigator);
     this.sourceOfSound = sourceOfSound;
     this.intruder = intruder;
   }
 
+
   @Override
   protected String getOnExhibitLogMessage() {
-    if (getAgent().getGameReporter().getActorIsPlayer(intruder)) {
+    if (getAgent().getGameInformer().getActorIsPlayer(intruder)) {
       return getActor().getName() + " has heard you.";
     }
     else {
       return null;
     }
   }
+
 
   @Override
   protected void onExhibit() {
@@ -61,8 +62,9 @@ public class Ai_Investigate extends Behavior {
 
     else {
 
-      final Direction towardsSourceOfSound = Direction.fromPointToPoint(
-          actorAt.globalX, actorAt.globalY, sourceOfSound.globalX, sourceOfSound.globalY);
+      final Direction towardsSourceOfSound = Direction
+          .fromPointToPoint(actorAt.globalX, actorAt.globalY, sourceOfSound.globalX,
+              sourceOfSound.globalY);
 
       // If we're already looking at the source of the sound, and we haven't seen anything, we
       // can abandon the search.
@@ -74,9 +76,7 @@ public class Ai_Investigate extends Behavior {
       else {
         getAgent().attemptAction(new Turning(getActor(), towardsSourceOfSound));
       }
-
     }
-
   }
 
 
@@ -85,15 +85,13 @@ public class Ai_Investigate extends Behavior {
 
     // Run the main routine at the end of every update.
     investigate();
-
   }
+
 
   @Override
   public void onVictimized(Actor attacker) {
 
     // If we are attacked, either fight or flee.
     Routines.evaluateNewAggressor(getAgent(), attacker);
-
   }
-
 }

@@ -20,10 +20,11 @@ import java.util.Set;
 /**
  *
  */
-public class ActionOverlay {
+class ActionOverlay {
 
-  public static final int SQUARE_SIZE = GameDisplay.SQUARE_SIZE;
-  public static final Font ACTION_OVERLAY_FONT = new Font("Monospaced", Font.BOLD, SQUARE_SIZE*5/7);
+  private static final int SQUARE_SIZE = GameDisplay.SQUARE_SIZE;
+  private static final Font ACTION_OVERLAY_FONT =
+      new Font("Monospaced", Font.BOLD, SQUARE_SIZE * 5 / 7);
 
 
   public static void drawOverlay(Graphics2D g) {
@@ -40,16 +41,16 @@ public class ActionOverlay {
     g.setFont(ACTION_OVERLAY_FONT);
     g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
     for (Actor actor : localActors) {
-      if (GameEngine.getTimeMode() == TimeMode.PRECISION || GameEngine.getTimeMode() == TimeMode.PAUSED) {
+      if (GameEngine.getTimeMode() == TimeMode.PRECISION
+          || GameEngine.getTimeMode() == TimeMode.PAUSED) {
         drawActionIndicator(g, actor);
       }
     }
     for (Actor actor : localActors) {
       drawFacingOverlay(g, actor, 6);
     }
-
-
   }
+
 
   private static void drawFacingOverlay(Graphics g, Actor actor, int thickness) {
 
@@ -57,7 +58,8 @@ public class ActionOverlay {
 
     g.setColor(actor.getColor());
 
-    AreaCoordinate actorAt = GameDisplay.getRunningGame().getWorld().convertToAreaCoordinate(actor.getCoordinate());
+    AreaCoordinate actorAt =
+        GameDisplay.getRunningGame().getWorld().convertToAreaCoordinate(actor.getCoordinate());
 
     int[] drawX = new int[6];
     int[] drawY = new int[6];
@@ -66,13 +68,10 @@ public class ActionOverlay {
     int originY = actorAt.areaY * SQUARE_SIZE;
 
     Point[] points = new Point[] {
-      getOffsetFor(facing.getLeftNeighbor(),0),
-      getOffsetFor(facing,0),
-      getOffsetFor(facing.getRightNeighbor(),0),
-
-      getOffsetFor(facing.getRightNeighbor(),thickness),
-      getOffsetFor(facing,thickness),
-      getOffsetFor(facing.getLeftNeighbor(),thickness)
+        getOffsetFor(facing.getLeftNeighbor(), 0), getOffsetFor(facing, 0),
+        getOffsetFor(facing.getRightNeighbor(), 0),
+        getOffsetFor(facing.getRightNeighbor(), thickness), getOffsetFor(facing, thickness),
+        getOffsetFor(facing.getLeftNeighbor(), thickness)
     };
 
     for (int i2 = 0; i2 < points.length; i2++) {
@@ -82,9 +81,8 @@ public class ActionOverlay {
     }
 
     g.fillPolygon(drawX, drawY, 6);
-
-
   }
+
 
   private static void drawActionIndicator(Graphics2D g, Actor actor) {
 
@@ -96,7 +94,7 @@ public class ActionOverlay {
 
       AreaCoordinate actionTargetAC = runningGame.getWorld().convertToAreaCoordinate(actionTarget);
 
-      int actionDelay = actor.getTotalActionDelay()+1;
+      int actionDelay = actor.getTotalActionDelay() + 1;
 
       int drawX = actionTargetAC.areaX * SQUARE_SIZE;
       int drawY = actionTargetAC.areaY * SQUARE_SIZE;
@@ -112,48 +110,43 @@ public class ActionOverlay {
       Appearance appearance = new Appearance(character, color, color);
 
       SquareDrawer.drawOval(g, appearance, SQUARE_SIZE, drawX, drawY);
-
     }
-
   }
 
 
   private static Point getOffsetFor(Direction direction, int gap) {
 
-    Point offset = new Point(-gap,-gap);
+    Point offset = new Point(-gap, -gap);
 
     switch (direction) {
 
       case NORTH:
-        offset.x = SQUARE_SIZE/2;
+        offset.x = SQUARE_SIZE / 2;
         break;
       case NORTH_EAST:
         offset.x = SQUARE_SIZE + gap;
         break;
       case EAST:
         offset.x = SQUARE_SIZE + gap;
-        offset.y = SQUARE_SIZE/2;
+        offset.y = SQUARE_SIZE / 2;
         break;
       case SOUTH_EAST:
         offset.x = SQUARE_SIZE + gap;
         offset.y = SQUARE_SIZE + gap;
         break;
       case SOUTH:
-        offset.x = SQUARE_SIZE/2;
+        offset.x = SQUARE_SIZE / 2;
         offset.y = SQUARE_SIZE + gap;
         break;
       case SOUTH_WEST:
         offset.y = SQUARE_SIZE + gap;
         break;
       case WEST:
-        offset.y = SQUARE_SIZE/2;
+        offset.y = SQUARE_SIZE / 2;
         break;
       case NORTH_WEST:
         break;
-
     }
     return offset;
-
   }
-
 }

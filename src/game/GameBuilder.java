@@ -17,7 +17,6 @@ import world.WorldFactory;
  */
 public class GameBuilder {
 
-
   public static Game newGame(Dimension areaSizeInSquares, Dimension worldSizeInAreas) {
 
     // produce a map
@@ -32,9 +31,15 @@ public class GameBuilder {
     for (int i = 0; i < 600; i++) {
       String id;
       switch (i % 5) {
-        case 0: id = "WOLF"; break;
-        case 1: id = "COUGAR"; break;
-        default: id = "MUSKRAT"; break;
+        case 0:
+          id = "WOLF";
+          break;
+        case 1:
+          id = "COUGAR";
+          break;
+        default:
+          id = "MUSKRAT";
+          break;
       }
       Actor actor = ActorFactory.makeActor(id);
 
@@ -44,10 +49,11 @@ public class GameBuilder {
         do {
           randomCoordinate = world.makeRandomCoordinate();
           square = world.getSquare(randomCoordinate);
-        } while (square.isBlocked());
+        }
+        while (square.isBlocked());
         square.put(actor);
         actor.setCoordinate(randomCoordinate);
-        gameControllers.addController(new AiActorAgent(actor, newGame.getReporter()));
+        gameControllers.addController(new AiActorAgent(actor, newGame.getInformer()));
       }
     }
 
@@ -64,10 +70,10 @@ public class GameBuilder {
 
     // assign the Human to a PlayerAgent and addController it
     PlayerAgent playerController = new PlayerAgent(player, world);
-    playerController.getWorldMapRevealedComponent().setAreaIsRevealed(world.convertToMapCoordinate(playerStartCoordinate));
+    playerController.getWorldMapRevealedComponent()
+        .setAreaIsRevealed(world.convertToMapCoordinate(playerStartCoordinate));
 
     gameControllers.addController(playerController);
-
 
     player.getInventory().addItem(ThingFactory.makeThing(WeaponTemplates.WP_CLUB));
     player.getInventory().addItem(ThingFactory.makeThing(WeaponTemplates.WP_SWORD));
@@ -80,8 +86,5 @@ public class GameBuilder {
     newGame.setPlayerAgent(playerController);
 
     return newGame;
-
   }
-
-
 }

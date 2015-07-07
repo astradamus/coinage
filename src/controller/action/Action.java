@@ -1,7 +1,6 @@
 package controller.action;
 
 import actor.Actor;
-import game.Game;
 import world.Coordinate;
 import world.World;
 
@@ -9,12 +8,12 @@ import java.awt.Color;
 import java.util.EnumSet;
 
 /**
- * Actors perform actions to manifest changes in themselves or the world around them. Actions
- * must be instantiable by actors (or rather, their controllers), meaning they cannot require
- * information actors do not have to construct. However, actions also cannot be executed by
- * actors--because the details of their execution generally requires information actors cannot
- * get, they must be passed upwards and executed at a higher level that can supply access to the
- * current game's {@code World}.
+ * Actors perform actions to manifest changes in themselves or the world around them. Actions must
+ * be instantiable by actors (or rather, their controllers), meaning they cannot require information
+ * actors do not have to construct. However, actions also cannot be executed by actors--because the
+ * details of their execution generally requires information actors cannot get, they must be passed
+ * upwards and executed at a higher level that can supply access to the current game's {@code
+ * World}.
  */
 public abstract class Action {
 
@@ -23,12 +22,14 @@ public abstract class Action {
   private final Coordinate target;
   private final EnumSet<ActionFlag> flags;
 
-  protected Action(Actor actor, Coordinate targetWhere) {
+
+  Action(Actor actor, Coordinate targetWhere) {
     this.actor = actor;
     this.origin = actor.getCoordinate();
     this.target = targetWhere;
     this.flags = EnumSet.noneOf(ActionFlag.class);
   }
+
 
   /**
    * @return The action overlay indicator color, or null if this action should not have one.
@@ -45,6 +46,7 @@ public abstract class Action {
     return 0;
   }
 
+
   /**
    * @return The number of updates that the actor must delay after the action has been performed.
    */
@@ -54,11 +56,11 @@ public abstract class Action {
 
 
   /**
-   * Begins executing this action. If {@code validate()} returns {@code true}, the action is
-   * legal at the time of execution and {@code apply()} will immediately be called to implement
-   * the action's effects. The action gains either the {@code SUCCEEDED} or {@code FAILED} flag,
-   * based on this validation. Finally, succeed or fail, {@code calcDelayToRecover()} is called
-   * and added to the performing actor's action delay.
+   * Begins executing this action. If {@code validate()} returns {@code true}, the action is legal
+   * at the time of execution and {@code apply()} will immediately be called to implement the
+   * action's effects. The action gains either the {@code SUCCEEDED} or {@code FAILED} flag, based
+   * on this validation. Finally, succeed or fail, {@code calcDelayToRecover()} is called and added
+   * to the performing actor's action delay.
    *
    * @throws IllegalStateException If this action has already been performed.
    */
@@ -73,13 +75,14 @@ public abstract class Action {
     if (valid) {
       addFlag(ActionFlag.SUCCEEDED);
       apply(world);
-    } else {
+    }
+    else {
       addFlag(ActionFlag.FAILED);
     }
 
     return valid;
-
   }
+
 
   /**
    * Should return {@code true} if this action's effects are legal to apply immediately.
@@ -91,6 +94,7 @@ public abstract class Action {
    */
   protected abstract void apply(World world);
 
+
   /**
    * Should return a new action to be performed by this actor immediately following this action, or
    * {@code null} if no such action is appropriate.
@@ -100,23 +104,27 @@ public abstract class Action {
   }
 
 
-  protected final void addFlag(ActionFlag flag) {
+  final void addFlag(ActionFlag flag) {
     flags.add(flag);
   }
+
 
   public final boolean hasFlag(ActionFlag flag) {
     return flags.contains(flag);
   }
+
 
   public Action doNotRepeat() {
     addFlag(ActionFlag.DO_NOT_REPEAT);
     return this;
   }
 
+
   public Action playerIsActor() {
     addFlag(ActionFlag.PLAYER_IS_ACTOR);
     return this;
   }
+
 
   public Action playerIsTarget() {
     addFlag(ActionFlag.PLAYER_IS_TARGET);
@@ -124,16 +132,17 @@ public abstract class Action {
   }
 
 
-  protected final Actor getActor() {
+  final Actor getActor() {
     return actor;
   }
+
 
   public final Coordinate getOrigin() {
     return origin;
   }
 
+
   public final Coordinate getTarget() {
     return target;
   }
-
 }

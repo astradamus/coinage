@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 /**
  *
  */
-public class ListSelectInterpreter implements KeyListener {
+class ListSelectInterpreter implements KeyListener {
 
   private final ListSelectionListener listSelectionListener;
 

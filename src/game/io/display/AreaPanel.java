@@ -16,7 +16,7 @@ import java.awt.Graphics2D;
 /**
  *
  */
-public class AreaPanel extends JPanel {
+class AreaPanel extends JPanel {
 
   private static final int SQUARE_SIZE = GameDisplay.SQUARE_SIZE;
 
@@ -38,11 +38,10 @@ public class AreaPanel extends JPanel {
     AreaCoordinate playerAtAC = world.convertToAreaCoordinate(playerAt);
     Coordinate playerAreaOrigin = playerAt.offset(-playerAtAC.areaX, -playerAtAC.areaY);
 
-
     for (int y = 0; y < world.getAreaSizeInSquares().getHeight(); y++) {
       for (int x = 0; x < world.getAreaSizeInSquares().getWidth(); x++) {
 
-        Coordinate thisCoordinate = playerAreaOrigin.offset(x,y);
+        Coordinate thisCoordinate = playerAreaOrigin.offset(x, y);
 
         final Physical visible = world.getSquare(thisCoordinate).peek();
 
@@ -51,7 +50,7 @@ public class AreaPanel extends JPanel {
         final Color bgColor = visible.getBGColor();
 
         int placeX = (x) * SQUARE_SIZE;
-        int placeY = (y) * SQUARE_SIZE+getInsets().top;
+        int placeY = (y) * SQUARE_SIZE + getInsets().top;
 
         SquareDrawer.drawSquare(g, mapSymbol, color, bgColor, SQUARE_SIZE, placeX, placeY);
 
@@ -60,13 +59,10 @@ public class AreaPanel extends JPanel {
         if (target != null && target.equalTo(thisCoordinate)) {
           SquareDrawer.drawOval(g, GameDisplay.CURSOR, SQUARE_SIZE, placeX, placeY);
         }
-
       }
     }
 
     ActionOverlay.drawOverlay((Graphics2D) g);
     EventLog.drawOverlay((Graphics2D) g);
-
   }
-
 }

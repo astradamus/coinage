@@ -5,14 +5,15 @@ import game.Direction;
 import world.World;
 
 /**
- * Actors perform turns to change their facing direction. Actors can only turn one direction
- * grade at a time, but attempts to turn more than one grade will automatically repeat until the
- * target is reached. Passing {@code true} to {@code moveAfterTurning} will cause the complete
- * turning chain to be finalized with a movement in the given direction.
+ * Actors perform turns to change their facing direction. Actors can only turn one direction grade
+ * at a time, but attempts to turn more than one grade will automatically repeat until the target is
+ * reached. Passing {@code true} to {@code moveAfterTurning} will cause the complete turning chain
+ * to be finalized with a movement in the given direction.
  */
 public class Turning extends Action {
 
-  protected final Direction turningTowards;
+  final Direction turningTowards;
+
 
   public Turning(Actor actor, Direction turningTowards) {
     super(actor, null);
@@ -27,6 +28,7 @@ public class Turning extends Action {
   protected boolean validate(World world) {
     return true;
   }
+
 
   /**
    * Turn the actor one direction grade towards the target direction.
@@ -45,11 +47,12 @@ public class Turning extends Action {
     // Evaluate whether turning left or right will get there faster.
     if ((difference > 0 && difference <= 4) || difference < -4) {
       getActor().setFacing(actorFacing.getLeftNeighbor());
-    } else {
+    }
+    else {
       getActor().setFacing(actorFacing.getRightNeighbor());
     }
-
   }
+
 
   /**
    * Continue turning until the target direction is reached. Cancelling repeat does not interrupt
@@ -65,7 +68,8 @@ public class Turning extends Action {
 
     if (targetDirectionReached) {
       return null;
-    } else {
+    }
+    else {
 
       final Turning next = new Turning(getActor(), turningTowards);
 
@@ -74,9 +78,6 @@ public class Turning extends Action {
       }
 
       return next;
-
     }
-
   }
-
 }

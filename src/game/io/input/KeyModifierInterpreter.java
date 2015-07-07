@@ -3,7 +3,7 @@ package game.io.input;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class KeyModifierInterpreter implements KeyListener {
+class KeyModifierInterpreter implements KeyListener {
 
   private KeyModifier lastModifier;
 

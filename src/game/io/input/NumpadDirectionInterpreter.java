@@ -12,11 +12,11 @@ import java.util.Stack;
  * Pressing non-complimentary directions in succession will go in the direction most recently
  * pressed.
  */
-public class NumpadDirectionInterpreter implements KeyListener {
+class NumpadDirectionInterpreter implements KeyListener {
 
   private final DirectionListener directionListener;
 
-  private Stack<Direction> heldDirections = new Stack<>();
+  private final Stack<Direction> heldDirections = new Stack<>();
 
   public NumpadDirectionInterpreter(DirectionListener directionListener) {
     this.directionListener = directionListener;

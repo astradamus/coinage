@@ -3,7 +3,7 @@ package world;
 /**
  *
  */
-public final class WeightMap {
+final class WeightMap {
   public final int[][] weightMap;
   public final int[] distribution;
 

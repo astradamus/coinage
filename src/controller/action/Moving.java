@@ -9,31 +9,32 @@ import world.World;
 import java.awt.Color;
 
 /**
- * Actors perform moves to change their own location in the world. Their movement speed is
- * defined by how long the delay to perform a movement is for them, which is derived from their
- * reflex attribute. This delay is magnified if the actor is not facing the direction in
- * which it is trying to move, albeit less so if the direction is immediately adjacent (i.e.
- * northwest and northeast for north).
- *
+ * Actors perform moves to change their own location in the world. Their movement speed is defined
+ * by how long the delay to perform a movement is for them, which is derived from their reflex
+ * attribute. This delay is magnified if the actor is not facing the direction in which it is trying
+ * to move, albeit less so if the direction is immediately adjacent (i.e. northwest and northeast
+ * for north).
+ * <p>
  * Passing {@code true} to {@code isWalking} will reduce movement to half speed.
  */
 public class Moving extends Action {
 
-  public final static int BASELINE_RANK = 5;
-  public final static int BEATS_AT_BASELINE = 4;
-  public final static int DISTANCE_ADJUSTMENT_DIVISOR = 3;
+  private final static int BASELINE_RANK = 5;
+  private final static int BEATS_AT_BASELINE = 4;
+  private final static int DISTANCE_ADJUSTMENT_DIVISOR = 3;
 
-  public static final int FOUR_LEGGED_FULL_SPEED_BONUS = 1;
-
+  private static final int FOUR_LEGGED_FULL_SPEED_BONUS = 1;
 
   private final Direction movingIn;
   private final boolean isWalking;
+
 
   public Moving(Actor actor, Direction movingIn, boolean isWalking) {
     super(actor, actor.getCoordinate().offset(movingIn.relativeX, movingIn.relativeY));
     this.movingIn = movingIn;
     this.isWalking = isWalking;
   }
+
 
   @Override
   public Color getIndicatorColor() {
@@ -42,10 +43,9 @@ public class Moving extends Action {
 
 
   /**
-   * At {@code BASELINE_RANK} reflex, an actor will suffer a {@code BEATS_AT_BASELINE} action
-   * delay. For every {@code DISTANCE_ADJUSTMENT_DIVISOR} ranks above or below
-   * {@code BASELINE_RANK}, the actor suffers one less or one more beat of action delay,
-   * respectively.
+   * At {@code BASELINE_RANK} reflex, an actor will suffer a {@code BEATS_AT_BASELINE} action delay.
+   * For every {@code DISTANCE_ADJUSTMENT_DIVISOR} ranks above or below {@code BASELINE_RANK}, the
+   * actor suffers one less or one more beat of action delay, respectively.
    */
   @Override
   public int calcDelayToPerform() {
@@ -57,10 +57,7 @@ public class Moving extends Action {
     final int distanceFromBaseline = actorReflex - BASELINE_RANK;
 
     // Subtract adjustment from baseline to get normal delay to perform.
-    int calculatedDelay =
-        BEATS_AT_BASELINE - (distanceFromBaseline / DISTANCE_ADJUSTMENT_DIVISOR);
-
-
+    int calculatedDelay = BEATS_AT_BASELINE - (distanceFromBaseline / DISTANCE_ADJUSTMENT_DIVISOR);
 
     // Determine facing adjustment.
     if (isWalking) {
@@ -81,16 +78,6 @@ public class Moving extends Action {
     else {
       return calculatedDelay * 2; // All other directions take twice as long to move in.
     }
-
-  }
-
-  private boolean getIsMovingInFacedDirection() {
-    return getActor().getFacing() == movingIn;
-  }
-
-  private boolean getIsMovingInAdjacentDirection() {
-    final Direction actorFacing = getActor().getFacing();
-    return movingIn == actorFacing.getLeftNeighbor() || movingIn == actorFacing.getRightNeighbor();
   }
 
 
@@ -109,8 +96,8 @@ public class Moving extends Action {
     final boolean performerHasMoved = !world.getSquare(getOrigin()).getAll().contains(getActor());
 
     return !targetIsBlocked && !performerHasMoved;
-
   }
+
 
   /**
    * Remove the actor from its original location, add it to the new location, and update its stored
@@ -129,8 +116,8 @@ public class Moving extends Action {
     if (world.getArea(getOrigin()) != world.getArea(getTarget())) {
       addFlag(ActionFlag.ACTOR_CHANGED_AREA);
     }
-
   }
+
 
   /**
    * Movement will always repeat on success unless {@code doNotRepeat()} is called.
@@ -145,4 +132,14 @@ public class Moving extends Action {
     }
   }
 
+
+  private boolean getIsMovingInFacedDirection() {
+    return getActor().getFacing() == movingIn;
+  }
+
+
+  private boolean getIsMovingInAdjacentDirection() {
+    final Direction actorFacing = getActor().getFacing();
+    return movingIn == actorFacing.getLeftNeighbor() || movingIn == actorFacing.getRightNeighbor();
+  }
 }

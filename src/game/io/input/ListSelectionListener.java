@@ -3,7 +3,7 @@ package game.io.input;
 /**
  *
  */
-public interface ListSelectionListener {
+interface ListSelectionListener {
 
   void receiveSelectScroll(int deltaY);
   void receiveSubmitSelection();

@@ -12,5 +12,4 @@ public interface ControllerInterface {
   void reevaluateActiveAreas();
 
   Set<Actor> requestActorsInMyArea(ActorAgent actorAgent);
-
 }

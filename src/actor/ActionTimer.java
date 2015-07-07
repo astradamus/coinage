@@ -1,22 +1,24 @@
 package actor;
 
 /**
- * Tracks the warm-up and cool-down states for an individual actor. Most actions have an
- * associated warm-up cost that represents how long it takes to perform that action. Many actions
- * also have a cool-down cost that represents how long it takes to recover from performing the
- * action, before you can perform another.<br><br>
- *
+ * Tracks the warm-up and cool-down states for an individual actor. Most actions have an associated
+ * warm-up cost that represents how long it takes to perform that action. Many actions also have a
+ * cool-down cost that represents how long it takes to recover from performing the action, before
+ * you can perform another.
+ * <p>
  * This timer stores both values and exposes methods for incrementing them, decrementing them, and
  * easily translating them into the information the game needs.
  */
-public class ActionTimer {
+class ActionTimer {
 
   private int actionWarmUp = 0;
   private int actionCoolDown = 0;
 
+
   void addBeatsToWarmUp(int addBeats) {
     actionWarmUp += addBeats;
   }
+
 
   void addBeatsToCoolDown(int addBeats) {
     actionCoolDown += addBeats;
@@ -31,7 +33,7 @@ public class ActionTimer {
    * went last, cancelling an action would waste any updates spent reducing warm-up.
    */
   public void decrementClock() {
-    if (actionCoolDown > 0){
+    if (actionCoolDown > 0) {
       actionCoolDown--;
     }
     else if (actionWarmUp > 0) {
@@ -49,6 +51,7 @@ public class ActionTimer {
     actionWarmUp = 0;
   }
 
+
   /**
    * @return {@code true} if both warm-up and cool-down are complete.
    */
@@ -56,12 +59,12 @@ public class ActionTimer {
     return actionWarmUp <= 0 && actionCoolDown <= 0;
   }
 
+
   /**
-   * @return The total amount of beats that must be spent before the actor can perform the
-   * currently queued action.
+   * @return The total amount of beats that must be spent before the actor can perform the currently
+   * queued action.
    */
   public int getTotalDelay() {
     return actionWarmUp + actionCoolDown;
   }
-
 }

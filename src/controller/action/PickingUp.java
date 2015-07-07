@@ -15,6 +15,7 @@ public class PickingUp extends Action {
 
   private final Physical pickingUpWhat;
 
+
   public PickingUp(Actor actor, Coordinate pickingUpWhere, Physical pickingUpWhat) {
     super(actor, pickingUpWhere);
     this.pickingUpWhat = pickingUpWhat;
@@ -25,6 +26,7 @@ public class PickingUp extends Action {
   public int calcDelayToPerform() {
     return 1;
   }
+
 
   @Override
   public int calcDelayToRecover() {
@@ -52,8 +54,8 @@ public class PickingUp extends Action {
     }
 
     return itemIsAtTarget;
-
   }
+
 
   /**
    * Upon success, the item is added to the actor's inventory.
@@ -63,5 +65,4 @@ public class PickingUp extends Action {
     world.getSquare(getTarget()).pull(pickingUpWhat);
     getActor().getInventory().addItem(pickingUpWhat);
   }
-
 }

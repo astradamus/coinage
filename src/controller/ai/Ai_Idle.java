@@ -7,30 +7,32 @@ import game.Game;
 
 /**
  * This behavior will make the agent hold position in one spot and, on occasion, turn to look
- * around.<br><br>
- *
+ * around.
+ * <p>
  * The agent will perform a sensory scan every few turns at a statically defined interval, but will
  * otherwise do nothing for the duration of the behavior.
  */
 public class Ai_Idle extends Behavior {
 
-  public static final int SENSORY_SCAN_INTERVAL = 5;
+  private static final int SENSORY_SCAN_INTERVAL = 5;
 
-  public static final int IDLE_DURATION_BASE  = 75;
-  public static final int IDLE_DURATION_RANGE = 75;
-
+  private static final int IDLE_DURATION_BASE = 75;
+  private static final int IDLE_DURATION_RANGE = 75;
 
   private int idleTimeRemaining;
+
 
   public Ai_Idle(AiActorAgent agent) {
     super(agent);
     idleTimeRemaining = IDLE_DURATION_BASE + Game.RANDOM.nextInt(IDLE_DURATION_RANGE);
   }
 
+
   @Override
   protected void onExhibit() {
     idle();
   }
+
 
   private void idle() {
 
@@ -62,11 +64,8 @@ public class Ai_Idle extends Behavior {
         }
 
         getAgent().attemptAction(new Turning(getActor(), turnTo));
-
       }
-
     }
-
   }
 
 
@@ -75,15 +74,13 @@ public class Ai_Idle extends Behavior {
 
     // Run the main routine at the end of every update.
     idle();
-
   }
+
 
   @Override
   public void onVictimized(Actor attacker) {
 
     // If we are attacked, either fight or flee.
     Routines.evaluateNewAggressor(getAgent(), attacker);
-
   }
-
 }

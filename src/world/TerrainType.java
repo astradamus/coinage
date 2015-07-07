@@ -62,7 +62,7 @@ public enum TerrainType {
       }),
   ;
 
-  List<Appearance> appearances;
+  final List<Appearance> appearances;
 
 
 

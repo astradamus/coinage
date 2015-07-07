@@ -16,6 +16,7 @@ public class EquipWeapon extends Action {
   private final Physical weapon;
   private Thing validatedWeapon;
 
+
   public EquipWeapon(Actor actor, Physical weapon) {
     super(actor, null);
     this.weapon = weapon;
@@ -27,10 +28,12 @@ public class EquipWeapon extends Action {
     return 2;
   }
 
+
   @Override
   public int calcDelayToRecover() {
     return 1;
   }
+
 
   /**
    * Equipping fails if the target physical is not a weapon.
@@ -50,8 +53,8 @@ public class EquipWeapon extends Action {
     }
 
     return false;
-
   }
+
 
   /**
    * Set the actor's equipped weapon. If this action was acted by the player, log an appropriate
@@ -65,7 +68,5 @@ public class EquipWeapon extends Action {
     if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
       EventLog.registerEvent(Color.CYAN, "You have equipped " + validatedWeapon.getName() + ".");
     }
-
   }
-
 }

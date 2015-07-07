@@ -18,9 +18,10 @@ public class ActorFactory {
     return null;
   }
 
-  static Map<Attribute,Rank> makeAttributeMap(ActorTemplate actorTemplate) {
 
-    Map<Attribute,Rank> attributes = new HashMap<>();
+  static Map<Attribute, Rank> makeAttributeMap(ActorTemplate actorTemplate) {
+
+    Map<Attribute, Rank> attributes = new HashMap<>();
 
     for (Attribute attribute : Attribute.values()) {
       AttributeRange attributeRange = actorTemplate.baseAttributeRanges.get(attribute.ordinal());
@@ -28,7 +29,5 @@ public class ActorFactory {
     }
 
     return attributes;
-
   }
-
 }

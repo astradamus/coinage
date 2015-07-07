@@ -4,28 +4,26 @@ import actor.Actor;
 import controller.action.Action;
 import controller.action.ActionFlag;
 import game.Direction;
-import game.Game;
 import game.physical.PhysicalFlag;
 import world.Coordinate;
 import world.MapCoordinate;
 import world.World;
 
 /**
- * This behavior will make the agent move at full speed away from the given pursuer. The agent
- * will attempt to place a distance of two areas between itself and its pursuer before it stops
- * running. However, if it is determined that the agent can't escape, it will turn and fight
- * instead.
- *
- * <p>This determination is made by recording the occurrences of three events. First, if the agent
+ * This behavior will make the agent move at full speed away from the given pursuer. The agent will
+ * attempt to place a distance of two areas between itself and its pursuer before it stops running.
+ * However, if it is determined that the agent can't escape, it will turn and fight instead.
+ * <p>
+ * This determination is made by recording the occurrences of three events. First, if the agent
  * is victimized by the pursuer while attempting to flee. Second, if the agent has to change the
  * direction of its escape, because the pursuer is outpacing or outmaneuvering it. Third, if the
- * agent's path of escape is blocked. Each of these events adds a certain (statically defined)
- * value to a counter, and when that counter reaches a certain (statically defined) point, the
- * agent will turn and fight.</p>
+ * agent's path of escape is blocked. Each of these events adds a certain (statically defined) value
+ * to a counter, and when that counter reaches a certain (statically defined) point, the agent will
+ * turn and fight.
  */
 public class Ai_Retreat extends Behavior {
 
-  public static final int CANT_ESCAPE_COUNTER_MAX = 30;
+  private static final int CANT_ESCAPE_COUNTER_MAX = 30;
 
   private static final int CANT_ESCAPE_ATTACKED_VALUE = 20;
   private static final int CANT_ESCAPE_REDIRECTED_VALUE = 8;
@@ -37,6 +35,7 @@ public class Ai_Retreat extends Behavior {
   private int cantEscapeCounter;
   private boolean isTurningToEscape;
 
+
   public Ai_Retreat(AiActorAgent agent, Actor pursuer) {
     super(agent);
     this.pursuer = pursuer;
@@ -44,15 +43,17 @@ public class Ai_Retreat extends Behavior {
     isTurningToEscape = false;
   }
 
+
   @Override
   protected String getOnExhibitLogMessage() {
-    if (getAgent().getGameReporter().getActorIsPlayer(pursuer)) {
+    if (getAgent().getGameInformer().getActorIsPlayer(pursuer)) {
       return getActor().getName() + " flees for its life.";
     }
     else {
       return null;
     }
   }
+
 
   @Override
   protected void onExhibit() {
@@ -72,10 +73,9 @@ public class Ai_Retreat extends Behavior {
       final Coordinate actorAt = getActor().getCoordinate();
       final Coordinate pursuerAt = pursuer.getCoordinate();
 
-      final World world = getAgent().getGameReporter().getWorld();
-      final MapCoordinate actorWMC = world.convertToMapCoordinate(actorAt);
-      final MapCoordinate pursuerWMC = world.convertToMapCoordinate(pursuerAt);
-
+      final World.Informer worldInformer = getAgent().getGameInformer().getWorldInformer();
+      final MapCoordinate actorWMC = worldInformer.convertToMapCoordinate(actorAt);
+      final MapCoordinate pursuerWMC = worldInformer.convertToMapCoordinate(pursuerAt);
 
       // If we are two areas away we've escaped and can stop retreating.
       if (actorWMC.getDistance(pursuerWMC) >= 2) {
@@ -87,11 +87,9 @@ public class Ai_Retreat extends Behavior {
         final Direction toEscape = pursuerAt.getDirectionTo(actorAt);
         Routines.turnThenMove(getAgent(), toEscape, false, false);
       }
-
     }
-
-
   }
+
 
   private void incrementCantEscapeCounter(int increments) {
 
@@ -102,7 +100,18 @@ public class Ai_Retreat extends Behavior {
     if (cantEscapeCounter >= CANT_ESCAPE_COUNTER_MAX) {
       getAgent().exhibitBehavior(new Ai_Fight(getAgent(), pursuer));
     }
+  }
 
+
+  @Override
+  public void onActionExecuted(Action action) {
+
+    // If one of our movements fails, step around the blocked square, and increment the can't
+    // escape counter by the appropriate value.
+    if (action.hasFlag(ActionFlag.FAILED)) {
+      Routines.stepAroundBlockedSquare(getAgent());
+      incrementCantEscapeCounter(CANT_ESCAPE_BLOCKED_VALUE);
+    }
   }
 
 
@@ -140,24 +149,10 @@ public class Ai_Retreat extends Behavior {
           incrementCantEscapeCounter(CANT_ESCAPE_REDIRECTED_VALUE);
           isTurningToEscape = true;
         }
-
       }
-
     }
-
   }
 
-  @Override
-  public void onActionExecuted(Action action) {
-
-    // If one of our movements fails, step around the blocked square, and increment the can't
-    // escape counter by the appropriate value.
-    if (action.hasFlag(ActionFlag.FAILED)) {
-      Routines.stepAroundBlockedSquare(getAgent());
-      incrementCantEscapeCounter(CANT_ESCAPE_BLOCKED_VALUE);
-    }
-
-  }
 
   @Override
   public void onVictimized(Actor attacker) {
@@ -167,7 +162,5 @@ public class Ai_Retreat extends Behavior {
     if (this.pursuer == attacker) {
       incrementCantEscapeCounter(CANT_ESCAPE_ATTACKED_VALUE);
     }
-
   }
-
 }

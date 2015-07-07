@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 /**
  *
  */
-public class ModeCommandInterpreter implements KeyListener {
+class ModeCommandInterpreter implements KeyListener {
 
   @Override
   public void keyPressed(KeyEvent e) {

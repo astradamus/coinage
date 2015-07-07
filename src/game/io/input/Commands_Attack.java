@@ -2,7 +2,6 @@ package game.io.input;
 
 import controller.action.Attacking;
 import controller.player.PlayerAgent;
-import game.Game;
 import game.io.display.Event;
 import game.io.display.EventLog;
 import world.Coordinate;

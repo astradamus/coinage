@@ -16,7 +16,7 @@ public class GameEngine {
   private static final int MILLISECONDS_PER_HEARTBEAT = 20;
 
 
-  private static Stack<TimeMode> TIME_MODE = new Stack<>();
+  private static final Stack<TimeMode> TIME_MODE = new Stack<>();
   static {TIME_MODE.push(TimeMode.LIVE);}
 
 
@@ -48,7 +48,7 @@ public class GameEngine {
 
 
 
-  private static Runnable gameLoop = new Runnable() {
+  private static final Runnable gameLoop = new Runnable() {
     @Override
     public void run() {
       synchronized (this) {

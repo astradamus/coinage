@@ -43,7 +43,7 @@ public class ActorTemplate {
         EnumSet.noneOf(PhysicalFlag.class));
   }
 
-  public static HashMap<String, ActorTemplate> LIB = new HashMap<>();
+  public static final HashMap<String, ActorTemplate> LIB = new HashMap<>();
 
   public static void loadActors() {
 

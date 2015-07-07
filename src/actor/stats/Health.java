@@ -19,7 +19,7 @@ public class Health {
 
   private final Actor actor;
 
-  private int maximum;
+  private final int maximum;
   private int current;
 
   public Health(Actor actor) {

@@ -51,7 +51,7 @@ public class ThingTemplate {
 
 
 
-  public static HashMap<String,ThingTemplate> LIB = new HashMap<>();
+  public static final HashMap<String,ThingTemplate> LIB = new HashMap<>();
 
   public static void loadThings() {
     LIB.put("UNDERGROWTH", new ThingTemplate(

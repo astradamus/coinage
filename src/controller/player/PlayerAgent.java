@@ -4,7 +4,6 @@ import actor.Actor;
 import controller.ActorAgent;
 import controller.action.Action;
 import controller.action.ActionFlag;
-import game.Game;
 import game.io.display.Event;
 import game.io.display.EventLog;
 import world.Area;

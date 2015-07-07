@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public class AiActorAgent extends ActorAgent {
 
-  private Game.Informer gameInformer;
+  private final Game.Informer gameInformer;
   private Behavior currentBehavior;
 
   public AiActorAgent(Actor actor, Game.Informer gameInformer) {

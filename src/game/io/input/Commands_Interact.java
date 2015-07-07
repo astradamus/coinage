@@ -3,7 +3,6 @@ package game.io.input;
 import actor.Actor;
 import controller.action.PickingUp;
 import controller.player.PlayerAgent;
-import game.Game;
 import game.physical.Physical;
 import world.Coordinate;
 

@@ -26,11 +26,11 @@ public class GameDisplay {
 
   private static Game runningGame;
 
-  private static AreaPanel PANEL_AREA = new AreaPanel();
-  private static SidePanel PANEL_SIDE = new SidePanel();
+  private static final AreaPanel PANEL_AREA = new AreaPanel();
+  private static final SidePanel PANEL_SIDE = new SidePanel();
 
 
-  private static JFrame WINDOW = new JFrame("Coinage") {
+  private static final JFrame WINDOW = new JFrame("Coinage") {
     {
       JPanel container = new JPanel();
       container.setBackground(Color.BLACK);

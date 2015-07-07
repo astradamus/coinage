@@ -1,7 +1,6 @@
 package controller.action;
 
 import actor.Actor;
-import game.Game;
 import world.Coordinate;
 import world.World;
 

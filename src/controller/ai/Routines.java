@@ -11,7 +11,6 @@ import controller.action.TurnThenMove;
 import game.Direction;
 import game.Game;
 import game.physical.PhysicalFlag;
-import world.Area;
 import world.Coordinate;
 
 import java.util.Set;

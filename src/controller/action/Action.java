@@ -118,6 +118,11 @@ public abstract class Action {
     return this;
   }
 
+  public Action playerIsTarget() {
+    addFlag(ActionFlag.PLAYER_IS_TARGET);
+    return this;
+  }
+
 
   protected final Actor getActor() {
     return actor;

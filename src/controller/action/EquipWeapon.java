@@ -1,7 +1,7 @@
 package controller.action;
 
 import actor.Actor;
-import game.display.EventLog;
+import game.io.display.EventLog;
 import game.physical.Physical;
 import thing.Thing;
 import world.World;

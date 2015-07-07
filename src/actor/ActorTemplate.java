@@ -2,7 +2,6 @@ package actor;
 
 import actor.attribute.AttributeRange;
 import actor.attribute.Rank;
-import game.Game;
 import game.physical.Appearance;
 import game.physical.PhysicalFlag;
 import thing.WeaponTemplates;
@@ -32,7 +31,7 @@ public class ActorTemplate {
                        List<AttributeRange> baseAttributeRanges, String naturalWeaponID,
                        EnumSet<PhysicalFlag> flags) {
     this.name = name;
-    this.appearance = new Appearance(appearance,color,bgColor, Game.VISUAL_PRIORITY__ACTORS);
+    this.appearance = new Appearance(appearance,color,bgColor, Appearance.VISUAL_PRIORITY__ACTORS);
     this.baseAttributeRanges = baseAttributeRanges;
     this.flags = flags;
     this.naturalWeaponID = naturalWeaponID;

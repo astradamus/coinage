@@ -5,12 +5,11 @@ import controller.ActorAgent;
 import controller.action.Action;
 import controller.action.ActionFlag;
 import game.Game;
-import game.display.Event;
-import game.display.EventLog;
+import game.io.display.Event;
+import game.io.display.EventLog;
 import world.Area;
 import world.World;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -22,12 +21,12 @@ import java.util.Set;
  */
 public class AiActorAgent extends ActorAgent {
 
-  private World world;
+  private Game.Reporter gameReporter;
   private Behavior currentBehavior;
 
-  public AiActorAgent(Actor actor, World world) {
+  public AiActorAgent(Actor actor, Game.Reporter gameReporter) {
     super(actor);
-    this.world = world;
+    this.gameReporter = gameReporter;
     currentBehavior = null;
   }
 
@@ -58,6 +57,7 @@ public class AiActorAgent extends ActorAgent {
   public void onActionExecuted(Action action) {
 
     if (action.hasFlag(ActionFlag.ACTOR_CHANGED_AREA)) {
+      final World world = gameReporter.getWorld();
       Area from = world.getArea(action.getOrigin());
       Area to = world.getArea(getActor().getCoordinate());
       getControllerInterface().onLocalityChanged(this, from, to);
@@ -98,8 +98,8 @@ public class AiActorAgent extends ActorAgent {
 
   }
 
-  World getWorld() {
-    return world;
+  Game.Reporter getGameReporter() {
+    return gameReporter;
   }
 
   @Override

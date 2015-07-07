@@ -4,6 +4,9 @@ import actor.Actor;
 import controller.ActorAgent;
 import controller.action.Action;
 import controller.action.ActionFlag;
+import game.Game;
+import game.io.display.Event;
+import game.io.display.EventLog;
 import world.Area;
 import world.World;
 import world.MapCoordinate;
@@ -41,6 +44,10 @@ public class PlayerAgent extends ActorAgent {
 
   }
 
+  @Override
+  protected void onActorObserverDisconnected() {
+    EventLog.registerEvent(Event.INVALID_ACTION, "You are dead. Game over.");
+  }
 
   public final Component_WorldMapRevealed getWorldMapRevealedComponent() {
     return component_worldMapRevealed;

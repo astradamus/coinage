@@ -1,8 +1,8 @@
 package controller.action;
 
 import actor.Actor;
-import game.display.Event;
-import game.display.EventLog;
+import game.io.display.Event;
+import game.io.display.EventLog;
 import game.physical.Physical;
 import world.Coordinate;
 import world.World;

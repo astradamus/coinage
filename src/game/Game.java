@@ -1,19 +1,12 @@
 package game;
 
 import actor.Actor;
-import game.display.GameDisplay;
-import game.input.GameInputSwitch;
-import thing.ThingFactory;
-import thing.WeaponTemplates;
-import utils.Dimension;
+import controller.player.PlayerAgent;
 import world.Coordinate;
-import world.World;
 import world.MapCoordinate;
+import world.World;
 
-import java.awt.event.KeyListener;
-import java.util.List;
 import java.util.Random;
-import java.util.Stack;
 
 /**
  *
@@ -22,104 +15,65 @@ public class Game {
 
   public static final Random RANDOM = new Random();
 
-  public static final int VISUAL_PRIORITY__TERRAIN = 0;
-  public static final int VISUAL_PRIORITY__THINGS = 10;
-  public static final int VISUAL_PRIORITY__ACTORS = 100;
+
+  private final World world;
+  private final GameControllers gameControllers;
+
+  private PlayerAgent playerAgent;
 
 
-  static Game ACTIVE;
-
-  private static Stack<TimeMode> TIME_MODE = new Stack<>();
-  static {TIME_MODE.push(TimeMode.LIVE);}
-
-
-  public static Game getActive() {
-    return ACTIVE;
+  public Game(World world) {
+    this.world = world;
+    this.gameControllers = new GameControllers(this);
   }
 
-  public static TimeMode getTimeMode() {
-    return TIME_MODE.peek();
-  }
-
-  public static void setTimeMode(TimeMode timeMode) {
-    if (TIME_MODE.contains(timeMode)) {
-
-      while (TIME_MODE.peek() != timeMode) {
-        TIME_MODE.pop();
-      }
-
-    } else {
-      TIME_MODE.push(timeMode);
-    }
-  }
-
-  public static void revertTimeMode() {
-    TIME_MODE.pop();
+  public void setPlayerAgent(PlayerAgent playerAgent) {
+    this.playerAgent = playerAgent;
   }
 
 
-  public static GameInputSwitch getActiveInputSwitch() {
-    return ACTIVE.INPUT_SWITCH;
+  public void update() {
+    gameControllers.onUpdate();
   }
 
-
-
-  final GameInputSwitch INPUT_SWITCH;
-  final World WORLD;
-  final GameControllers CONTROLLERS;
-
-  public Game(World world, GameControllers gameControllers, GameInputSwitch gameInputSwitch) {
-    this.WORLD = world;
-    this.CONTROLLERS = gameControllers;
-    this.INPUT_SWITCH = gameInputSwitch;
-  }
-
-
-  void update() {
-
-    INPUT_SWITCH.onUpdate();
-
-    TimeMode timeMode = TIME_MODE.peek();
-    if (timeMode == TimeMode.LIVE
-        || (timeMode == TimeMode.PRECISION && !getActivePlayerActor().isFreeToAct())) {
-      CONTROLLERS.onUpdate();
-    }
-
-    GameDisplay.onUpdate();
-
-  }
 
   public World getWorld() {
-    return WORLD;
+    return world;
   }
 
-  public GameControllers getControllers() {
-    return CONTROLLERS;
+  public GameControllers getGameControllers() {
+    return gameControllers;
+  }
+
+  public PlayerAgent getPlayerAgent() {
+    return playerAgent;
   }
 
   public Actor getActivePlayerActor() {
-    return INPUT_SWITCH.getPlayerController().getActor();
+    return playerAgent.getActor();
   }
 
-  public static void main(String[] args) {
+  public boolean getWorldMapAreaIsRevealed(Coordinate coordinate) {
+    MapCoordinate mapCoordinate = world.convertToMapCoordinate(coordinate);
+    return (playerAgent.getWorldMapRevealedComponent().getAreaIsRevealed(mapCoordinate));
+  }
 
-    GameLoader.newGame(new Dimension(48, 48), new Dimension(24, 24));
-    GameDisplay.recalculateSize();
 
-    List<KeyListener> keyListeners = ACTIVE.INPUT_SWITCH.getKeyListeners();
-    for (KeyListener keyListener : keyListeners) {
-      GameDisplay.addKeyListener(keyListener);
+  private final Reporter reporter = new Reporter();
+
+  public Reporter getReporter() {
+    return reporter;
+  }
+
+  public final class Reporter {
+
+    public boolean getActorIsPlayer(Actor actor) {
+      return  (getActivePlayerActor() == actor);
     }
 
-    ACTIVE.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
-        (WeaponTemplates.WP_CLUB));
-    ACTIVE.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
-        (WeaponTemplates.WP_SWORD));
-    ACTIVE.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
-        (WeaponTemplates.WP_AXE));
-    ACTIVE.getActivePlayerActor().getInventory().addItem(ThingFactory.makeThing
-        (WeaponTemplates.WP_DAGGER));
-    GameEngine.start();
+    public World getWorld() {
+      return world; // todo Set up a world reporter that offers only immutable view of world.
+    }
 
   }
 

@@ -2,9 +2,8 @@ package actor.stats;
 
 import actor.Actor;
 import actor.attribute.Attribute;
-import game.Game;
-import game.display.Event;
-import game.display.EventLog;
+import game.io.display.Event;
+import game.io.display.EventLog;
 import game.physical.PhysicalFlag;
 
 /**
@@ -63,12 +62,7 @@ public class Health {
       if (current <= 0) {
 
         // Construct a log message
-        final String message;
-        if (Game.getActiveInputSwitch().getPlayerController().getActor() == actor) {
-          message = "You have died.";
-        } else {
-          message = actor.getName() + " has died.";
-        }
+        final String message = actor.getName() + " has died.";
 
         // Notify the player, if they are local.
         EventLog.registerEventIfPlayerIsNear(actor.getCoordinate(), Event.ACTOR_WOUNDED, message);

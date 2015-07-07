@@ -6,7 +6,6 @@ import actor.attribute.Perception;
 import actor.attribute.Rank;
 import controller.action.Turning;
 import game.Direction;
-import game.Game;
 import world.Coordinate;
 
 /**
@@ -33,7 +32,7 @@ public class Ai_Investigate extends Behavior {
 
   @Override
   protected String getOnExhibitLogMessage() {
-    if (intruder == Game.getActiveInputSwitch().getPlayerController().getActor()) {
+    if (getAgent().getGameReporter().getActorIsPlayer(intruder)) {
       return getActor().getName() + " has heard you.";
     }
     else {

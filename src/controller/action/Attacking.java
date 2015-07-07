@@ -4,8 +4,8 @@ import actor.Actor;
 import actor.attribute.Attribute;
 import actor.attribute.Rank;
 import game.Game;
-import game.display.Event;
-import game.display.EventLog;
+import game.io.display.Event;
+import game.io.display.EventLog;
 import game.physical.Physical;
 import game.physical.PhysicalFlag;
 import thing.Thing;
@@ -91,7 +91,7 @@ public class Attacking extends Action {
     final String hitString = weaponComponent.getDamageType().getHitString();
 
     String victimName = victim.getName();
-    if (victim == Game.getActiveInputSwitch().getPlayerController().getActor()) {
+    if (hasFlag(ActionFlag.PLAYER_IS_TARGET)) {
       victimName = "you";
     }
 

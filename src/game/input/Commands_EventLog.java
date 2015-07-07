@@ -53,6 +53,26 @@ public enum Commands_EventLog implements Command {
       EventLog.scrollLogUp();
     }
 
+  },
+
+  TOGGLE_MODE {
+
+    @Override
+    public int getHotKeyCode() {
+      return KeyEvent.VK_F;
+    }
+
+    @Override
+    public String getControlText() {
+      return "F: Toggle overlay mode.";
+    }
+
+    @Override
+    public void execute() {
+      EventLog.toggleLogMode();
+    }
+
   }
+
 
 }

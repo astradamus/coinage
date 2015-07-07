@@ -192,11 +192,16 @@ public enum GameMode {
     @Override
     public void onEnter() {
       EventLog.showEventLog();
+
+      if (Game.getTimeMode() == TimeMode.LIVE || Game.getTimeMode() == TimeMode.PRECISION) {
+        Game.setTimeMode(TimeMode.PAUSED);
+      }
+
     }
 
     @Override
     public String getPrompt() {
-      return null;
+      return "Viewing Event Log";
     }
 
     @Override
@@ -204,7 +209,8 @@ public enum GameMode {
       return Arrays.asList(
               Commands_EnterMode.ENTER_MODE_EXPLORE,
               Commands_EventLog.SCROLL_DOWN,
-              Commands_EventLog.SCROLL_UP
+              Commands_EventLog.SCROLL_UP,
+              Commands_EventLog.TOGGLE_MODE
       );
     }
 
@@ -214,6 +220,7 @@ public enum GameMode {
       return Arrays.asList(
               DisplayElement.MINIMAP,
               DisplayElement.CONTROL_ESCAPE,
+              DisplayElement.makeCurrentPrompt(),
               DisplayElement.makeControlsList(getModeCommands(), 1)
       );
 

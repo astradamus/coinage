@@ -31,23 +31,25 @@ public class EventLog {
   // VALUES IN LINES
   public static final int MINIMUM_HEIGHT = 5;
   public static final int MAXIMUM_HEIGHT = 10;
-  public static final int MAX_LOG_LINES = 15;  // 15 lines. 1 for the esc message
-
+  public static final int MAX_LOG_LINES = 25;
+  public static final int MIN_LOG_LINES = 5;
   public static final Font SMALL_TEXT = new Font("Monospaced", Font.PLAIN, LINE_HEIGHT);
   private static int startingEvent = 1;
 
-  private static boolean expandedMode = false;
+  private static int expandedMode = 0;  // 0 = off, 1 = Max size paused, 2 = Min size running
   private static int liveEventsIndex = 0;
   private static final List<Event> events = new ArrayList<>();
 
   public static void scrollLogDown() {
-    if (--startingEvent < 1) {
+    startingEvent--;
+    if (startingEvent < 1) {
       startingEvent = 1;
     }
   }
 
   public static void scrollLogUp() {
-    if (++startingEvent > events.size()) {
+    startingEvent++;
+    if (startingEvent > events.size()) {
       startingEvent = events.size();
     }
   }
@@ -77,26 +79,39 @@ public class EventLog {
       registerEvent(color, message);
     }
   }
-  public static boolean showEventLog() {
-    expandedMode = true;
-    return true;
+
+  public static void hideEventLog() {
+    if (expandedMode == 1) {
+      expandedMode = 0;
+    }
+    return;
   }
 
-  public static boolean hideEventLog() {
-    expandedMode = false;
-    return false;
+  public static void showEventLog() {
+    expandedMode = 1;
+    return;
   }
 
-  public static boolean getExpandedMode() { return expandedMode; }
+  public static void minimizeEventLog() {
+    expandedMode = 2;
+    return;
+  }
+
+  public static int toggleLogMode() {
+    expandedMode = 3 - expandedMode;
+    return expandedMode;
+  }
+
+  public static int getExpandedMode() { return expandedMode; }
 
   public static void drawOverlay(Graphics2D g2d) {
 
     if (Game.RANDOM.nextInt(100) < 1) {
-      registerEvent(Color.BLUE, Double.toString(Game.RANDOM.nextDouble()));
+      registerEvent(Color.BLUE, "Random Event " + Double.toString(Game.RANDOM.nextDouble()));
     }
 
     // Look for live events. if there are none and we're not in expanded mode then exit.
-    if (!findLiveEvents() && !expandedMode) {
+    if (!findLiveEvents() && expandedMode == 0) {
       return;
     }
     g2d.setFont(SMALL_TEXT);
@@ -110,8 +125,10 @@ public class EventLog {
     boolean drawingTop = (playerAt.localY > areaHeight * TOP_OR_BOTTOM_SWAP_LINE);
     int linesTall = getLinesTall();
 
-    if (expandedMode) {
-      linesTall = MAX_LOG_LINES;
+    switch (expandedMode) {
+      case 1: linesTall = MAX_LOG_LINES;
+              break;
+      case 2: linesTall = MIN_LOG_LINES;
     }
 
     int drawWidth = (int) (LINE_HEIGHT * areaSizeInSquares.getWidth() * 0.65);
@@ -131,7 +148,7 @@ public class EventLog {
     g2d.fillRect(drawX, drawY, drawWidth, drawHeight);
     g2d.setColor(Color.DARK_GRAY);
     g2d.drawRect(drawX, drawY, drawWidth, drawHeight);
-    if (expandedMode) {
+    if (expandedMode > 0) {
       drawEventLog(g2d, linesTall, drawX, drawY, drawHeight);
     }
     else {
@@ -154,11 +171,8 @@ public class EventLog {
 
   public static void drawEventLog(Graphics2D g2d, int linesTall, int drawX, int drawY, int drawHeight) {
 
-    // Draw MAX_LOG_LINES number of lines. Including one for the exit message.
-    g2d.setColor(Color.WHITE);
-    g2d.drawString("(Esc to exit)", drawX + 10, drawY + drawHeight - LINE_SPACER);
-
-    for (int i = 0; i < (MAX_LOG_LINES - 1); i++) {
+    // Draw linesTall number of lines.
+    for (int i = 0; i < linesTall; i++) {
 
       int eventsIndex = events.size() - i - startingEvent;
       if (eventsIndex < 0) {
@@ -173,7 +187,7 @@ public class EventLog {
       else {
         message = " " + event.message;
       }
-      g2d.drawString(message, drawX + 10, drawY + drawHeight - LINE_HEIGHT * (i + 1) - LINE_SPACER);
+      g2d.drawString(message, drawX + 10, drawY + drawHeight - LINE_HEIGHT * i - LINE_SPACER);
     }
   }
 }

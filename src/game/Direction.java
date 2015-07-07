@@ -1,5 +1,7 @@
 package game;
 
+import utils.Utils;
+
 import java.awt.event.KeyEvent;
 
 /**
@@ -48,6 +50,21 @@ public enum Direction {
 
   public static Direction getRandom() {
     return values()[Game.RANDOM.nextInt(values().length)];
+  }
+
+  public static Direction fromPointToPoint(int x1, int y1, int x2, int y2) {
+
+    final int deltaX = Utils.clamp(x2 - x1, -1, 1);
+    final int deltaY = Utils.clamp(y2 - y1, -1, 1);
+
+    for (Direction direction : values()) {
+      if (direction.relativeX == deltaX && direction.relativeY == deltaY) {
+        return direction;
+      }
+    }
+
+    return null;
+
   }
 
 }

@@ -5,9 +5,9 @@ import game.Game;
 /**
  *
  */
-public final class WeightMapFactory {
+final class WeightMapFactory {
 
-  public static final double DISTRIBUTION_STRICTNESS = 0.95; //
+  private static final double DISTRIBUTION_STRICTNESS = 0.95; //
 
   /**
    * <p>Produces an int[][] of size height*width, and populates it with values within range

@@ -2,17 +2,18 @@ package controller.action;
 
 import actor.Actor;
 import game.Direction;
+import world.World;
 
 /**
- * Actors perform turns to change their facing direction. Actors can only turn one direction
- * grade at a time, but attempts to turn more than one grade will automatically repeat until the
- * target is reached. Passing {@code true} to {@code moveAfterTurning} will cause the complete
- * turning chain to be finalized with a movement in the given direction.
+ * Actors perform turns to change their facing direction. Actors can only turn one direction grade
+ * at a time, but attempts to turn more than one grade will automatically repeat until the target is
+ * reached. Passing {@code true} to {@code moveAfterTurning} will cause the complete turning chain
+ * to be finalized with a movement in the given direction.
  */
 public class Turning extends Action {
 
+  final Direction turningTowards;
 
-  protected final Direction turningTowards;
 
   public Turning(Actor actor, Direction turningTowards) {
     super(actor, null);
@@ -20,12 +21,11 @@ public class Turning extends Action {
   }
 
 
-
   /**
    * Turning cannot currently fail.
    */
   @Override
-  protected boolean validate() {
+  protected boolean validate(World world) {
     return true;
   }
 
@@ -34,19 +34,23 @@ public class Turning extends Action {
    * Turn the actor one direction grade towards the target direction.
    */
   @Override
-  protected void apply() {
+  protected void apply(World world) {
 
-    final Direction actorFacing = getPerformer().getFacing();
+    final Direction actorFacing = getActor().getFacing();
 
     final int difference = actorFacing.ordinal() - turningTowards.ordinal();
 
-    // Evaluate whether turning left or right will get there faster.
-    if ((difference > 0 && difference <= 4) || difference < -4) {
-      getPerformer().setFacing(actorFacing.getLeftNeighbor());
-    } else {
-      getPerformer().setFacing(actorFacing.getRightNeighbor());
+    if (difference == 0) {
+      return;
     }
 
+    // Evaluate whether turning left or right will get there faster.
+    if ((difference > 0 && difference <= 4) || difference < -4) {
+      getActor().setFacing(actorFacing.getLeftNeighbor());
+    }
+    else {
+      getActor().setFacing(actorFacing.getRightNeighbor());
+    }
   }
 
 
@@ -60,23 +64,20 @@ public class Turning extends Action {
   @Override
   public Action attemptRepeat() {
 
-    final boolean targetDirectionReached = getPerformer().getFacing() == turningTowards;
+    final boolean targetDirectionReached = getActor().getFacing() == turningTowards;
 
     if (targetDirectionReached) {
       return null;
-    } else {
+    }
+    else {
 
-      final Turning next = new Turning(getPerformer(), turningTowards);
+      final Turning next = new Turning(getActor(), turningTowards);
 
       if (hasFlag(ActionFlag.DO_NOT_REPEAT)) {
         next.doNotRepeat(); // Pass repeat cancellation along the chain, if there is one.
       }
 
       return next;
-
     }
-
   }
-
-
 }

@@ -1,18 +1,19 @@
 package controller.action;
 
 import actor.Actor;
-import game.display.Event;
-import game.display.EventLog;
+import game.io.display.Event;
+import game.io.display.EventLog;
 import game.physical.Physical;
 import world.Coordinate;
+import world.World;
 
 /**
  * Actors perform placings to move items from their inventory to the world.
  */
 public class Placing extends Action {
 
-
   private final Physical placingWhat;
+
 
   public Placing(Actor actor, Coordinate placingWhere, Physical placingWhat) {
     super(actor, placingWhere);
@@ -20,11 +21,11 @@ public class Placing extends Action {
   }
 
 
-
   @Override
   public int calcDelayToPerform() {
     return 1;
   }
+
 
   @Override
   public int calcDelayToRecover() {
@@ -32,28 +33,27 @@ public class Placing extends Action {
   }
 
 
-
   /**
-   * Placing will fail if the target location is blocked, or if the item is no longer in the
-   * actor's inventory at the time of execution.
+   * Placing will fail if the target location is blocked, or if the item is no longer in the actor's
+   * inventory at the time of execution.
    */
   @Override
-  protected boolean validate() {
+  protected boolean validate(World world) {
 
-    if (getTarget().getSquare().isBlocked()) {
+    if (world.getSquare(getTarget()).isBlocked()) {
       EventLog.registerEvent(Event.INVALID_ACTION, "There's no room there.");
       return false;
     }
 
-    boolean itemIsHeldByActor = getPerformer().getInventory().getItemsHeld().contains(placingWhat);
+    final boolean itemIsHeldByActor =
+        getActor().getInventory().getItemsHeld().contains(placingWhat);
 
-    if (!itemIsHeldByActor){
+    if (!itemIsHeldByActor) {
       EventLog.registerEvent(Event.INVALID_ACTION,
           "You can't seem to find the item you were trying to drop.");
     }
 
     return itemIsHeldByActor;
-
   }
 
 
@@ -61,10 +61,8 @@ public class Placing extends Action {
    * Place the item at the target location.
    */
   @Override
-  protected void apply() {
-    getPerformer().getInventory().removeItem(placingWhat);
-    getTarget().getSquare().put(placingWhat);
+  protected void apply(World world) {
+    getActor().getInventory().removeItem(placingWhat);
+    world.getSquare(getTarget()).put(placingWhat);
   }
-
-
 }

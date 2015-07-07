@@ -6,7 +6,6 @@ import game.physical.PhysicalFlag;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -18,25 +17,32 @@ import java.util.List;
 public class ThingTemplate {
 
   final String name;
-  final List<Appearance> appearances;
+  private final List<Appearance> appearances = new ArrayList<>();
   final EnumSet<PhysicalFlag> flags;
 
-  public ThingTemplate(String name, char[] chars, Color[] colors, EnumSet<PhysicalFlag> flags) {
+  final WeaponComponent weaponComponent;
+
+  private ThingTemplate(String name, char[] chars, Color[] colors, EnumSet<PhysicalFlag> flags) {
 
     this.name = name;
 
-    final List<Appearance> appearances = new ArrayList<>();
-
     for (char character : chars) {
       for (Color color : colors) {
-        appearances.add(new Appearance(character, color, null, Game.VISUAL_PRIORITY__THINGS));
+        appearances.add(new Appearance(character, color, null, Appearance.VISUAL_PRIORITY__THINGS));
       }
     }
 
-    this.appearances = Collections.unmodifiableList(appearances);
-
     this.flags = flags;
 
+    this.weaponComponent = null;
+
+  }
+
+  public ThingTemplate(String name, char mapSymbol, Color color, WeaponComponent weaponComponent) {
+    this.name = name;
+    this.appearances.add(new Appearance(mapSymbol,color, Appearance.VISUAL_PRIORITY__THINGS));
+    this.weaponComponent = weaponComponent;
+    this.flags = EnumSet.noneOf(PhysicalFlag.class);
   }
 
   Appearance getRandomAppearance() {
@@ -45,8 +51,9 @@ public class ThingTemplate {
 
 
 
-  public static HashMap<String,ThingTemplate> LIB = new HashMap<>();
-  static {
+  public static final HashMap<String,ThingTemplate> LIB = new HashMap<>();
+
+  public static void loadThings() {
     LIB.put("UNDERGROWTH", new ThingTemplate(
         "undergrowth",
         new char[] {'#'},
@@ -143,6 +150,10 @@ public class ThingTemplate {
             new Color(63, 63, 63)
         }, EnumSet.noneOf(PhysicalFlag.class)
     ));
+
+    WeaponTemplates.loadStandardWeapons();
+    WeaponTemplates.loadNaturalWeapons();
+
   }
 
 }

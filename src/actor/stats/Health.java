@@ -2,66 +2,94 @@ package actor.stats;
 
 import actor.Actor;
 import actor.attribute.Attribute;
-import game.display.Event;
-import game.display.EventLog;
+import game.io.display.Event;
+import game.io.display.EventLog;
 import game.physical.PhysicalFlag;
 
 /**
- *
+ * Defines how much damage an actor can take before dying and how tracks how much damage an actor
+ * has already taken. Handles calls to damage or heal the actor, and notifies the parent actor
+ * class when its health has been depleted and it should die. If the dying actor is local to the
+ * player, a message will be reported to the event log.
  */
 public class Health {
 
+  private static final int HEALTH_PER_GRIT = 10;
+
+
   private final Actor actor;
 
-  private double maximum;
-  private double current;
+  private final int maximum;
+  private int current;
 
   public Health(Actor actor) {
     this.actor = actor;
-    maximum = actor.readAttributeLevel(Attribute.GRIT).ordinal()*10.0;
+    maximum = actor.getAttributeRank(Attribute.GRIT).ordinal() * HEALTH_PER_GRIT;
     current = maximum;
   }
 
-  public void heal(double healing) {
-    if (actor.hasFlag(PhysicalFlag.DEAD)) {
-      return; // The dead cannot be healed.
-    }
-    current += healing;
-    if (current > maximum) {
-      current = maximum;
-    }
-  }
 
-  public void wound(double damage) {
-    if (actor.hasFlag(PhysicalFlag.DEAD)) {
-      return; // The dead cannot be wounded.
-    }
+  public void heal(int healing) {
 
-    double remaining = current - damage;
+    // The dead cannot be healed.
+    if (!actor.hasFlag(PhysicalFlag.DEAD)) {
 
+      // Apply the healing.
+      current += healing;
 
-    EventLog.registerEventIfPlayerIsNear(actor.getCoordinate(), Event.ACTOR_WOUNDED,
-        actor.getName() + " suffered " + Double.toString(damage)+" damage.");
-
-    if (remaining <= 0) {
-
-      EventLog.registerEventIfPlayerIsNear(actor.getCoordinate(), Event.ACTOR_WOUNDED,
-          actor.getName() + " has died.");
-
-      actor.die();
+      // Enforce the maximum.
+      if (current > maximum) {
+        current = maximum;
+      }
 
     }
-
-    current = remaining;
 
   }
 
-  public double getMaximum() {
-    return maximum;
+  /**
+   * Inflict damage on this actor. If this reduces the actor's current health to zero or lower,
+   * the actor is now dead.
+   */
+  public void wound(int damage) {
+
+    // The dead cannot be wounded.
+    if (!actor.hasFlag(PhysicalFlag.DEAD)) {
+
+      // Apply the damage.
+      current -= damage;
+
+      // If the actor has run out of health, they are now dead.
+      if (current <= 0) {
+
+        // Construct a log message
+        final String message = actor.getName() + " has died.";
+
+        // Notify the player, if they are local.
+        EventLog.registerEventIfPlayerIsNear(actor.getCoordinate(), Event.ACTOR_WOUNDED, message);
+
+        // Notify the parent class.
+        actor.die();
+
+      }
+
+    }
+
   }
 
-  public double getCurrent() {
+
+  private int getCurrent( ) {
     return current;
   }
 
+  private int getMaximum( ) {
+    return maximum;
+  }
+
+  /**
+   * @return A value between 0.0 and 1.0 that is equal to current health divided by maximum health.
+   */
+  public double getFraction() {
+    return getCurrent() / getMaximum();
+  }
+  
 }

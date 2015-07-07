@@ -8,10 +8,10 @@ import utils.Dimension;
 /**
  *
  */
-public class AreaFactory {
+class AreaFactory {
 
-  public static final int    STDGEN_PATCH_RADIUS_LIMIT = 5;
-  public static final double STDGEN_PATCH_PATCHINESS = 0.300; // % of patch candidates are discarded
+  private static final int    STDGEN_PATCH_RADIUS_LIMIT = 5;
+  private static final double STDGEN_PATCH_PATCHINESS = 0.300; // % of patch candidates are discarded
 
   public static Area standardGeneration(Biome biome, Dimension areaSizeInSquares) {
 

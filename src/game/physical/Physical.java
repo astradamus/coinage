@@ -10,8 +10,8 @@ import java.util.EnumSet;
 public abstract class Physical {
 
 
-  protected final String name;
-  protected final Appearance appearance;
+  private final String name;
+  private final Appearance appearance;
 
   private final EnumSet<PhysicalFlag> flags;
 

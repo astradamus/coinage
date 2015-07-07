@@ -64,12 +64,19 @@ public enum Commands_EventLog implements Command {
 
     @Override
     public String getControlText() {
-      return "F: Toggle overlay mode.";
+      if (EventLog.getExpandedMode() == 1) {
+        return "F: Minimize overlay";
+      }
+      else {
+        return "F: Maximize overlay.";
+      }
+
     }
 
     @Override
     public void execute() {
       EventLog.toggleLogMode();
+      Game.getActiveInputSwitch().enterMode(GameMode.EXPLORE);
     }
 
   }

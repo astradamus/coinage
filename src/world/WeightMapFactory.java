@@ -19,10 +19,11 @@ import java.awt.Point;
  */
 final class WeightMapFactory {
 
-  private static final double PATCHES_DISTRIBUTION_STRICTNESS = 1.00;
-  private static final double CRAWLER_DISTRIBUTION_STRICTNESS = 1.00;
-  private static final IntegerRange walkTurnRange = new IntegerRange(0, 7);
-  private static final IntegerRange collisionDivisorRange = new IntegerRange(1, 10);
+  private static final double patchesDistributionStrictness = 1.00;
+
+  private static final double crawlerDistributionStrictness = 1.00;
+  private static final IntegerRange crawlerTurningRadius = new IntegerRange(0, 7);
+  private static final IntegerRange crawlerAverageChunkCountRange = new IntegerRange(1, 10);
 
 
   /**
@@ -34,11 +35,11 @@ final class WeightMapFactory {
    * @param patchMaxRadius  The maximum distance a patch can extend from its center point.
    * @param patchPatchiness The chance each square in a patch will not be applied.
    */
-  static WeightMap generateWithPatches(Dimension dimension, int[] weightsByIndex,
+  static WeightMap generateWithPatches(Dimension dimension, int[] featureWeightsByIndex,
       int patchMaxRadius, double patchPatchiness) {
 
     final WeightMapBundle bundle =
-        new WeightMapBundle(dimension, weightsByIndex, PATCHES_DISTRIBUTION_STRICTNESS);
+        new WeightMapBundle(dimension, featureWeightsByIndex, patchesDistributionStrictness);
     final int[] distancesFromGoals = bundle.distancesFromGoals;
 
     int featureIndex = 0;
@@ -112,7 +113,7 @@ final class WeightMapFactory {
   static WeightMap generateWithCrawler(Dimension dimension, int[] featureWeightsByIndex) {
 
     final WeightMapBundle bundle =
-        new WeightMapBundle(dimension, featureWeightsByIndex, CRAWLER_DISTRIBUTION_STRICTNESS);
+        new WeightMapBundle(dimension, featureWeightsByIndex, crawlerDistributionStrictness);
 
     final int[][] baseMapUnderlyingArray = bundle.baseMap;
     final int[] distancesFromGoals = bundle.distancesFromGoals;
@@ -135,7 +136,7 @@ final class WeightMapFactory {
       // clumps. Large numbers produce few large clumps. This number should be less than the
       // maximum quantity for the feature being placed.
       // The divisor determines the average number of clumps. 4 to 8 are good values for areas.
-      final int collisionDivisor = collisionDivisorRange.getRandomWithin(Game.RANDOM);
+      final int collisionDivisor = crawlerAverageChunkCountRange.getRandomWithin(Game.RANDOM);
       final int maxFeatureCollisions = distancesFromGoals[featureIndex] / collisionDivisor;
 
       // Keep track of feature collisions.
@@ -149,7 +150,7 @@ final class WeightMapFactory {
       while (distancesFromGoals[featureIndex] > 0) {
 
         // Turn to a random direction within range.
-        direction = direction.turn(walkTurnRange.getRandomWithin(Game.RANDOM));
+        direction = direction.turn(crawlerTurningRadius.getRandomWithin(Game.RANDOM));
 
         // Move in that direction.
         position.translate(direction.relativeX, direction.relativeY);

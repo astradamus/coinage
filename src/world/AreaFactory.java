@@ -10,58 +10,59 @@ import utils.Dimension;
  */
 class AreaFactory {
 
-  private static final int    STDGEN_PATCH_RADIUS_LIMIT = 5;
-  private static final double STDGEN_PATCH_PATCHINESS = 0.300; // % of patch candidates are discarded
+  private static final int STDGEN_PATCH_RADIUS_LIMIT = 5;
+  private static final double STDGEN_PATCH_PATCHINESS = 0.300; // % of patch candidates to discard.
+
 
   public static Area standardGeneration(Biome biome, Dimension areaSizeInSquares) {
 
-    int width = areaSizeInSquares.getWidth();
-    int height = areaSizeInSquares.getHeight();
+    final int width = areaSizeInSquares.getWidth();
+    final int height = areaSizeInSquares.getHeight();
 
     // Get a WeightMap
-    WeightMap terrainWeightMap =
-        WeightMapFactory.generateWeightMap(STDGEN_PATCH_RADIUS_LIMIT, STDGEN_PATCH_PATCHINESS,
-            biome.terrainWeights, width, height);
-
+    final WeightMap terrainWeightMap =
+        WeightMapFactory.generateWithCrawler(areaSizeInSquares, biome.terrainWeights);
 
     // Generate Features
-    Physical[][] physicals = generateFeatures(biome, terrainWeightMap, width, height);
+    final Physical[][] physicals = generateFeatures(biome, terrainWeightMap, width, height);
 
+    // Produce square map from WeightMap
+    final Square[][] squares = new Square[height][width];
 
-    // Produce Terrain from WeightMap
-    Square[][] squares = new Square[height][width];
-    for(int y = 0; y < height; y++) {
-      for(int x = 0; x < width; x++) {
-        Terrain terrain = new Terrain(biome.terrainTypes[terrainWeightMap.weightMap[y][x]]);
-        Square square = new Square(terrain);
-        Physical physical = physicals[y][x];
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+
+        final Terrain terrain = new Terrain(biome.terrainTypes[terrainWeightMap.weightMap[y][x]]);
+        final Square square = new Square(terrain);
+        final Physical physical = physicals[y][x];
+
         if (physical != null) {
           square.put(physical);
         }
+
         squares[y][x] = square;
       }
     }
 
     return new Area(biome, squares);
-
   }
 
 
-  private static Physical[][] generateFeatures(Biome biome, WeightMap terrainWeightMap,
-                                               int width, int height) {
+  private static Physical[][] generateFeatures(Biome biome, WeightMap terrainWeightMap, int width,
+      int height) {
 
     Physical[][] physicals = new Physical[height][width];
 
-    for (int terrainTypeIndex = 0; terrainTypeIndex < biome.terrainTypes.length; terrainTypeIndex++) {
+    for (int terrainTypeIndex = 0; terrainTypeIndex < biome.terrainTypes.length;
+        terrainTypeIndex++) {
 
-      for (int featureIndex = 0;
-           featureIndex < biome.featureIDs[terrainTypeIndex].length;
-           featureIndex++) {
+      for (int featureIndex = 0; featureIndex < biome.featureIDs[terrainTypeIndex].length;
+          featureIndex++) {
 
         String featureID = biome.featureIDs[terrainTypeIndex][featureIndex];
 
         int featureCount = (int) (terrainWeightMap.distribution[terrainTypeIndex]
-                                  * biome.featureFrequencies[terrainTypeIndex][featureIndex]);
+            * biome.featureFrequencies[terrainTypeIndex][featureIndex]);
 
         // pick random points until we've picked a matching terrain that has no physicals, then
         //   place the feature and continue the search until we've placed all the features or
@@ -79,14 +80,12 @@ class AreaFactory {
             featureCount--;
             searchLimit = 10000;
           }
-
         }
         if (searchLimit == 0) {
-          System.out.println("Failed to find spot for "+featureID+". Frequency too high?");
+          System.out.println("Failed to find spot for " + featureID + ". Frequency too high?");
         }
       }
     }
     return physicals;
   }
-
 }

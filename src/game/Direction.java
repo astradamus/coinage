@@ -34,6 +34,13 @@ public enum Direction {
     return values()[(ordinal()+1)%values().length];
   }
 
+  // This turns left or right by some amount
+  public Direction turn(int amount) {
+    // This ensures that the value of amount is in the range -length to length
+    amount = Integer.signum(amount) * (Math.abs(amount) % values().length);
+    return values()[(ordinal() + values().length + amount) % values().length];
+  }
+
   public static Direction fromKeyEvent(KeyEvent keyEvent) {
     switch (keyEvent.getKeyCode()) {
       case KeyEvent.VK_HOME:      return NORTH_WEST;

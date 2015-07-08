@@ -84,7 +84,14 @@ public class World {
 
 
   public boolean validateCoordinate(Coordinate coordinate) {
-    return globalSizeInSquares.getCoordinateIsWithinBounds(coordinate.globalX, coordinate.globalY);
+    return coordinate != null && globalSizeInSquares
+        .getCoordinateIsWithinBounds(coordinate.globalX, coordinate.globalY);
+  }
+
+
+  public boolean validateCoordinate(MapCoordinate mapCoordinate) {
+    return mapCoordinate != null && worldSizeInAreas
+        .getCoordinateIsWithinBounds(mapCoordinate.worldAreasX, mapCoordinate.worldAreasY);
   }
 
 
@@ -111,21 +118,25 @@ public class World {
 
 
   public Area getArea(Coordinate coordinate) {
-    if (coordinate == null) {
+    if (!validateCoordinate(coordinate)) {
       return null;
     }
-    try {
-      final MapCoordinate mapCoordinate = convertToMapCoordinate(coordinate);
-      return areas[mapCoordinate.worldAreasY][mapCoordinate.worldAreasX];
-    }
-    catch (IndexOutOfBoundsException iob) {
-      return null; // Target is not valid.
-    }
+
+    final MapCoordinate mapCoordinate = convertToMapCoordinate(coordinate);
+    return getArea(mapCoordinate);
   }
 
 
   public Informer getInformer() {
     return informer;
+  }
+
+
+  public Area getArea(MapCoordinate mapCoordinate) {
+    if (!validateCoordinate(mapCoordinate)) {
+      return null;
+    }
+    return areas[mapCoordinate.worldAreasY][mapCoordinate.worldAreasX];
   }
 
 

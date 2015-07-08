@@ -59,8 +59,7 @@ public class Game {
   }
 
 
-  public boolean getWorldMapAreaIsRevealed(Coordinate coordinate) {
-    MapCoordinate mapCoordinate = world.convertToMapCoordinate(coordinate);
+  public boolean getWorldMapAreaIsRevealed(MapCoordinate mapCoordinate) {
     return (playerAgent.getWorldMapRevealedComponent().getAreaIsRevealed(mapCoordinate));
   }
 

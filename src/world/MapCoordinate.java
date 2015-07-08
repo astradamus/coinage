@@ -13,6 +13,10 @@ public class MapCoordinate {
     this.worldAreasY = worldAreasY;
   }
 
+  public MapCoordinate offset(int offX, int offY) {
+    return new MapCoordinate(worldAreasX+offX, worldAreasY+offY);
+  }
+
   /**
    * @return The Chebyshev/"Chessboard" distance between this and another coordinate.
    */
@@ -24,5 +28,4 @@ public class MapCoordinate {
     return Math.max(deltaX, deltaY);
 
   }
-
 }

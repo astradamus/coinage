@@ -53,8 +53,8 @@ public class WeightMapBundle {
   }
 
   public void adjustDistribution(int index, int value) {
-    actualDistribution[index]++;
-    distancesFromGoals[index]--;
+    actualDistribution[index] += value;
+    distancesFromGoals[index] -= value;
   }
 
   public WeightMap construct() {

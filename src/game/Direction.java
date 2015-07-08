@@ -21,36 +21,17 @@ public enum Direction {
   public final int relativeX;
   public final int relativeY;
 
+
   Direction(int relativeX, int relativeY) {
     this.relativeX = relativeX;
     this.relativeY = relativeY;
   }
 
-  public Direction getLeftNeighbor() {
-    return values()[(ordinal()+values().length-1)%values().length];
-  }
-
-  public Direction getRightNeighbor() {
-    return values()[(ordinal()+1)%values().length];
-  }
-
-  public static Direction fromKeyEvent(KeyEvent keyEvent) {
-    switch (keyEvent.getKeyCode()) {
-      case KeyEvent.VK_HOME:      return NORTH_WEST;
-      case KeyEvent.VK_UP:        return NORTH;
-      case KeyEvent.VK_PAGE_UP:   return NORTH_EAST;
-      case KeyEvent.VK_RIGHT:     return EAST;
-      case KeyEvent.VK_PAGE_DOWN: return SOUTH_EAST;
-      case KeyEvent.VK_DOWN:      return SOUTH;
-      case KeyEvent.VK_END:       return SOUTH_WEST;
-      case KeyEvent.VK_LEFT:      return WEST;
-      default: return null;
-    }
-  }
 
   public static Direction getRandom() {
     return values()[Game.RANDOM.nextInt(values().length)];
   }
+
 
   public static Direction fromPointToPoint(int x1, int y1, int x2, int y2) {
 
@@ -64,7 +45,49 @@ public enum Direction {
     }
 
     return null;
+  }
 
+
+  public static Direction fromKeyEvent(KeyEvent keyEvent) {
+    switch (keyEvent.getKeyCode()) {
+      case KeyEvent.VK_HOME:
+        return NORTH_WEST;
+      case KeyEvent.VK_UP:
+        return NORTH;
+      case KeyEvent.VK_PAGE_UP:
+        return NORTH_EAST;
+      case KeyEvent.VK_RIGHT:
+        return EAST;
+      case KeyEvent.VK_PAGE_DOWN:
+        return SOUTH_EAST;
+      case KeyEvent.VK_DOWN:
+        return SOUTH;
+      case KeyEvent.VK_END:
+        return SOUTH_WEST;
+      case KeyEvent.VK_LEFT:
+        return WEST;
+      default:
+        return null;
+    }
+  }
+
+
+  public Direction getLeftNeighbor() {
+    return values()[(ordinal() + values().length - 1) % values().length];
+  }
+
+
+  public Direction getRightNeighbor() {
+    return values()[(ordinal() + 1) % values().length];
+  }
+
+
+  /**
+   * Turn an {@code amount} of direction grades. Positive values are clockwise, negative values are
+   * counterclockwise.
+   */
+  public Direction turn(int amount) {
+    return values()[Utils.modulus(ordinal() + amount, values().length)];
   }
 
 }

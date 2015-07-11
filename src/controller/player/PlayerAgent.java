@@ -34,7 +34,7 @@ public class PlayerAgent extends ActorAgent {
 
   @Override
   protected void onActorObserverDisconnected() {
-    EventLog.registerEvent(Event.INVALID_ACTION, "You are dead. Game over.");
+    EventLog.registerEvent(Event.ALERT_MAJOR, "You are dead. Game over.");
   }
 
 

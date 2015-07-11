@@ -68,8 +68,8 @@ public class Attacking extends Action {
       final String attackTypeString =
           getActor().getActiveWeapon().getWeaponComponent().getDamageType().getAttackString();
 
-      EventLog.registerEvent(Event.INVALID_ACTION,
-          "Your " + attackTypeString + " has hit naught but air.");
+      EventLog
+          .registerEvent(Event.FAILURE, "Your " + attackTypeString + " has hit naught but air.");
     }
 
     return attackHit;
@@ -94,7 +94,7 @@ public class Attacking extends Action {
 
     String victimName = victim.getName();
     if (hasFlag(ActionFlag.PLAYER_IS_TARGET)) {
-      victimName = "you";
+      victimName = "YOU";
     }
 
     final String messageA = hitString + " " + victimName + " with ";
@@ -110,7 +110,7 @@ public class Attacking extends Action {
     }
 
     // Log the message if the player is in this area.
-    EventLog.registerEventIfPlayerIsNear(victim.getCoordinate(), Event.ACTOR_WOUNDED, message);
+    EventLog.registerEventIfPlayerIsLocal(victim.getCoordinate(), Event.ACTOR_WOUNDED, message);
 
     // Apply the damage to the victim and notify the victim's controller.
     victim.getHealth().wound(damage);

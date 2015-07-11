@@ -24,12 +24,15 @@ public enum GameMode {
     @Override
     public void onEnter() {
 
+      // Unpause if paused.
       if (GameEngine.getTimeMode() == TimeMode.PAUSED) {
         GameEngine.revertTimeMode();
       }
 
-      EventLog.hideEventLog();
-
+      // Collapse event log if expanded.
+      if (EventLog.getIsDisplayModeEnabled(EventLog.DisplayMode.EXPANDED)) {
+        EventLog.toggleDisplayMode(EventLog.DisplayMode.EXPANDED);
+      }
     }
 
     @Override
@@ -45,7 +48,7 @@ public enum GameMode {
           Commands_EnterMode.ENTER_MODE_INTERACT,
           Commands_EnterMode.ENTER_MODE_ATTACK,
           Commands_EnterMode.ENTER_MODE_INVENTORY,
-          Commands_EnterMode.ENTER_MODE_EVENTLOG
+          Commands_EnterMode.ENTER_MODE_EVENT_LOG
       );
     }
 
@@ -229,26 +232,26 @@ public enum GameMode {
 
   },
 
-  EVENTLOG {
+  EVENT_LOG {
 
     @Override
     public void onEnter() {
-      EventLog.showEventLog();
+      EventLog.toggleDisplayMode(EventLog.DisplayMode.EXPANDED);
 
       pauseIfUnpaused();
     }
 
     @Override
     public String getPrompt() {
-      return "Viewing Event Log";
+      return "VIEWING EVENT LOG...";
     }
 
     @Override
     public List<Command> getModeCommands() {
       return Arrays.asList(
               Commands_EnterMode.ENTER_MODE_EXPLORE,
-              Commands_EventLog.SCROLL_DOWN,
-              Commands_EventLog.SCROLL_UP,
+              Commands_EventLog.SCROLL_BACKWARD,
+              Commands_EventLog.SCROLL_FORWARD,
               Commands_EventLog.TOGGLE_MODE
       );
     }

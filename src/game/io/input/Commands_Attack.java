@@ -34,7 +34,7 @@ public enum Commands_Attack implements Command {
       PlayerAgent playerAgent = GameInput.getRunningGame().getPlayerAgent();
 
       if (playerTarget.equalTo(playerAgent.getActor().getCoordinate())) {
-        EventLog.registerEvent(Event.INVALID_ACTION, "You smack yourself upside the head.");
+        EventLog.registerEvent(Event.INVALID_INPUT, "You smack yourself upside the head.");
       } else {
 
         playerAgent.attemptAction(new Attacking(playerAgent.getActor(),

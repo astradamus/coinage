@@ -5,6 +5,7 @@ import game.TimeMode;
 import game.io.GameEngine;
 import game.io.display.DisplayElement;
 import game.io.display.DisplayElement_Text;
+import game.io.display.EventLog;
 import world.Coordinate;
 
 import java.util.Arrays;
@@ -27,6 +28,8 @@ public enum GameMode {
         GameEngine.revertTimeMode();
       }
 
+      EventLog.hideEventLog();
+
     }
 
     @Override
@@ -41,7 +44,8 @@ public enum GameMode {
           Commands_EnterMode.ENTER_MODE_LOOK,
           Commands_EnterMode.ENTER_MODE_INTERACT,
           Commands_EnterMode.ENTER_MODE_ATTACK,
-          Commands_EnterMode.ENTER_MODE_INVENTORY
+          Commands_EnterMode.ENTER_MODE_INVENTORY,
+          Commands_EnterMode.ENTER_MODE_EVENTLOG
       );
     }
 
@@ -66,9 +70,7 @@ public enum GameMode {
       GameInput.setTargetCursor(TargetCursor.makeSquareTargeter(runningGame.getWorld(),
           runningGame.getActivePlayerActor().getCoordinate(), 1));
 
-      if (GameEngine.getTimeMode() == TimeMode.LIVE || GameEngine.getTimeMode() == TimeMode.PRECISION) {
-        GameEngine.setTimeMode(TimeMode.PAUSED);
-      }
+      pauseIfUnpaused();
     }
 
     @Override
@@ -106,9 +108,7 @@ public enum GameMode {
       GameInput.setTargetCursor(TargetCursor.makeSquareTargeter(runningGame.getWorld(),
           runningGame.getActivePlayerActor().getCoordinate(), null));
 
-      if (GameEngine.getTimeMode() == TimeMode.LIVE || GameEngine.getTimeMode() == TimeMode.PRECISION) {
-        GameEngine.setTimeMode(TimeMode.PAUSED);
-      }
+      pauseIfUnpaused();
     }
 
     @Override
@@ -147,9 +147,7 @@ public enum GameMode {
       GameInput.setTargetCursor(TargetCursor.makeSquareAndListTargeter(runningGame.getWorld(),
           runningGame.getActivePlayerActor().getCoordinate(), 1));
 
-      if (GameEngine.getTimeMode() == TimeMode.LIVE || GameEngine.getTimeMode() == TimeMode.PRECISION) {
-        GameEngine.setTimeMode(TimeMode.PAUSED);
-      }
+      pauseIfUnpaused();
     }
 
     @Override
@@ -195,9 +193,7 @@ public enum GameMode {
       GameInput.setTargetCursor(TargetCursor.makeListTargeter(runningGame.getWorld(),
           runningGame.getActivePlayerActor().getInventory().getItemsHeld().size()));
 
-      if (GameEngine.getTimeMode() == TimeMode.LIVE || GameEngine.getTimeMode() == TimeMode.PRECISION) {
-        GameEngine.setTimeMode(TimeMode.PAUSED);
-      }
+      pauseIfUnpaused();
     }
 
     @Override
@@ -231,7 +227,52 @@ public enum GameMode {
 
     }
 
+  },
+
+  EVENTLOG {
+
+    @Override
+    public void onEnter() {
+      EventLog.showEventLog();
+
+      pauseIfUnpaused();
+    }
+
+    @Override
+    public String getPrompt() {
+      return "Viewing Event Log";
+    }
+
+    @Override
+    public List<Command> getModeCommands() {
+      return Arrays.asList(
+              Commands_EnterMode.ENTER_MODE_EXPLORE,
+              Commands_EventLog.SCROLL_DOWN,
+              Commands_EventLog.SCROLL_UP,
+              Commands_EventLog.TOGGLE_MODE
+      );
+    }
+
+    @Override
+    public List<DisplayElement> getDisplayElements() {
+
+      return Arrays.asList(
+              DisplayElement.MINIMAP,
+              DisplayElement.CONTROL_ESCAPE,
+              DisplayElement.makeCurrentPrompt(),
+              DisplayElement.makeControlsList(getModeCommands(), 1)
+      );
+
+    }
+
   };
+
+
+  private static void pauseIfUnpaused() {
+    if (GameEngine.getTimeMode() == TimeMode.LIVE || GameEngine.getTimeMode() == TimeMode.PRECISION) {
+      GameEngine.setTimeMode(TimeMode.PAUSED);
+    }
+  }
 
 
   public abstract void onEnter();

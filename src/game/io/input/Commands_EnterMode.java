@@ -149,8 +149,25 @@ public enum Commands_EnterMode implements Command {
       GameInput.enterMode(GameMode.INVENTORY);
     }
 
+  },
+
+  ENTER_MODE_EVENTLOG {
+
+    @Override
+    public int getHotKeyCode() {
+      return KeyEvent.VK_E;
+    }
+
+    @Override
+    public String getControlText() {
+      return "E: Open event log.";
+    }
+
+    @Override
+    public void execute() {
+      Game.getActiveInputSwitch().enterMode(GameMode.EVENTLOG);
+    }
+
   }
-
-
 
 }

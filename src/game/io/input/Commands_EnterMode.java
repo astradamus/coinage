@@ -42,7 +42,7 @@ public enum Commands_EnterMode implements Command {
         next = TimeMode.PRECISION;
         GameEngine.setTimeMode(next);
       }
-      EventLog.registerEvent(Event.INVALID_ACTION, next.getEnterText());
+      EventLog.registerEvent(Event.ALERT_MINOR, next.getEnterText());
 
     }
 
@@ -149,8 +149,26 @@ public enum Commands_EnterMode implements Command {
       GameInput.enterMode(GameMode.INVENTORY);
     }
 
+  },
+
+
+  ENTER_MODE_EVENT_LOG {
+
+    @Override
+    public int getHotKeyCode() {
+      return KeyEvent.VK_E;
+    }
+
+    @Override
+    public String getControlText() {
+      return "E: Open event log.";
+    }
+
+    @Override
+    public void execute() {
+      GameInput.enterMode(GameMode.EVENT_LOG);
+    }
+
   }
-
-
 
 }

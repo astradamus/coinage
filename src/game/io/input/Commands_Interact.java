@@ -3,7 +3,10 @@ package game.io.input;
 import actor.Actor;
 import controller.action.PickingUp;
 import controller.player.PlayerAgent;
+import game.io.display.Event;
+import game.io.display.EventLog;
 import game.physical.Physical;
+import game.physical.PhysicalFlag;
 import world.Coordinate;
 
 import java.awt.event.KeyEvent;
@@ -38,6 +41,11 @@ public enum Commands_Interact implements Command {
       final Integer playerSelection = GameInput.getPlayerSelection();
 
       final Physical selected = GameInput.getRunningGame().getWorld().getSquare(playerTarget).getAll().get(playerSelection);
+
+      if (selected.hasFlag(PhysicalFlag.IMMOVABLE)) {
+        EventLog.registerEvent(Event.INVALID_INPUT, "You can't pick up " + selected.getName() + ".");
+        return;
+      }
 
       playerAgent.attemptAction(new PickingUp(playerActor, GameInput.getPlayerTarget(), selected));
 

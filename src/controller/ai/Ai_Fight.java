@@ -41,7 +41,7 @@ public class Ai_Fight extends Behavior {
   @Override
   protected String getOnExhibitLogMessage() {
     if (getAgent().getGameInformer().getActorIsPlayer(victim)) {
-      return getActor().getName() + " doesn't look too friendly.";
+      return getActor().getName() + " isn't looking too friendly.";
     }
     else {
       return null;
@@ -57,7 +57,7 @@ public class Ai_Fight extends Behavior {
     if (getAgent().getGameInformer().getActorIsPlayer(victim)
         && GameEngine.getTimeMode() == TimeMode.LIVE) {
       GameEngine.setTimeMode(TimeMode.PRECISION);
-      EventLog.registerEvent(Event.INVALID_ACTION,
+      EventLog.registerEvent(Event.ALERT_MAJOR,
           "Precision mode has been enabled because you are under attack.");
     }
   }

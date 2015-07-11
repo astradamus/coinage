@@ -42,15 +42,18 @@ public class PickingUp extends Action {
   protected boolean validate(World world) {
 
     if (pickingUpWhat.hasFlag(PhysicalFlag.IMMOVABLE)) {
-      EventLog.registerEvent(Event.INVALID_ACTION, "That can't be picked up.");
+
+      if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
+        EventLog.registerEvent(Event.FAILURE,
+            "You couldn't seem to pick up " + pickingUpWhat.getName() + ".");
+      }
       return false;
     }
 
     boolean itemIsAtTarget = world.getSquare(getTarget()).getAll().contains(pickingUpWhat);
 
-    if (!itemIsAtTarget) {
-      EventLog.registerEvent(Event.INVALID_ACTION,
-          "The thing you were reaching for is no longer there.");
+    if (!itemIsAtTarget && hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
+      EventLog.registerEvent(Event.FAILURE, "The thing you were reaching for is no longer there.");
     }
 
     return itemIsAtTarget;
@@ -62,6 +65,10 @@ public class PickingUp extends Action {
    */
   @Override
   protected void apply(World world) {
+    if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
+      EventLog.registerEvent(Event.SUCCESS,
+          "You have added " + pickingUpWhat.getName() + " to your inventory.");
+    }
     world.getSquare(getTarget()).pull(pickingUpWhat);
     getActor().getInventory().addItem(pickingUpWhat);
   }

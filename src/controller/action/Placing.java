@@ -41,16 +41,20 @@ public class Placing extends Action {
   protected boolean validate(World world) {
 
     if (world.getSquare(getTarget()).isBlocked()) {
-      EventLog.registerEvent(Event.INVALID_ACTION, "There's no room there.");
+
+      if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
+        EventLog.registerEvent(Event.FAILURE, "There's no room there.");
+      }
+
       return false;
     }
 
     final boolean itemIsHeldByActor =
         getActor().getInventory().getItemsHeld().contains(placingWhat);
 
-    if (!itemIsHeldByActor) {
-      EventLog.registerEvent(Event.INVALID_ACTION,
-          "You can't seem to find the item you were trying to drop.");
+    if (!itemIsHeldByActor && hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
+      EventLog
+          .registerEvent(Event.FAILURE, "You can't seem to find the item you were trying to drop.");
     }
 
     return itemIsHeldByActor;
@@ -62,6 +66,9 @@ public class Placing extends Action {
    */
   @Override
   protected void apply(World world) {
+    if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
+      EventLog.registerEvent(Event.SUCCESS, "You have dropped " + placingWhat.getName() + ".");
+    }
     getActor().getInventory().removeItem(placingWhat);
     world.getSquare(getTarget()).put(placingWhat);
   }

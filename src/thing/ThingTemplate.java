@@ -1,5 +1,6 @@
 package thing;
 
+import actor.stats.DamageType;
 import game.Game;
 import game.physical.Appearance;
 import game.physical.PhysicalFlag;
@@ -9,6 +10,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -35,19 +37,7 @@ public class ThingTemplate {
     this.name = templateMap.get("name");
     this.appearances = parseAppearances(templateMap);
     this.flags = parseFlags(templateMap);
-    this.weaponComponent = null;
-  }
-
-
-  /**
-   * Produces a ThingTemplate that has a weapon component.
-   */
-  public ThingTemplate(String name, char mapSymbol, Color color, WeaponComponent weaponComponent) {
-    this.name = name;
-    this.appearances = new ArrayList<>();
-    this.appearances.add(new Appearance(mapSymbol, color, Appearance.VISUAL_PRIORITY__THINGS));
-    this.weaponComponent = weaponComponent;
-    this.flags = EnumSet.noneOf(PhysicalFlag.class);
+    this.weaponComponent = parseWeaponComponent(templateMap);
   }
 
 
@@ -58,26 +48,28 @@ public class ThingTemplate {
    */
   public static void loadThings() throws IOException {
 
-    final CSVReader reader = new CSVReader(new File("raw/things.csv"));
+    final List<String> thingFilePaths = Arrays.asList("raw/things.csv", "raw/weapons.csv");
 
-    Map<String, String> templateMap = reader.readLine();
+    for (final String thingFilePath : thingFilePaths) {
+      final CSVReader reader = new CSVReader(new File(thingFilePath));
 
-    while (templateMap != null) {
+      Map<String, String> templateMap = reader.readLine();
 
-      final ThingTemplate thingTemplate = new ThingTemplate(templateMap);
-      final String id = templateMap.get("id");
+      while (templateMap != null) {
 
-      if (id == null) {
-        throw new IOException("Missing id for line: " + Integer.toString(LIB.size()));
+        final ThingTemplate thingTemplate = new ThingTemplate(templateMap);
+        final String id = templateMap.get("id");
+
+        if (id == null) {
+          throw new IOException(
+              "Missing id for: " + thingFilePath + " line: " + Integer.toString(LIB.size()));
+        }
+
+        LIB.put(id, thingTemplate);
+
+        templateMap = reader.readLine();
       }
-
-      LIB.put(id, thingTemplate);
-
-      templateMap = reader.readLine();
     }
-
-    WeaponTemplates.loadStandardWeapons();
-    WeaponTemplates.loadNaturalWeapons();
   }
 
 
@@ -202,5 +194,33 @@ public class ThingTemplate {
     }
 
     return flags;
+  }
+
+
+  /**
+   * Attempts to build a weapon component from the given template map, returning null if it fails.
+   */
+  private WeaponComponent parseWeaponComponent(Map<String, String> templateMap) {
+
+    try {
+
+      final DamageType damageType = DamageType.valueOf(templateMap.get("damage_type"));
+
+      final int damage = Integer.parseInt(templateMap.get("damage"));
+      final double damageBonusMultFromMuscle = Double.parseDouble(templateMap.get("muscle_bonus"));
+      final double damageConsistency = Double.parseDouble(templateMap.get("dmg_consistency"));
+
+      final int attackSpeed = Integer.parseInt(templateMap.get("attack_speed"));
+      final double reflexAttackBonus = Double.parseDouble(templateMap.get("reflex_atk_bonus"));
+
+      final int recoverySpeed = Integer.parseInt(templateMap.get("recovery_speed"));
+      final double reflexRecoveryBonus = Double.parseDouble(templateMap.get("reflex_rec_bonus"));
+
+      return new WeaponComponent(damageType, damage, damageBonusMultFromMuscle, damageConsistency,
+          attackSpeed, reflexAttackBonus, recoverySpeed, reflexRecoveryBonus);
+    }
+    catch (Exception e) {
+      return null; // No valid weapon data found.
+    }
   }
 }

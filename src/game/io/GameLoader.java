@@ -8,6 +8,8 @@ import game.io.input.GameInput;
 import thing.ThingTemplate;
 import utils.Dimension;
 
+import java.io.IOException;
+
 /**
  *
  */
@@ -17,12 +19,18 @@ class GameLoader {
 
   static {
 
-    ThingTemplate.loadThings();
-    ActorTemplate.loadActors();
+    try {
+      ThingTemplate.loadThings();
 
-    GameInput.initialize();
+      ActorTemplate.loadActors();
 
-    GameDisplay.addKeyListeners(GameInput.getKeyListeners());
+      GameInput.initialize();
+
+      GameDisplay.addKeyListeners(GameInput.getKeyListeners());
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
 

@@ -4,14 +4,11 @@ import actor.attribute.AttributeRange;
 import actor.attribute.Rank;
 import game.physical.Appearance;
 import game.physical.PhysicalFlag;
-import utils.CSVReader;
 
 import java.awt.Color;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +17,6 @@ import java.util.Map;
  */
 public class ActorTemplate {
 
-  public static final HashMap<String, ActorTemplate> LIB = new HashMap<>();
   final String name;
   final EnumSet<PhysicalFlag> flags;
   final List<AttributeRange> baseAttributeRanges;
@@ -33,39 +29,12 @@ public class ActorTemplate {
    *
    * @throws IOException If any invalid input is encountered.
    */
-  private ActorTemplate(Map<String, String> templateMap) throws IOException {
+  public ActorTemplate(Map<String, String> templateMap) throws IOException {
     this.name = templateMap.get("name");
     this.flags = parseFlags(templateMap);
     this.baseAttributeRanges = parseAttributeRanges(templateMap);
     this.naturalWeaponID = templateMap.get("natural_weapon_id");
     this.appearance = parseAppearance(templateMap);
-  }
-
-
-  /**
-   * Attempts to load actors into the library from {@code raw/actors.csv}.
-   *
-   * @throws IOException If any invalid input is encountered.
-   */
-  public static void loadActors() throws IOException {
-
-    final CSVReader reader = new CSVReader(new File("raw/actors.csv"));
-
-    Map<String, String> templateMap = reader.readLine();
-
-    while (templateMap != null) {
-
-      final ActorTemplate actorTemplate = new ActorTemplate(templateMap);
-      final String id = templateMap.get("id");
-
-      if (id == null) {
-        throw new IOException("Missing id for line: " + Integer.toString(LIB.size()));
-      }
-
-      LIB.put(id, actorTemplate);
-
-      templateMap = reader.readLine();
-    }
   }
 
 

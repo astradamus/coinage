@@ -1,14 +1,10 @@
 package game.io;
 
-import actor.ActorTemplate;
 import game.Game;
 import game.GameBuilder;
 import game.io.display.GameDisplay;
 import game.io.input.GameInput;
-import thing.ThingTemplate;
 import utils.Dimension;
-
-import java.io.IOException;
 
 /**
  *
@@ -18,19 +14,8 @@ class GameLoader {
   private static Game runningGame;
 
   static {
-
-    try {
-      ThingTemplate.loadThings();
-
-      ActorTemplate.loadActors();
-
-      GameInput.initialize();
-
-      GameDisplay.addKeyListeners(GameInput.getKeyListeners());
-    }
-    catch (IOException e) {
-      e.printStackTrace();
-    }
+    GameInput.initialize();
+    GameDisplay.addKeyListeners(GameInput.getKeyListeners());
   }
 
 

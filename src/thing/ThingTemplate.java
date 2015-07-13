@@ -4,15 +4,11 @@ import actor.stats.DamageType;
 import game.Game;
 import game.physical.Appearance;
 import game.physical.PhysicalFlag;
-import utils.CSVReader;
 
 import java.awt.Color;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +17,6 @@ import java.util.Map;
  */
 public class ThingTemplate {
 
-  public static final HashMap<String, ThingTemplate> LIB = new HashMap<>();
   final String name;
   final EnumSet<PhysicalFlag> flags;
   final WeaponComponent weaponComponent;
@@ -33,43 +28,11 @@ public class ThingTemplate {
    *
    * @throws IOException If any invalid input is encountered.
    */
-  private ThingTemplate(Map<String, String> templateMap) throws IOException {
+  public ThingTemplate(Map<String, String> templateMap) throws IOException {
     this.name = templateMap.get("name");
     this.appearances = parseAppearances(templateMap);
     this.flags = parseFlags(templateMap);
     this.weaponComponent = parseWeaponComponent(templateMap);
-  }
-
-
-  /**
-   * Attempts to load things into the library from {@code raw/things.csv}.
-   *
-   * @throws IOException If any invalid input is encountered.
-   */
-  public static void loadThings() throws IOException {
-
-    final List<String> thingFilePaths = Arrays.asList("raw/things.csv", "raw/weapons.csv");
-
-    for (final String thingFilePath : thingFilePaths) {
-      final CSVReader reader = new CSVReader(new File(thingFilePath));
-
-      Map<String, String> templateMap = reader.readLine();
-
-      while (templateMap != null) {
-
-        final ThingTemplate thingTemplate = new ThingTemplate(templateMap);
-        final String id = templateMap.get("id");
-
-        if (id == null) {
-          throw new IOException(
-              "Missing id for: " + thingFilePath + " line: " + Integer.toString(LIB.size()));
-        }
-
-        LIB.put(id, thingTemplate);
-
-        templateMap = reader.readLine();
-      }
-    }
   }
 
 

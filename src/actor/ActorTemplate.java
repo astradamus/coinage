@@ -4,7 +4,6 @@ import actor.attribute.AttributeRange;
 import actor.attribute.Rank;
 import game.physical.Appearance;
 import game.physical.PhysicalFlag;
-import thing.WeaponTemplates;
 
 import java.awt.Color;
 import java.util.Arrays;
@@ -63,7 +62,7 @@ public class ActorTemplate {
             AttributeRange.fromRank(Rank.R05_AVERAGE, 1)         // CHARM
         ),
 
-        WeaponTemplates.WP_NATURAL_FISTS,
+        "WP_NATURAL_FISTS",
 
         EnumSet.of(PhysicalFlag.AGGRESSIVE)
 
@@ -82,7 +81,7 @@ public class ActorTemplate {
             AttributeRange.fromRank(Rank.R03_INFERIOR, 1)                    // CHARM
         ),
 
-        WeaponTemplates.WP_NATURAL_FANGS,
+        "WP_NATURAL_FANGS",
 
         EnumSet.of(PhysicalFlag.FOUR_LEGGED, PhysicalFlag.AGGRESSIVE)
 
@@ -101,7 +100,7 @@ public class ActorTemplate {
             AttributeRange.fromRank(Rank.R03_INFERIOR, 1)                    // CHARM
         ),
 
-        WeaponTemplates.WP_NATURAL_CLAWS,
+        "WP_NATURAL_CLAWS",
 
         EnumSet.of(PhysicalFlag.FOUR_LEGGED, PhysicalFlag.AGGRESSIVE)
 
@@ -120,7 +119,7 @@ public class ActorTemplate {
             AttributeRange.fromRank(Rank.R01_ABYSMAL, 0)                     // CHARM
         ),
 
-        WeaponTemplates.WP_NATURAL_FANGS,
+        "WP_NATURAL_FANGS",
 
         EnumSet.of(PhysicalFlag.FOUR_LEGGED, PhysicalFlag.TIMID)
 

@@ -9,19 +9,10 @@ import java.awt.Color;
  */
 public class WeaponTemplates {
 
-  public static final String WP_NATURAL_FISTS = "WP_NATURAL_FISTS";
-  public static final String WP_NATURAL_FANGS = "WP_NATURAL_FANGS";
-  public static final String WP_NATURAL_CLAWS = "WP_NATURAL_CLAWS";
-
-  public static final String WP_CLUB = "WP_CLUB";
-  public static final String WP_SWORD = "WP_SWORD";
-  public static final String WP_AXE = "WP_AXE";
-  public static final String WP_DAGGER = "WP_DAGGER";
-
 
   static void loadNaturalWeapons() {
 
-    ThingTemplate.LIB.put(WP_NATURAL_FISTS,
+    ThingTemplate.LIB.put("WP_NATURAL_FISTS",
         new ThingTemplate("fist", 'N', Color.yellow,
             new WeaponComponent(
                 DamageType.STRIKING,
@@ -38,7 +29,7 @@ public class WeaponTemplates {
 
             )));
 
-    ThingTemplate.LIB.put(WP_NATURAL_FANGS,
+    ThingTemplate.LIB.put("WP_NATURAL_FANGS",
         new ThingTemplate("fangs", 'N', Color.yellow,
             new WeaponComponent(
                 DamageType.BITING,
@@ -55,7 +46,7 @@ public class WeaponTemplates {
 
             )));
 
-    ThingTemplate.LIB.put(WP_NATURAL_CLAWS,
+    ThingTemplate.LIB.put("WP_NATURAL_CLAWS",
         new ThingTemplate("claws", 'N', Color.yellow,
             new WeaponComponent(
                 DamageType.SHREDDING,
@@ -76,7 +67,7 @@ public class WeaponTemplates {
 
   static void loadStandardWeapons() {
 
-    ThingTemplate.LIB.put(WP_CLUB,
+    ThingTemplate.LIB.put("WP_CLUB",
         new ThingTemplate("oaken club", (char) 1634, Color.yellow,
             new WeaponComponent(
                 DamageType.CRUSHING,
@@ -93,7 +84,7 @@ public class WeaponTemplates {
 
             )));
 
-    ThingTemplate.LIB.put(WP_SWORD,
+    ThingTemplate.LIB.put("WP_SWORD",
         new ThingTemplate("sword", (char) 134, Color.yellow,
             new WeaponComponent(
                 DamageType.SLASHING,
@@ -110,7 +101,7 @@ public class WeaponTemplates {
 
             )));
 
-    ThingTemplate.LIB.put(WP_AXE,
+    ThingTemplate.LIB.put("WP_AXE",
         new ThingTemplate("axe", (char) 1006, Color.yellow,
             new WeaponComponent(
                 DamageType.CLEAVING,
@@ -127,7 +118,7 @@ public class WeaponTemplates {
 
             )));
 
-    ThingTemplate.LIB.put(WP_DAGGER,
+    ThingTemplate.LIB.put("WP_DAGGER",
         new ThingTemplate("dagger", (char) 647, Color.yellow,
             new WeaponComponent(
                 DamageType.STABBING,

@@ -5,7 +5,6 @@ import actor.ActorFactory;
 import controller.ai.AiActorAgent;
 import controller.player.PlayerAgent;
 import thing.ThingFactory;
-import thing.WeaponTemplates;
 import utils.Dimension;
 import world.Coordinate;
 import world.Square;
@@ -75,10 +74,10 @@ public class GameBuilder {
 
     gameControllers.addController(playerController);
 
-    player.getInventory().addItem(ThingFactory.makeThing(WeaponTemplates.WP_CLUB));
-    player.getInventory().addItem(ThingFactory.makeThing(WeaponTemplates.WP_SWORD));
-    player.getInventory().addItem(ThingFactory.makeThing(WeaponTemplates.WP_AXE));
-    player.getInventory().addItem(ThingFactory.makeThing(WeaponTemplates.WP_DAGGER));
+    player.getInventory().addItem(ThingFactory.makeThing("WP_CLUB"));
+    player.getInventory().addItem(ThingFactory.makeThing("WP_SWORD"));
+    player.getInventory().addItem(ThingFactory.makeThing("WP_AXE"));
+    player.getInventory().addItem(ThingFactory.makeThing("WP_DAGGER"));
 
     // produce the game instance
 

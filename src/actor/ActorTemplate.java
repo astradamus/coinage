@@ -4,125 +4,206 @@ import actor.attribute.AttributeRange;
 import actor.attribute.Rank;
 import game.physical.Appearance;
 import game.physical.PhysicalFlag;
+import utils.CSVReader;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * A stored Prototype from which prefab Actors can be produced. Currently uses a hard-coded static
- * set for its library, will eventually use raw text resources.
+ * A stored Prototype from which prefab Actors can be produced.
  */
 public class ActorTemplate {
 
   public static final HashMap<String, ActorTemplate> LIB = new HashMap<>();
-
   final String name;
-  final Appearance appearance;
-
+  final EnumSet<PhysicalFlag> flags;
   final List<AttributeRange> baseAttributeRanges;
   final String naturalWeaponID;
+  final Appearance appearance;
 
-  final EnumSet<PhysicalFlag> flags;
 
-
-  private ActorTemplate(String name, char appearance, Color color, Color bgColor,
-      List<AttributeRange> baseAttributeRanges, String naturalWeaponID,
-      EnumSet<PhysicalFlag> flags) {
-    this.name = name;
-    this.appearance =
-        new Appearance(appearance, color, bgColor, Appearance.VISUAL_PRIORITY__ACTORS);
-    this.baseAttributeRanges = baseAttributeRanges;
-    this.flags = flags;
-    this.naturalWeaponID = naturalWeaponID;
+  /**
+   * Attempts to produce an ActorTemplate from the given map.
+   *
+   * @throws IOException If any invalid input is encountered.
+   */
+  private ActorTemplate(Map<String, String> templateMap) throws IOException {
+    this.name = templateMap.get("name");
+    this.flags = parseFlags(templateMap);
+    this.baseAttributeRanges = parseAttributeRanges(templateMap);
+    this.naturalWeaponID = templateMap.get("natural_weapon_id");
+    this.appearance = parseAppearance(templateMap);
   }
 
 
-  public ActorTemplate(String name, char appearance, Color color, Color bgColor,
-      List<AttributeRange> baseAttributeRanges, String naturalWeaponID) {
-    this(name, appearance, color, bgColor, baseAttributeRanges, naturalWeaponID,
-        EnumSet.noneOf(PhysicalFlag.class));
+  /**
+   * Attempts to load actors into the library from {@code raw/actors.csv}.
+   *
+   * @throws IOException If any invalid input is encountered.
+   */
+  public static void loadActors() throws IOException {
+
+    final CSVReader reader = new CSVReader(new File("raw/actors.csv"));
+
+    Map<String, String> templateMap = reader.readLine();
+
+    while (templateMap != null) {
+
+      final ActorTemplate actorTemplate = new ActorTemplate(templateMap);
+      final String id = templateMap.get("id");
+
+      if (id == null) {
+        throw new IOException("Missing id for line: " + Integer.toString(LIB.size()));
+      }
+
+      LIB.put(id, actorTemplate);
+
+      templateMap = reader.readLine();
+    }
   }
 
 
-  public static void loadActors() {
+  /**
+   * Attempts to extract an appearance from the given template map.
+   *
+   * @throws IOException If any invalid input is encountered.
+   */
+  private Appearance parseAppearance(Map<String, String> templateMap) throws IOException {
+    final char symbol = parseSymbol(templateMap.get("symbol"));
+    final Color color = parseColor(templateMap.get("color"));
+    final Color bgcolor = parseColor(templateMap.get("bgcolor"));
+    return new Appearance(symbol, color, bgcolor, Appearance.VISUAL_PRIORITY__ACTORS);
+  }
 
-    LIB.put("HUMAN", new ActorTemplate(
 
-        "a human", 'H', new Color(168, 109, 60), new Color(56, 37, 18),
+  /**
+   * Attempts to extract a symbol (ASCII representation) from the given template map.
+   *
+   * @throws IOException If any invalid input is encountered.
+   */
+  private char parseSymbol(String s) throws IOException {
 
-        Arrays.asList(
-            AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // MUSCLE
-            AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // GRIT
-            AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // REFLEX
-            AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // TALENT
-            AttributeRange.fromRank(Rank.R05_AVERAGE, 1),        // PERCEPTION
-            AttributeRange.fromRank(Rank.R05_AVERAGE, 1)         // CHARM
-        ),
+    // First try to parse the input as an ASCII character code.
+    try {
+      return (char) Integer.parseInt(s);
+    }
+    catch (NumberFormatException e) {
 
-        "WP_NATURAL_FISTS",
+      // If we can't, try to parse it as a literal character.
+      try {
+        return s.charAt(0);
+      }
+      catch (IndexOutOfBoundsException iob) {
+        throw new IOException("Could not parse symbol \"" + s + "\" due to invalid formatting.");
+      }
+    }
+  }
 
-        EnumSet.of(PhysicalFlag.AGGRESSIVE)
 
-    ));
+  /**
+   * Attempts to extract a list of colors from the given template map. Colors must come in the
+   * format R:G:B, where each letter is a value between 0-255.
+   *
+   * @throws IOException If any invalid input is encountered.
+   */
+  private Color parseColor(String colorString) throws IOException {
+    final String[] rgbStrings = colorString.split(":");
+    final int[] rgb = new int[3];
 
-    LIB.put("WOLF", new ActorTemplate(
+    try {
+      for (int i = 0; i < rgbStrings.length; i++) {
+        final String value = rgbStrings[i];
+        rgb[i] = Integer.parseInt(value);
+      }
+      return new Color(rgb[0], rgb[1], rgb[2]);
+    }
+    catch (IllegalArgumentException | IndexOutOfBoundsException ex) {
+      ex.printStackTrace();
+      throw new IOException(
+          "Could not parse color \"" + colorString + "\" due to invalid formatting.");
+    }
+  }
 
-        "a wolf", 'w', new Color(139, 129, 122), new Color(57, 45, 36),
 
-        Arrays.asList(
-            AttributeRange.fromRank(Rank.R08_OUTSTANDING, 1),                // MUSCLE
-            AttributeRange.fromRank(Rank.R08_OUTSTANDING, 1),                // GRIT
-            AttributeRange.fromRank(Rank.R08_OUTSTANDING, 1),                // REFLEX
-            new AttributeRange(Rank.R03_INFERIOR, Rank.R04_BELOW_AVERAGE),   // TALENT
-            new AttributeRange(Rank.R10_MASTERFUL, Rank.R11_HEROIC),         // PERCEPTION
-            AttributeRange.fromRank(Rank.R03_INFERIOR, 1)                    // CHARM
-        ),
+  /**
+   * Attempts to extract a list of attribute ranges from the given template map.
+   *
+   * @throws IOException If any invalid input is encountered.
+   */
+  private List<AttributeRange> parseAttributeRanges(Map<String, String> map) throws IOException {
+    return Arrays
+        .asList(parseAttributeRange(map.get("muscle")), parseAttributeRange(map.get("grit")),
+            parseAttributeRange(map.get("reflex")), parseAttributeRange(map.get("talent")),
+            parseAttributeRange(map.get("perception")), parseAttributeRange(map.get("charm")));
+  }
 
-        "WP_NATURAL_FANGS",
 
-        EnumSet.of(PhysicalFlag.FOUR_LEGGED, PhysicalFlag.AGGRESSIVE)
+  /**
+   * Attempts to parse an attribute range from the given string. Only two formats are acceptable:
+   * single values, such as "7", which will result in a fixed range (7-7); or a pair of values
+   * separated by a hyphen, such as "6-8", resulting in (6-8).
+   *
+   * @throws IOException If any invalid input is encountered.
+   */
+  private AttributeRange parseAttributeRange(String rangeString) throws IOException {
 
-    ));
+    final String[] split = rangeString.split("-");
+    final int[] ints;
 
-    LIB.put("COUGAR", new ActorTemplate(
+    // Parse single-value range.
+    if (split.length == 1) {
+      final int singleValue = Integer.parseInt(split[0]);
+      ints = new int[] { singleValue, singleValue };
+    }
 
-        "a cougar", 'c', new Color(130, 90, 10), new Color(37, 26, 6),
+    // Parse double-value range.
+    else if (split.length == 2) {
+      ints = new int[] { Integer.parseInt(split[0]), Integer.parseInt(split[1]) };
+    }
 
-        Arrays.asList(
-            AttributeRange.fromRank(Rank.R10_MASTERFUL, 1),                  // MUSCLE
-            AttributeRange.fromRank(Rank.R10_MASTERFUL, 1),                  // GRIT
-            AttributeRange.fromRank(Rank.R11_HEROIC, 1),                     // REFLEX
-            new AttributeRange(Rank.R03_INFERIOR, Rank.R04_BELOW_AVERAGE),   // TALENT
-            new AttributeRange(Rank.R09_EXCEPTIONAL, Rank.R10_MASTERFUL),    // PERCEPTION
-            AttributeRange.fromRank(Rank.R03_INFERIOR, 1)                    // CHARM
-        ),
+    // Can only parse single- or double-value ranges.
+    else {
+      throw new IOException(
+          "Could not parse attribute range \"" + rangeString + "\" due to invalid "
+              + "formatting.");
+    }
 
-        "WP_NATURAL_CLAWS",
+    return new AttributeRange(Rank.values()[ints[0]], Rank.values()[ints[1]]);
+  }
 
-        EnumSet.of(PhysicalFlag.FOUR_LEGGED, PhysicalFlag.AGGRESSIVE)
 
-    ));
+  /**
+   * Attempts to extract a list of flags from the given template map. Multiple flags must be
+   * space-separated to be recognized.
+   *
+   * @throws IOException If any invalid input is encountered.
+   */
+  private EnumSet<PhysicalFlag> parseFlags(Map<String, String> templateMap) throws IOException {
 
-    LIB.put("MUSKRAT", new ActorTemplate(
+    final EnumSet<PhysicalFlag> flags = EnumSet.noneOf(PhysicalFlag.class);
 
-        "a muskrat", 'r', new Color(127, 129, 53), new Color(37, 23, 0),
+    final String flagsString = templateMap.get("flags");
 
-        Arrays.asList(
-            AttributeRange.fromRank(Rank.R03_INFERIOR, 1),                   // MUSCLE
-            new AttributeRange(Rank.R03_INFERIOR, Rank.R04_BELOW_AVERAGE),   // GRIT
-            AttributeRange.fromRank(Rank.R03_INFERIOR, 1),                   // REFLEX
-            AttributeRange.fromRank(Rank.R01_ABYSMAL, 0),                    // TALENT
-            AttributeRange.fromRank(Rank.R05_AVERAGE, 1),                    // PERCEPTION
-            AttributeRange.fromRank(Rank.R01_ABYSMAL, 0)                     // CHARM
-        ),
+    if (flagsString != null) {
+      final String[] splitFlagStrings = flagsString.split(" ");
 
-        "WP_NATURAL_FANGS",
+      for (final String s : splitFlagStrings) {
+        try {
+          flags.add(PhysicalFlag.valueOf(s));
+        }
+        catch (IllegalArgumentException e) {
+          e.printStackTrace();
+          throw new IOException("Could not parse flag \"" + s + "\" because it is not recognized.");
+        }
+      }
+    }
 
-        EnumSet.of(PhysicalFlag.FOUR_LEGGED, PhysicalFlag.TIMID)
-
-    ));
+    return flags;
   }
 }

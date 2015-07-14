@@ -69,11 +69,11 @@ public class ResourceParser {
      */
     public static EnumSet<PhysicalFlag> parseFlags(String flagsString) throws IOException {
 
-      final EnumSet<PhysicalFlag> flags = EnumSet.noneOf(PhysicalFlag.class);
-
       if (flagsString == null) {
-        return flags;
+        return null;
       }
+
+      final EnumSet<PhysicalFlag> flags = EnumSet.noneOf(PhysicalFlag.class);
 
       for (String flagString : flagsString.split(" ")) {
         flags.add(parseFlag(flagString));

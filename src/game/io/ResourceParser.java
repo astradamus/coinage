@@ -18,9 +18,9 @@ import java.util.Map;
 /**
  *
  */
-public class ResourceParser {
+class ResourceParser {
 
-  public static class Physicals {
+  static class Physicals {
 
     /**
      * Parses the given string as a list of symbols (ASCII character representations).
@@ -29,7 +29,7 @@ public class ResourceParser {
      *                      #parseSymbol(String)}.
      * @throws IOException If the whole string or any of the split values cannot be parsed.
      */
-    public static List<Character> parseSymbols(String symbolsString) throws IOException {
+    static List<Character> parseSymbols(String symbolsString) throws IOException {
 
       final List<Character> symbols = new ArrayList<>();
 
@@ -48,7 +48,7 @@ public class ResourceParser {
      *                     #parseColor(String)}.
      * @throws IOException If the whole string or any of the split values cannot be parsed.
      */
-    public static List<Color> parseColors(String colorsString) throws IOException {
+    static List<Color> parseColors(String colorsString) throws IOException {
 
       final List<Color> colors = new ArrayList<>();
 
@@ -67,7 +67,7 @@ public class ResourceParser {
      *                    #parseFlag(String)}.
      * @throws IOException If the whole string or any of the split values cannot be parsed.
      */
-    public static EnumSet<PhysicalFlag> parseFlags(String flagsString) throws IOException {
+    static EnumSet<PhysicalFlag> parseFlags(String flagsString) throws IOException {
 
       if (flagsString == null) {
         return null;
@@ -92,7 +92,7 @@ public class ResourceParser {
      *                     a symbol one must specify that number's character code instead.
      * @throws IOException If no symbol can be parsed.
      */
-    public static char parseSymbol(String symbolString) throws IOException {
+    static char parseSymbol(String symbolString) throws IOException {
 
       // First try to parse the input as an ASCII character code.
       try {
@@ -119,7 +119,7 @@ public class ResourceParser {
      *                    0-255.
      * @throws IOException If no color can be parsed.
      */
-    public static Color parseColor(String colorString) throws IOException {
+    static Color parseColor(String colorString) throws IOException {
       final String[] rgbStrings = colorString.split(":");
       final int[] rgb = new int[3];
 
@@ -144,7 +144,7 @@ public class ResourceParser {
      * @param flagString A string that exactly matches the name of an existing physical flag.
      * @throws IOException If no physical flag can be parsed.
      */
-    public static PhysicalFlag parseFlag(String flagString) throws IOException {
+    static PhysicalFlag parseFlag(String flagString) throws IOException {
       try {
         return PhysicalFlag.valueOf(flagString);
       }
@@ -156,14 +156,14 @@ public class ResourceParser {
     }
   }
 
-  public static class Things {
+  static class Things {
 
     /**
      * Attempts to build a thing-type list of appearances from the given map.
      *
      * @throws IOException If any of the required values cannot be found or cannot be read.
      */
-    public static List<Appearance> buildThingAppearances(Map<String, String> templateMap)
+    static List<Appearance> buildThingAppearances(Map<String, String> templateMap)
         throws IOException {
 
       final List<Character> symbols = Physicals.parseSymbols(templateMap.get("symbols"));
@@ -185,7 +185,7 @@ public class ResourceParser {
      * Attempts to build a weapon component from the given map. Returns null if any of the required
      * values cannot be found or cannot be read.
      */
-    public static WeaponComponent buildWeaponComponent(Map<String, String> templateMap) {
+    static WeaponComponent buildWeaponComponent(Map<String, String> templateMap) {
 
       try {
 
@@ -211,14 +211,14 @@ public class ResourceParser {
     }
   }
 
-  public static class Actors {
+  static class Actors {
 
     /**
      * Attempts to build an actor-styled appearance from the given map.
      *
      * @throws IOException If any of the required values cannot be found or cannot be read.
      */
-    public static Appearance buildActorAppearance(Map<String, String> templateMap)
+    static Appearance buildActorAppearance(Map<String, String> templateMap)
         throws IOException {
       final char symbol = Physicals.parseSymbol(templateMap.get("symbol"));
       final Color color = Physicals.parseColor(templateMap.get("color"));
@@ -232,7 +232,7 @@ public class ResourceParser {
      *
      * @throws IOException If any of the required values cannot be found or cannot be read.
      */
-    public static List<AttributeRange> buildAttributeRanges(Map<String, String> map)
+    static List<AttributeRange> buildAttributeRanges(Map<String, String> map)
         throws IOException {
       return Arrays
           .asList(parseAttributeRange(map.get("muscle")), parseAttributeRange(map.get("grit")),
@@ -249,7 +249,7 @@ public class ResourceParser {
      *                    such as "6-8", resulting in (6-8).
      * @throws IOException If the whole string or any of the split values cannot be parsed.
      */
-    public static AttributeRange parseAttributeRange(String rangeString) throws IOException {
+    static AttributeRange parseAttributeRange(String rangeString) throws IOException {
 
       final String[] split = rangeString.split("-");
       final int[] ints;

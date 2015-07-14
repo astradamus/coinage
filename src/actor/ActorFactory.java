@@ -13,7 +13,7 @@ public class ActorFactory {
 
   public static Actor makeActor(String actorTemplateID) {
     ActorTemplate actorTemplate =
-        GameResources.getActorLibrary().get(actorTemplateID.toUpperCase());
+        GameResources.getActorLibrary().get(actorTemplateID);
     if (actorTemplate != null) {
       return new Actor(actorTemplate);
     }

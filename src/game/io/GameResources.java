@@ -132,12 +132,12 @@ public class GameResources {
   }
 
 
-  public static Map<String, ThingTemplate> getThingLibrary() {
-    return thingLibrary;
+  public static ThingTemplate getThingTemplateByID(String id) {
+    return thingLibrary.get(id);
   }
 
 
-  public static Map<String, ActorTemplate> getActorLibrary() {
-    return actorLibrary;
+  public static ActorTemplate getActorTemplateByID(String id) {
+    return actorLibrary.get(id);
   }
 }

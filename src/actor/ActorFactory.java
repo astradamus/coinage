@@ -12,8 +12,7 @@ import java.util.Map;
 public class ActorFactory {
 
   public static Actor makeActor(String actorTemplateID) {
-    ActorTemplate actorTemplate =
-        GameResources.getActorLibrary().get(actorTemplateID);
+    ActorTemplate actorTemplate = GameResources.getActorTemplateByID(actorTemplateID);
     if (actorTemplate != null) {
       return new Actor(actorTemplate);
     }

@@ -1,6 +1,7 @@
 package world;
 
 import game.Game;
+import game.io.GameResources;
 import game.physical.Physical;
 import thing.ThingFactory;
 import utils.Dimension;
@@ -32,7 +33,9 @@ class AreaFactory {
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
 
-        final Terrain terrain = new Terrain(biome.terrainTypes[terrainWeightMap.weightMap[y][x]]);
+        final String terrainTypeID = biome.terrainTypeIDs[terrainWeightMap.weightMap[y][x]];
+        final Terrain terrain =
+            GameResources.getTerrainTypeByID(terrainTypeID).getRandomVariation();
         final Square square = new Square(terrain);
         final Physical physical = physicals[y][x];
 
@@ -53,7 +56,7 @@ class AreaFactory {
 
     Physical[][] physicals = new Physical[height][width];
 
-    for (int terrainTypeIndex = 0; terrainTypeIndex < biome.terrainTypes.length;
+    for (int terrainTypeIndex = 0; terrainTypeIndex < biome.terrainTypeIDs.length;
         terrainTypeIndex++) {
 
       for (int featureIndex = 0; featureIndex < biome.featureIDs[terrainTypeIndex].length;

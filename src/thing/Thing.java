@@ -18,7 +18,9 @@ public class Thing extends Physical {
 
     weaponComponent = tT.weaponComponent;
 
-    tT.flags.forEach(this::addFlag);
+    if (tT.flags != null) {
+      tT.flags.forEach(this::addFlag);
+    }
 
   }
 

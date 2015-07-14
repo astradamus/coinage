@@ -1,11 +1,9 @@
 package game.io;
 
-import actor.ActorTemplate;
 import game.Game;
 import game.GameBuilder;
 import game.io.display.GameDisplay;
 import game.io.input.GameInput;
-import thing.ThingTemplate;
 import utils.Dimension;
 
 /**
@@ -16,12 +14,7 @@ class GameLoader {
   private static Game runningGame;
 
   static {
-
-    ThingTemplate.loadThings();
-    ActorTemplate.loadActors();
-
     GameInput.initialize();
-
     GameDisplay.addKeyListeners(GameInput.getKeyListeners());
   }
 

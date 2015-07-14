@@ -53,7 +53,10 @@ public class Actor extends Physical {
 
     // Add standard actor flags and template-specific flags.
     STANDARD_FLAGS.forEach(this::addFlag);
-    aT.flags.forEach(this::addFlag);
+
+    if (aT.flags != null) {
+      aT.flags.forEach(this::addFlag);
+    }
 
     // Construct components.
     attributes = ActorFactory.makeAttributeMap(aT);

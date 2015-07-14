@@ -11,7 +11,7 @@ public enum Biome {
 
   GRASSLAND(8, new Appearance('G', new Color(7, 140, 0), new Color(8, 96, 0))){
     {
-      terrainTypes = new TerrainType[] { TerrainType.GRASS,   TerrainType.DIRT,   TerrainType.ROCK};
+      terrainTypeIDs = new String[] { "GRASS",   "DIRT",   "ROCK"};
       terrainWeights = new int[]                       {40,                  3,                  1};
       featureIDs = new String[][] {               {"TREE"},           {"TREE"},          {"BOULDER",
                                                                                           "STONE"}};
@@ -21,7 +21,7 @@ public enum Biome {
   },
   FOREST(4, new Appearance('F', new Color(28, 82, 0), new Color(3, 33, 0))){
     {
-      terrainTypes = new TerrainType[] { TerrainType.GRASS,   TerrainType.DIRT,   TerrainType.ROCK};
+      terrainTypeIDs = new String[] { "GRASS",   "DIRT",   "ROCK"};
       terrainWeights = new int[]                       {32,                  2,                  1};
       featureIDs = new String[][] {                {"TREE",
                                             "UNDERGROWTH"},           {"TREE"},          {"BOULDER",
@@ -33,7 +33,7 @@ public enum Biome {
   },
   CRAGS(2, new Appearance('C', new Color(205, 205, 205), new Color(85, 85, 85))){
     {
-      terrainTypes = new TerrainType[] { TerrainType.GRASS,   TerrainType.DIRT,   TerrainType.ROCK};
+      terrainTypeIDs = new String[] { "GRASS",   "DIRT",   "ROCK"};
       terrainWeights = new int[]                        {1,                  2,                 16};
       featureIDs = new String[][] {               {"TREE"},           {"TREE"},          {"BOULDER",
                                                                                           "STONE"}};
@@ -44,7 +44,7 @@ public enum Biome {
 
   DESERT(1, new Appearance('D', new Color(255, 204, 0), new Color(114, 90, 0))){
     {
-      terrainTypes = new TerrainType[] {         TerrainType.SAND,     TerrainType.SANDSTONE};
+      terrainTypeIDs = new String[] {         "SAND",     "SANDSTONE"};
       terrainWeights = new int[]                               {20,                        1};
       featureIDs = new String[][] {                        {"DUNE",
                                                          "CACTUS"},      {"BOULDER_SANDSTONE",
@@ -56,7 +56,7 @@ public enum Biome {
   },
   BADLANDS(1, new Appearance('B', new Color(144, 71, 0), new Color(76, 14, 0))){
     {
-      terrainTypes = new TerrainType[] { TerrainType.DIRT,  TerrainType.SAND,  TerrainType.SANDSTONE};
+      terrainTypeIDs = new String[] { "DIRT",  "SAND",  "SANDSTONE"};
       terrainWeights = new int[]                        {1,                 3,                    30};
       featureIDs = new String[][] {                     {},        {"CACTUS"},   {"BOULDER_SANDSTONE",
                                                                                            "CACTUS"}};
@@ -67,7 +67,7 @@ public enum Biome {
 
   SWAMP(1, new Appearance('S', new Color(71, 0, 63), new Color(25, 0, 48))){
     {
-      terrainTypes = new TerrainType[] {  TerrainType.MARSH,  TerrainType.MUCK};
+      terrainTypeIDs = new String[] {  "MARSH",  "MUCK"};
       terrainWeights = new int[]                         {2,                16};
       featureIDs = new String[][] {           {"TREE_SWAMP",
                                                "SHARKWEED"},      {"TREE_SWAMP",
@@ -92,7 +92,7 @@ public enum Biome {
 
   public final Appearance worldMapAppearance;
 
-  TerrainType[] terrainTypes;
+  String[] terrainTypeIDs;
   int[] terrainWeights;
   String[][] featureIDs;
   double[][] featureFrequencies;

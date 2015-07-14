@@ -17,22 +17,22 @@ public class TerrainType {
   static final char[] chars = new char[] { '.', ',', '\'', '`' };
 
   final String name;
-  final List<Appearance> appearances;
+  final List<Terrain> variations;
 
 
   public TerrainType(String name, List<Color> colors) {
 
-    final List<Appearance> appearances = new ArrayList<>();
+    final List<Terrain> variations = new ArrayList<>();
 
     for (char character : chars) {
       for (Color color : colors) {
-        appearances
-            .add(new Appearance(character, color, null, Appearance.VISUAL_PRIORITY__TERRAIN));
+        variations.add(new Terrain(name,
+            new Appearance(character, color, null, Appearance.VISUAL_PRIORITY__TERRAIN)));
       }
     }
 
     this.name = name;
-    this.appearances = Collections.unmodifiableList(appearances);
+    this.variations = Collections.unmodifiableList(variations);
   }
 
 
@@ -41,7 +41,7 @@ public class TerrainType {
   }
 
 
-  Appearance getRandomAppearance() {
-    return appearances.get(Game.RANDOM.nextInt(appearances.size()));
+  Terrain getRandomVariation() {
+    return variations.get(Game.RANDOM.nextInt(variations.size()));
   }
 }

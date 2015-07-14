@@ -34,7 +34,8 @@ class AreaFactory {
       for (int x = 0; x < width; x++) {
 
         final String terrainTypeID = biome.terrainTypeIDs[terrainWeightMap.weightMap[y][x]];
-        final Terrain terrain = new Terrain(GameResources.getTerrainTypeByID(terrainTypeID));
+        final Terrain terrain =
+            GameResources.getTerrainTypeByID(terrainTypeID).getRandomVariation();
         final Square square = new Square(terrain);
         final Physical physical = physicals[y][x];
 

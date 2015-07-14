@@ -1,14 +1,11 @@
 package actor;
 
 import actor.attribute.AttributeRange;
-import game.io.ResourceParser;
 import game.physical.Appearance;
 import game.physical.PhysicalFlag;
 
-import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A stored Prototype from which prefab Actors can be produced.
@@ -22,16 +19,16 @@ public class ActorTemplate {
   final String naturalWeaponID;
 
 
-  /**
-   * Attempts to produce an ActorTemplate from the given map.
-   *
-   * @throws IOException If any invalid input is encountered.
-   */
-  public ActorTemplate(Map<String, String> templateMap) throws IOException {
-    this.name = templateMap.get("name");
-    this.appearance = ResourceParser.Actors.buildActorAppearance(templateMap);
-    this.flags = ResourceParser.Physicals.parseFlags(templateMap.get("flags"));
-    this.baseAttributeRanges = ResourceParser.Actors.buildAttributeRanges(templateMap);
-    this.naturalWeaponID = templateMap.get("natural_weapon_id");
+  public ActorTemplate(String name, Appearance appearance, EnumSet<PhysicalFlag> flags,
+      List<AttributeRange> baseAttributeRanges, String naturalWeaponID) {
+    this.name = name;
+    this.appearance = appearance;
+    this.flags = flags;
+    this.baseAttributeRanges = baseAttributeRanges;
+    this.naturalWeaponID = naturalWeaponID;
+  }
+
+  public String getName() {
+    return name;
   }
 }

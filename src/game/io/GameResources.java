@@ -1,12 +1,17 @@
 package game.io;
 
 import actor.ActorTemplate;
+import actor.attribute.AttributeRange;
+import game.physical.Appearance;
+import game.physical.PhysicalFlag;
 import thing.ThingTemplate;
+import thing.WeaponComponent;
 import utils.CSVReader;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +37,6 @@ public class GameResources {
     }
   }
 
-
   /**
    * Attempts to load things into the library from {@code raw/things.csv}.
    *
@@ -45,22 +49,39 @@ public class GameResources {
     for (final String thingFilePath : thingFilePaths) {
       final CSVReader reader = new CSVReader(new File(thingFilePath));
 
-      Map<String, String> templateMap = reader.readLine();
+      Map<String, String> map = reader.readLine();
 
-      while (templateMap != null) {
+      while (map != null) {
 
-        final ThingTemplate thingTemplate = new ThingTemplate(templateMap);
-        final String id = templateMap.get("id");
+        final ThingTemplate template = buildThingTemplate(map);
+        final String id = map.get("id");
 
-        if (id == null) {
-          throw new IOException("Missing id for: " + thingFilePath + " line: " + Integer
-              .toString(thingLibrary.size()));
-        }
+        commit(id, template);
 
-        thingLibrary.put(id, thingTemplate);
-
-        templateMap = reader.readLine();
+        map = reader.readLine();
       }
+    }
+  }
+
+
+  private static ThingTemplate buildThingTemplate(Map<String, String> map) throws IOException {
+    final String name = map.get("name");
+    final List<Appearance> appearances = ResourceParser.Things.buildThingAppearances(map);
+    final EnumSet<PhysicalFlag> flags = ResourceParser.Physicals.parseFlags(map.get("flags"));
+    final WeaponComponent weaponComponent = ResourceParser.Things.buildWeaponComponent(map);
+
+    return new ThingTemplate(name, appearances, flags, weaponComponent);
+  }
+
+
+  private static void commit(String id, ThingTemplate template) throws IOException {
+
+    if (id == null) {
+      throw new IOException("Missing id for: \"" + template.getName() + "\"");
+    }
+
+    if (thingLibrary.put(id, template) != null) {
+      throw new IOException("Duplicate Thing ID: " + id);
     }
   }
 
@@ -74,20 +95,39 @@ public class GameResources {
 
     final CSVReader reader = new CSVReader(new File("raw/actors.csv"));
 
-    Map<String, String> templateMap = reader.readLine();
+    Map<String, String> map = reader.readLine();
 
-    while (templateMap != null) {
+    while (map != null) {
 
-      final ActorTemplate actorTemplate = new ActorTemplate(templateMap);
-      final String id = templateMap.get("id");
+      final ActorTemplate template = buildActorTemplate(map);
+      final String id = map.get("id");
 
-      if (id == null) {
-        throw new IOException("Missing id for line: " + Integer.toString(actorLibrary.size()));
-      }
+      commit(id, template);
 
-      actorLibrary.put(id, actorTemplate);
+      map = reader.readLine();
+    }
+  }
 
-      templateMap = reader.readLine();
+
+  private static ActorTemplate buildActorTemplate(Map<String, String> map) throws IOException {
+    final String name = map.get("name");
+    final Appearance appearances = ResourceParser.Actors.buildActorAppearance(map);
+    final EnumSet<PhysicalFlag> flags = ResourceParser.Physicals.parseFlags(map.get("flags"));
+    final List<AttributeRange> attributeRanges = ResourceParser.Actors.buildAttributeRanges(map);
+    final String naturalWeaponID = map.get("natural_weapon_id");
+
+    return new ActorTemplate(name, appearances, flags, attributeRanges, naturalWeaponID);
+  }
+
+
+  private static void commit(String id, ActorTemplate template) throws IOException {
+
+    if (id == null) {
+      throw new IOException("Missing id for: \"" + template.getName() + "\"");
+    }
+
+    if (actorLibrary.put(id, template) != null) {
+      throw new IOException("Duplicate Actor ID: " + id);
     }
   }
 

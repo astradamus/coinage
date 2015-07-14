@@ -16,9 +16,9 @@ import java.util.Map;
 public class ThingTemplate {
 
   final String name;
+  private final List<Appearance> appearances;
   final EnumSet<PhysicalFlag> flags;
   final WeaponComponent weaponComponent;
-  private final List<Appearance> appearances;
 
 
   /**

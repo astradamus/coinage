@@ -16,10 +16,10 @@ import java.util.Map;
 public class ActorTemplate {
 
   final String name;
+  final Appearance appearance;
   final EnumSet<PhysicalFlag> flags;
   final List<AttributeRange> baseAttributeRanges;
   final String naturalWeaponID;
-  final Appearance appearance;
 
 
   /**
@@ -29,9 +29,9 @@ public class ActorTemplate {
    */
   public ActorTemplate(Map<String, String> templateMap) throws IOException {
     this.name = templateMap.get("name");
+    this.appearance = ResourceParser.Actors.buildActorAppearance(templateMap);
     this.flags = ResourceParser.Physicals.parseFlags(templateMap.get("flags"));
     this.baseAttributeRanges = ResourceParser.Actors.buildAttributeRanges(templateMap);
     this.naturalWeaponID = templateMap.get("natural_weapon_id");
-    this.appearance = ResourceParser.Actors.buildActorAppearance(templateMap);
   }
 }

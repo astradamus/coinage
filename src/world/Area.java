@@ -1,5 +1,7 @@
 package world;
 
+import utils.Array2D;
+
 /**
  *
  */
@@ -7,10 +9,10 @@ public final class Area {
 
   private final Biome biome;
 
-  private final Square[][] squares;
+  private final Array2D<Square> squares;
 
 
-  Area(Biome biome, Square[][] squares) {
+  Area(Biome biome, Array2D<Square> squares) {
 
     this.biome = biome;
     this.squares = squares;
@@ -23,6 +25,6 @@ public final class Area {
 
 
   Square getSquare(AreaCoordinate coordinate) {
-    return squares[coordinate.areaY][coordinate.areaX];
+    return squares.get(coordinate.areaX, coordinate.areaY);
   }
 }

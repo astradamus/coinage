@@ -4,6 +4,7 @@ import game.Game;
 import game.io.GameResources;
 import game.physical.Physical;
 import thing.ThingFactory;
+import utils.Array2D;
 import utils.Dimension;
 import world.blueprinter.Blueprint;
 import world.blueprinter.BlueprintFactory;
@@ -21,33 +22,31 @@ class AreaFactory {
 
   public static Area standardGeneration(Biome biome, Dimension areaSizeInSquares) {
 
-    final int width = areaSizeInSquares.getWidth();
-    final int height = areaSizeInSquares.getHeight();
-
     // Get a Blueprint
     final Blueprint terrainBlueprint =
         BlueprintFactory.generateWithCrawler(areaSizeInSquares, biome.getTerrainWeights());
 
     // Generate Features
-    final Physical[][] physicals = generateFeatures(biome, terrainBlueprint, width, height);
+    final Array2D<Physical> physicals =
+        generateFeatures(biome, terrainBlueprint, areaSizeInSquares);
 
     // Produce square map from Blueprint
-    final Square[][] squares = new Square[height][width];
+    final Array2D<Square> squares = new Array2D<>(areaSizeInSquares);
 
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
+    for (int y = 0; y < areaSizeInSquares.getHeight(); y++) {
+      for (int x = 0; x < areaSizeInSquares.getWidth(); x++) {
 
         final String terrainTypeID = biome.getTerrainTypeByIndex(terrainBlueprint.weightMap[y][x]);
         final Terrain terrain =
             GameResources.getTerrainTypeByID(terrainTypeID).getRandomVariation();
         final Square square = new Square(terrain);
-        final Physical physical = physicals[y][x];
+        final Physical physical = physicals.get(x, y);
 
         if (physical != null) {
           square.put(physical);
         }
 
-        squares[y][x] = square;
+        squares.put(square, x, y);
       }
     }
 
@@ -55,10 +54,10 @@ class AreaFactory {
   }
 
 
-  private static Physical[][] generateFeatures(Biome biome, Blueprint terrainBlueprint, int width,
-      int height) {
+  private static Array2D<Physical> generateFeatures(Biome biome, Blueprint terrainBlueprint,
+      Dimension dimension) {
 
-    final Physical[][] physicals = new Physical[height][width];
+    final Array2D<Physical> physicals = new Array2D<>(dimension);
 
     // For each terrain classification in the biome...
     final List<BiomeTerrain> biomeTerrainList = biome.getBiomeTerrainList();
@@ -82,11 +81,11 @@ class AreaFactory {
         while (featureCount > 0 && searchLimit > 0) {
           searchLimit--;
 
-          int x = Game.RANDOM.nextInt(width);
-          int y = Game.RANDOM.nextInt(height);
+          int x = Game.RANDOM.nextInt(dimension.getWidth());
+          int y = Game.RANDOM.nextInt(dimension.getHeight());
 
-          if (terrainBlueprint.weightMap[y][x] == terrainIndex && physicals[y][x] == null) {
-            physicals[y][x] = ThingFactory.makeThing(featureID);
+          if (terrainBlueprint.weightMap[y][x] == terrainIndex && physicals.get(x, y) == null) {
+            physicals.put(ThingFactory.makeThing(featureID), x, y);
             featureCount--;
             searchLimit = 10000;
           }

@@ -22,6 +22,20 @@ public class Array2D<E> implements Iterable<E> {
 
 
   /**
+   * Constructs this Array2D as a shallow copy of the given Array2D (both contain the same elements
+   * upon copying, but changes to one Array2D will not affect the other).
+   */
+  public Array2D(Array2D<E> toCopy) {
+    this(toCopy.getDimension());
+    for (int y = 0; y < dimension.getHeight(); y++) {
+      for (int x = 0; x < dimension.getWidth(); x++) {
+        put(toCopy.get(x, y), x, y);
+      }
+    }
+  }
+
+
+  /**
    * Constructs this Array2D with all values set to null.
    */
   public Array2D(Dimension dimension) {

@@ -3,8 +3,10 @@ package utils;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class Array2D<E> implements Iterable<E> {
 
@@ -165,6 +167,25 @@ public class Array2D<E> implements Iterable<E> {
         action.accept(get(x, y));
       }
     }
+  }
+
+
+  /**
+   * Returns a new Array2D that is the result of applying the given function to every element in
+   * this one.
+   *
+   * @param mapper A function that takes in the type of this Array2D and returns type {@code <R>}.
+   * @param <R>    The type returned by the mapper.
+   */
+  public <R> Array2D<R> map(Function<E, R> mapper) {
+    Objects.requireNonNull(mapper);
+    final Array2D<R> mapped = new Array2D<>(getDimension());
+    for (int y = 0; y < getDimension().getHeight(); y++) {
+      for (int x = 0; x < getDimension().getWidth(); x++) {
+        mapped.put(mapper.apply(get(x, y)), x, y);
+      }
+    }
+    return mapped;
   }
 
 

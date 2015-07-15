@@ -1,5 +1,6 @@
 package world.blueprinter;
 
+import utils.Array2D;
 import utils.Dimension;
 
 /**
@@ -7,9 +8,10 @@ import utils.Dimension;
  */
 public class BlueprintBundle {
 
-  final int[][] baseMap;
+  final Array2D<Integer> baseMap;
   final int[] actualDistribution;
   final int[] distancesFromGoals;
+
 
   public BlueprintBundle(Dimension dimension, int[] weightsByIndex, double distributionStrictness) {
 
@@ -37,11 +39,11 @@ public class BlueprintBundle {
     final int[] actualDistribution = new int[weightsByIndex.length];
 
     // Make a base map filled with the heaviest feature index.
-    final int[][] baseMap = new int[dimension.getHeight()][dimension.getWidth()];
+    final Array2D<Integer> baseMap = new Array2D<>(dimension);
 
     for (int y = 0; y < dimension.getHeight(); y++) {
       for (int x = 0; x < dimension.getWidth(); x++) {
-        baseMap[y][x] = heaviestFeatureIndex;
+        baseMap.put(heaviestFeatureIndex, x, y);
         distancesFromGoals[heaviestFeatureIndex]--;
         actualDistribution[heaviestFeatureIndex]++;
       }

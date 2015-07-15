@@ -27,7 +27,7 @@ public class WorldFactory {
     for (int y = 0; y < worldSizeInAreas.getHeight(); y++) {
       for (int x = 0; x < worldSizeInAreas.getWidth(); x++) {
 
-        final Biome blueprintBiome = Biome.values()[biomeBlueprint.weightMap[y][x]];
+        final Biome blueprintBiome = Biome.values()[biomeBlueprint.weightMap.get(x, y)];
         areas.put(AreaFactory.standardGeneration(blueprintBiome, areaSizeInSquares), x, y);
       }
     }

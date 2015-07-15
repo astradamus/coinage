@@ -2,6 +2,7 @@ package world.blueprinter;
 
 import game.Direction;
 import game.Game;
+import utils.Array2D;
 import utils.Dimension;
 import utils.IntegerRange;
 
@@ -86,17 +87,16 @@ public final class BlueprintFactory {
       for (int adjX = x - patchRadius; adjX < x + patchRadius; adjX++) {
 
         // don't go outside map boundaries
-        if (adjX < 0 || adjX >= bundle.baseMap[0].length || adjY < 0
-            || adjY >= bundle.baseMap.length) {
+        if (!bundle.baseMap.getDimension().getCoordinateIsWithinBounds(adjX, adjY)) {
           continue;
         }
 
         // check if this spot represents a hole in the patch
         if (Game.RANDOM.nextDouble() > patchPatchiness) {
-          int replacingIndex = bundle.baseMap[adjY][adjX];
+          int replacingIndex = bundle.baseMap.get(adjX, adjY);
           bundle.adjustDistribution(placingIndex, 1); // Advance goal for this index.
           bundle.adjustDistribution(replacingIndex, -1); // Rewind goal for replaced index.
-          bundle.baseMap[adjY][adjX] = placingIndex; // Place the index.
+          bundle.baseMap.put(placingIndex, adjX, adjY); // Place the index.
         }
       }
     }
@@ -115,14 +115,14 @@ public final class BlueprintFactory {
     final BlueprintBundle bundle =
         new BlueprintBundle(dimension, featureWeightsByIndex, crawlerDistributionStrictness);
 
-    final int[][] baseMapUnderlyingArray = bundle.baseMap;
+    final Array2D<Integer> baseMapUnderlyingArray = bundle.baseMap;
     final int[] distancesFromGoals = bundle.distancesFromGoals;
 
     final int width = dimension.getWidth();
     final int height = dimension.getHeight();
 
     // The base map comes filled with the heaviest feature, which crawler will need.
-    final int heaviestFeatureIndex = baseMapUnderlyingArray[0][0];
+    final int heaviestFeatureIndex = baseMapUnderlyingArray.get(0, 0);
 
     // For each feature, draw random walks across the map until its goal is met.
     for (int featureIndex = 0; featureIndex < featureWeightsByIndex.length; featureIndex++) {
@@ -161,7 +161,7 @@ public final class BlueprintFactory {
         }
 
         // Otherwise, if we hit a feature that isn't the base type, increment the collision count.
-        else if (baseMapUnderlyingArray[position.y][position.x] != heaviestFeatureIndex) {
+        else if (baseMapUnderlyingArray.get(position.x, position.y) != heaviestFeatureIndex) {
           featureCollisions++;
         }
 
@@ -169,7 +169,7 @@ public final class BlueprintFactory {
         else {
           bundle.adjustDistribution(featureIndex, 1); // Advance goal for this index.
           bundle.adjustDistribution(heaviestFeatureIndex, -1); // Rewind goal for replaced index.
-          baseMapUnderlyingArray[position.y][position.x] = featureIndex; // Place the feature.
+          baseMapUnderlyingArray.put(featureIndex, position.x, position.y); // Place the feature.
         }
 
         // If we've had too many collisions, move to a new location for the next loop.

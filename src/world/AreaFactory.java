@@ -36,7 +36,8 @@ class AreaFactory {
     for (int y = 0; y < areaSizeInSquares.getHeight(); y++) {
       for (int x = 0; x < areaSizeInSquares.getWidth(); x++) {
 
-        final String terrainTypeID = biome.getTerrainTypeByIndex(terrainBlueprint.weightMap[y][x]);
+        final String terrainTypeID =
+            biome.getTerrainTypeByIndex(terrainBlueprint.weightMap.get(x, y));
         final Terrain terrain =
             GameResources.getTerrainTypeByID(terrainTypeID).getRandomVariation();
         final Square square = new Square(terrain);
@@ -84,7 +85,7 @@ class AreaFactory {
           int x = Game.RANDOM.nextInt(dimension.getWidth());
           int y = Game.RANDOM.nextInt(dimension.getHeight());
 
-          if (terrainBlueprint.weightMap[y][x] == terrainIndex && physicals.get(x, y) == null) {
+          if (terrainBlueprint.weightMap.get(x, y) == terrainIndex && physicals.get(x, y) == null) {
             physicals.put(ThingFactory.makeThing(featureID), x, y);
             featureCount--;
             searchLimit = 10000;

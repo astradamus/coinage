@@ -1,15 +1,12 @@
 package world;
 
 import game.Game;
-import game.io.GameResources;
 import game.physical.Physical;
 import thing.ThingFactory;
 import utils.Array2D;
 import utils.Dimension;
 import world.blueprinter.Blueprint;
 import world.blueprinter.BlueprintFactory;
-
-import java.util.List;
 
 /**
  *
@@ -23,57 +20,45 @@ class AreaFactory {
   public static Area standardGeneration(Biome biome, Dimension areaSizeInSquares) {
 
     // Get a Blueprint
-    final Blueprint terrainBlueprint =
-        BlueprintFactory.generateWithCrawler(areaSizeInSquares, biome.getTerrainWeights());
+    final Blueprint<BiomeTerrain> terrainBlueprint =
+        BlueprintFactory.generateWithCrawler(areaSizeInSquares, biome.getBiomeTerrain());
 
-    // Generate Features
-    final Array2D<Physical> physicals =
-        generateFeatures(biome, terrainBlueprint, areaSizeInSquares);
+    // Generate Props
+    final Array2D<Physical> physicals = generateProps(biome, terrainBlueprint, areaSizeInSquares);
 
     // Produce square map from Blueprint
-    final Array2D<Square> squares = new Array2D<>(areaSizeInSquares);
+    final Array2D<Square> squares =
+        terrainBlueprint.build().map(biomeTerrain -> new Square(biomeTerrain.getTerrainTypeID()));
 
+    // Add props to square map.
     for (int y = 0; y < areaSizeInSquares.getHeight(); y++) {
       for (int x = 0; x < areaSizeInSquares.getWidth(); x++) {
-
-        final String terrainTypeID =
-            biome.getTerrainTypeByIndex(terrainBlueprint.weightMap.get(x, y));
-        final Terrain terrain =
-            GameResources.getTerrainTypeByID(terrainTypeID).getRandomVariation();
-        final Square square = new Square(terrain);
         final Physical physical = physicals.get(x, y);
-
         if (physical != null) {
-          square.put(physical);
+          squares.get(x, y).put(physical);
         }
-
-        squares.put(square, x, y);
       }
     }
 
-    return new Area(biome, squares);
+    return new Area(biome, squares.unmodifiableView(squares.getDimension(), 0, 0));
   }
 
 
-  private static Array2D<Physical> generateFeatures(Biome biome, Blueprint terrainBlueprint,
+  private static Array2D<Physical> generateProps(Biome biome, Blueprint<BiomeTerrain> blueprint,
       Dimension dimension) {
 
     final Array2D<Physical> physicals = new Array2D<>(dimension);
 
     // For each terrain classification in the biome...
-    final List<BiomeTerrain> biomeTerrainList = biome.getBiomeTerrainList();
-    for (int terrainIndex = 0; terrainIndex < biomeTerrainList.size(); terrainIndex++) {
-      final BiomeTerrain biomeTerrain = biomeTerrainList.get(terrainIndex);
+    for (BiomeTerrain biomeTerrain : biome.getBiomeTerrain()) {
 
-      // For each feature classification in the terrain...
-      final List<BiomeProp> features = biomeTerrain.getBiomeProps();
-      for (int featureIndex = 0; featureIndex < features.size(); featureIndex++) {
-        final BiomeProp biomeProp = features.get(featureIndex);
+      // For each prop classification in the terrain...
+      for (BiomeProp biomeProp : biomeTerrain.getBiomeProps()) {
 
         // Retrieve the feature ID and calculate how many of the feature we should try to place.
         final String featureID = biomeProp.getThingTemplateID();
         int featureCount =
-            (int) (terrainBlueprint.distribution[terrainIndex] * biomeProp.getFrequency());
+            (int) (blueprint.getFeatureCount(biomeTerrain) * biomeProp.getFrequency());
 
         // Pick random points until we've picked a matching terrain that has no physicals, then
         // place the feature and continue the search--until we've placed all the features or we've
@@ -85,7 +70,7 @@ class AreaFactory {
           int x = Game.RANDOM.nextInt(dimension.getWidth());
           int y = Game.RANDOM.nextInt(dimension.getHeight());
 
-          if (terrainBlueprint.weightMap.get(x, y) == terrainIndex && physicals.get(x, y) == null) {
+          if (blueprint.get(x, y) == biomeTerrain && physicals.get(x, y) == null) {
             physicals.put(ThingFactory.makeThing(featureID), x, y);
             featureCount--;
             searchLimit = 10000;

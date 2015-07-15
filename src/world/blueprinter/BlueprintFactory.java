@@ -2,27 +2,24 @@ package world.blueprinter;
 
 import game.Direction;
 import game.Game;
-import utils.Array2D;
 import utils.Dimension;
 import utils.IntegerRange;
 
 import java.awt.Point;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
- * Exposes methods that produce WeightMaps via different algorithms. Each method takes a dimension
- * for the map, and a "weights by index" integer array. For each integer value in this array, that
- * integer's index in the array has a frequency in the weight map that is proportional to that
- * integer's value relative to the total of all the values in the array.
- * <p>
- * Put another way, given a weights by index of {5,15,30} with a dimension of 10x10, your given map
- * would contain 100 total values. Ten of these values would be {@code 0}, thirty of them would be
- * {@code 1}, and sixty of them would be {@code 2}.
+ * Exposes methods that produce Blueprints via different algorithms. Each method takes a dimension
+ * for the map and a feature set. Each feature in this set has a frequency in the blueprint that is
+ * proportional to that feature's weight relative to the total of all the weights of all the
+ * features in the set.
  */
 public final class BlueprintFactory {
 
-  private static final double patchesDistributionStrictness = 1.00;
-
-  private static final double crawlerDistributionStrictness = 1.00;
+  private static final double patchesStrictness = 1.00;
+  private static final double crawlerStrictness = 1.00;
   private static final IntegerRange crawlerTurningRadius = new IntegerRange(0, 7);
   private static final IntegerRange crawlerAverageChunkCountRange = new IntegerRange(1, 10);
 
@@ -36,47 +33,41 @@ public final class BlueprintFactory {
    * @param patchMaxRadius  The maximum distance a patch can extend from its center point.
    * @param patchPatchiness The chance each square in a patch will not be applied.
    */
-  public static Blueprint generateWithPatches(Dimension dimension, int[] featureWeightsByIndex,
-      int patchMaxRadius, double patchPatchiness) {
+  public static <E extends BlueprintFeature> Blueprint<E> generateWithPatches(Dimension dimension,
+      Set<E> featureSet, int patchMaxRadius, double patchPatchiness) {
 
-    final BlueprintBundle bundle =
-        new BlueprintBundle(dimension, featureWeightsByIndex, patchesDistributionStrictness);
-    final int[] distancesFromGoals = bundle.distancesFromGoals;
+    final Blueprint<E> blueprint = new Blueprint<>(dimension, featureSet, patchesStrictness);
 
+    final List<E> featureList = featureSet.stream().collect(Collectors.toList());
     int featureIndex = 0;
-    boolean goalUnmet = true;
+    boolean goalsUnsatisfied = true;
 
-    while (goalUnmet) {
+    while (goalsUnsatisfied) {
 
-      // if this feature's goal has not been met, place a patch of it.
-      if (distancesFromGoals[featureIndex] > 0) {
-        placePatch(bundle, dimension, featureIndex, patchMaxRadius, patchPatchiness);
+      final E feature = featureList.get(featureIndex);
+
+      // If this feature's goal has not been met, place a patch of it.
+      if (!blueprint.goalIsSatisfied(feature)) {
+        placePatch(blueprint, dimension, feature, patchMaxRadius, patchPatchiness);
       }
+
+      // If we hit a met goal, check if all goals are met.
       else {
-
-        // If we hit a met goal, check if all goals are met.
-        goalUnmet = false;
-        for (int distanceFromGoal : distancesFromGoals) {
-          if (distanceFromGoal > 0) {
-            goalUnmet = true;
-            break;
-          }
-        }
+        goalsUnsatisfied = !blueprint.allGoalsSatisfied();
       }
 
-      // if goal is still unmet, prepare for next loop cycle by advancing index
-      if (goalUnmet) {
-        featureIndex++;
-        featureIndex %= distancesFromGoals.length;
+      // If goal is still unmet, prepare for next loop cycle by advancing index.
+      if (goalsUnsatisfied) {
+        featureIndex = (featureIndex + 1) % featureList.size();
       }
     }
 
-    return bundle.construct();
+    return blueprint;
   }
 
 
-  private static void placePatch(BlueprintBundle bundle, Dimension dimension, int placingIndex,
-      int patchMaxRadius, double patchPatchiness) {
+  private static <T extends BlueprintFeature> void placePatch(Blueprint<T> bundle,
+      Dimension dimension, T placingFeature, int patchMaxRadius, double patchPatchiness) {
 
     final int patchRadius = Game.RANDOM.nextInt(patchMaxRadius);
     final int x = Game.RANDOM.nextInt(dimension.getWidth());
@@ -87,16 +78,13 @@ public final class BlueprintFactory {
       for (int adjX = x - patchRadius; adjX < x + patchRadius; adjX++) {
 
         // don't go outside map boundaries
-        if (!bundle.baseMap.getDimension().getCoordinateIsWithinBounds(adjX, adjY)) {
+        if (!dimension.getCoordinateIsWithinBounds(adjX, adjY)) {
           continue;
         }
 
         // check if this spot represents a hole in the patch
         if (Game.RANDOM.nextDouble() > patchPatchiness) {
-          int replacingIndex = bundle.baseMap.get(adjX, adjY);
-          bundle.adjustDistribution(placingIndex, 1); // Advance goal for this index.
-          bundle.adjustDistribution(replacingIndex, -1); // Rewind goal for replaced index.
-          bundle.baseMap.put(placingIndex, adjX, adjY); // Place the index.
+          bundle.putFeature(placingFeature, adjX, adjY);
         }
       }
     }
@@ -110,25 +98,19 @@ public final class BlueprintFactory {
    * has already added, and will jump to a random new position if it has too many of these
    * collisions in a row or it walks off the edge of the map.
    */
-  public static Blueprint generateWithCrawler(Dimension dimension, int[] featureWeightsByIndex) {
+  public static <T extends BlueprintFeature> Blueprint<T> generateWithCrawler(Dimension dimension,
+      Set<T> featureSet) {
 
-    final BlueprintBundle bundle =
-        new BlueprintBundle(dimension, featureWeightsByIndex, crawlerDistributionStrictness);
-
-    final Array2D<Integer> baseMapUnderlyingArray = bundle.baseMap;
-    final int[] distancesFromGoals = bundle.distancesFromGoals;
+    final Blueprint<T> blueprint = new Blueprint<>(dimension, featureSet, crawlerStrictness);
 
     final int width = dimension.getWidth();
     final int height = dimension.getHeight();
 
-    // The base map comes filled with the heaviest feature, which crawler will need.
-    final int heaviestFeatureIndex = baseMapUnderlyingArray.get(0, 0);
-
     // For each feature, draw random walks across the map until its goal is met.
-    for (int featureIndex = 0; featureIndex < featureWeightsByIndex.length; featureIndex++) {
+    for (T feature : featureSet) {
 
-      if (featureIndex == heaviestFeatureIndex) {
-        continue; // Skip the main feature since the map was filled with this already.
+      if (feature == blueprint.getMostCommonFeature()) {
+        continue; // Skip the most common feature since the map was filled with this already.
       }
 
       // The maximum number of times we can walk onto a feature that has already been changed
@@ -136,8 +118,8 @@ public final class BlueprintFactory {
       // clumps. Large numbers produce few large clumps. This number should be less than the
       // maximum quantity for the feature being placed.
       // The divisor determines the average number of clumps. 4 to 8 are good values for areas.
-      final int collisionDivisor = crawlerAverageChunkCountRange.getRandomWithin(Game.RANDOM);
-      final int maxFeatureCollisions = distancesFromGoals[featureIndex] / collisionDivisor;
+      final int averageChunkCount = crawlerAverageChunkCountRange.getRandomWithin(Game.RANDOM);
+      final int collisionLimit = blueprint.getFeatureCountGoals().get(feature) / averageChunkCount;
 
       // Keep track of feature collisions.
       int featureCollisions = 0;
@@ -147,7 +129,7 @@ public final class BlueprintFactory {
       Direction direction = Direction.getRandom();
 
       // Place this feature until we reach its goal.
-      while (distancesFromGoals[featureIndex] > 0) {
+      while (!blueprint.goalIsSatisfied(feature)) {
 
         // Turn to a random direction within range.
         direction = direction.turn(crawlerTurningRadius.getRandomWithin(Game.RANDOM));
@@ -155,31 +137,26 @@ public final class BlueprintFactory {
         // Move in that direction.
         position.translate(direction.relativeX, direction.relativeY);
 
-        // If we exceed the map bounds, we must start a new walk.
-        if (!dimension.getCoordinateIsWithinBounds(position)) {
-          featureCollisions = maxFeatureCollisions; // Hit edge of area, must start new walk.
+        // If we exceed the map bounds or the collision limit, we must start a new walk.
+        if (!dimension.getCoordinateIsWithinBounds(position)
+            || featureCollisions == collisionLimit) {
+          position.setLocation(Game.RANDOM.nextInt(width), Game.RANDOM.nextInt(height));
+          featureCollisions = 0;  // Reset to zero since we moved
         }
 
-        // Otherwise, if we hit a feature that isn't the base type, increment the collision count.
-        else if (baseMapUnderlyingArray.get(position.x, position.y) != heaviestFeatureIndex) {
+        // Otherwise, if we hit a feature that isn't the most common type (i.e. a tile that has
+        // already been crawled over), increment the collision count.
+        else if (blueprint.get(position.x, position.y) != blueprint.getMostCommonFeature()) {
           featureCollisions++;
         }
 
         // Otherwise, we're free to place the feature here.
         else {
-          bundle.adjustDistribution(featureIndex, 1); // Advance goal for this index.
-          bundle.adjustDistribution(heaviestFeatureIndex, -1); // Rewind goal for replaced index.
-          baseMapUnderlyingArray.put(featureIndex, position.x, position.y); // Place the feature.
-        }
-
-        // If we've had too many collisions, move to a new location for the next loop.
-        if (featureCollisions == maxFeatureCollisions) {
-          position.setLocation(Game.RANDOM.nextInt(width), Game.RANDOM.nextInt(height));
-          featureCollisions = 0;  // Reset to zero since we moved
+          blueprint.putFeature(feature, position.x, position.y);
         }
       }
     }
 
-    return bundle.construct();
+    return blueprint;
   }
 }

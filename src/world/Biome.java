@@ -1,15 +1,18 @@
 package world;
 
 import game.physical.Appearance;
+import world.blueprinter.BlueprintFeature;
 
 import java.awt.Color;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  */
-public enum Biome {
+public enum Biome implements BlueprintFeature {
 
   GRASSLAND(8, new Appearance('G', new Color(7, 140, 0), new Color(8, 96, 0)),
 
@@ -71,41 +74,30 @@ public enum Biome {
           new BiomeProp("OOZE", 0.004)));
 
   public final Appearance worldMapAppearance;
-  final int biomeWeight;
-  List<BiomeTerrain> biomeTerrain;
+  final int weight;
+  final Set<BiomeTerrain> biomeTerrain;
 
 
-  Biome(int biomeWeight, Appearance worldMapAppearance, BiomeTerrain... biomeTerrain) {
-    this.biomeWeight = biomeWeight;
+  Biome(int weight, Appearance worldMapAppearance, BiomeTerrain... biomeTerrain) {
+    this.weight = weight;
     this.worldMapAppearance = worldMapAppearance;
-    this.biomeTerrain = Arrays.asList(biomeTerrain);
+    this.biomeTerrain = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(biomeTerrain)));
   }
 
 
-  public static int[] getAllWeights() {
-    int[] weights = new int[values().length];
-    for (int i = 0; i < weights.length; i++) {
-      weights[i] = values()[i].biomeWeight;
-    }
-    return weights;
+  public static Set<Biome> getAll() {
+    return new HashSet<>(Arrays.asList(values()));
   }
 
 
-  public int[] getTerrainWeights() {
-    final int[] weights = new int[biomeTerrain.size()];
-    for (int i = 0; i < biomeTerrain.size(); i++) {
-      weights[i] = biomeTerrain.get(i).getWeight();
-    }
-    return weights;
+  @Override
+  public int getWeight() {
+    return weight;
   }
 
 
-  public String getTerrainTypeByIndex(int index) {
-    return biomeTerrain.get(index).getTerrainTypeID();
-  }
-
-
-  public List<BiomeTerrain> getBiomeTerrainList() {
+  public Set<BiomeTerrain> getBiomeTerrain() {
     return biomeTerrain;
   }
+
 }

@@ -1,5 +1,7 @@
 package world;
 
+import world.blueprinter.BlueprintFeature;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.List;
  * may appear on that terrain type. Used by a Biome to define its constituent terrain types,
  * their relative frequency, and what features they can present.
  */
-public class BiomeTerrain {
+public class BiomeTerrain implements BlueprintFeature {
   private final String terrainTypeID;
   private final int weight;
   private final List<BiomeProp> biomeProps;
@@ -33,7 +35,7 @@ public class BiomeTerrain {
     return terrainTypeID;
   }
 
-
+  @Override
   public int getWeight() {
     return weight;
   }

@@ -1,6 +1,8 @@
 package world;
 
 import utils.Dimension;
+import world.blueprinter.Blueprint;
+import world.blueprinter.BlueprintFactory;
 
 /**
  *
@@ -13,16 +15,17 @@ public class WorldFactory {
 
   public static World standardGeneration(Dimension areaSizeInSquares, Dimension worldSizeInAreas) {
 
-    // Get a WeightMap
-    WeightMap biomeWeightMap = WeightMapFactory.generateWithPatches(worldSizeInAreas,
-        Biome.getAllWeights(), STDGEN_PATCH_RADIUS_LIMIT, STDGEN_PATCH_PATCHINESS);
+    // Get a Blueprint
+    Blueprint biomeBlueprint = BlueprintFactory
+        .generateWithPatches(worldSizeInAreas, Biome.getAllWeights(), STDGEN_PATCH_RADIUS_LIMIT,
+            STDGEN_PATCH_PATCHINESS);
 
-    // Produce areas from WeightMap.
+    // Produce areas from Blueprint.
     Area[][] areas = new Area[worldSizeInAreas.getHeight()][worldSizeInAreas.getWidth()];
     for (int y = 0; y < worldSizeInAreas.getHeight(); y++) {
       for (int x = 0; x < worldSizeInAreas.getWidth(); x++) {
         areas[y][x] = AreaFactory
-            .standardGeneration(Biome.values()[biomeWeightMap.weightMap[y][x]], areaSizeInSquares);
+            .standardGeneration(Biome.values()[biomeBlueprint.weightMap[y][x]], areaSizeInSquares);
       }
     }
 

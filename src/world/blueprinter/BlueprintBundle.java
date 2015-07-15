@@ -1,17 +1,17 @@
-package world;
+package world.blueprinter;
 
 import utils.Dimension;
 
 /**
  *
  */
-public class WeightMapBundle {
+public class BlueprintBundle {
 
   final int[][] baseMap;
   final int[] actualDistribution;
   final int[] distancesFromGoals;
 
-  public WeightMapBundle(Dimension dimension, int[] weightsByIndex, double distributionStrictness) {
+  public BlueprintBundle(Dimension dimension, int[] weightsByIndex, double distributionStrictness) {
 
     // determine number of squares in the area
     final int squares = dimension.getArea();
@@ -57,8 +57,8 @@ public class WeightMapBundle {
     distancesFromGoals[index] -= value;
   }
 
-  public WeightMap construct() {
-    return new WeightMap(baseMap,actualDistribution);
+  public Blueprint construct() {
+    return new Blueprint(baseMap,actualDistribution);
   }
 
 }

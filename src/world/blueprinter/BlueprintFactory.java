@@ -1,4 +1,4 @@
-package world;
+package world.blueprinter;
 
 import game.Direction;
 import game.Game;
@@ -17,7 +17,7 @@ import java.awt.Point;
  * would contain 100 total values. Ten of these values would be {@code 0}, thirty of them would be
  * {@code 1}, and sixty of them would be {@code 2}.
  */
-final class WeightMapFactory {
+public final class BlueprintFactory {
 
   private static final double patchesDistributionStrictness = 1.00;
 
@@ -35,11 +35,11 @@ final class WeightMapFactory {
    * @param patchMaxRadius  The maximum distance a patch can extend from its center point.
    * @param patchPatchiness The chance each square in a patch will not be applied.
    */
-  static WeightMap generateWithPatches(Dimension dimension, int[] featureWeightsByIndex,
+  public static Blueprint generateWithPatches(Dimension dimension, int[] featureWeightsByIndex,
       int patchMaxRadius, double patchPatchiness) {
 
-    final WeightMapBundle bundle =
-        new WeightMapBundle(dimension, featureWeightsByIndex, patchesDistributionStrictness);
+    final BlueprintBundle bundle =
+        new BlueprintBundle(dimension, featureWeightsByIndex, patchesDistributionStrictness);
     final int[] distancesFromGoals = bundle.distancesFromGoals;
 
     int featureIndex = 0;
@@ -74,7 +74,7 @@ final class WeightMapFactory {
   }
 
 
-  private static void placePatch(WeightMapBundle bundle, Dimension dimension, int placingIndex,
+  private static void placePatch(BlueprintBundle bundle, Dimension dimension, int placingIndex,
       int patchMaxRadius, double patchPatchiness) {
 
     final int patchRadius = Game.RANDOM.nextInt(patchMaxRadius);
@@ -110,10 +110,10 @@ final class WeightMapFactory {
    * has already added, and will jump to a random new position if it has too many of these
    * collisions in a row or it walks off the edge of the map.
    */
-  static WeightMap generateWithCrawler(Dimension dimension, int[] featureWeightsByIndex) {
+  public static Blueprint generateWithCrawler(Dimension dimension, int[] featureWeightsByIndex) {
 
-    final WeightMapBundle bundle =
-        new WeightMapBundle(dimension, featureWeightsByIndex, crawlerDistributionStrictness);
+    final BlueprintBundle bundle =
+        new BlueprintBundle(dimension, featureWeightsByIndex, crawlerDistributionStrictness);
 
     final int[][] baseMapUnderlyingArray = bundle.baseMap;
     final int[] distancesFromGoals = bundle.distancesFromGoals;

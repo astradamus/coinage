@@ -5,6 +5,8 @@ import game.io.GameResources;
 import game.physical.Physical;
 import thing.ThingFactory;
 import utils.Dimension;
+import world.blueprinter.Blueprint;
+import world.blueprinter.BlueprintFactory;
 
 import java.util.List;
 
@@ -22,20 +24,20 @@ class AreaFactory {
     final int width = areaSizeInSquares.getWidth();
     final int height = areaSizeInSquares.getHeight();
 
-    // Get a WeightMap
-    final WeightMap terrainWeightMap =
-        WeightMapFactory.generateWithCrawler(areaSizeInSquares, biome.getTerrainWeights());
+    // Get a Blueprint
+    final Blueprint terrainBlueprint =
+        BlueprintFactory.generateWithCrawler(areaSizeInSquares, biome.getTerrainWeights());
 
     // Generate Features
-    final Physical[][] physicals = generateFeatures(biome, terrainWeightMap, width, height);
+    final Physical[][] physicals = generateFeatures(biome, terrainBlueprint, width, height);
 
-    // Produce square map from WeightMap
+    // Produce square map from Blueprint
     final Square[][] squares = new Square[height][width];
 
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
 
-        final String terrainTypeID = biome.getTerrainTypeByIndex(terrainWeightMap.weightMap[y][x]);
+        final String terrainTypeID = biome.getTerrainTypeByIndex(terrainBlueprint.weightMap[y][x]);
         final Terrain terrain =
             GameResources.getTerrainTypeByID(terrainTypeID).getRandomVariation();
         final Square square = new Square(terrain);
@@ -53,7 +55,7 @@ class AreaFactory {
   }
 
 
-  private static Physical[][] generateFeatures(Biome biome, WeightMap terrainWeightMap, int width,
+  private static Physical[][] generateFeatures(Biome biome, Blueprint terrainBlueprint, int width,
       int height) {
 
     final Physical[][] physicals = new Physical[height][width];
@@ -71,7 +73,7 @@ class AreaFactory {
         // Retrieve the feature ID and calculate how many of the feature we should try to place.
         final String featureID = biomeProp.getThingTemplateID();
         int featureCount =
-            (int) (terrainWeightMap.distribution[terrainIndex] * biomeProp.getFrequency());
+            (int) (terrainBlueprint.distribution[terrainIndex] * biomeProp.getFrequency());
 
         // Pick random points until we've picked a matching terrain that has no physicals, then
         // place the feature and continue the search--until we've placed all the features or we've
@@ -83,7 +85,7 @@ class AreaFactory {
           int x = Game.RANDOM.nextInt(width);
           int y = Game.RANDOM.nextInt(height);
 
-          if (terrainWeightMap.weightMap[y][x] == terrainIndex && physicals[y][x] == null) {
+          if (terrainBlueprint.weightMap[y][x] == terrainIndex && physicals[y][x] == null) {
             physicals[y][x] = ThingFactory.makeThing(featureID);
             featureCount--;
             searchLimit = 10000;

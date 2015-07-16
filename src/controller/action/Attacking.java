@@ -36,7 +36,7 @@ public class Attacking extends Action {
 
   @Override
   public int calcDelayToPerform() {
-    final Thing equippedWeapon = getActor().getActiveWeapon();
+    final Thing equippedWeapon = getActor().getInventory().getWeapon();
     return equippedWeapon.getWeaponComponent()
         .calcAttackSpeed(getActor().getAttributeComponent().getRank(Attribute.REFLEX));
   }
@@ -44,7 +44,7 @@ public class Attacking extends Action {
 
   @Override
   public int calcDelayToRecover() {
-    final Thing equippedWeapon = getActor().getActiveWeapon();
+    final Thing equippedWeapon = getActor().getInventory().getWeapon();
     return equippedWeapon.getWeaponComponent()
         .calcRecoverySpeed(getActor().getAttributeComponent().getRank(Attribute.REFLEX));
   }
@@ -66,7 +66,8 @@ public class Attacking extends Action {
     if (!attackHit && hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
 
       final String attackTypeString =
-          getActor().getActiveWeapon().getWeaponComponent().getDamageType().getAttackString();
+          getActor().getInventory().getWeapon().getWeaponComponent().getDamageType()
+              .getAttackString();
 
       EventLog
           .registerEvent(Event.FAILURE, "Your " + attackTypeString + " has hit naught but air.");
@@ -82,7 +83,7 @@ public class Attacking extends Action {
   @Override
   protected void apply(World world) {
 
-    final Thing weapon = getActor().getActiveWeapon();
+    final Thing weapon = getActor().getInventory().getWeapon();
     final WeaponComponent weaponComponent = weapon.getWeaponComponent();
 
     // Determine how much damage this attack will do.

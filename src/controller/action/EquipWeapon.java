@@ -58,7 +58,7 @@ public class EquipWeapon extends Action {
   @Override
   protected void apply(World world) {
 
-    getActor().setEquippedWeapon(validatedWeapon);
+    getActor().getInventory().setEquippedWeapon(validatedWeapon);
 
     if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
       EventLog.registerEvent(Event.SUCCESS, "You have equipped " + validatedWeapon.getName() + ".");

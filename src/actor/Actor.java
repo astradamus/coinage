@@ -10,7 +10,6 @@ import game.Direction;
 import game.Executor;
 import game.physical.Physical;
 import game.physical.PhysicalFlag;
-import thing.Thing;
 import thing.ThingFactory;
 import world.Coordinate;
 
@@ -31,7 +30,6 @@ public class Actor extends Physical {
   private final ActionTimer actionTimer;
 
   private final Inventory inventory;
-  private final Thing naturalWeapon;
   private final AttributeComponent attributeComponent;
 
   private ActorObserver actorObserver;
@@ -39,8 +37,6 @@ public class Actor extends Physical {
   private Coordinate coordinate;
   private Direction facing = Direction.getRandom();
   private Action action;
-
-  private Thing equippedWeapon;
 
 
   /**
@@ -59,8 +55,7 @@ public class Actor extends Physical {
     // Construct components.
     attributeComponent = new AttributeComponent(aT);
     health = new Health(this);
-    inventory = new Inventory();
-    naturalWeapon = ThingFactory.makeThing(aT.naturalWeaponID);
+    inventory = new Inventory(ThingFactory.makeThing(aT.naturalWeaponID));
     actionTimer = new ActionTimer();
   }
 
@@ -184,30 +179,6 @@ public class Actor extends Physical {
    */
   public final Inventory getInventory() {
     return inventory;
-  }
-
-
-  /**
-   * @return The actor's equipped weapon, if it has one. Otherwise, its natural weapon.
-   */
-  public final Thing getActiveWeapon() {
-    if (equippedWeapon != null) {
-      return equippedWeapon;
-    }
-    else {
-      return naturalWeapon;
-    }
-  }
-
-
-  /**
-   * Sets the actor's equipped weapon to the given thing. Does nothing if the given thing has no
-   * weapon component.
-   */
-  public final void setEquippedWeapon(Thing weapon) {
-    if (weapon.getWeaponComponent() != null) {
-      equippedWeapon = weapon;
-    }
   }
 
 

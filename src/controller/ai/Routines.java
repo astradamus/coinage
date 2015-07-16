@@ -1,13 +1,13 @@
 package controller.ai;
 
 import actor.Actor;
+import actor.action.Action;
+import actor.action.Moving;
+import actor.action.TurnThenMove;
 import actor.attribute.Attribute;
 import actor.attribute.Perception;
 import actor.attribute.Rank;
 import actor.stats.Health;
-import controller.action.Action;
-import controller.action.Moving;
-import controller.action.TurnThenMove;
 import game.Direction;
 import game.Game;
 import game.physical.PhysicalFlag;

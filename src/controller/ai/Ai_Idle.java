@@ -1,7 +1,7 @@
 package controller.ai;
 
 import actor.Actor;
-import controller.action.Turning;
+import actor.action.Turning;
 import game.Direction;
 import game.Game;
 

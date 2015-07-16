@@ -1,13 +1,13 @@
 package controller.ai;
 
 import actor.Actor;
+import actor.action.Action;
+import actor.action.ActionFlag;
+import actor.action.Attacking;
+import actor.action.Moving;
 import actor.attribute.Attribute;
 import actor.attribute.Perception;
 import actor.attribute.Rank;
-import controller.action.Action;
-import controller.action.ActionFlag;
-import controller.action.Attacking;
-import controller.action.Moving;
 import game.TimeMode;
 import game.io.GameEngine;
 import game.io.display.Event;

@@ -1,4 +1,4 @@
-package actor;
+package actor.action;
 
 /**
  * Tracks the warm-up and cool-down states for an individual actor. Most actions have an associated

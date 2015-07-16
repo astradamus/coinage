@@ -1,8 +1,8 @@
 package controller.ai;
 
 import actor.Actor;
-import controller.action.Action;
-import controller.action.ActionFlag;
+import actor.action.Action;
+import actor.action.ActionFlag;
 import game.Direction;
 import game.Game;
 

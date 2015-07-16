@@ -1,7 +1,7 @@
 package game.io.input;
 
 import actor.Actor;
-import controller.action.PickingUp;
+import actor.action.PickingUp;
 import controller.player.PlayerAgent;
 import game.io.display.Event;
 import game.io.display.EventLog;

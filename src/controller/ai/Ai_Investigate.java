@@ -1,10 +1,10 @@
 package controller.ai;
 
 import actor.Actor;
+import actor.action.Turning;
 import actor.attribute.Attribute;
 import actor.attribute.Perception;
 import actor.attribute.Rank;
-import controller.action.Turning;
 import game.Direction;
 import world.Coordinate;
 

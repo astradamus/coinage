@@ -1,7 +1,7 @@
 package controller;
 
 import actor.Actor;
-import controller.action.Action;
+import actor.action.Action;
 
 /**
  *

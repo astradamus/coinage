@@ -1,9 +1,9 @@
 package game.io.input;
 
-import controller.action.Action;
-import controller.action.Moving;
-import controller.action.TurnThenMove;
-import controller.action.Turning;
+import actor.action.Action;
+import actor.action.Moving;
+import actor.action.TurnThenMove;
+import actor.action.Turning;
 import game.Direction;
 import game.Game;
 import game.physical.Physical;

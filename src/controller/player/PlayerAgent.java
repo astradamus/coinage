@@ -1,9 +1,9 @@
 package controller.player;
 
 import actor.Actor;
+import actor.action.Action;
+import actor.action.ActionFlag;
 import controller.ActorAgent;
-import controller.action.Action;
-import controller.action.ActionFlag;
 import game.io.display.Event;
 import game.io.display.EventLog;
 import world.Area;

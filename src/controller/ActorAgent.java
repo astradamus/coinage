@@ -1,8 +1,8 @@
 package controller;
 
 import actor.Actor;
+import actor.action.Action;
 import actor.attribute.Attribute;
-import controller.action.Action;
 import game.Executor;
 import game.Game;
 

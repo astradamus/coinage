@@ -1,6 +1,6 @@
 package game;
 
-import controller.action.Action;
+import actor.action.Action;
 
 /**
  *

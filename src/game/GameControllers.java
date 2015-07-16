@@ -1,10 +1,10 @@
 package game;
 
 import actor.Actor;
+import actor.action.Action;
 import controller.ActorAgent;
 import controller.Controller;
 import controller.ControllerInterface;
-import controller.action.Action;
 import game.physical.PhysicalFlag;
 import world.Area;
 import world.Coordinate;

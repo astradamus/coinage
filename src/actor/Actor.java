@@ -1,5 +1,6 @@
 package actor;
 
+import actor.action.ActionComponent;
 import actor.attribute.AttributeComponent;
 import actor.inventory.Inventory;
 import actor.stats.Health;

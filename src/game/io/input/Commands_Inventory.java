@@ -1,7 +1,7 @@
 package game.io.input;
 
-import controller.action.EquipWeapon;
-import controller.action.Placing;
+import actor.action.EquipWeapon;
+import actor.action.Placing;
 import controller.player.PlayerAgent;
 import game.io.display.Event;
 import game.io.display.EventLog;

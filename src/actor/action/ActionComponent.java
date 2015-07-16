@@ -1,7 +1,6 @@
-package actor;
+package actor.action;
 
-import controller.action.Action;
-import controller.action.ActionFlag;
+import actor.Actor;
 import game.Executor;
 import world.Coordinate;
 

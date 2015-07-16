@@ -1,4 +1,4 @@
-package controller.action;
+package actor.action;
 
 /**
  *

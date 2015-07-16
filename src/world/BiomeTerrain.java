@@ -1,6 +1,6 @@
 package world;
 
-import world.blueprinter.BlueprintFeature;
+import world.blueprint.BlueprintFeature;
 
 import java.util.Arrays;
 import java.util.Collections;

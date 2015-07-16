@@ -1,4 +1,4 @@
-package world.blueprinter;
+package world.blueprint;
 
 import game.Direction;
 import game.Game;

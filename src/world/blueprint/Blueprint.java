@@ -1,4 +1,4 @@
-package world.blueprinter;
+package world.blueprint;
 
 import utils.Array2D;
 import utils.Dimension;

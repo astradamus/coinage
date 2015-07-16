@@ -5,8 +5,8 @@ import game.physical.Physical;
 import thing.ThingFactory;
 import utils.Array2D;
 import utils.Dimension;
-import world.blueprinter.Blueprint;
-import world.blueprinter.BlueprintFactory;
+import world.blueprint.Blueprint;
+import world.blueprint.BlueprintFactory;
 
 /**
  *

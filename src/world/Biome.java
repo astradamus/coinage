@@ -1,7 +1,7 @@
 package world;
 
 import game.physical.Appearance;
-import world.blueprinter.BlueprintFeature;
+import world.blueprint.BlueprintFeature;
 
 import java.awt.Color;
 import java.util.Arrays;

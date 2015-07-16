@@ -89,7 +89,7 @@ class Routines {
 
     final Actor actor = agent.getActor();
     final Coordinate actorAt = actor.getCoordinate();
-    final Rank perceptionRank = actor.getAttributeRank(Attribute.PERCEPTION);
+    final Rank perceptionRank = actor.getAttributeComponent().getRank(Attribute.PERCEPTION);
 
     // Get all actor controllers in our area.
     final Set<Actor> localActors = agent.requestActorsInMyArea();

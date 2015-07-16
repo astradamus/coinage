@@ -97,7 +97,7 @@ public class Ai_Fight extends Behavior {
 
           final World.Informer worldInformer = getAgent().getGameInformer().getWorldInformer();
 
-          final Rank perception = getActor().getAttributeRank(Attribute.PERCEPTION);
+          final Rank perception = getActor().getAttributeComponent().getRank(Attribute.PERCEPTION);
           final MapCoordinate actorMC = worldInformer.convertToMapCoordinate(actorAt);
           final MapCoordinate enemyMC = worldInformer.convertToMapCoordinate(enemyAt);
 

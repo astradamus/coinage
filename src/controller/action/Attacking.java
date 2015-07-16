@@ -38,7 +38,7 @@ public class Attacking extends Action {
   public int calcDelayToPerform() {
     final Thing equippedWeapon = getActor().getActiveWeapon();
     return equippedWeapon.getWeaponComponent()
-        .calcAttackSpeed(getActor().getAttributeRank(Attribute.REFLEX));
+        .calcAttackSpeed(getActor().getAttributeComponent().getRank(Attribute.REFLEX));
   }
 
 
@@ -46,7 +46,7 @@ public class Attacking extends Action {
   public int calcDelayToRecover() {
     final Thing equippedWeapon = getActor().getActiveWeapon();
     return equippedWeapon.getWeaponComponent()
-        .calcRecoverySpeed(getActor().getAttributeRank(Attribute.REFLEX));
+        .calcRecoverySpeed(getActor().getAttributeComponent().getRank(Attribute.REFLEX));
   }
 
 
@@ -86,7 +86,7 @@ public class Attacking extends Action {
     final WeaponComponent weaponComponent = weapon.getWeaponComponent();
 
     // Determine how much damage this attack will do.
-    final Rank muscle = getActor().getAttributeRank(Attribute.MUSCLE);
+    final Rank muscle = getActor().getAttributeComponent().getRank(Attribute.MUSCLE);
     final int damage = weaponComponent.calculateDamageRange(muscle).getRandomWithin(Game.RANDOM);
 
     // Construct the event log string for this attack.

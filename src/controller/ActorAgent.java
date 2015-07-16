@@ -53,7 +53,7 @@ public abstract class ActorAgent implements Controller, ActorObserver {
 
   @Override
   public Integer getRolledInitiative() {
-    return Game.RANDOM.nextInt(actor.getAttributeRank(Attribute.REFLEX).ordinal());
+    return Game.RANDOM.nextInt(actor.getAttributeComponent().getRank(Attribute.REFLEX).ordinal());
   }
 
 

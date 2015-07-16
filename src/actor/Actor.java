@@ -1,7 +1,6 @@
 package actor;
 
-import actor.attribute.Attribute;
-import actor.attribute.Rank;
+import actor.attribute.AttributeComponent;
 import actor.inventory.Inventory;
 import actor.stats.Health;
 import controller.ActorObserver;
@@ -17,7 +16,6 @@ import world.Coordinate;
 
 import java.awt.Color;
 import java.util.EnumSet;
-import java.util.Map;
 
 /**
  * Actors are subjects. They represent animate beings and characters in the world, as opposed to
@@ -29,12 +27,12 @@ public class Actor extends Physical {
   private static final EnumSet<PhysicalFlag> STANDARD_FLAGS =
       EnumSet.of(PhysicalFlag.BLOCKING, PhysicalFlag.IMMOVABLE);
 
-  private final Map<Attribute, Rank> attributes;
   private final Health health;
   private final ActionTimer actionTimer;
 
   private final Inventory inventory;
   private final Thing naturalWeapon;
+  private final AttributeComponent attributeComponent;
 
   private ActorObserver actorObserver;
 
@@ -59,7 +57,7 @@ public class Actor extends Physical {
     }
 
     // Construct components.
-    attributes = ActorFactory.makeAttributeMap(aT);
+    attributeComponent = new AttributeComponent(aT);
     health = new Health(this);
     inventory = new Inventory();
     naturalWeapon = ThingFactory.makeThing(aT.naturalWeaponID);
@@ -166,10 +164,10 @@ public class Actor extends Physical {
 
 
   /**
-   * @return This actor's rank in the given attribute.
+   * Returns this actor's attribute component.
    */
-  public final Rank getAttributeRank(Attribute attribute) {
-    return attributes.get(attribute);
+  public AttributeComponent getAttributeComponent() {
+    return attributeComponent;
   }
 
 

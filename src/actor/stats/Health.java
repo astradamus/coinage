@@ -24,7 +24,7 @@ public class Health {
 
   public Health(Actor actor) {
     this.actor = actor;
-    maximum = actor.getAttributeRank(Attribute.GRIT).ordinal() * HEALTH_PER_GRIT;
+    maximum = actor.getAttributeComponent().getRank(Attribute.GRIT).ordinal() * HEALTH_PER_GRIT;
     current = maximum;
   }
 

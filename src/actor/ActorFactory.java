@@ -16,7 +16,7 @@ public class ActorFactory {
   }
 
 
-  static Map<Attribute, Rank> makeAttributeMap(ActorTemplate actorTemplate) {
+  public static Map<Attribute, Rank> makeAttributeMap(ActorTemplate actorTemplate) {
 
     Map<Attribute, Rank> attributes = new HashMap<>();
 

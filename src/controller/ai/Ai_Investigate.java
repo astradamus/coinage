@@ -49,7 +49,7 @@ public class Ai_Investigate extends Behavior {
 
   private void investigate() {
 
-    final Rank perception = getActor().getAttributeRank(Attribute.PERCEPTION);
+    final Rank perception = getActor().getAttributeComponent().getRank(Attribute.PERCEPTION);
     final Direction actorFacing = getActor().getFacing();
     final Coordinate actorAt = getActor().getCoordinate();
 

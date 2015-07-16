@@ -51,7 +51,7 @@ public class Moving extends Action {
   public int calcDelayToPerform() {
 
     // Take the actor's reflex rank.
-    final int actorReflex = getActor().getAttributeRank(Attribute.REFLEX).ordinal();
+    final int actorReflex = getActor().getAttributeComponent().getRank(Attribute.REFLEX).ordinal();
 
     // Determine distance from BASELINE_RANK.
     final int distanceFromBaseline = actorReflex - BASELINE_RANK;

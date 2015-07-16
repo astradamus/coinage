@@ -3,7 +3,7 @@ package world;
 import utils.Array2D;
 import utils.Dimension;
 import world.blueprint.Blueprint;
-import world.blueprint.BlueprintFactory;
+import world.blueprint.BlueprintFactory_Patches;
 
 /**
  *
@@ -17,8 +17,8 @@ public class WorldFactory {
   public static World standardGeneration(Dimension areaSizeInSquares, Dimension worldSizeInAreas) {
 
     // Get a Blueprint
-    Blueprint<Biome> blueprint = BlueprintFactory
-        .generateWithPatches(worldSizeInAreas, Biome.getAll(), STDGEN_PATCH_RADIUS_LIMIT,
+    Blueprint<Biome> blueprint = BlueprintFactory_Patches
+        .generate(worldSizeInAreas, Biome.getAll(), STDGEN_PATCH_RADIUS_LIMIT,
             STDGEN_PATCH_PATCHINESS);
 
     // Produce areas from Blueprint.

@@ -6,7 +6,7 @@ import thing.ThingFactory;
 import utils.Array2D;
 import utils.Dimension;
 import world.blueprint.Blueprint;
-import world.blueprint.BlueprintFactory;
+import world.blueprint.BlueprintFactory_Crawler;
 
 /**
  *
@@ -21,7 +21,7 @@ class AreaFactory {
 
     // Get a Blueprint
     final Blueprint<BiomeTerrain> terrainBlueprint =
-        BlueprintFactory.generateWithCrawler(areaSizeInSquares, biome.getBiomeTerrain());
+        BlueprintFactory_Crawler.generate(areaSizeInSquares, biome.getBiomeTerrain());
 
     // Generate Props
     final Array2D<Physical> physicals = generateProps(biome, terrainBlueprint, areaSizeInSquares);

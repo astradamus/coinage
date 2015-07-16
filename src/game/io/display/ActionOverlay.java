@@ -86,22 +86,22 @@ class ActionOverlay {
 
   private static void drawActionIndicator(Graphics2D g, Actor actor) {
 
-    Color color = actor.getActionIndicatorColor();
-    final Coordinate actionTarget = actor.getActionTarget();
+    Color color = actor.getActionComponent().getActionIndicatorColor();
+    final Coordinate actionTarget = actor.getActionComponent().getActionTarget();
     if (actionTarget != null) {
 
       final Game runningGame = GameDisplay.getRunningGame();
 
       AreaCoordinate actionTargetAC = runningGame.getWorld().convertToAreaCoordinate(actionTarget);
 
-      int actionDelay = actor.getTotalActionDelay() + 1;
+      int actionDelay = actor.getActionComponent().getTotalActionDelay() + 1;
 
       int drawX = actionTargetAC.areaX * SQUARE_SIZE;
       int drawY = actionTargetAC.areaY * SQUARE_SIZE;
 
       char character = '+';
 
-      if (runningGame.getPlayerAgent().getActor().isFreeToAct()) {
+      if (runningGame.getPlayerAgent().getActor().getActionComponent().isFreeToAct()) {
         if (actionDelay < 10) {
           character = Integer.toString(actionDelay).charAt(0);
         }

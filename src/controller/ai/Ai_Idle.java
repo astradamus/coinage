@@ -52,7 +52,7 @@ public class Ai_Idle extends Behavior {
       }
 
       // On occasion, turn one grade to the left or the right.
-      if (getActor().isFreeToAct() && Game.RANDOM.nextInt(100) < 1) {
+      if (getActor().getActionComponent().isFreeToAct() && Game.RANDOM.nextInt(100) < 1) {
 
         Direction turnTo = getActor().getFacing();
 

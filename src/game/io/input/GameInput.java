@@ -189,7 +189,7 @@ public class GameInput {
   private static void receiveDirectionsCleared() {
 
     if (targetCursor == null) {
-      runningGame.getActivePlayerActor().doNotRepeatAction();
+      runningGame.getActivePlayerActor().getActionComponent().doNotRepeatAction();
       terminateRepeatingMoveTimer();
     }
     else {
@@ -227,9 +227,12 @@ public class GameInput {
   }
 
 
+  /**
+   * Only delay move repeat when we start moving from being stopped. Prevents delay from
+   * occurring each time we change directions.
+   */
   private static boolean shouldDelayMoveRepeat() {
-    return runningGame.getActivePlayerActor()
-        .isFreeToAct(); // Prevents re-delay when changing directions.
+    return runningGame.getActivePlayerActor().getActionComponent().isFreeToAct();
   }
 
 

@@ -32,7 +32,7 @@ public class GameEngine {
 
           TimeMode timeMode = TIME_MODE.peek();
           if (timeMode == TimeMode.LIVE || (timeMode == TimeMode.PRECISION && !runningGame
-              .getActivePlayerActor().isFreeToAct())) {
+              .getActivePlayerActor().getActionComponent().isFreeToAct())) {
             runningGame.update();
           }
 

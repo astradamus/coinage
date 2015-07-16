@@ -119,7 +119,7 @@ public class Ai_Retreat extends Behavior {
   public void onActorTurnComplete() {
 
     // If we have no action queued, retreat directly away from our pursuer.
-    if (getActor().isFreeToAct()) {
+    if (getActor().getActionComponent().isFreeToAct()) {
       retreat();
     }
 

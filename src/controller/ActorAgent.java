@@ -41,7 +41,7 @@ public abstract class ActorAgent implements Controller, ActorObserver {
 
   @Override
   public void onUpdate(Executor executor) {
-    actor.onUpdate(executor);
+    actor.getActionComponent().onUpdate(executor);
   }
 
 
@@ -63,7 +63,7 @@ public abstract class ActorAgent implements Controller, ActorObserver {
 
 
   public void attemptAction(Action action) {
-    actor.startAction(action);
+    actor.getActionComponent().startAction(action);
   }
 
 

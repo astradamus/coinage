@@ -73,7 +73,7 @@ public class Ai_Wander extends Behavior {
   @Override
   public void onActorTurnComplete() {
 
-    if (getActor().isFreeToAct()) {
+    if (getActor().getActionComponent().isFreeToAct()) {
       wander();
     }
   }

@@ -131,7 +131,7 @@ public class Ai_Fight extends Behavior {
 
     // If we have no action queued, run the main routine, which will determine whether we should
     // fight, pursue or flee.
-    if (getActor().isFreeToAct()) {
+    if (getActor().getActionComponent().isFreeToAct()) {
       fight();
     }
   }

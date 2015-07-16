@@ -28,7 +28,7 @@ public class PlayerAgent extends ActorAgent {
 
   @Override
   public void attemptAction(Action action) {
-    getActor().startAction(action.playerIsActor());
+    getActor().getActionComponent().startAction(action.playerIsActor());
   }
 
 

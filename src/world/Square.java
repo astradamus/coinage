@@ -1,5 +1,6 @@
 package world;
 
+import game.io.GameResources;
 import game.physical.Physical;
 import game.physical.PhysicalFlag;
 
@@ -14,11 +15,9 @@ public class Square {
   private final Terrain terrain;
   private final List<Physical> locatedHere;
 
-  public Square(Terrain terrain) {
-
-    this.terrain = terrain;
+  Square(String terrainTypeID) {
+    this.terrain = GameResources.getTerrainTypeByID(terrainTypeID).getRandomVariation();
     this.locatedHere = new ArrayList<>();
-
   }
 
 

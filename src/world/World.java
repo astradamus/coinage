@@ -1,10 +1,10 @@
 package world;
 
 import game.Game;
+import utils.Array2D;
 import utils.Dimension;
+import utils.Utils;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class World {
 
-  private final Area[][] areas;
+  private final Array2D<Area> areas;
 
   private final Dimension worldSizeInAreas;
   private final Dimension areaSizeInSquares;
@@ -21,11 +21,11 @@ public class World {
   private final Informer informer = new Informer();
 
 
-  World(Area[][] areas, Dimension areaSizeInSquares) {
+  World(Array2D<Area> areas, Dimension areaSizeInSquares) {
 
     this.areas = areas;
 
-    this.worldSizeInAreas = new Dimension(areas[0].length, areas.length);
+    this.worldSizeInAreas = areas.getDimension();
     this.areaSizeInSquares = areaSizeInSquares;
 
     int worldWidthInSquares = worldSizeInAreas.getWidth() * areaSizeInSquares.getWidth();
@@ -42,30 +42,20 @@ public class World {
 
 
   public Set<Area> getAllAreas() {
-    Set<Area> all = new HashSet<>();
-    for (int y = 0; y < worldSizeInAreas.getHeight(); y++) {
-      all.addAll(Arrays.asList(areas[y]));
-    }
-    return all;
+    return areas.toSet();
   }
 
 
   public Set<Area> getAllAreasWithinRange(Coordinate target, int radius) {
     final MapCoordinate worldTarget = convertToMapCoordinate(target);
-    Set<Area> all = new HashSet<>();
-    for (int y = worldTarget.worldAreasY - radius; y <= worldTarget.worldAreasY + radius; y++) {
-      if (y < 0 || y >= worldSizeInAreas.getHeight()) {
-        continue;
-      }
-      for (int x = worldTarget.worldAreasX - radius; x <= worldTarget.worldAreasX + radius; x++) {
-        if (x < 0 || x >= worldSizeInAreas.getWidth()) {
-          continue;
-        }
 
-        all.add(areas[y][x]);
-      }
-    }
-    return all;
+    final int offX = Utils.clamp(worldTarget.worldAreasX - radius, 0, worldTarget.worldAreasX);
+    final int offY = Utils.clamp(worldTarget.worldAreasY - radius, 0, worldTarget.worldAreasY);
+    final int diameter = radius * 2 + 1;
+    final int width = Utils.clamp(offX + diameter, 0, worldSizeInAreas.getWidth()) - offX;
+    final int height = Utils.clamp(offY + diameter, 0, worldSizeInAreas.getHeight()) - offY;
+
+    return areas.view(new Dimension(width, height), offX, offY).toSet();
   }
 
 
@@ -136,7 +126,7 @@ public class World {
     if (!validateCoordinate(mapCoordinate)) {
       return null;
     }
-    return areas[mapCoordinate.worldAreasY][mapCoordinate.worldAreasX];
+    return areas.get(mapCoordinate.worldAreasX, mapCoordinate.worldAreasY);
   }
 
 

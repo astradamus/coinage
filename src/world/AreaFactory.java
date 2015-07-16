@@ -1,10 +1,12 @@
 package world;
 
 import game.Game;
-import game.io.GameResources;
 import game.physical.Physical;
 import thing.ThingFactory;
+import utils.Array2D;
 import utils.Dimension;
+import world.blueprint.Blueprint;
+import world.blueprint.BlueprintFactory;
 
 /**
  *
@@ -17,69 +19,59 @@ class AreaFactory {
 
   public static Area standardGeneration(Biome biome, Dimension areaSizeInSquares) {
 
-    final int width = areaSizeInSquares.getWidth();
-    final int height = areaSizeInSquares.getHeight();
+    // Get a Blueprint
+    final Blueprint<BiomeTerrain> terrainBlueprint =
+        BlueprintFactory.generateWithCrawler(areaSizeInSquares, biome.getBiomeTerrain());
 
-    // Get a WeightMap
-    final WeightMap terrainWeightMap =
-        WeightMapFactory.generateWithCrawler(areaSizeInSquares, biome.terrainWeights);
+    // Generate Props
+    final Array2D<Physical> physicals = generateProps(biome, terrainBlueprint, areaSizeInSquares);
 
-    // Generate Features
-    final Physical[][] physicals = generateFeatures(biome, terrainWeightMap, width, height);
+    // Produce square map from Blueprint
+    final Array2D<Square> squares =
+        terrainBlueprint.build().map(biomeTerrain -> new Square(biomeTerrain.getTerrainTypeID()));
 
-    // Produce square map from WeightMap
-    final Square[][] squares = new Square[height][width];
-
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-
-        final String terrainTypeID = biome.terrainTypeIDs[terrainWeightMap.weightMap[y][x]];
-        final Terrain terrain =
-            GameResources.getTerrainTypeByID(terrainTypeID).getRandomVariation();
-        final Square square = new Square(terrain);
-        final Physical physical = physicals[y][x];
-
+    // Add props to square map.
+    for (int y = 0; y < areaSizeInSquares.getHeight(); y++) {
+      for (int x = 0; x < areaSizeInSquares.getWidth(); x++) {
+        final Physical physical = physicals.get(x, y);
         if (physical != null) {
-          square.put(physical);
+          squares.get(x, y).put(physical);
         }
-
-        squares[y][x] = square;
       }
     }
 
-    return new Area(biome, squares);
+    return new Area(biome, squares.unmodifiableView(squares.getDimension(), 0, 0));
   }
 
 
-  private static Physical[][] generateFeatures(Biome biome, WeightMap terrainWeightMap, int width,
-      int height) {
+  private static Array2D<Physical> generateProps(Biome biome, Blueprint<BiomeTerrain> blueprint,
+      Dimension dimension) {
 
-    Physical[][] physicals = new Physical[height][width];
+    final Array2D<Physical> physicals = new Array2D<>(dimension);
 
-    for (int terrainTypeIndex = 0; terrainTypeIndex < biome.terrainTypeIDs.length;
-        terrainTypeIndex++) {
+    // For each terrain classification in the biome...
+    for (BiomeTerrain biomeTerrain : biome.getBiomeTerrain()) {
 
-      for (int featureIndex = 0; featureIndex < biome.featureIDs[terrainTypeIndex].length;
-          featureIndex++) {
+      // For each prop classification in the terrain...
+      for (BiomeProp biomeProp : biomeTerrain.getBiomeProps()) {
 
-        String featureID = biome.featureIDs[terrainTypeIndex][featureIndex];
+        // Retrieve the feature ID and calculate how many of the feature we should try to place.
+        final String featureID = biomeProp.getThingTemplateID();
+        int featureCount =
+            (int) (blueprint.getFeatureCount(biomeTerrain) * biomeProp.getFrequency());
 
-        int featureCount = (int) (terrainWeightMap.distribution[terrainTypeIndex]
-            * biome.featureFrequencies[terrainTypeIndex][featureIndex]);
-
-        // pick random points until we've picked a matching terrain that has no physicals, then
-        //   place the feature and continue the search until we've placed all the features or
-        //   searched for too long
+        // Pick random points until we've picked a matching terrain that has no physicals, then
+        // place the feature and continue the search--until we've placed all the features or we've
+        // searched for too long.
         int searchLimit = 10000;
-
         while (featureCount > 0 && searchLimit > 0) {
           searchLimit--;
 
-          int x = Game.RANDOM.nextInt(width);
-          int y = Game.RANDOM.nextInt(height);
+          int x = Game.RANDOM.nextInt(dimension.getWidth());
+          int y = Game.RANDOM.nextInt(dimension.getHeight());
 
-          if (terrainWeightMap.weightMap[y][x] == terrainTypeIndex && physicals[y][x] == null) {
-            physicals[y][x] = ThingFactory.makeThing(featureID);
+          if (blueprint.get(x, y) == biomeTerrain && physicals.get(x, y) == null) {
+            physicals.put(ThingFactory.makeThing(featureID), x, y);
             featureCount--;
             searchLimit = 10000;
           }
@@ -89,6 +81,7 @@ class AreaFactory {
         }
       }
     }
+
     return physicals;
   }
 }

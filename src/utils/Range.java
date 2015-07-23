@@ -43,4 +43,16 @@ public abstract class Range<E> {
 
   }
 
+  public E getAverageElement() {
+    return getTypeValue.apply((minimum+maximum)/2);
+  }
+
+  public E getMinimumElement() {
+    return getTypeValue.apply(minimum);
+  }
+
+  public E getMaximumElement() {
+    return getTypeValue.apply(maximum);
+  }
+
 }

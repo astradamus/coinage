@@ -3,6 +3,7 @@ package actor;
 import actor.action.ActionComponent;
 import actor.attribute.AttributeComponent;
 import actor.inventory.Inventory;
+import actor.skill.SkillComponent;
 import actor.stats.Health;
 import controller.ActorObserver;
 import game.Direction;
@@ -24,8 +25,8 @@ public class Actor extends Physical {
   private static final EnumSet<PhysicalFlag> STANDARD_FLAGS =
       EnumSet.of(PhysicalFlag.BLOCKING, PhysicalFlag.IMMOVABLE);
 
-
   private final AttributeComponent attributeComponent;
+  private final SkillComponent skillComponent;
   private final Health health;
   private final Inventory inventory;
   private final ActionComponent actionComponent;
@@ -51,6 +52,7 @@ public class Actor extends Physical {
 
     // Construct components.
     attributeComponent = new AttributeComponent(aT);
+    skillComponent = new SkillComponent(this);
     health = new Health(this);
     inventory = new Inventory(ThingFactory.makeThing(aT.naturalWeaponID));
     actionComponent = new ActionComponent(this);
@@ -78,6 +80,11 @@ public class Actor extends Physical {
    */
   public AttributeComponent getAttributeComponent() {
     return attributeComponent;
+  }
+
+
+  public SkillComponent getSkillComponent() {
+    return skillComponent;
   }
 
 

@@ -17,7 +17,7 @@ public enum Biome implements BlueprintFeature {
 
   GRASSLAND(8, new Appearance('G', new Color(7, 140, 0), new Color(8, 96, 0)),
 
-      new BiomeTerrain("GRASS", 40, CrawlerStyle.LONG_BLOB,
+      new BiomeTerrain("GRASS", 30, CrawlerStyle.LONG_BLOB,
           new BiomeProp("TREE", 0.02)),
       new BiomeTerrain("DIRT", 3, CrawlerStyle.LUMPY_ROPE,
           new BiomeProp("TREE", 0.01)),
@@ -27,10 +27,10 @@ public enum Biome implements BlueprintFeature {
 
   FOREST(4, new Appearance('F', new Color(28, 82, 0), new Color(3, 33, 0)),
 
-      new BiomeTerrain("GRASS", 32, CrawlerStyle.LONG_BLOB,
+      new BiomeTerrain("GRASS", 30, CrawlerStyle.LONG_BLOB,
           new BiomeProp("TREE", 0.12),
           new BiomeProp("UNDERGROWTH", 0.12)),
-      new BiomeTerrain("DIRT", 2, CrawlerStyle.TRAILS,
+      new BiomeTerrain("DIRT", 5, CrawlerStyle.TRAILS,
           new BiomeProp("TREE", 0.03)),
       new BiomeTerrain("ROCK", 1, CrawlerStyle.AMOEBA,
           new BiomeProp("BOULDER", 0.001),
@@ -38,9 +38,9 @@ public enum Biome implements BlueprintFeature {
 
   CRAGS(2, new Appearance('C', new Color(205, 205, 205), new Color(85, 85, 85)),
 
-      new BiomeTerrain("GRASS", 1, CrawlerStyle.TRAILS,
+      new BiomeTerrain("GRASS", 1, CrawlerStyle.AMOEBA,
           new BiomeProp("TREE", 0.004)),
-      new BiomeTerrain("DIRT", 2, CrawlerStyle.TRAILS,
+      new BiomeTerrain("DIRT", 3, CrawlerStyle.TRAILS,
           new BiomeProp("TREE", 0.002)),
       new BiomeTerrain("ROCK", 16, CrawlerStyle.LONG_BLOB,
           new BiomeProp("BOULDER", 0.15),
@@ -51,27 +51,27 @@ public enum Biome implements BlueprintFeature {
       new BiomeTerrain("SAND", 20, CrawlerStyle.TRAILS,
           new BiomeProp("DUNE", 0.6),
           new BiomeProp("CACTUS", 0.005)),
-      new BiomeTerrain("SANDSTONE", 1, CrawlerStyle.TRAILS,
+      new BiomeTerrain("SANDSTONE", 1, CrawlerStyle.AMOEBA,
           new BiomeProp("BOULDER_SANDSTONE", 0.003),
           new BiomeProp("CACTUS", 0.002))),
 
   BADLANDS(1, new Appearance('B', new Color(144, 71, 0), new Color(76, 14, 0)),
 
-      new BiomeTerrain("DIRT", 1, CrawlerStyle.TRAILS),
-      new BiomeTerrain("SAND", 3, CrawlerStyle.TRAILS,
+      new BiomeTerrain("DIRT", 7, CrawlerStyle.TRAILS),
+      new BiomeTerrain("SAND", 1, CrawlerStyle.LONG_BLOB,
           new BiomeProp("CACTUS", 0.001)),
-      new BiomeTerrain("SANDSTONE", 30, CrawlerStyle.AMOEBA,
+      new BiomeTerrain("SANDSTONE", 8, CrawlerStyle.AMOEBA,
           new BiomeProp("BOULDER_SANDSTONE", 0.05),
           new BiomeProp("CACTUS", 0.004))),
 
   SWAMP(1, new Appearance('S', new Color(71, 0, 63), new Color(25, 0, 48)),
 
-      new BiomeTerrain("MARSH", 2, CrawlerStyle.AMOEBA,
+      new BiomeTerrain("MARSH", 1, CrawlerStyle.LONG_BLOB,
           new BiomeProp("TREE_SWAMP", 0.02),
-          new BiomeProp("SHARKWEED", 0.1)),
-      new BiomeTerrain("MUCK", 16, CrawlerStyle.TRAILS,
+          new BiomeProp("SHARKWEED", 0.25)),
+      new BiomeTerrain("MUCK", 4, CrawlerStyle.TRAILS,
           new BiomeProp("TREE_SWAMP", 0.02),
-          new BiomeProp("UNDERGROWTH", 0.04),
+          new BiomeProp("UNDERGROWTH", 0.1),
           new BiomeProp("OOZE", 0.004)));
 
   public final Appearance worldMapAppearance;

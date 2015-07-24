@@ -9,6 +9,8 @@ public enum  PhysicalFlag {
   BLOCKING,
   IMMOVABLE,
 
+  CAN_CHOP,
+  CHOPPABLE,
 
   // ACTORS
   FOUR_LEGGED,

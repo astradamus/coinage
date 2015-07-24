@@ -1,6 +1,7 @@
 package world;
 
 import world.blueprint.BlueprintFeature;
+import world.blueprint.CrawlerStyle;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,19 +15,23 @@ import java.util.List;
 public class BiomeTerrain implements BlueprintFeature {
   private final String terrainTypeID;
   private final int weight;
+  private final CrawlerStyle crawlerStyle;
   private final List<BiomeProp> biomeProps;
 
 
-  public BiomeTerrain(String terrainTypeID, int weight) {
+  public BiomeTerrain(String terrainTypeID, int weight, CrawlerStyle crawlerStyle) {
     this.terrainTypeID = terrainTypeID;
     this.weight = weight;
+    this.crawlerStyle = crawlerStyle;
     this.biomeProps = Collections.emptyList();
   }
 
 
-  public BiomeTerrain(String terrainTypeID, int weight, BiomeProp... biomeProps) {
+  public BiomeTerrain(String terrainTypeID, int weight, CrawlerStyle crawlerStyle,
+      BiomeProp... biomeProps) {
     this.terrainTypeID = terrainTypeID;
     this.weight = weight;
+    this.crawlerStyle = crawlerStyle;
     this.biomeProps = Collections.unmodifiableList(Arrays.asList(biomeProps));
   }
 
@@ -43,5 +48,11 @@ public class BiomeTerrain implements BlueprintFeature {
 
   public List<BiomeProp> getBiomeProps() {
     return biomeProps;
+  }
+
+
+  @Override
+  public CrawlerStyle getCrawlerStyle() {
+    return crawlerStyle;
   }
 }

@@ -1,8 +1,8 @@
-id,name,symbols,colors,damage_type,damage,muscle_bonus,dmg_consistency,attack_speed,reflex_atk_bonus,recovery_speed,reflex_rec_bonus
-WP_NATURAL_FISTS,fist,N,255:255:0,STRIKING,1,2.25,0.25,2,0.10,2,0.15
-WP_NATURAL_FANGS,fangs,N,255:255:0,BITING,5,1.0,0.50,2,0.10,2,0.15
-WP_NATURAL_CLAWS,claws,N,255:255:0,SHREDDING,4,0.75,0.30,2,0.15,2,0.20
-WP_CLUB,oaken club,1634,255:255:0,CRUSHING,4,1.0,0.50,4,0.10,2,0.10
-WP_SWORD,sword,134,255:255:0,SLASHING,6,1.0,0.80,3,0.15,2,0.10
-WP_AXE,axe,1006,255:255:0,CLEAVING,10,1.25,0.90,5,0.15,3,0.15
-WP_DAGGER,dagger,647,255:255:0,STABBING,18,0.05,0.30,3,0.17,2,0.25
+id,name,symbols,colors,damage_type,damage,muscle_bonus,dmg_consistency,attack_speed,reflex_atk_bonus,recovery_speed,reflex_rec_bonus,flags
+WP_NATURAL_FISTS,fist,N,255:255:0,STRIKING,1,2.25,0.25,2,0.10,2,0.15,
+WP_NATURAL_FANGS,fangs,N,255:255:0,BITING,5,1.0,0.50,2,0.10,2,0.15,
+WP_NATURAL_CLAWS,claws,N,255:255:0,SHREDDING,4,0.75,0.30,2,0.15,2,0.20,
+WP_CLUB,oaken club,1634,255:255:0,CRUSHING,4,1.0,0.50,4,0.10,2,0.10,
+WP_SWORD,sword,134,255:255:0,SLASHING,6,1.0,0.80,3,0.15,2,0.10,
+WP_AXE,axe,1006,255:255:0,CLEAVING,10,1.25,0.90,5,0.15,3,0.15,
+WP_DAGGER,dagger,647,255:255:0,STABBING,18,0.05,0.30,3,0.17,2,0.25,

@@ -55,12 +55,12 @@ public enum Biome implements BlueprintFeature {
           new BiomeProp("BOULDER_SANDSTONE", 0.003),
           new BiomeProp("CACTUS", 0.002))),
 
-  BADLANDS(1, new Appearance('B', new Color(144, 71, 0), new Color(76, 14, 0)),
+  BADLANDS(11, new Appearance('B', new Color(144, 71, 0), new Color(76, 14, 0)),
 
-      new BiomeTerrain("DIRT", 7, CrawlerStyle.TRAILS),
+      new BiomeTerrain("DIRT", 8, CrawlerStyle.TRAILS),
       new BiomeTerrain("SAND", 1, CrawlerStyle.LONG_BLOB,
           new BiomeProp("CACTUS", 0.001)),
-      new BiomeTerrain("SANDSTONE", 8, CrawlerStyle.AMOEBA,
+      new BiomeTerrain("SANDSTONE", 6, CrawlerStyle.AMOEBA,
           new BiomeProp("BOULDER_SANDSTONE", 0.05),
           new BiomeProp("CACTUS", 0.004))),
 

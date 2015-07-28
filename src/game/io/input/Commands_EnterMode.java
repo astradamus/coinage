@@ -2,8 +2,8 @@ package game.io.input;
 
 import game.TimeMode;
 import game.io.GameEngine;
-import game.io.display.Event;
-import game.io.display.EventLog;
+import game.io.better_ui.Event;
+import game.io.better_ui.EventLog;
 
 import java.awt.event.KeyEvent;
 

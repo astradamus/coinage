@@ -2,8 +2,8 @@ package actor.stats;
 
 import actor.Actor;
 import actor.attribute.Attribute;
-import game.io.display.Event;
-import game.io.display.EventLog;
+import game.io.better_ui.Event;
+import game.io.better_ui.EventLog;
 import game.physical.PhysicalFlag;
 
 /**

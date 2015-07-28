@@ -5,8 +5,8 @@ import controller.ActorAgent;
 import controller.action.Action;
 import controller.action.ActionFlag;
 import game.Game;
-import game.io.display.Event;
-import game.io.display.EventLog;
+import game.io.better_ui.Event;
+import game.io.better_ui.EventLog;
 import world.Area;
 import world.World;
 

@@ -1,8 +1,8 @@
 package controller.action;
 
 import actor.Actor;
-import game.io.display.Event;
-import game.io.display.EventLog;
+import game.io.better_ui.Event;
+import game.io.better_ui.EventLog;
 import game.physical.Physical;
 import thing.Thing;
 import world.World;

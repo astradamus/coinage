@@ -50,22 +50,40 @@ public enum Direction {
 
   public static Direction fromKeyEvent(KeyEvent keyEvent) {
     switch (keyEvent.getKeyCode()) {
+
       case KeyEvent.VK_HOME:
+      case KeyEvent.VK_Q:
         return NORTH_WEST;
+
       case KeyEvent.VK_UP:
+      case KeyEvent.VK_W:
         return NORTH;
+
       case KeyEvent.VK_PAGE_UP:
+      case KeyEvent.VK_E:
         return NORTH_EAST;
+
       case KeyEvent.VK_RIGHT:
+      case KeyEvent.VK_D:
         return EAST;
+
       case KeyEvent.VK_PAGE_DOWN:
+      case KeyEvent.VK_C:
         return SOUTH_EAST;
+
       case KeyEvent.VK_DOWN:
+      case KeyEvent.VK_S:
+      case KeyEvent.VK_X:
         return SOUTH;
+
       case KeyEvent.VK_END:
+      case KeyEvent.VK_Z:
         return SOUTH_WEST;
+
       case KeyEvent.VK_LEFT:
+      case KeyEvent.VK_A:
         return WEST;
+
       default:
         return null;
     }

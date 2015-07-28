@@ -3,9 +3,9 @@ package game.io.input;
 import game.Game;
 import game.TimeMode;
 import game.io.GameEngine;
+import game.io.better_ui.EventLog;
 import game.io.display.DisplayElement;
 import game.io.display.DisplayElement_Text;
-import game.io.display.EventLog;
 import world.Coordinate;
 
 import java.util.Arrays;

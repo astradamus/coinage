@@ -2,10 +2,7 @@ package game.io;
 
 import game.Game;
 import game.TimeMode;
-import game.io.display.GameDisplay;
-import game.io.input.GameInput;
 
-import java.security.InvalidParameterException;
 import java.util.Stack;
 
 /**
@@ -25,10 +22,7 @@ public class GameEngine {
       synchronized (this) {
         while (!thread.isInterrupted()) {
 
-          // Freeze the game (stop sending state updates) if the Engine has been paused, but
-          //   continue sending Display updates.
-
-          GameInput.onUpdate();
+          // Freeze the game (stop sending state updates) if the Engine has been paused.
 
           TimeMode timeMode = TIME_MODE.peek();
           if (timeMode == TimeMode.LIVE || (timeMode == TimeMode.PRECISION && !runningGame
@@ -36,7 +30,6 @@ public class GameEngine {
             runningGame.update();
           }
 
-          GameDisplay.onUpdate();
 
           try {
             wait(MILLISECONDS_PER_HEARTBEAT);
@@ -99,7 +92,7 @@ public class GameEngine {
   }
 
 
-  public static void loadRunningGame(Game runningGame) {
+  static void loadRunningGame(Game runningGame) {
     if (GameEngine.runningGame != null) {
       throw new IllegalStateException(
           "Already running a game, must first call unloadRunningGame().");
@@ -108,15 +101,7 @@ public class GameEngine {
   }
 
 
-  /**
-   * @param runningGame Must be supplied to ensure this method is only called from high places.
-   * @throws InvalidParameterException If the supplied game is null or does not match the currently
-   *                                   running game.
-   */
-  public static void unloadRunningGame(Game runningGame) {
-    if (GameEngine.runningGame != runningGame) {
-      throw new InvalidParameterException("Game parameter does not match currently running game.");
-    }
+  static void unloadRunningGame() {
     GameEngine.runningGame = null;
   }
 }

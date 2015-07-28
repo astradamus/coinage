@@ -1,4 +1,4 @@
-package game.io.display;
+package game.io.better_ui;
 
 import java.awt.Color;
 

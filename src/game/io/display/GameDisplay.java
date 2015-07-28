@@ -68,7 +68,7 @@ public class GameDisplay {
           "Already running a game, must first call unloadRunningGame().");
     }
     GameDisplay.runningGame = activeGame;
-    EventLog.initialize();
+//    EventLog.initialize();
   }
 
 

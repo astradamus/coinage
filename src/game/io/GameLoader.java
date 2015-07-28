@@ -2,8 +2,7 @@ package game.io;
 
 import game.Game;
 import game.GameBuilder;
-import game.io.display.GameDisplay;
-import game.io.input.GameInput;
+import game.io.better_ui.GameFrame;
 import utils.Dimension;
 
 /**
@@ -12,11 +11,7 @@ import utils.Dimension;
 class GameLoader {
 
   private static Game runningGame;
-
-  static {
-    GameInput.initialize();
-    GameDisplay.addKeyListeners(GameInput.getKeyListeners());
-  }
+  private static GameFrame runningGameFrame;
 
 
   private static void load(Game game) {
@@ -24,9 +19,7 @@ class GameLoader {
       throw new IllegalStateException("Already running a game, must first call unload().");
     }
     runningGame = game;
-    GameInput.loadRunningGame(game);
-    GameDisplay.loadRunningGame(game);
-    GameDisplay.recalculateSize();
+    runningGameFrame = new GameFrame(game, 20);
     GameEngine.loadRunningGame(game);
     GameEngine.start();
   }
@@ -37,10 +30,9 @@ class GameLoader {
       throw new IllegalStateException("No active Game to unload!");
     }
     GameEngine.stop();
-    GameEngine.unloadRunningGame(runningGame);
-    GameDisplay.unloadRunningGame(runningGame);
-    GameInput.unloadRunningGame(runningGame);
+    GameEngine.unloadRunningGame();
     runningGame = null;
+    runningGameFrame = null;
   }
 
 

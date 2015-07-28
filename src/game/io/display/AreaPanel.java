@@ -1,6 +1,7 @@
 package game.io.display;
 
 import game.Game;
+import game.io.better_ui.EventLog;
 import game.io.input.GameInput;
 import game.physical.Physical;
 import world.AreaCoordinate;

@@ -2,8 +2,8 @@ package game.io.input;
 
 import controller.action.Attacking;
 import controller.player.PlayerAgent;
-import game.io.display.Event;
-import game.io.display.EventLog;
+import game.io.better_ui.Event;
+import game.io.better_ui.EventLog;
 import world.Coordinate;
 
 import java.awt.event.KeyEvent;

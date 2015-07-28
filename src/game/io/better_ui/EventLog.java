@@ -1,12 +1,8 @@
-package game.io.display;
+package game.io.better_ui;
 
-import game.Game;
 import utils.Dimension;
 import utils.Utils;
-import world.Area;
-import world.AreaCoordinate;
 import world.Coordinate;
-import world.World;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -37,7 +33,7 @@ public class EventLog {
   private static final long eventLifeSpan = 8000;
 
   // VALUES IN PIXELS
-  private static final int lineHeight = GameDisplay.SQUARE_SIZE / 9 * 8;
+  private static final int lineHeight = 20 / 9 * 8; // todo 20 should be areapanel.squaresize
   private static final int lineSpacerHeight = lineHeight / 3;
 
   // FONTS
@@ -81,8 +77,8 @@ public class EventLog {
   static void initialize() {
     loggedEvents.clear();
 
-    final int squareSize = GameDisplay.SQUARE_SIZE;
-    final Dimension areaSize = GameDisplay.getRunningGame().getWorld().getAreaSizeInSquares();
+    final int squareSize = 20; // todo 20 should be areapanel.squaresize
+    final Dimension areaSize = new Dimension(64,64); // todo should refer to game.world.areasize
 
     drawWidth = (int) (squareSize * areaSize.getWidth() * widthAsProportionOfAreaPanel);
     drawX = areaSize.getWidth() / 2 * squareSize - drawWidth / 2;
@@ -229,14 +225,14 @@ public class EventLog {
    */
   public static void registerEventIfPlayerIsLocal(Coordinate nearTo, Color color, String message) {
 
-    final Game runningGame = GameDisplay.getRunningGame();
-    final World world = runningGame.getWorld();
-    final Area playerArea = world.getArea(runningGame.getActivePlayerActor().getCoordinate());
-    final Area eventArea = world.getArea(nearTo);
+//    final Game runningGame = GameDisplay.getRunningGame();
+//    final World world = runningGame.getWorld();
+//    final Area playerArea = world.getArea(runningGame.getActivePlayerActor().getCoordinate());
+//    final Area eventArea = world.getArea(nearTo);
 
-    if (playerArea == eventArea) {
-      registerEvent(color, message);
-    }
+//    if (playerArea == eventArea) {
+      registerEvent(color, message); // todo restore functionality
+//    }
   }
 
 
@@ -301,11 +297,12 @@ public class EventLog {
    * where the log usually is.
    */
   private static boolean getIsPlayerBelowSwapLine() {
-    final Game runningGame = GameDisplay.getRunningGame();
-    final AreaCoordinate playerAt = runningGame.getWorld()
-        .convertToAreaCoordinate(runningGame.getActivePlayerActor().getCoordinate());
-
-    return playerAt.areaY > topOrBottomSwapLine;
+//    final Game runningGame = GameDisplay.getRunningGame();
+//    final AreaCoordinate playerAt = runningGame.getWorld()
+//        .convertToAreaCoordinate(runningGame.getActivePlayerActor().getCoordinate());
+//
+//    return playerAt.areaY > topOrBottomSwapLine;
+    return false; // todo restore functionality
   }
 
 

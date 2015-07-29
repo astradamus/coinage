@@ -54,6 +54,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
     new Timer(20, e -> repaint()).start();
 
     this.mouseMenu = new MouseMenu(this, tileSize);
+    EventLog.initialize(game, tileSize);
   }
 
 
@@ -110,6 +111,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 
     ActionOverlay.drawOverlay((Graphics2D) g, tileSize, game);
     mouseMenu.drawOverlay(g);
+    EventLog.drawOverlay((Graphics2D) g);
 
   }
 

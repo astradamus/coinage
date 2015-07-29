@@ -1,8 +1,12 @@
 package game.io.better_ui;
 
+import game.Game;
 import utils.Dimension;
 import utils.Utils;
+import world.Area;
+import world.AreaCoordinate;
 import world.Coordinate;
+import world.World;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -32,13 +36,7 @@ public class EventLog {
   // VALUES IN MILLISECONDS
   private static final long eventLifeSpan = 8000;
 
-  // VALUES IN PIXELS
-  private static final int lineHeight = 20 / 9 * 8; // todo 20 should be areapanel.squaresize
-  private static final int lineSpacerHeight = lineHeight / 3;
-
   // FONTS
-  private static final Font fontSmall = new Font("Monospaced", Font.PLAIN, lineHeight);
-  private static final Font fontSmallBold = new Font("Monospaced", Font.BOLD, lineHeight);
 
   // ALPHA COMPOSITES
   private static final AlphaComposite alphaFaded =
@@ -46,10 +44,17 @@ public class EventLog {
   private static final AlphaComposite alphaVisible =
       AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.80f);
 
+
   // This list stores all logged events since the game started.
   private static final List<Event> loggedEvents = new ArrayList<>();
 
   // These values are calculated when a game is started, because they depend on area size.
+  private static Game game;
+  private static int lineHeight;
+  private static int lineSpacerHeight;
+  private static Font fontSmall;
+  private static Font fontSmallBold;
+
   private static int drawWidth;
   private static int drawX;
   private static double topOrBottomSwapLine;
@@ -74,16 +79,22 @@ public class EventLog {
    * Must be called when a new game is loaded in order for the EventLog to know how big/where to
    * draw itself.
    */
-  static void initialize() {
+  static void initialize(Game game, int tileSize) {
     loggedEvents.clear();
 
-    final int squareSize = 20; // todo 20 should be areapanel.squaresize
-    final Dimension areaSize = new Dimension(64,64); // todo should refer to game.world.areasize
+    EventLog.game = game;
 
-    drawWidth = (int) (squareSize * areaSize.getWidth() * widthAsProportionOfAreaPanel);
-    drawX = areaSize.getWidth() / 2 * squareSize - drawWidth / 2;
+    lineHeight = tileSize / 9 * 8;
+    lineSpacerHeight = lineHeight / 3;
+    fontSmall = new Font("Monospaced", Font.PLAIN, lineHeight);
+    fontSmallBold = new Font("Monospaced", Font.BOLD, lineHeight);
+
+    final Dimension areaSize = game.getWorld().getAreaSizeInSquares();
+
+    drawWidth = (int) (tileSize * areaSize.getWidth() * widthAsProportionOfAreaPanel);
+    drawX = areaSize.getWidth() / 2 * tileSize - drawWidth / 2;
     topOrBottomSwapLine = areaSize.getHeight() * topOrBottomSwapProportion;
-    areaHeightInPixels = squareSize * areaSize.getHeight();
+    areaHeightInPixels = tileSize * areaSize.getHeight();
   }
 
 
@@ -225,14 +236,13 @@ public class EventLog {
    */
   public static void registerEventIfPlayerIsLocal(Coordinate nearTo, Color color, String message) {
 
-//    final Game runningGame = GameDisplay.getRunningGame();
-//    final World world = runningGame.getWorld();
-//    final Area playerArea = world.getArea(runningGame.getActivePlayerActor().getCoordinate());
-//    final Area eventArea = world.getArea(nearTo);
+    final World world = game.getWorld();
+    final Area playerArea = world.getArea(game.getActivePlayerActor().getCoordinate());
+    final Area eventArea = world.getArea(nearTo);
 
-//    if (playerArea == eventArea) {
-      registerEvent(color, message); // todo restore functionality
-//    }
+    if (playerArea == eventArea) {
+      registerEvent(color, message);
+    }
   }
 
 
@@ -249,7 +259,8 @@ public class EventLog {
     final int drawHeight = lineHeight * latestLineCount + lineSpacerHeight;
 
     final int drawY =
-        getIsPlayerBelowSwapLine() ? lineSpacerHeight : areaHeightInPixels - drawHeight;
+        getIsPlayerBelowSwapLine() ? lineSpacerHeight : areaHeightInPixels - drawHeight -
+            lineHeight;
 
     g2d.setComposite(alphaVisible);
 
@@ -297,12 +308,10 @@ public class EventLog {
    * where the log usually is.
    */
   private static boolean getIsPlayerBelowSwapLine() {
-//    final Game runningGame = GameDisplay.getRunningGame();
-//    final AreaCoordinate playerAt = runningGame.getWorld()
-//        .convertToAreaCoordinate(runningGame.getActivePlayerActor().getCoordinate());
-//
-//    return playerAt.areaY > topOrBottomSwapLine;
-    return false; // todo restore functionality
+    final AreaCoordinate playerAt = game.getWorld()
+        .convertToAreaCoordinate(game.getActivePlayerActor().getCoordinate());
+
+    return playerAt.areaY > topOrBottomSwapLine;
   }
 
 

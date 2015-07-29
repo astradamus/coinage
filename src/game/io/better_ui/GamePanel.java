@@ -29,6 +29,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 
   private final Point cursorLocation;
   private Long cursorLocationLastUpdateTime;
+  private boolean shouldShowToolTip;
 
   private Coordinate playerAreaOrigin;
   private MouseMenu mouseMenu;
@@ -59,22 +60,24 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 
+    if (cursorLocationLastUpdateTime != null) {
+      if (System.currentTimeMillis() - cursorLocationLastUpdateTime > 400) {
+        shouldShowToolTip = true;
+      }
+    }
 
-    if (cursorLocationLastUpdateTime != null
-        && System.currentTimeMillis() - cursorLocationLastUpdateTime > 400) {
-
-      // This saves us from having repeating this check when nothing has actually changed.
-      cursorLocationLastUpdateTime = null;
-
+    if (shouldShowToolTip) {
       final Physical physical =
-          game.getWorld().getSquare(
-              playerAreaOrigin.offset(cursorLocation.x, cursorLocation.y)).peek();
+          game.getWorld().getSquare(playerAreaOrigin.offset(cursorLocation.x, cursorLocation.y))
+              .peek();
 
       Color bgColor = physical.getBGColor();
       if (bgColor == null) {
         bgColor = Color.BLACK;
       }
-      mouseMenu.setToolTip(cursorLocation.x, cursorLocation.y, physical.getName(), physical.getColor(), bgColor);
+      mouseMenu
+          .setToolTip(cursorLocation.x, cursorLocation.y, physical.getName(), physical.getColor(),
+              bgColor);
     }
 
 
@@ -112,6 +115,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
     mouseMenu.clear();
     cursorLocation.setLocation(tileX, tileY);
     cursorLocationLastUpdateTime = System.currentTimeMillis();
+    shouldShowToolTip = false;
   }
 
 
@@ -119,6 +123,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
     mouseMenu.clear();
     cursorLocation.setLocation(-1, -1);
     cursorLocationLastUpdateTime = null;
+    shouldShowToolTip = false;
   }
 
 

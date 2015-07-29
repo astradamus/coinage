@@ -12,6 +12,7 @@ import javax.swing.Timer;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -107,7 +108,9 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
       }
     }
 
+    ActionOverlay.drawOverlay((Graphics2D) g, tileSize, game);
     mouseMenu.drawOverlay(g);
+
   }
 
 

@@ -1,6 +1,6 @@
 package controller.player;
 
-import utils.Dimension;
+import utils.ImmutableDimension;
 import world.MapCoordinate;
 
 public class Component_WorldMapRevealed {
@@ -8,7 +8,7 @@ public class Component_WorldMapRevealed {
   private final boolean[][] worldMapRevealed;
 
 
-  public Component_WorldMapRevealed(Dimension worldSizeInAreas) {
+  public Component_WorldMapRevealed(ImmutableDimension worldSizeInAreas) {
     worldMapRevealed = new boolean[worldSizeInAreas.getHeight()][worldSizeInAreas.getWidth()];
   }
 

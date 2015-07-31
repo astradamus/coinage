@@ -3,7 +3,6 @@ package game.io.display;
 import game.TimeMode;
 import game.io.GameEngine;
 import game.physical.Appearance;
-import utils.Dimension;
 import world.Area;
 import world.Coordinate;
 import world.MapCoordinate;

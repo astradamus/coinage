@@ -3,7 +3,7 @@ package game.io.better_ui;
 import game.Game;
 import game.io.better_ui.mouse_control.MouseControl;
 import game.physical.Physical;
-import utils.Dimension;
+import utils.ImmutableDimension;
 import world.AreaCoordinate;
 import world.Coordinate;
 import world.World;
@@ -21,7 +21,7 @@ import java.awt.Graphics2D;
 public class GamePanel extends JPanel {
 
   private final Game game;
-  private final Dimension areaSize;
+  private final ImmutableDimension areaSize;
 
   private final int tileSize;
   private final Font gamePanelFont;

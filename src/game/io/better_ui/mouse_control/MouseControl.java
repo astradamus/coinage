@@ -5,7 +5,7 @@ import game.Game;
 import game.io.better_ui.GamePanel;
 import game.physical.Physical;
 import game.physical.PhysicalFlag;
-import utils.Dimension;
+import utils.ImmutableDimension;
 import world.Coordinate;
 
 import java.awt.Font;
@@ -91,7 +91,7 @@ public class MouseControl implements MouseMotionListener, MouseListener {
     final int tileX = e.getX() / tileSize;
     final int tileY = e.getY() / tileSize;
 
-    final Dimension areaSize = game.getWorld().getAreaSizeInSquares();
+    final ImmutableDimension areaSize = game.getWorld().getAreaSizeInSquares();
     if (tileX >= areaSize.getWidth() || tileY >= areaSize.getHeight()) {
       mouseExited(e);
       return;

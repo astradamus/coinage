@@ -5,7 +5,7 @@ import actor.ActorFactory;
 import controller.ai.AiActorAgent;
 import controller.player.PlayerAgent;
 import thing.ThingFactory;
-import utils.Dimension;
+import utils.ImmutableDimension;
 import world.Coordinate;
 import world.Square;
 import world.World;
@@ -16,7 +16,8 @@ import world.WorldFactory;
  */
 public class GameBuilder {
 
-  public static Game newGame(Dimension areaSizeInSquares, Dimension worldSizeInAreas) {
+  public static Game newGame(ImmutableDimension areaSizeInSquares,
+      ImmutableDimension worldSizeInAreas) {
 
     // produce a map
     World world = WorldFactory.standardGeneration(areaSizeInSquares, worldSizeInAreas);

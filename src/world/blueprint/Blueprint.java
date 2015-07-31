@@ -1,7 +1,7 @@
 package world.blueprint;
 
 import utils.Array2D;
-import utils.Dimension;
+import utils.ImmutableDimension;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,7 +37,7 @@ public class Blueprint<E extends BlueprintFeature> {
    *                   be anything. How this flexibility manifests depends on what method is being
    *                   used to develop the blueprint.
    */
-  Blueprint(Dimension dimension, Set<E> featureSet, double strictness) {
+  Blueprint(ImmutableDimension dimension, Set<E> featureSet, double strictness) {
 
     // Determine number of squares in the area.
     final int squares = dimension.getArea();

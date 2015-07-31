@@ -3,7 +3,7 @@ package game.io;
 import game.Game;
 import game.GameBuilder;
 import game.io.better_ui.GameFrame;
-import utils.Dimension;
+import utils.ImmutableDimension;
 
 /**
  *
@@ -37,6 +37,6 @@ class GameLoader {
 
 
   public static void main(String[] args) {
-    load(GameBuilder.newGame(new Dimension(48, 48), new Dimension(24, 24)));
+    load(GameBuilder.newGame(new ImmutableDimension(48, 48), new ImmutableDimension(24, 24)));
   }
 }

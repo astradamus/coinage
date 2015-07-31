@@ -1,7 +1,7 @@
 package game.io.better_ui;
 
 import game.Game;
-import utils.Dimension;
+import utils.ImmutableDimension;
 import utils.Utils;
 import world.Area;
 import world.AreaCoordinate;
@@ -89,7 +89,7 @@ public class EventLog {
     fontSmall = new Font("Monospaced", Font.PLAIN, lineHeight);
     fontSmallBold = new Font("Monospaced", Font.BOLD, lineHeight);
 
-    final Dimension areaSize = game.getWorld().getAreaSizeInSquares();
+    final ImmutableDimension areaSize = game.getWorld().getAreaSizeInSquares();
 
     drawWidth = (int) (tileSize * areaSize.getWidth() * widthAsProportionOfAreaPanel);
     drawX = areaSize.getWidth() / 2 * tileSize - drawWidth / 2;

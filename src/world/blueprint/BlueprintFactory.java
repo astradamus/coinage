@@ -2,7 +2,7 @@ package world.blueprint;
 
 import game.Direction;
 import game.Game;
-import utils.Dimension;
+import utils.ImmutableDimension;
 import utils.IntegerRange;
 
 import java.awt.Point;
@@ -33,7 +33,8 @@ public final class BlueprintFactory {
    * @param patchMaxRadius  The maximum distance a patch can extend from its center point.
    * @param patchPatchiness The chance each square in a patch will not be applied.
    */
-  public static <E extends BlueprintFeature> Blueprint<E> generateWithPatches(Dimension dimension,
+  public static <E extends BlueprintFeature> Blueprint<E> generateWithPatches(
+      ImmutableDimension dimension,
       Set<E> featureSet, int patchMaxRadius, double patchPatchiness) {
 
     final Blueprint<E> blueprint = new Blueprint<>(dimension, featureSet, patchesStrictness);
@@ -67,7 +68,7 @@ public final class BlueprintFactory {
 
 
   private static <T extends BlueprintFeature> void placePatch(Blueprint<T> bundle,
-      Dimension dimension, T placingFeature, int patchMaxRadius, double patchPatchiness) {
+      ImmutableDimension dimension, T placingFeature, int patchMaxRadius, double patchPatchiness) {
 
     final int patchRadius = Game.RANDOM.nextInt(patchMaxRadius);
     final int x = Game.RANDOM.nextInt(dimension.getWidth());
@@ -78,7 +79,7 @@ public final class BlueprintFactory {
       for (int adjX = x - patchRadius; adjX < x + patchRadius; adjX++) {
 
         // don't go outside map boundaries
-        if (!dimension.getCoordinateIsWithinBounds(adjX, adjY)) {
+        if (!dimension.contains(adjX, adjY)) {
           continue;
         }
 
@@ -98,7 +99,8 @@ public final class BlueprintFactory {
    * has already added, and will jump to a random new position if it has too many of these
    * collisions in a row or it walks off the edge of the map.
    */
-  public static <T extends BlueprintFeature> Blueprint<T> generateWithCrawler(Dimension dimension,
+  public static <T extends BlueprintFeature> Blueprint<T> generateWithCrawler(
+      ImmutableDimension dimension,
       Set<T> featureSet) {
 
     final Blueprint<T> blueprint = new Blueprint<>(dimension, featureSet, crawlerStrictness);
@@ -138,7 +140,7 @@ public final class BlueprintFactory {
         position.translate(direction.relativeX, direction.relativeY);
 
         // If we exceed the map bounds or the collision limit, we must start a new walk.
-        if (!dimension.getCoordinateIsWithinBounds(position)
+        if (!dimension.contains(position)
             || featureCollisions == collisionLimit) {
           position.setLocation(Game.RANDOM.nextInt(width), Game.RANDOM.nextInt(height));
           featureCollisions = 0;  // Reset to zero since we moved

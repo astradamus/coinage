@@ -1,7 +1,7 @@
 package world;
 
 import utils.Array2D;
-import utils.Dimension;
+import utils.ImmutableDimension;
 import world.blueprint.Blueprint;
 import world.blueprint.BlueprintFactory;
 
@@ -14,7 +14,8 @@ public class WorldFactory {
   private static final double STDGEN_PATCH_PATCHINESS = 0.000; // % of patch candidates to discard.
 
 
-  public static World standardGeneration(Dimension areaSizeInSquares, Dimension worldSizeInAreas) {
+  public static World standardGeneration(
+      ImmutableDimension areaSizeInSquares, ImmutableDimension worldSizeInAreas) {
 
     // Get a Blueprint
     Blueprint<Biome> blueprint = BlueprintFactory

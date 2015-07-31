@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 public class Array2D<E> implements Iterable<E> {
 
-  private final Dimension dimension;
+  private final ImmutableDimension dimension;
   private final Object[][] elementData;
 
 
@@ -40,7 +40,7 @@ public class Array2D<E> implements Iterable<E> {
   /**
    * Constructs this Array2D with all values set to null.
    */
-  public Array2D(Dimension dimension) {
+  public Array2D(ImmutableDimension dimension) {
     this.dimension = dimension;
     elementData = new Object[dimension.getHeight()][dimension.getWidth()];
   }
@@ -49,7 +49,7 @@ public class Array2D<E> implements Iterable<E> {
   /**
    * Constructs this Array2D with all values set to {@code defaultValue}.
    */
-  public Array2D(Dimension dimension, E defaultValue) {
+  public Array2D(ImmutableDimension dimension, E defaultValue) {
     this.dimension = dimension;
     elementData = new Object[dimension.getHeight()][dimension.getWidth()];
     setAll(defaultValue);
@@ -90,7 +90,7 @@ public class Array2D<E> implements Iterable<E> {
   /**
    * Returns the size of this Array2D.
    */
-  public Dimension getDimension() {
+  public ImmutableDimension getDimension() {
     return dimension;
   }
 
@@ -105,7 +105,7 @@ public class Array2D<E> implements Iterable<E> {
    * @param offY     Where the top edge of the viewport should start on the backing array.
    */
   @SuppressWarnings("unchecked")
-  public Array2D<E> view(Dimension viewport, int offX, int offY) {
+  public Array2D<E> view(ImmutableDimension viewport, int offX, int offY) {
     rangeCheckView(viewport, offX, offY);
     return new ModifiableView(viewport, offX, offY);
   }
@@ -121,7 +121,7 @@ public class Array2D<E> implements Iterable<E> {
    * @param offY     Where the top edge of the viewport should start on the backing array.
    */
   @SuppressWarnings("unchecked")
-  public Array2D<E> unmodifiableView(Dimension viewport, int offX, int offY) {
+  public Array2D<E> unmodifiableView(ImmutableDimension viewport, int offX, int offY) {
     rangeCheckView(viewport, offX, offY);
     return new UnmodifiableView(viewport, offX, offY);
   }
@@ -130,10 +130,10 @@ public class Array2D<E> implements Iterable<E> {
   /**
    * Ensures no view is created that would extend past the boundaries of its parent Array2D.
    */
-  private void rangeCheckView(Dimension viewport, int offX, int offY) {
+  private void rangeCheckView(ImmutableDimension viewport, int offX, int offY) {
     final int limitX = viewport.getWidth() -1 + offX;
     final int limitY = viewport.getHeight() -1 + offY;
-    if (!getDimension().getCoordinateIsWithinBounds(limitX, limitY)) {
+    if (!getDimension().contains(limitX, limitY)) {
       throw new IndexOutOfBoundsException("View would extend past backing array boundaries.");
     }
   }
@@ -191,12 +191,12 @@ public class Array2D<E> implements Iterable<E> {
 
   private class ModifiableView extends Array2D<E> {
 
-    final Dimension viewport;
+    final ImmutableDimension viewport;
     final int offX;
     final int offY;
 
 
-    public ModifiableView(Dimension viewport, int offX, int offY) {
+    public ModifiableView(ImmutableDimension viewport, int offX, int offY) {
       this.viewport = viewport;
       this.offX = offX;
       this.offY = offY;
@@ -208,7 +208,7 @@ public class Array2D<E> implements Iterable<E> {
      * its boundary.
      */
     private void rangeCheck(int x, int y) {
-      if (!viewport.getCoordinateIsWithinBounds(x, y)) {
+      if (!viewport.contains(x, y)) {
         throw new IndexOutOfBoundsException();
       }
     }
@@ -240,7 +240,7 @@ public class Array2D<E> implements Iterable<E> {
 
 
     @Override
-    public Dimension getDimension() {
+    public ImmutableDimension getDimension() {
       return viewport;
     }
 
@@ -259,7 +259,7 @@ public class Array2D<E> implements Iterable<E> {
 
   private class UnmodifiableView extends ModifiableView {
 
-    public UnmodifiableView(Dimension viewport, int offX, int offY) {
+    public UnmodifiableView(ImmutableDimension viewport, int offX, int offY) {
       super(viewport, offX, offY);
     }
 
@@ -277,7 +277,7 @@ public class Array2D<E> implements Iterable<E> {
 
 
     @Override
-    public Array2D<E> view(Dimension viewport, int offX, int offY) {
+    public Array2D<E> view(ImmutableDimension viewport, int offX, int offY) {
       return unmodifiableView(viewport, offX, offY);
     }
   }

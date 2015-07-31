@@ -4,7 +4,7 @@ import game.Game;
 import game.physical.Physical;
 import thing.ThingFactory;
 import utils.Array2D;
-import utils.Dimension;
+import utils.ImmutableDimension;
 import world.blueprint.Blueprint;
 import world.blueprint.BlueprintFactory;
 
@@ -17,7 +17,7 @@ class AreaFactory {
   private static final double STDGEN_PATCH_PATCHINESS = 0.300; // % of patch candidates to discard.
 
 
-  public static Area standardGeneration(Biome biome, Dimension areaSizeInSquares) {
+  public static Area standardGeneration(Biome biome, ImmutableDimension areaSizeInSquares) {
 
     // Get a Blueprint
     final Blueprint<BiomeTerrain> terrainBlueprint =
@@ -45,7 +45,7 @@ class AreaFactory {
 
 
   private static Array2D<Physical> generateProps(Biome biome, Blueprint<BiomeTerrain> blueprint,
-      Dimension dimension) {
+      ImmutableDimension dimension) {
 
     final Array2D<Physical> physicals = new Array2D<>(dimension);
 

@@ -2,7 +2,7 @@ package world;
 
 import game.Game;
 import utils.Array2D;
-import utils.Dimension;
+import utils.ImmutableDimension;
 import utils.Utils;
 
 import java.util.Set;
@@ -14,14 +14,14 @@ public class World {
 
   private final Array2D<Area> areas;
 
-  private final Dimension worldSizeInAreas;
-  private final Dimension areaSizeInSquares;
-  private final Dimension globalSizeInSquares;
+  private final ImmutableDimension worldSizeInAreas;
+  private final ImmutableDimension areaSizeInSquares;
+  private final ImmutableDimension globalSizeInSquares;
 
   private final Informer informer = new Informer();
 
 
-  World(Array2D<Area> areas, Dimension areaSizeInSquares) {
+  World(Array2D<Area> areas, ImmutableDimension areaSizeInSquares) {
 
     this.areas = areas;
 
@@ -31,7 +31,7 @@ public class World {
     int worldWidthInSquares = worldSizeInAreas.getWidth() * areaSizeInSquares.getWidth();
     int worldHeightInSquares = worldSizeInAreas.getHeight() * areaSizeInSquares.getHeight();
 
-    this.globalSizeInSquares = new Dimension(worldWidthInSquares, worldHeightInSquares);
+    this.globalSizeInSquares = new ImmutableDimension(worldWidthInSquares, worldHeightInSquares);
   }
 
 
@@ -55,7 +55,7 @@ public class World {
     final int width = Utils.clamp(offX + diameter, 0, worldSizeInAreas.getWidth()) - offX;
     final int height = Utils.clamp(offY + diameter, 0, worldSizeInAreas.getHeight()) - offY;
 
-    return areas.view(new Dimension(width, height), offX, offY).toSet();
+    return areas.view(new ImmutableDimension(width, height), offX, offY).toSet();
   }
 
 
@@ -75,22 +75,22 @@ public class World {
 
   public boolean validateCoordinate(Coordinate coordinate) {
     return coordinate != null && globalSizeInSquares
-        .getCoordinateIsWithinBounds(coordinate.globalX, coordinate.globalY);
+        .contains(coordinate.globalX, coordinate.globalY);
   }
 
 
   public boolean validateCoordinate(MapCoordinate mapCoordinate) {
     return mapCoordinate != null && worldSizeInAreas
-        .getCoordinateIsWithinBounds(mapCoordinate.worldAreasX, mapCoordinate.worldAreasY);
+        .contains(mapCoordinate.worldAreasX, mapCoordinate.worldAreasY);
   }
 
 
-  public Dimension getWorldSizeInAreas() {
+  public ImmutableDimension getWorldSizeInAreas() {
     return worldSizeInAreas;
   }
 
 
-  public Dimension getAreaSizeInSquares() {
+  public ImmutableDimension getAreaSizeInSquares() {
     return areaSizeInSquares;
   }
 

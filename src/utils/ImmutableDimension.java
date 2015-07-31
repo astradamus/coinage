@@ -29,6 +29,11 @@ public class ImmutableDimension {
   }
 
 
+  public boolean contains(ImmutablePoint testPoint) {
+    return contains(testPoint.getX(), testPoint.getY());
+  }
+
+
   public boolean contains(Point testPoint) {
     return contains(testPoint.x, testPoint.y);
   }

@@ -39,6 +39,11 @@ public class ImmutableDimension {
   }
 
 
+  public ImmutableDimension getAdjusted(int adjWidth, int adjHeight) {
+    return new ImmutableDimension(getWidth()+adjWidth,getHeight()+adjHeight);
+  }
+
+
   public int getWidth() {
     return width;
   }
@@ -56,5 +61,12 @@ public class ImmutableDimension {
 
   public Dimension toDimension() {
     return new Dimension(width, height);
+  }
+
+
+  @Override
+  public String toString() {
+    return "ImmutableDimension[width: " + Integer.toString(getWidth()) + ", height: "
+        + Integer.toString(getHeight()) + "]";
   }
 }

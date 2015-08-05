@@ -26,6 +26,23 @@ public class ImmutableRectangle extends ImmutableDimension {
   }
 
 
+  public ImmutableRectangle(ImmutableDimension immutableDimension) {
+    super(immutableDimension.getWidth(), immutableDimension.getHeight());
+    x = 0;
+    y = 0;
+  }
+
+
+  public ImmutableRectangle(ImmutablePoint originPoint, int width, int height) {
+    this(originPoint.getX(), originPoint.getY(), width, height);
+  }
+
+
+  public ImmutableRectangle(ImmutablePoint origin, ImmutableDimension size) {
+    this(origin, size.getWidth(), size.getHeight());
+  }
+
+
   @Override
   public boolean contains(int x, int y) {
     return (x >= getLeft() && x <= getRight() && y >= getTop() && y <= getBottom());
@@ -50,6 +67,17 @@ public class ImmutableRectangle extends ImmutableDimension {
 
   public boolean contains(Rectangle rect) {
     return contains(rect.x, rect.y, rect.width, rect.height);
+  }
+
+
+  public ImmutableRectangle getAdjusted(int adjX, int adjY, int adjWidth, int adjHeight) {
+    return new ImmutableRectangle(getX() + adjX, getY() + adjY, getWidth() + adjWidth,
+        getHeight() + adjHeight);
+  }
+
+
+  public ImmutablePoint getOrigin() {
+    return new ImmutablePoint(x, y);
   }
 
 
@@ -100,5 +128,13 @@ public class ImmutableRectangle extends ImmutableDimension {
 
   public Rectangle toRectangle() {
     return new Rectangle(x, y, getWidth(), getHeight());
+  }
+
+
+  @Override
+  public String toString() {
+    return "ImmutableRectangle[x: " + Integer.toString(x) + ", y: " + Integer.toString(y)
+        + ", width: " + Integer.toString(getWidth()) + ", height: " + Integer.toString(getHeight())
+        + "]";
   }
 }

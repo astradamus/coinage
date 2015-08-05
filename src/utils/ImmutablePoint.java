@@ -43,6 +43,11 @@ public class ImmutablePoint {
   }
 
 
+  public ImmutablePoint getTranslated(ImmutablePoint point) {
+    return getTranslated(point.getX(), point.getY());
+  }
+
+
   public int getX() {
     return x;
   }

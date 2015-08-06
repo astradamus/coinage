@@ -31,7 +31,7 @@ public class MouseControl implements MouseMotionListener, MouseListener {
 
   private Widget widget;
   private boolean looseWidget;
-
+  private Fader fader;
 
   public MouseControl(Game game, GamePanel gamePanel) {
     this.game = game;
@@ -46,6 +46,10 @@ public class MouseControl implements MouseMotionListener, MouseListener {
     if ((widget == null) && mousePosition != null && mousePosition.getToolTipHoverTimeReached()) {
       this.widget = makeToolTip(g, getPhysicalUnderMouse());
       looseWidget = true;
+
+      final Runnable onComplete = () -> fader = null;
+      fader = new Fader(widget, Fader.Type.IN, onComplete).start();
+
     }
 
     if (widget != null) {
@@ -96,17 +100,24 @@ public class MouseControl implements MouseMotionListener, MouseListener {
 
 
   private void setCursor(int tileX, int tileY) {
+    clearCursor();
     mousePosition = new MousePosition(tileX, tileY, System.currentTimeMillis());
-    if (looseWidget) {
-      widget = null;
-    }
   }
 
 
   private void clearCursor() {
     mousePosition = null;
-    if (looseWidget) {
-      widget = null;
+    if ((fader == null || fader.getType() == Fader.Type.OUT) && widget != null && looseWidget) {
+
+      if (fader != null) {
+        fader.interrupt();
+      }
+
+      fader = new Fader(widget, Fader.Type.OUT, () -> {
+        widget = null;
+        fader = null;
+      }).start();
+
     }
   }
 

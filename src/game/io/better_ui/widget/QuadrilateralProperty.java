@@ -1,4 +1,4 @@
-package game.io.better_ui.mouse_control;
+package game.io.better_ui.widget;
 
 /**
  * A data class for properties that have four values, each associated with a side of a box (left,

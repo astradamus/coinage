@@ -1,7 +1,7 @@
 package game.io.better_ui;
 
 import game.Game;
-import game.io.better_ui.mouse_control.MouseControl;
+import game.io.better_ui.widget.MouseControl;
 import game.physical.Physical;
 import utils.ImmutableDimension;
 import world.AreaCoordinate;

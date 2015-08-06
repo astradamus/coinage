@@ -1,4 +1,4 @@
-package game.io.better_ui.mouse_control;
+package game.io.better_ui.widget;
 
 import javax.swing.Timer;
 import java.awt.AlphaComposite;

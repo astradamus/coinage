@@ -39,7 +39,7 @@ public class MousePosition {
       return true;
     }
 
-    toolTipHoverTimeReached = System.currentTimeMillis() - updateTime > 400;
+    toolTipHoverTimeReached = System.currentTimeMillis() - updateTime > 200;
     return toolTipHoverTimeReached;
   }
 }

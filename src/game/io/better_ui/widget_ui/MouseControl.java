@@ -18,6 +18,8 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -30,33 +32,59 @@ public class MouseControl implements MouseMotionListener, MouseListener {
   private final Dimension screenSize;
 
   private Coordinate playerAreaOrigin;
-  private MousePosition mousePosition;
+  private MousePosition mouseAt;
 
-  private Widget widget;
-  private boolean looseWidget;
-  private Fader fader;
+  private List<ToolTip> toolTips;
 
   public MouseControl(Game game, GamePanel gamePanel) {
     this.game = game;
     tileSize = gamePanel.getTileSize();
     screenSize = gamePanel.getPreferredSize();
+    toolTips = new ArrayList<>();
   }
 
 
   public void drawOverlay(Graphics2D g, Coordinate playerAreaOrigin) {
     this.playerAreaOrigin = playerAreaOrigin;
 
-    if ((widget == null) && mousePosition != null && mousePosition.getToolTipHoverTimeReached()) {
-      this.widget = makeToolTip(g, getPhysicalUnderMouse());
-      looseWidget = true;
 
-      final Runnable onComplete = () -> fader = null;
-      fader = new Fader(widget, Fader.Type.IN, onComplete).start();
+    if (mouseAt != null) {
 
+      final ImmutablePoint mouseAtIP = new ImmutablePoint(mouseAt.getX(), mouseAt.getY());
+      if (mouseAt.getToolTipHoverTimeReached()
+          && toolTips.stream().noneMatch(tT -> mouseAtIP.equalTo(tT.point))) {
+        toolTips.add(new ToolTip(mouseAtIP, makeToolTip(g, getPhysicalUnderMouse())));
+      }
     }
 
-    if (widget != null) {
-      widget.draw(g);
+    for (final ToolTip toolTip : toolTips) {
+      toolTip.widget.draw(g);
+    }
+  }
+
+  private class ToolTip {
+    private final ImmutablePoint point;
+    private final Widget widget;
+    private Fader fader;
+
+
+    public ToolTip(ImmutablePoint point, Widget widget) {
+      this.point = point;
+      this.widget = widget;
+      fader = new Fader(widget, Fader.Type.IN, () -> fader = null).start();
+    }
+
+    void fadeOut() {
+      if (fader != null) {
+        if (fader.getType() == Fader.Type.OUT) {
+          return;
+        }
+        else {
+          fader.interrupt();
+        }
+      }
+
+      fader = new Fader(widget, Fader.Type.OUT, () -> toolTips.remove(this)).start();
     }
   }
 
@@ -64,7 +92,7 @@ public class MouseControl implements MouseMotionListener, MouseListener {
   private TextWidget makeToolTip(Graphics g, Physical p) {
 
     final ImmutablePoint widgetAt =
-        new ImmutablePoint((mousePosition.getX() + 2) * tileSize, mousePosition.getY() * tileSize);
+        new ImmutablePoint((mouseAt.getX() + 2) * tileSize, mouseAt.getY() * tileSize);
 
     final TextWidget titleWidget =
         new TextWidget(g.getFontMetrics(TextWidget.STANDARD_FONT), p.getName());
@@ -104,39 +132,24 @@ public class MouseControl implements MouseMotionListener, MouseListener {
 
   private void setCursor(int tileX, int tileY) {
     clearCursor();
-    mousePosition = new MousePosition(tileX, tileY, System.currentTimeMillis());
+    mouseAt = new MousePosition(tileX, tileY, System.currentTimeMillis());
   }
 
 
   private void clearCursor() {
-    mousePosition = null;
-    if ((fader == null || fader.getType() == Fader.Type.OUT) && widget != null && looseWidget) {
-
-      if (fader != null) {
-        fader.interrupt();
-      }
-
-      fader = new Fader(widget, Fader.Type.OUT, () -> {
-        widget = null;
-        fader = null;
-      }).start();
-
-    }
+    mouseAt = null;
+    toolTips.forEach(ToolTip::fadeOut);
   }
 
 
   private Physical getPhysicalUnderMouse() {
     return game.getWorld()
-        .getSquare(playerAreaOrigin.offset(mousePosition.getX(), mousePosition.getY())).peek();
+        .getSquare(playerAreaOrigin.offset(mouseAt.getX(), mouseAt.getY())).peek();
   }
 
 
   @Override
   public void mouseMoved(MouseEvent e) {
-    if (widget != null && !looseWidget) {
-      widget.handleMouseMoved(e);
-      return;
-    }
 
     final int tileX = e.getX() / tileSize;
     final int tileY = e.getY() / tileSize;
@@ -147,18 +160,14 @@ public class MouseControl implements MouseMotionListener, MouseListener {
       return;
     }
 
-    if (mousePosition == null || !mousePosition.equalTo(tileX, tileY)) {
+    if (mouseAt == null || !mouseAt.equalTo(tileX, tileY)) {
       setCursor(tileX, tileY);
     }
   }
 
 
   @Override
-  public void mouseClicked(MouseEvent e) {
-    if (widget != null && !looseWidget) {
-      widget.handleMouseClicked(e);
-    }
-  }
+  public void mouseClicked(MouseEvent e) { }
 
 
   @Override

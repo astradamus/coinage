@@ -51,7 +51,7 @@ public class Fader {
     final AlphaComposite alphaComposite = fading.getAlpha();
     float alpha = alphaComposite.getAlpha();
 
-    float delta = (targetAlpha - alpha) * 0.15f;
+    float delta = (targetAlpha - alpha) * 0.07f;
 
     if (type == Type.OUT) {
       delta = Math.min(-0.01f, delta);

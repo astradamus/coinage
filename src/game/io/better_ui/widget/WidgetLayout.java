@@ -26,6 +26,7 @@ public abstract class WidgetLayout extends Widget {
 
   public WidgetLayout(ImmutableRectangle layoutMarginBox) {
     this();
+    setPreferredSize(layoutMarginBox);
     moveAndResize(layoutMarginBox);
   }
 

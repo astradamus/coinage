@@ -23,14 +23,14 @@ public class LinearLayout extends WidgetLayout {
 
 
   public LinearLayout(ImmutableRectangle layoutMarginBox) {
-    super();
-    moveAndResize(layoutMarginBox);
+    super(layoutMarginBox);
   }
 
 
   public LinearLayout(ImmutableRectangle layoutMarginBox, Orientation orientation) {
     super();
     this.orientation = Objects.requireNonNull(orientation);
+    setPreferredSize(layoutMarginBox);
     moveAndResize(layoutMarginBox);
   }
 

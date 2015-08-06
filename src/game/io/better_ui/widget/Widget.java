@@ -69,7 +69,7 @@ public abstract class Widget {
    * Draws this widget according to its defined boxes. Subclasses overriding this method should
    * call super or many widget features will not be applied.
    */
-  protected void draw(Graphics2D g) {
+  public void draw(Graphics2D g) {
 
     // Draw nothing if the content box has no width and/or no height.
     final ImmutableRectangle contentBox = getContentBox();

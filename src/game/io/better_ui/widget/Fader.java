@@ -77,5 +77,5 @@ public class Fader {
   }
 
 
-  enum Type {IN, OUT}
+  public enum Type {IN, OUT}
 }

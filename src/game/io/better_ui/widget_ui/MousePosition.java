@@ -1,4 +1,4 @@
-package game.io.better_ui.widget;
+package game.io.better_ui.widget_ui;
 
 /**
  *

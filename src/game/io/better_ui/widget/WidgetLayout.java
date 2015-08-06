@@ -77,7 +77,7 @@ public abstract class WidgetLayout extends Widget {
 
 
   @Override
-  protected final void draw(Graphics2D g) {
+  public final void draw(Graphics2D g) {
 
     // Perform standard widget drawing setup.
     super.draw(g);

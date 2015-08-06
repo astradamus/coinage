@@ -12,7 +12,7 @@ import java.awt.Graphics2D;
  */
 public class TextWidget extends Widget {
 
-  protected static final Font standardFont = new Font("Monospaced", Font.PLAIN, 20);
+  public static final Font STANDARD_FONT = new Font("Monospaced", Font.PLAIN, 20);
 
   private FontMetrics fontMetrics;
   private String string;
@@ -48,7 +48,7 @@ public class TextWidget extends Widget {
 
 
   @Override
-  protected void draw(Graphics2D g) {
+  public void draw(Graphics2D g) {
 
     // Perform standard widget drawing setup.
     super.draw(g);
@@ -81,7 +81,7 @@ public class TextWidget extends Widget {
 
 
   public Font getFont() {
-    return  fontMetrics != null ? fontMetrics.getFont() : standardFont;
+    return  fontMetrics != null ? fontMetrics.getFont() : STANDARD_FONT;
   }
 
 

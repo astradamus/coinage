@@ -1,7 +1,10 @@
-package game.io.better_ui.widget;
+package game.io.better_ui.widget_ui;
 
 import game.Game;
 import game.io.better_ui.GamePanel;
+import game.io.better_ui.widget.Fader;
+import game.io.better_ui.widget.TextWidget;
+import game.io.better_ui.widget.Widget;
 import game.physical.Physical;
 import utils.ImmutableDimension;
 import utils.ImmutablePoint;
@@ -64,7 +67,7 @@ public class MouseControl implements MouseMotionListener, MouseListener {
         new ImmutablePoint((mousePosition.getX() + 2) * tileSize, mousePosition.getY() * tileSize);
 
     final TextWidget titleWidget =
-        new TextWidget(g.getFontMetrics(TextWidget.standardFont), p.getName());
+        new TextWidget(g.getFontMetrics(TextWidget.STANDARD_FONT), p.getName());
 
     titleWidget.setBorder(1);
     titleWidget.setBorderColor(p.getColor());

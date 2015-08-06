@@ -13,13 +13,6 @@ public class LayerLayout extends WidgetLayout {
   }
 
 
-  /**
-   * LayerLayouts cannot be packed.
-   */
-  @Override
-  void pack() { }
-
-
   @Override
   protected void recalculate() {
     super.recalculate();

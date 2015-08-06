@@ -36,7 +36,7 @@ public class LinearLayout extends WidgetLayout {
 
 
   @Override
-  void pack() {
+  public void pack() {
 
     // Collect the total parallel size and the highest perpendicular size from all subwidgets.
     int highestPerpendicular = 0;

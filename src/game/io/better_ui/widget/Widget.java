@@ -54,7 +54,7 @@ public abstract class Widget {
    * its contents compactly. This only sets the preferred size, actually applying it to the widget
    * requires a successive call to {@code resize(getPreferredSize())}.
    */
-  abstract void pack();
+  public void pack() { }
 
 
   public void handleMouseMoved(MouseEvent e) {

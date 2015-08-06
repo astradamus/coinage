@@ -37,6 +37,8 @@ public abstract class Widget {
 
   private ImmutableDimension preferredSize;
 
+  private boolean mouseHovering;
+
 
   public Widget() { }
 
@@ -55,7 +57,9 @@ public abstract class Widget {
   abstract void pack();
 
 
-  public void handleMouseMoved(MouseEvent e) { }
+  public void handleMouseMoved(MouseEvent e) {
+    mouseHovering = getPaddedBox().contains(e.getPoint());
+  }
 
 
   public void handleMouseClicked(MouseEvent e) { }
@@ -328,5 +332,14 @@ public abstract class Widget {
     final int width = getMarginBox().getWidth() - getContentBox().getWidth();
     final int height = getMarginBox().getHeight() - getContentBox().getHeight();
     return new ImmutableDimension(width, height);
+  }
+
+
+  /**
+   * Returns true if the most recent mouse movement event this widget received was inside its
+   * padding box.
+   */
+  protected boolean isMouseHovering() {
+    return mouseHovering;
   }
 }

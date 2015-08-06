@@ -56,6 +56,10 @@ public abstract class WidgetLayout extends Widget {
 
   @Override
   public void handleMouseMoved(MouseEvent e) {
+
+    // Perform standard widget mouse movement handling.
+    super.handleMouseMoved(e);
+
     // Pass the event to each subwidget.
     for (Widget widget : subwidgets) {
       widget.handleMouseMoved(e);

@@ -65,6 +65,10 @@ public abstract class Widget {
   public void handleMouseClicked(MouseEvent e) { }
 
 
+  /**
+   * Draws this widget according to its defined boxes. Subclasses overriding this method should
+   * call super or many widget features will not be applied.
+   */
   protected void draw(Graphics2D g) {
 
     // Draw nothing if the content box has no width and/or no height.
@@ -134,7 +138,8 @@ public abstract class Widget {
 
   /**
    * Must be called whenever something changes the structure of this widget to ensure all components
-   * are updated accordingly.
+   * are updated accordingly. Subclasses overriding this method must call super or recalculate the
+   * padded and content boxes themselves.
    */
   protected void recalculate() {
     this.paddedBox = calculatePaddedBox();

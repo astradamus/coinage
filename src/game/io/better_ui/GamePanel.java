@@ -82,8 +82,8 @@ public class GamePanel extends JPanel {
     }
 
     ActionOverlay.drawOverlay((Graphics2D) g, tileSize, game);
-    mouseControl.drawOverlay(g, playerAreaOrigin);
     EventLog.drawOverlay((Graphics2D) g);
+    mouseControl.drawOverlay((Graphics2D) g, playerAreaOrigin);
   }
 
 

@@ -1,16 +1,17 @@
 package game.io.better_ui.mouse_control;
 
-import actor.Actor;
 import game.Game;
 import game.io.better_ui.GamePanel;
 import game.physical.Physical;
-import game.physical.PhysicalFlag;
 import utils.ImmutableDimension;
+import utils.ImmutablePoint;
+import utils.ImmutableRectangle;
 import world.Coordinate;
 
-import java.awt.Font;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -23,48 +24,90 @@ public class MouseControl implements MouseMotionListener, MouseListener {
   private final Game game;
 
   private final int tileSize;
-  private final Font mouseMenuFont;
-  private final MouseMenuFactory menuFactory;
+  private final Dimension screenSize;
 
   private Coordinate playerAreaOrigin;
   private MousePosition mousePosition;
-  private MouseMenu mouseMenu;
+
+  private Widget widget;
+  private boolean looseWidget;
 
 
   public MouseControl(Game game, GamePanel gamePanel) {
     this.game = game;
     tileSize = gamePanel.getTileSize();
-    mouseMenuFont = new Font("Monospaced", Font.BOLD, tileSize);
-
-    menuFactory = new MouseMenuFactory(tileSize, new Rectangle(gamePanel.getPreferredSize()),
-        gamePanel.getFontMetrics(mouseMenuFont));
+    screenSize = gamePanel.getPreferredSize();
   }
 
 
-  public void drawOverlay(Graphics g, Coordinate playerAreaOrigin) {
+  public void drawOverlay(Graphics2D g, Coordinate playerAreaOrigin) {
     this.playerAreaOrigin = playerAreaOrigin;
 
-    if (mouseMenu == null || mouseMenu.allowEasyReplacement()) {
-      if (mousePosition != null && mousePosition.getToolTipHoverTimeReached()) {
-        mouseMenu = menuFactory.makeToolTip(mousePosition, getPhysicalUnderMouse());
-      }
+    if ((widget == null) && mousePosition != null && mousePosition.getToolTipHoverTimeReached()) {
+      this.widget = makeToolTip(g, getPhysicalUnderMouse());
+      looseWidget = true;
     }
 
-    if (mouseMenu != null) {
-      mouseMenu.drawOverlay(g);
+    if (widget != null) {
+      widget.draw(g);
     }
+  }
+
+
+  private TextWidget makeToolTip(Graphics g, Physical p) {
+
+    final ImmutablePoint widgetAt =
+        new ImmutablePoint((mousePosition.getX() + 2) * tileSize, mousePosition.getY() * tileSize);
+
+    final TextWidget titleWidget =
+        new TextWidget(g.getFontMetrics(TextWidget.standardFont), p.getName());
+
+    titleWidget.setBorder(1);
+    titleWidget.setBorderColor(p.getColor());
+
+    titleWidget.setColor(p.getColor());
+    titleWidget.setBgColor(new Color(0, 0, 0, 255));
+
+    titleWidget.getPadding().set(5, 2);
+
+    titleWidget.pack();
+    titleWidget.moveAndResize(new ImmutableRectangle(
+        widgetAt.getTranslated(0, -titleWidget.getNonContentSize().getHeight()),
+        titleWidget.getPreferredSize()));
+
+    final ImmutableRectangle marginBox = titleWidget.getMarginBox();
+
+    int offX = 0;
+    int offY = 0;
+
+    if (marginBox.getRight() > screenSize.getWidth()) {
+      offX = -tileSize * 3 - marginBox.getWidth();
+    }
+    if (marginBox.getBottom() > screenSize.getHeight()) {
+      offY = -marginBox.getHeight();
+    }
+
+    if (offX != 0 || offY != 0) {
+      titleWidget.move(marginBox.getOrigin().getTranslated(offX, offY));
+    }
+
+    return titleWidget;
   }
 
 
   private void setCursor(int tileX, int tileY) {
     mousePosition = new MousePosition(tileX, tileY, System.currentTimeMillis());
-    mouseMenu = null;
+    if (looseWidget) {
+      widget = null;
+    }
   }
 
 
   private void clearCursor() {
     mousePosition = null;
-    mouseMenu = null;
+    if (looseWidget) {
+      widget = null;
+    }
   }
 
 
@@ -75,17 +118,10 @@ public class MouseControl implements MouseMotionListener, MouseListener {
 
 
   @Override
-  public void mouseDragged(MouseEvent e) {
-    if (mouseMenu != null) {
-      mouseMenu.mouseDragged(e);
-    }
-  }
-
-
-  @Override
   public void mouseMoved(MouseEvent e) {
-    if (mouseMenu != null && mouseMenu.mouseMoved(e)) {
-      return; // Mouse menu handled event, do nothing else.
+    if (widget != null && !looseWidget) {
+      widget.handleMouseMoved(e);
+      return;
     }
 
     final int tileX = e.getX() / tileSize;
@@ -105,46 +141,30 @@ public class MouseControl implements MouseMotionListener, MouseListener {
 
   @Override
   public void mouseClicked(MouseEvent e) {
-    if (mouseMenu != null) {
-      mouseMenu.mouseClicked(e);
-    }
-
-    final Physical physical = getPhysicalUnderMouse();
-    if (physical.getClass() == Actor.class && !physical.hasFlag(PhysicalFlag.DEAD)) {
-      mouseMenu = menuFactory.makeToolBox(mousePosition, (Actor) physical);
+    if (widget != null && !looseWidget) {
+      widget.handleMouseClicked(e);
     }
   }
 
 
   @Override
-  public void mousePressed(MouseEvent e) {
-    if (mouseMenu != null) {
-      mouseMenu.mousePressed(e);
-    }
-  }
+  public void mousePressed(MouseEvent e) { }
 
 
   @Override
-  public void mouseReleased(MouseEvent e) {
-    if (mouseMenu != null) {
-      mouseMenu.mouseReleased(e);
-    }
-  }
+  public void mouseReleased(MouseEvent e) { }
 
 
   @Override
-  public void mouseEntered(MouseEvent e) {
-    if (mouseMenu != null) {
-      mouseMenu.mouseEntered(e);
-    }
-  }
+  public void mouseEntered(MouseEvent e) { }
 
 
   @Override
   public void mouseExited(MouseEvent e) {
-    if (mouseMenu != null) {
-      mouseMenu.mouseExited(e);
-    }
     clearCursor();
   }
+
+
+  @Override
+  public void mouseDragged(MouseEvent e) { }
 }

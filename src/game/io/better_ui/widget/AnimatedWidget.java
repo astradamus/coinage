@@ -14,12 +14,13 @@ public class AnimatedWidget extends Widget {
   private Transform transform;
 
 
-  public void fade(float startAlpha, float endAlpha, long duration) {
+  public void animateFade(float startAlpha, float endAlpha, long duration) {
     fade = new Fade(startAlpha, endAlpha, System.currentTimeMillis(), duration);
   }
 
 
-  public void transform(ImmutableRectangle startRect, ImmutableRectangle endRect, long duration) {
+  public void animateTransform(ImmutableRectangle startRect, ImmutableRectangle endRect,
+      long duration) {
     transform = new Transform(startRect, endRect, System.currentTimeMillis(), duration);
   }
 

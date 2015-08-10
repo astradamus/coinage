@@ -53,6 +53,12 @@ public class TextWidget extends AnimatedWidget {
     // Perform standard widget drawing setup.
     super.draw(g);
 
+    // Draw nothing if the content box has no width and/or no height.
+    final ImmutableRectangle contentBox = getContentBox();
+    if (contentBox.getWidth() < 1 || contentBox.getHeight() < 1) {
+      return;
+    }
+
     // If this widget has a font, use that, otherwise use the standard.
     g.setFont(getFont());
 
@@ -61,7 +67,6 @@ public class TextWidget extends AnimatedWidget {
     final int stringWidth = fontMetrics.stringWidth(string);
 
     // Center inside the content box.
-    final ImmutableRectangle contentBox = getContentBox();
     final int x = contentBox.getCenterX() - stringWidth / 2;
     final int y = contentBox.getCenterY() + fontMetrics.getDescent();
 

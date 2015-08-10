@@ -18,8 +18,6 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -34,30 +32,23 @@ public class MouseControl implements MouseMotionListener, MouseListener {
   private Coordinate playerAreaOrigin;
   private MousePosition mouseAt;
 
-  private List<ToolTip> toolTips;
+  private ToolTip toolTip;
 
   public MouseControl(Game game, GamePanel gamePanel) {
     this.game = game;
     tileSize = gamePanel.getTileSize();
     screenSize = gamePanel.getPreferredSize();
-    toolTips = new ArrayList<>();
   }
 
 
   public void drawOverlay(Graphics2D g, Coordinate playerAreaOrigin) {
     this.playerAreaOrigin = playerAreaOrigin;
 
-
-    if (mouseAt != null) {
-
-      final ImmutablePoint mouseAtIP = new ImmutablePoint(mouseAt.getX(), mouseAt.getY());
-      if (mouseAt.getToolTipHoverTimeReached()
-          && toolTips.stream().noneMatch(tT -> mouseAtIP.equalTo(tT.point))) {
-        toolTips.add(new ToolTip(mouseAtIP, makeToolTip(g, getPhysicalUnderMouse())));
-      }
+    if (toolTip == null && mouseAt != null && mouseAt.getToolTipHoverTimeReached()) {
+      toolTip = new ToolTip(mouseAt, makeToolTip(g, getPhysicalUnderMouse()));
     }
 
-    for (final ToolTip toolTip : toolTips) {
+    if (toolTip != null) {
       toolTip.widget.draw(g);
     }
   }
@@ -93,7 +84,7 @@ public class MouseControl implements MouseMotionListener, MouseListener {
       this.widget.animateTransform(mB, collapsedBox, 275);
       this.widget.animateFade(widget.getAlpha().getAlpha(), 0, 300);
 
-      final Timer timer = new Timer(300, (aE) -> toolTips.remove(this));
+      final Timer timer = new Timer(300, (aE) -> toolTip = null);
       timer.setRepeats(false);
       timer.start();
     }
@@ -149,7 +140,9 @@ public class MouseControl implements MouseMotionListener, MouseListener {
 
   private void clearCursor() {
     mouseAt = null;
-    toolTips.forEach(ToolTip::fadeOut);
+    if (toolTip != null) {
+      toolTip.fadeOut();
+    }
   }
 
 

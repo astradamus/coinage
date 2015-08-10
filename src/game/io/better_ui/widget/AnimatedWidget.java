@@ -2,7 +2,6 @@ package game.io.better_ui.widget;
 
 import utils.ImmutableRectangle;
 
-import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 
 /**
@@ -26,25 +25,17 @@ public class AnimatedWidget extends Widget {
 
 
   @Override
-  public AlphaComposite getAlpha() {
-    if (fade != null) {
-      final float currentAlpha = fade.getCurrentAlpha();
-      if (fade.isComplete()) {
-        setAlpha(currentAlpha);
-        fade = null;
-      }
-      return AlphaComposite.getInstance(AlphaComposite.SRC_OVER, currentAlpha);
-    }
-    return super.getAlpha();
-  }
-
-
-  @Override
   public void draw(Graphics2D g) {
     if (transform != null) {
       moveAndResize(transform.getCurrentBox());
       if (transform.isComplete()) {
         transform = null;
+      }
+    }
+    if (fade != null) {
+      setAlpha(fade.getCurrentAlpha());
+      if (fade.isComplete()) {
+        fade = null;
       }
     }
     super.draw(g);

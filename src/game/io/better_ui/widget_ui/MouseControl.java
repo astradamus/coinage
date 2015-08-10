@@ -2,9 +2,8 @@ package game.io.better_ui.widget_ui;
 
 import game.Game;
 import game.io.better_ui.GamePanel;
-import game.io.better_ui.widget.Fader;
+import game.io.better_ui.widget.AnimatedWidget;
 import game.io.better_ui.widget.TextWidget;
-import game.io.better_ui.widget.Widget;
 import game.physical.Physical;
 import utils.ImmutableDimension;
 import utils.ImmutablePoint;
@@ -64,27 +63,17 @@ public class MouseControl implements MouseMotionListener, MouseListener {
 
   private class ToolTip {
     private final ImmutablePoint point;
-    private final Widget widget;
-    private Fader fader;
+    private final AnimatedWidget widget;
 
 
-    public ToolTip(ImmutablePoint point, Widget widget) {
+    public ToolTip(ImmutablePoint point, AnimatedWidget widget) {
       this.point = point;
       this.widget = widget;
-      fader = new Fader(widget, Fader.Type.IN, () -> fader = null).start();
+      this.widget.fade(0, widget.getAlpha().getAlpha(), 750);
     }
 
     void fadeOut() {
-      if (fader != null) {
-        if (fader.getType() == Fader.Type.OUT) {
-          return;
-        }
-        else {
-          fader.interrupt();
-        }
-      }
-
-      fader = new Fader(widget, Fader.Type.OUT, () -> toolTips.remove(this)).start();
+      this.widget.fade(widget.getAlpha().getAlpha(), 0, 375);
     }
   }
 

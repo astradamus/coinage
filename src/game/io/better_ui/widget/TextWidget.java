@@ -10,7 +10,7 @@ import java.awt.Graphics2D;
 /**
  * A basic widget for displaying text.
  */
-public class TextWidget extends Widget {
+public class TextWidget extends AnimatedWidget {
 
   public static final Font STANDARD_FONT = new Font("Monospaced", Font.PLAIN, 20);
 

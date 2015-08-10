@@ -14,7 +14,7 @@ import java.util.List;
  * should override <code>recalculate</code> to define the sizing/placement of child widgets, and
  * <code>pack</code> to define resizing the layout to tightly contain its children.
  */
-public abstract class WidgetLayout extends Widget {
+public abstract class WidgetLayout extends AnimatedWidget {
 
   private final List<Widget> subwidgets;
 

@@ -10,6 +10,7 @@ import utils.ImmutablePoint;
 import utils.ImmutableRectangle;
 import world.Coordinate;
 
+import javax.swing.Timer;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -65,15 +66,36 @@ public class MouseControl implements MouseMotionListener, MouseListener {
     private final ImmutablePoint point;
     private final AnimatedWidget widget;
 
+    final ImmutableRectangle collapsedBox;
+    private boolean fading = false;
+
 
     public ToolTip(ImmutablePoint point, AnimatedWidget widget) {
       this.point = point;
       this.widget = widget;
-      this.widget.fade(0, widget.getAlpha().getAlpha(), 750);
+
+      final ImmutableRectangle mB = widget.getMarginBox();
+      collapsedBox =
+          mB.getAdjusted(mB.getWidth() / 2, mB.getHeight() / 2, -mB.getWidth(), -mB.getHeight());
+
+      this.widget.transform(collapsedBox, mB, 350);
+      this.widget.fade(0, widget.getAlpha().getAlpha(), 500);
     }
 
     void fadeOut() {
-      this.widget.fade(widget.getAlpha().getAlpha(), 0, 375);
+      if (fading) {
+        return;
+      }
+      else {
+        fading = true;
+      }
+      final ImmutableRectangle mB = widget.getMarginBox();
+      this.widget.transform(mB, collapsedBox, 275);
+      this.widget.fade(widget.getAlpha().getAlpha(), 0, 300);
+
+      final Timer timer = new Timer(300, (aE) -> toolTips.remove(this));
+      timer.setRepeats(false);
+      timer.start();
     }
   }
 

@@ -127,7 +127,11 @@ public class MouseControl implements MouseMotionListener, MouseListener {
     final Color green = new Color(0, 100, 0, 225).darker().darker();
     final Color blue = new Color(0, 0, 100, 225).darker().darker();
 
-    tools.add(new ToolBoxButton(green, fM, "Pick\nUp"));
+    final ToolBoxButton pickUpButton = new ToolBoxButton(green, fM, "Pick\nUp");
+    pickUpButton.setOnClick(this::onClickPickUpButton);
+    tools.add(pickUpButton);
+
+
     tools.add(new ToolBoxButton(red, fM, "Attack\nHere"));
     tools.add(new ToolBoxButton(blue, fM, "Use\nSkill"));
 
@@ -150,6 +154,16 @@ public class MouseControl implements MouseMotionListener, MouseListener {
 
       toolTip.animateTransform(toolTip.getMarginBox(), next, 250);
     });
+    timer.setRepeats(false);
+    timer.start();
+  }
+
+
+  private void onClickPickUpButton() {
+    Commands.playerPickUp(gamePanel.getGame(),
+        playerAreaOrigin.offset(mouseAt.getX(), mouseAt.getY()));
+
+    final Timer timer = new Timer(250, (aE) -> clearCursor());
     timer.setRepeats(false);
     timer.start();
   }

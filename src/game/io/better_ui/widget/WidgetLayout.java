@@ -97,4 +97,9 @@ public abstract class WidgetLayout extends AnimatedWidget {
   protected List<Widget> getSubwidgets() {
     return subwidgets;
   }
+
+
+  public Widget getChild(int index) {
+    return subwidgets.get(index);
+  }
 }

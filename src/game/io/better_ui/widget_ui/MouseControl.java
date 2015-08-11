@@ -3,9 +3,11 @@ package game.io.better_ui.widget_ui;
 import game.Game;
 import game.io.better_ui.GamePanel;
 import game.io.better_ui.widget.AnimatedWidget;
+import game.io.better_ui.widget.Button;
 import game.io.better_ui.widget.LinearLayout;
 import game.io.better_ui.widget.Orientation;
 import game.io.better_ui.widget.TextWidget;
+import game.io.better_ui.widget.Widget;
 import game.physical.Physical;
 import utils.ImmutableDimension;
 import utils.ImmutablePoint;
@@ -15,6 +17,7 @@ import world.Coordinate;
 import javax.swing.Timer;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
@@ -27,6 +30,7 @@ import java.awt.event.MouseMotionListener;
 public class MouseControl implements MouseMotionListener, MouseListener {
 
   private final Game game;
+  private GamePanel gamePanel;
 
   private final int tileSize;
   private final Dimension screenSize;
@@ -38,6 +42,7 @@ public class MouseControl implements MouseMotionListener, MouseListener {
 
   public MouseControl(Game game, GamePanel gamePanel) {
     this.game = game;
+    this.gamePanel = gamePanel;
     tileSize = gamePanel.getTileSize();
     screenSize = gamePanel.getPreferredSize();
   }
@@ -51,6 +56,12 @@ public class MouseControl implements MouseMotionListener, MouseListener {
     }
 
     if (toolTip != null) {
+
+      if (toolTip.handlesMouse && mouseAt != null) {
+        g.setColor(Color.WHITE);
+        g.drawOval(mouseAt.getX()*tileSize,mouseAt.getY()*tileSize,tileSize,tileSize);
+      }
+
       toolTip.widget.draw(g);
     }
   }
@@ -82,10 +93,16 @@ public class MouseControl implements MouseMotionListener, MouseListener {
       else {
         fading = true;
       }
-      final AnimatedWidget child = (AnimatedWidget) this.widget.getChild(0);
-      final ImmutableRectangle mB = child.getMarginBox();
-      child.animateTransform(mB, collapsedBox, 275);
-      child.animateFade(child.getAlpha().getAlpha(), 0, 300);
+
+      for (Widget child : this.widget.getSubwidgets()) {
+        final AnimatedWidget anim = (AnimatedWidget) child;
+        final ImmutableRectangle mB = anim.getMarginBox();
+        anim.animateTransform(mB, collapsedBox, 275);
+        anim.animateFade(child.getAlpha().getAlpha(), 0, 300);
+      }
+
+      this.widget.animateTransform(this.widget.getMarginBox(), collapsedBox, 275);
+      this.widget.animateFade(this.widget.getAlpha().getAlpha(), 0, 300);
 
       final Timer timer = new Timer(300, (aE) -> toolTip = null);
       timer.setRepeats(false);
@@ -116,6 +133,8 @@ public class MouseControl implements MouseMotionListener, MouseListener {
         titleWidget.getPreferredSize()));
 
     final ImmutableRectangle marginBox = titleWidget.getMarginBox();
+    LinearLayout linearLayout = new LinearLayout(marginBox, Orientation.VERT);
+    linearLayout.add(titleWidget);
 
     int offX = 0;
     int offY = 0;
@@ -128,16 +147,10 @@ public class MouseControl implements MouseMotionListener, MouseListener {
     }
 
     if (offX != 0 || offY != 0) {
-      titleWidget.move(marginBox.getOrigin().getTranslated(offX, offY));
+      linearLayout.move(marginBox.getOrigin().getTranslated(offX, offY));
     }
 
-
-    LinearLayout linearLayout = new LinearLayout(marginBox, Orientation.VERT);
-    linearLayout.add(titleWidget);
-
     return linearLayout;
-
-//    return titleWidget;
   }
 
 
@@ -187,8 +200,88 @@ public class MouseControl implements MouseMotionListener, MouseListener {
   @Override
   public void mouseClicked(MouseEvent e) {
     if (toolTip != null && toolTip.handlesMouse) {
-      toolTip.widget.handleMouseClicked(e);
+      if (toolTip.widget.getMarginBox().contains(e.getPoint())) {
+        toolTip.widget.handleMouseClicked(e);
+      }
+      else {
+        clearCursor();
+      }
+      return;
     }
+
+    if (toolTip == null) {
+      return;
+    }
+
+    toolTip.handlesMouse = true;
+
+    final LinearLayout widget = toolTip.widget;
+    widget.setBorder(widget.getChild(0).getBorder());
+    widget.setBorderColor(widget.getChild(0).getBorderColor());
+    final ImmutableRectangle mB = widget.getMarginBox();
+
+    final ImmutableRectangle box;
+    final int width = Math.max(242, mB.getWidth());
+    final ImmutableRectangle newBox = new ImmutableRectangle(mB.getX(), mB.getY(), width, mB.getHeight());
+
+
+    int adjX = 0;
+
+    if (newBox.getRight() > screenSize.width) {
+      adjX = -newBox.getWidth() -tileSize*3;
+    }
+
+    box = newBox.getAdjusted(adjX,0,0,0);
+
+    final LinearLayout tools = new LinearLayout(null, Orientation.HORZ);
+
+    final FontMetrics fM = gamePanel.getFontMetrics(TextWidget.STANDARD_FONT);
+
+    final Button widget1 = new Button(fM, "Pick Up");
+    widget1.setLayoutWeight(1);
+    final Color green = new Color(0, 255, 0, 175).darker().darker();
+    widget1.setBorderColor(green);
+    widget1.setBgColor(green.darker());
+    widget1.setBorder(2);
+    tools.add(widget1);
+
+    final Button widget2 = new Button(fM, "Attack");
+    widget2.setLayoutWeight(1);
+    final Color red = new Color(255, 0, 0, 175).darker().darker();
+    widget2.setBorderColor(red);
+    widget2.setBgColor(red.darker());
+    widget2.setBorder(2);
+    tools.add(widget2);
+
+    final Button widget3 = new Button(fM, "Skill");
+    widget3.setLayoutWeight(1);
+    final Color blue = new Color(0, 0, 255, 175).darker().darker();
+    widget3.setBorderColor(blue);
+    widget3.setBgColor(blue.darker());
+    widget3.setBorder(2);
+    tools.add(widget3);
+
+    tools.setLayoutWeight(1);
+    widget.animateTransform(mB, box, 250);
+
+    toolTip.widget.add(tools);
+
+    final Timer timer = new Timer(250, e1 -> {
+      final ImmutableRectangle nextBox =
+          new ImmutableRectangle(box.getX(), box.getY(), box.getWidth(), 100);
+      final ImmutableRectangle next;
+
+      int adjY = 0;
+      if (nextBox.getBottom() > screenSize.height) {
+        adjY = screenSize.height - nextBox.getBottom();
+      }
+
+      next = nextBox.getAdjusted(0,adjY,0,0);
+
+      widget.animateTransform(widget.getMarginBox(), next, 250);
+    });
+    timer.setRepeats(false);
+    timer.start();
   }
 
 

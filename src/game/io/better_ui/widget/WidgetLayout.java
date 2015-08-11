@@ -94,7 +94,7 @@ public abstract class WidgetLayout extends AnimatedWidget {
   protected void drawBeforeSubwidgets(Graphics g) { }
 
 
-  protected List<Widget> getSubwidgets() {
+  public List<Widget> getSubwidgets() {
     return subwidgets;
   }
 

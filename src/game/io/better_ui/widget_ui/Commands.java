@@ -1,6 +1,7 @@
 package game.io.better_ui.widget_ui;
 
 import actor.Actor;
+import controller.action.Attacking;
 import controller.action.PickingUp;
 import controller.player.PlayerAgent;
 import game.Game;
@@ -38,4 +39,22 @@ public class Commands {
     playerAgent.attemptAction(new PickingUp(playerActor, playerTarget, selected));
   }
 
+
+  public static void playerAttack(Game game, Coordinate playerTarget) {
+
+    final PlayerAgent playerAgent = game.getPlayerAgent();
+    final Actor playerActor = playerAgent.getActor();
+
+    if (!playerActor.getCoordinate().getIsAdjacentTo(playerTarget)) {
+      EventLog.registerEvent(Event.INVALID_INPUT, "You are too far away.");
+      return;
+    }
+
+    if (playerTarget.equalTo(playerAgent.getActor().getCoordinate())) {
+      EventLog.registerEvent(Event.INVALID_INPUT, "You smack yourself upside the head.");
+      return;
+    }
+
+    playerAgent.attemptAction(new Attacking(playerActor, playerTarget));
+  }
 }

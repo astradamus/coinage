@@ -131,8 +131,10 @@ public class MouseControl implements MouseMotionListener, MouseListener {
     pickUpButton.setOnClick(this::onClickPickUpButton);
     tools.add(pickUpButton);
 
+    final ToolBoxButton attackButton = new ToolBoxButton(red, fM, "Attack\nHere");
+    attackButton.setOnClick(this::onClickAttackButton);
+    tools.add(attackButton);
 
-    tools.add(new ToolBoxButton(red, fM, "Attack\nHere"));
     tools.add(new ToolBoxButton(blue, fM, "Use\nSkill"));
 
     tools.setLayoutWeight(1);
@@ -161,6 +163,16 @@ public class MouseControl implements MouseMotionListener, MouseListener {
 
   private void onClickPickUpButton() {
     Commands.playerPickUp(gamePanel.getGame(),
+        playerAreaOrigin.offset(mouseAt.getX(), mouseAt.getY()));
+
+    final Timer timer = new Timer(250, (aE) -> clearCursor());
+    timer.setRepeats(false);
+    timer.start();
+  }
+
+
+  private void onClickAttackButton() {
+    Commands.playerAttack(gamePanel.getGame(),
         playerAreaOrigin.offset(mouseAt.getX(), mouseAt.getY()));
 
     final Timer timer = new Timer(250, (aE) -> clearCursor());

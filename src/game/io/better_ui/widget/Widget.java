@@ -264,7 +264,7 @@ public abstract class Widget {
    * If this widget has a border color, return that, otherwise return the null (invisible) color.
    */
   public Color getBorderColor() {
-    return borderColor != null ? color : nullColor;
+    return borderColor != null ? borderColor : nullColor;
   }
 
 

@@ -90,4 +90,9 @@ public class GamePanel extends JPanel {
   public int getTileSize() {
     return tileSize;
   }
+
+
+  public Game getGame() {
+    return game;
+  }
 }

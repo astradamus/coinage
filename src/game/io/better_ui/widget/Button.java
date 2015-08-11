@@ -115,7 +115,9 @@ public class Button extends TextWidget {
       final Timer timer = new Timer(depressTime, (aE) -> {
 
         // Activate the button's effect.
-        onClick.run();
+        if (onClick != null) {
+          onClick.run();
+        }
 
         // Restore the button's default appearance.
         setBorder(storedBorder);

@@ -138,11 +138,11 @@ public class MouseControl implements MouseMotionListener, MouseListener {
     tools.add(new ToolBoxButton(blue, fM, "Use\nSkill"));
 
     tools.setLayoutWeight(1);
-    toolTip.animateTransform(mB, box, 250);
+    toolTip.animateTransform(mB, box, 150);
 
     toolTip.add(tools);
 
-    final Timer timer = new Timer(250, e1 -> {
+    final Timer timer = new Timer(150, e1 -> {
       final ImmutableRectangle nextBox =
           new ImmutableRectangle(box.getX(), box.getY(), box.getWidth(), 75);
       final ImmutableRectangle next;
@@ -154,7 +154,7 @@ public class MouseControl implements MouseMotionListener, MouseListener {
 
       next = nextBox.getAdjusted(0, adjY, 0, 0);
 
-      toolTip.animateTransform(toolTip.getMarginBox(), next, 250);
+      toolTip.animateTransform(toolTip.getMarginBox(), next, 150);
     });
     timer.setRepeats(false);
     timer.start();

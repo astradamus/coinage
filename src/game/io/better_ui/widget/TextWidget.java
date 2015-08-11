@@ -6,6 +6,8 @@ import utils.ImmutableRectangle;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A basic widget for displaying text.
@@ -15,17 +17,17 @@ public class TextWidget extends AnimatedWidget {
   public static final Font STANDARD_FONT = new Font("Monospaced", Font.PLAIN, 20);
 
   private FontMetrics fontMetrics;
-  private String string;
+  private List<String> strings;
 
 
   public TextWidget(String string) {
-    this.string = string;
+    setString(string);
   }
 
 
   public TextWidget(FontMetrics fontMetrics, String string) {
     this.fontMetrics = fontMetrics;
-    this.string = string;
+    setString(string);
   }
 
 
@@ -36,10 +38,19 @@ public class TextWidget extends AnimatedWidget {
       return; // Cannot pack without font metrics.
     }
 
-    // Produce a new dimension that tightly fits the current string.
-    final int width = fontMetrics.stringWidth(string);
-    final int height = fontMetrics.getFont().getSize();
-    ImmutableDimension size = new ImmutableDimension(width, height);
+    // Produce a new dimension that tightly fits the (manually) line-broken string.
+    String widest = null;
+    int widestWidth = 0;
+    for (final String s : strings) {
+      final int sWidth = fontMetrics.stringWidth(s);
+      if (widest == null || sWidth > widestWidth) {
+        widest = s;
+        widestWidth = sWidth;
+      }
+    }
+
+    final int height = fontMetrics.getFont().getSize() * strings.size();
+    final ImmutableDimension size = new ImmutableDimension(widestWidth, height);
 
     // Expand that dimension to include the borders, margins and padding of this text widget.
     final ImmutableDimension nonContentSize = getNonContentSize();
@@ -62,26 +73,34 @@ public class TextWidget extends AnimatedWidget {
     // If this widget has a font, use that, otherwise use the standard.
     g.setFont(getFont());
 
-    // Calculate the width of the string.
-    final FontMetrics fontMetrics = g.getFontMetrics();
-    final int stringWidth = fontMetrics.stringWidth(string);
+    final int extraLineAdjust = (strings.size() - 1) * fontMetrics.getFont().getSize()/2;
+    for (int i = 0; i < strings.size(); i++) {
+      final String string = strings.get(i);
 
-    // Center inside the content box.
-    final int x = contentBox.getCenterX() - stringWidth / 2;
-    final int y = contentBox.getCenterY() + fontMetrics.getDescent();
+      // Calculate the width of the string.
+      final int stringWidth = fontMetrics.stringWidth(string);
 
-    // Draw.
-    g.drawString(string, x, y);
+      // Center inside the content box.
+      final int x = contentBox.getCenterX() - stringWidth / 2;
+      final int y = contentBox.getCenterY() + fontMetrics.getDescent() - extraLineAdjust;
+
+      // Draw.
+      g.drawString(string, x, y + fontMetrics.getFont().getSize() * i);
+    }
   }
 
 
   public String getString() {
-    return string;
+    String s = "";
+    for (final String string : strings) {
+      s += string + "\n";
+    }
+    return s;
   }
 
 
-  public void setString(String string) {
-    this.string = string;
+  public void setString(String s) {
+    this.strings = Arrays.asList(s.split("\\n"));
   }
 
 

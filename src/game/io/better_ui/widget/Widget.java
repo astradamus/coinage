@@ -84,8 +84,8 @@ public abstract class Widget {
     g.setClip(getMarginBox().toRectangle());
 
     // If this widget has a background color, fill the padded box with that color.
-    if (bgColor != null) {
-      g.setColor(bgColor);
+    if (getBgColor() != null) {
+      g.setColor(getBgColor());
       g.fill(getPaddedBox().toRectangle());
     }
 
@@ -102,7 +102,7 @@ public abstract class Widget {
     g.setClip(getContentBox().toRectangle());
 
     // If this widget has a color setting, use that now, otherwise use the standard.
-    g.setColor(color != null ? color : standardColor);
+    g.setColor(getColor() != null ? getColor() : standardColor);
   }
 
 

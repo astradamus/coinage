@@ -51,6 +51,7 @@ public class MouseControl implements MouseMotionListener, MouseListener {
 
     if (toolTip == null && mouseAt != null && mouseAt.getToolTipHoverTimeReached()) {
       toolTip = new ToolTip();
+      toolTip.fadeIn();
     }
 
     if (toolTip != null) {
@@ -98,7 +99,12 @@ public class MouseControl implements MouseMotionListener, MouseListener {
     }
 
     if (toolTip == null) {
-      return;
+      if (mouseAt == null) {
+        mouseMoved(e); // Because cursor is cleared after a delay, mouseAt can sometimes be null.
+        // This solution is ugly and bug prone, as is this entire implementation. Fix it!
+      }
+      toolTip = new ToolTip();
+      toolTip.resize(new ImmutableDimension(0, toolTip.getMarginBox().getHeight()));
     }
 
     toolTip.handlesMouse = true;
@@ -277,9 +283,12 @@ public class MouseControl implements MouseMotionListener, MouseListener {
       final ImmutableRectangle mB = getMarginBox();
       collapsedBox =
           mB.getAdjusted(mB.getWidth() / 2, mB.getHeight() / 2, -mB.getWidth(), -mB.getHeight());
+    }
 
+
+    void fadeIn() {
       final AnimatedWidget child = (AnimatedWidget) this.getChild(0);
-      child.animateTransform(collapsedBox, mB, 350);
+      child.animateTransform(collapsedBox, getMarginBox(), 350);
       child.animateFade(0, getAlpha().getAlpha(), 500);
     }
 

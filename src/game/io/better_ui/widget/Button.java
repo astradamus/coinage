@@ -61,6 +61,9 @@ public class Button extends TextWidget {
   @Override
   public Color getBorderColor() {
     final Color borderColor = super.getBorderColor();
+    if (borderColor == null) {
+      return null;
+    }
     if (isDown) {
       return borderColor.darker();
     }
@@ -74,7 +77,7 @@ public class Button extends TextWidget {
   @Override
   public Color getBgColor() {
     final Color bgColor = super.getBgColor();
-    if (isMouseHovering()) {
+    if (bgColor != null && isMouseHovering()) {
       return bgColor.brighter();
     }
     return bgColor;
@@ -87,7 +90,7 @@ public class Button extends TextWidget {
     if (isDown) {
       return color.darker();
     }
-    if (isMouseHovering()) {
+    if (color != null && isMouseHovering()) {
       return color.brighter();
     }
     return color;

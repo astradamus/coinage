@@ -3,6 +3,8 @@ package game.io.better_ui.widget_ui;
 import game.Game;
 import game.io.better_ui.GamePanel;
 import game.io.better_ui.widget.AnimatedWidget;
+import game.io.better_ui.widget.LinearLayout;
+import game.io.better_ui.widget.Orientation;
 import game.io.better_ui.widget.TextWidget;
 import game.physical.Physical;
 import utils.ImmutableDimension;
@@ -45,7 +47,7 @@ public class MouseControl implements MouseMotionListener, MouseListener {
     this.playerAreaOrigin = playerAreaOrigin;
 
     if (toolTip == null && mouseAt != null && mouseAt.getToolTipHoverTimeReached()) {
-      toolTip = new ToolTip(mouseAt, makeToolTip(g, getPhysicalUnderMouse()));
+      toolTip = new ToolTip(makeToolTip(g, getPhysicalUnderMouse()));
     }
 
     if (toolTip != null) {
@@ -54,23 +56,23 @@ public class MouseControl implements MouseMotionListener, MouseListener {
   }
 
   private class ToolTip {
-    private final ImmutablePoint point;
-    private final AnimatedWidget widget;
-
+    private final LinearLayout widget;
     final ImmutableRectangle collapsedBox;
+
     private boolean fading = false;
+    private boolean handlesMouse = false;
 
 
-    public ToolTip(ImmutablePoint point, AnimatedWidget widget) {
-      this.point = point;
+    public ToolTip(LinearLayout widget) {
       this.widget = widget;
 
       final ImmutableRectangle mB = widget.getMarginBox();
       collapsedBox =
           mB.getAdjusted(mB.getWidth() / 2, mB.getHeight() / 2, -mB.getWidth(), -mB.getHeight());
 
-      this.widget.animateTransform(collapsedBox, mB, 350);
-      this.widget.animateFade(0, widget.getAlpha().getAlpha(), 500);
+      final AnimatedWidget child = (AnimatedWidget) this.widget.getChild(0);
+      child.animateTransform(collapsedBox, mB, 350);
+      child.animateFade(0, widget.getAlpha().getAlpha(), 500);
     }
 
     void fadeOut() {
@@ -80,9 +82,10 @@ public class MouseControl implements MouseMotionListener, MouseListener {
       else {
         fading = true;
       }
-      final ImmutableRectangle mB = widget.getMarginBox();
-      this.widget.animateTransform(mB, collapsedBox, 275);
-      this.widget.animateFade(widget.getAlpha().getAlpha(), 0, 300);
+      final AnimatedWidget child = (AnimatedWidget) this.widget.getChild(0);
+      final ImmutableRectangle mB = child.getMarginBox();
+      child.animateTransform(mB, collapsedBox, 275);
+      child.animateFade(child.getAlpha().getAlpha(), 0, 300);
 
       final Timer timer = new Timer(300, (aE) -> toolTip = null);
       timer.setRepeats(false);
@@ -91,7 +94,7 @@ public class MouseControl implements MouseMotionListener, MouseListener {
   }
 
 
-  private TextWidget makeToolTip(Graphics g, Physical p) {
+  private LinearLayout makeToolTip(Graphics g, Physical p) {
 
     final ImmutablePoint widgetAt =
         new ImmutablePoint((mouseAt.getX() + 2) * tileSize, mouseAt.getY() * tileSize);
@@ -128,7 +131,13 @@ public class MouseControl implements MouseMotionListener, MouseListener {
       titleWidget.move(marginBox.getOrigin().getTranslated(offX, offY));
     }
 
-    return titleWidget;
+
+    LinearLayout linearLayout = new LinearLayout(marginBox, Orientation.VERT);
+    linearLayout.add(titleWidget);
+
+    return linearLayout;
+
+//    return titleWidget;
   }
 
 
@@ -155,6 +164,11 @@ public class MouseControl implements MouseMotionListener, MouseListener {
   @Override
   public void mouseMoved(MouseEvent e) {
 
+    if (toolTip != null && toolTip.handlesMouse) {
+      toolTip.widget.handleMouseMoved(e);
+      return;
+    }
+
     final int tileX = e.getX() / tileSize;
     final int tileY = e.getY() / tileSize;
 
@@ -171,7 +185,11 @@ public class MouseControl implements MouseMotionListener, MouseListener {
 
 
   @Override
-  public void mouseClicked(MouseEvent e) { }
+  public void mouseClicked(MouseEvent e) {
+    if (toolTip != null && toolTip.handlesMouse) {
+      toolTip.widget.handleMouseClicked(e);
+    }
+  }
 
 
   @Override

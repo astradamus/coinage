@@ -39,6 +39,7 @@ public class MouseControl implements KeyListener, MouseMotionListener, MouseList
 
   private ToolTip toolTip;
   private boolean ctrlIsDown;
+  private boolean shiftIsDown;
 
 
   public MouseControl(Game game, GamePanel gamePanel) {
@@ -52,9 +53,15 @@ public class MouseControl implements KeyListener, MouseMotionListener, MouseList
   public void drawOverlay(Graphics2D g, Coordinate playerAreaOrigin) {
     this.playerAreaOrigin = playerAreaOrigin;
 
-    if (ctrlIsDown && mouseAt != null) {
-      g.setColor(Color.RED);
-      g.drawOval(mouseAt.getX() * tileSize, mouseAt.getY() * tileSize, tileSize, tileSize);
+    if (mouseAt != null) {
+      if (ctrlIsDown) {
+        g.setColor(Color.RED);
+        g.drawOval(mouseAt.getX() * tileSize, mouseAt.getY() * tileSize, tileSize, tileSize);
+      }
+      else if (shiftIsDown) {
+        g.setColor(Color.GREEN);
+        g.drawOval(mouseAt.getX() * tileSize, mouseAt.getY() * tileSize, tileSize, tileSize);
+      }
     }
 
     if (toolTip == null && mouseAt != null && mouseAt.getToolTipHoverTimeReached()) {
@@ -117,6 +124,10 @@ public class MouseControl implements KeyListener, MouseMotionListener, MouseList
 
     if (ctrlIsDown) {
       onClickAttackButton();
+      return;
+    }
+    else if (shiftIsDown) {
+      onClickPickUpButton();
       return;
     }
 
@@ -254,12 +265,14 @@ public class MouseControl implements KeyListener, MouseMotionListener, MouseList
   @Override
   public void keyPressed(KeyEvent e) {
     ctrlIsDown = e.isControlDown();
+    shiftIsDown = e.isShiftDown();
   }
 
 
   @Override
   public void keyReleased(KeyEvent e) {
     ctrlIsDown = e.isControlDown();
+    shiftIsDown = e.isShiftDown();
   }
 
 

@@ -31,6 +31,7 @@ public class GameFrame extends JFrame implements DirectionListener {
     setVisible(true);
 
     addKeyListener(new WASDDirectionInterpreter(this));
+    addKeyListener(gamePanel.getMouseControl());
   }
 
 

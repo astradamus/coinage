@@ -19,6 +19,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -26,7 +28,7 @@ import java.awt.event.MouseMotionListener;
 /**
  *
  */
-public class MouseControl implements MouseMotionListener, MouseListener {
+public class MouseControl implements KeyListener, MouseMotionListener, MouseListener {
 
   private final Game game;
   private final int tileSize;
@@ -36,6 +38,7 @@ public class MouseControl implements MouseMotionListener, MouseListener {
   private MousePosition mouseAt;
 
   private ToolTip toolTip;
+  private boolean ctrlIsDown;
 
 
   public MouseControl(Game game, GamePanel gamePanel) {
@@ -48,6 +51,11 @@ public class MouseControl implements MouseMotionListener, MouseListener {
 
   public void drawOverlay(Graphics2D g, Coordinate playerAreaOrigin) {
     this.playerAreaOrigin = playerAreaOrigin;
+
+    if (ctrlIsDown && mouseAt != null) {
+      g.setColor(Color.RED);
+      g.drawOval(mouseAt.getX() * tileSize, mouseAt.getY() * tileSize, tileSize, tileSize);
+    }
 
     if (toolTip == null && mouseAt != null && mouseAt.getToolTipHoverTimeReached()) {
       toolTip = new ToolTip();
@@ -105,6 +113,11 @@ public class MouseControl implements MouseMotionListener, MouseListener {
       }
       toolTip = new ToolTip();
       toolTip.resize(new ImmutableDimension(0, toolTip.getMarginBox().getHeight()));
+    }
+
+    if (ctrlIsDown) {
+      onClickAttackButton();
+      return;
     }
 
     toolTip.handlesMouse = true;
@@ -230,6 +243,25 @@ public class MouseControl implements MouseMotionListener, MouseListener {
       setCursor(tileX, tileY);
     }
   }
+
+
+  @Override
+  public void keyTyped(KeyEvent e) {
+
+  }
+
+
+  @Override
+  public void keyPressed(KeyEvent e) {
+    ctrlIsDown = e.isControlDown();
+  }
+
+
+  @Override
+  public void keyReleased(KeyEvent e) {
+    ctrlIsDown = e.isControlDown();
+  }
+
 
   class ToolTip extends LinearLayout {
     final ImmutableRectangle collapsedBox;

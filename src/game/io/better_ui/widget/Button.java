@@ -15,7 +15,7 @@ import java.util.Objects;
 public class Button extends TextWidget {
 
   private static final Font DEPRESS_FONT;
-  private static final int depressTime = 150;
+  private static final int depressTime = 100;
 
   static {
     final Font std = TextWidget.STANDARD_FONT;

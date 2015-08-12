@@ -349,14 +349,14 @@ public class MouseControl implements KeyListener, MouseMotionListener, MouseList
       for (Widget child : this.getSubwidgets()) {
         final AnimatedWidget anim = (AnimatedWidget) child;
         final ImmutableRectangle mB = anim.getMarginBox();
-        anim.animateTransform(mB, collapsedBox, 275);
-        anim.animateFade(child.getAlpha().getAlpha(), 0, 300);
+        anim.animateTransform(mB, collapsedBox, 150);
+        anim.animateFade(child.getAlpha().getAlpha(), 0, 175);
       }
 
-      this.animateTransform(this.getMarginBox(), collapsedBox, 275);
-      this.animateFade(this.getAlpha().getAlpha(), 0, 300);
+      this.animateTransform(this.getMarginBox(), collapsedBox, 150);
+      this.animateFade(this.getAlpha().getAlpha(), 0, 175);
 
-      final Timer timer = new Timer(300, (aE) -> toolTip = null);
+      final Timer timer = new Timer(175, (aE) -> toolTip = null);
       timer.setRepeats(false);
       timer.start();
     }

@@ -60,7 +60,7 @@ public class EquipWeapon extends Action {
 
         getActor().setEquippedWeapon(validatedWeapon);
 
-        if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
+        if (hasFlag(ActionFlag.ACTOR_IS_PLAYER)) {
             EventLog.registerEvent(Event.SUCCESS, "You have equipped " + validatedWeapon.getName() + ".");
         }
     }

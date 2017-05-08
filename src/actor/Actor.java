@@ -147,7 +147,7 @@ public class Actor extends Physical {
                 if (repeat != null) {
 
                     // Copy repeating flag(s).
-                    if (repeat.hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
+                    if (repeat.hasFlag(ActionFlag.ACTOR_IS_PLAYER)) {
                         repeat.playerIsActor();
                     }
 

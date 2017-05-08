@@ -121,13 +121,13 @@ public abstract class Action {
 
 
     public Action playerIsActor() {
-        addFlag(ActionFlag.PLAYER_IS_ACTOR);
+        addFlag(ActionFlag.ACTOR_IS_PLAYER);
         return this;
     }
 
 
     public Action playerIsTarget() {
-        addFlag(ActionFlag.PLAYER_IS_TARGET);
+        addFlag(ActionFlag.TARGET_IS_PLAYER);
         return this;
     }
 

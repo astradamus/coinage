@@ -42,7 +42,7 @@ public class Collecting extends Action {
 
         if (thingToCollect.hasFlag(PhysicalFlag.IMMOVABLE)) {
 
-            if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
+            if (hasFlag(ActionFlag.ACTOR_IS_PLAYER)) {
                 final String message = "You couldn't seem to collect " + thingToCollect.getName() + ".";
                 EventLog.registerEvent(Event.FAILURE, message);
             }
@@ -51,7 +51,7 @@ public class Collecting extends Action {
 
         boolean itemIsAtTarget = world.getSquare(getTarget()).getAll().contains(thingToCollect);
 
-        if (!itemIsAtTarget && hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
+        if (!itemIsAtTarget && hasFlag(ActionFlag.ACTOR_IS_PLAYER)) {
             EventLog.registerEvent(Event.FAILURE, "The thing you were reaching for is no longer there.");
         }
 
@@ -64,7 +64,7 @@ public class Collecting extends Action {
      */
     @Override
     protected void apply(World world) {
-        if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
+        if (hasFlag(ActionFlag.ACTOR_IS_PLAYER)) {
             final String message = "You have added " + thingToCollect.getName() + " to your inventory.";
             EventLog.registerEvent(Event.SUCCESS, message);
         }

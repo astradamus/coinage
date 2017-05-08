@@ -1,7 +1,7 @@
 package game.io.input;
 
-import controller.action.EquipWeapon;
-import controller.action.Placing;
+import controller.action.Action_EquipWeapon;
+import controller.action.Action_Place;
 import controller.player.PlayerAgent;
 import game.io.display.Event;
 import game.io.display.EventLog;
@@ -43,7 +43,7 @@ public enum Commands_Inventory implements Command {
                 }
 
                 final PlayerAgent player = GameInput.getRunningGame().getPlayerAgent();
-                player.attemptAction(new EquipWeapon(player.getActor(), equip));
+                player.attemptAction(new Action_EquipWeapon(player.getActor(), equip));
 
                 GameInput.enterMode(GameMode.EXPLORE);
             }
@@ -79,7 +79,7 @@ public enum Commands_Inventory implements Command {
                                            @Override
                                            public void execute(Coordinate selected) {
 
-                                               player.attemptAction(new Placing(player.getActor(), selected, placing));
+                                               player.attemptAction(new Action_Place(player.getActor(), selected, placing));
 
                                                GameInput.enterMode(GameMode.EXPLORE);
                                            }

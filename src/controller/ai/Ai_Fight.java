@@ -6,8 +6,8 @@ import actor.attribute.Perception;
 import actor.attribute.Rank;
 import controller.action.Action;
 import controller.action.ActionFlag;
-import controller.action.Attacking;
-import controller.action.Moving;
+import controller.action.Action_Attack;
+import controller.action.Action_Move;
 import game.TimeMode;
 import game.io.GameEngine;
 import game.io.display.Event;
@@ -77,7 +77,7 @@ public class Ai_Fight extends Behavior {
 
             // If we are adjacent to our enemy, attack them.
             if (actorAt.getIsAdjacentTo(enemyAt)) {
-                final Attacking action = new Attacking(getActor(), victim.getCoordinate());
+                final Action_Attack action = new Action_Attack(getActor(), victim.getCoordinate());
 
                 if (getAgent().getGameInformer().getActorIsPlayer(victim)) {
                     action.playerIsTarget();
@@ -120,7 +120,7 @@ public class Ai_Fight extends Behavior {
     public void onActionExecuted(Action action) {
 
         // Moves only fail because of blocked squares, so step around the blockage.
-        if (action.hasFlag(ActionFlag.FAILED) && action.getClass() == Moving.class) {
+        if (action.hasFlag(ActionFlag.FAILED) && action.getClass() == Action_Move.class) {
             Routines.stepAroundBlockedSquare(getAgent());
         }
     }

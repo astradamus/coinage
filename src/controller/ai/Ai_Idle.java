@@ -1,7 +1,7 @@
 package controller.ai;
 
 import actor.Actor;
-import controller.action.Turning;
+import controller.action.Action_Turn;
 import game.Direction;
 import game.Game;
 
@@ -63,7 +63,7 @@ public class Ai_Idle extends Behavior {
                     turnTo = turnTo.getRightNeighbor();
                 }
 
-                getAgent().attemptAction(new Turning(getActor(), turnTo));
+                getAgent().attemptAction(new Action_Turn(getActor(), turnTo));
             }
         }
     }

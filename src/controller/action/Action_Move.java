@@ -17,7 +17,7 @@ import java.awt.Color;
  * <p>
  * Passing {@code true} to {@code isWalking} will reduce movement to one-third speed.
  */
-public class Moving extends Action {
+public class Action_Move extends Action {
 
     private final static int BASELINE_RANK = 5;
     private final static int BEATS_AT_BASELINE = 4;
@@ -29,7 +29,7 @@ public class Moving extends Action {
     private final boolean isWalking;
 
 
-    public Moving(Actor actor, Direction movingIn, boolean isWalking) {
+    public Action_Move(Actor actor, Direction movingIn, boolean isWalking) {
         super(actor, actor.getCoordinate().offset(movingIn.relativeX, movingIn.relativeY));
         this.movingIn = movingIn;
         this.isWalking = isWalking;
@@ -82,7 +82,7 @@ public class Moving extends Action {
 
 
     /**
-     * Moving will fail if the target coordinate is blocked or if the actor is somehow relocated
+     * Action_Move will fail if the target coordinate is blocked or if the actor is somehow relocated
      * before completing the movement.
      */
     @Override
@@ -128,7 +128,7 @@ public class Moving extends Action {
             return null;
         }
         else {
-            return new Moving(getActor(), movingIn, isWalking);
+            return new Action_Move(getActor(), movingIn, isWalking);
         }
     }
 

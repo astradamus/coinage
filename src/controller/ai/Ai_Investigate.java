@@ -4,7 +4,7 @@ import actor.Actor;
 import actor.attribute.Attribute;
 import actor.attribute.Perception;
 import actor.attribute.Rank;
-import controller.action.Turning;
+import controller.action.Action_Turn;
 import game.Direction;
 import world.Coordinate;
 
@@ -75,7 +75,7 @@ public class Ai_Investigate extends Behavior {
 
             // Otherwise, try to turn towards the sound.
             else {
-                getAgent().attemptAction(new Turning(getActor(), towardsSourceOfSound));
+                getAgent().attemptAction(new Action_Turn(getActor(), towardsSourceOfSound));
             }
         }
     }

@@ -11,12 +11,12 @@ import world.World;
 /**
  * Actors perform collects to move items from the world to their inventory.
  */
-public class Collecting extends Action {
+public class Action_Collect extends Action {
 
     private final Physical thingToCollect;
 
 
-    public Collecting(Actor actor, Physical thingToCollect, Coordinate whereThingIs) {
+    public Action_Collect(Actor actor, Physical thingToCollect, Coordinate whereThingIs) {
         super(actor, whereThingIs);
         this.thingToCollect = thingToCollect;
     }
@@ -35,7 +35,7 @@ public class Collecting extends Action {
 
 
     /**
-     * Collecting will fail if the item is immovable, or if the item is not found at the target location.
+     * Action_Collect will fail if the item is immovable, or if the item is not found at the target location.
      */
     @Override
     protected boolean validate(World world) {

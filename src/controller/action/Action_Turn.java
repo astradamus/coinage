@@ -9,19 +9,19 @@ import world.World;
  * at a time, but attempts to turn more than one grade will automatically repeat until the target is
  * reached.
  */
-public class Turning extends Action {
+public class Action_Turn extends Action {
 
     final Direction turningTowards;
 
 
-    public Turning(Actor actor, Direction turningTowards) {
+    public Action_Turn(Actor actor, Direction turningTowards) {
         super(actor, null);
         this.turningTowards = turningTowards;
     }
 
 
     /**
-     * Turning cannot currently fail.
+     * Action_Turn cannot currently fail.
      */
     @Override
     protected boolean validate(World world) {
@@ -70,7 +70,7 @@ public class Turning extends Action {
         }
         else {
 
-            final Turning next = new Turning(getActor(), turningTowards);
+            final Action_Turn next = new Action_Turn(getActor(), turningTowards);
 
             if (hasFlag(ActionFlag.DO_NOT_REPEAT)) {
                 next.doNotRepeat(); // Pass repeat cancellation along the chain, if there is one.

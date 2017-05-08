@@ -10,12 +10,12 @@ import world.World;
 /**
  * Actors perform placings to move items from their inventory to the world.
  */
-public class Placing extends Action {
+public class Action_Place extends Action {
 
     private final Physical placingWhat;
 
 
-    public Placing(Actor actor, Coordinate placingWhere, Physical placingWhat) {
+    public Action_Place(Actor actor, Coordinate placingWhere, Physical placingWhat) {
         super(actor, placingWhere);
         this.placingWhat = placingWhat;
     }
@@ -34,7 +34,7 @@ public class Placing extends Action {
 
 
     /**
-     * Placing will fail if the target location is blocked, or if the item is no longer in the actor's
+     * Action_Place will fail if the target location is blocked, or if the item is no longer in the actor's
      * inventory at the time of execution.
      */
     @Override

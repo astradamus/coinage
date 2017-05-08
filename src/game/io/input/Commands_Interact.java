@@ -1,7 +1,7 @@
 package game.io.input;
 
 import actor.Actor;
-import controller.action.Collecting;
+import controller.action.Action_Collect;
 import controller.player.PlayerAgent;
 import game.io.display.Event;
 import game.io.display.EventLog;
@@ -50,7 +50,7 @@ public enum Commands_Interact implements Command {
                 return;
             }
 
-            playerAgent.attemptAction(new Collecting(playerActor, selected, GameInput.getPlayerTarget()));
+            playerAgent.attemptAction(new Action_Collect(playerActor, selected, GameInput.getPlayerTarget()));
 
             GameInput.enterMode(GameMode.EXPLORE);
 

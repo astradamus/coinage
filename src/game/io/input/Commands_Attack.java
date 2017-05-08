@@ -1,6 +1,6 @@
 package game.io.input;
 
-import controller.action.Attacking;
+import controller.action.Action_Attack;
 import controller.player.PlayerAgent;
 import game.io.display.Event;
 import game.io.display.EventLog;
@@ -37,8 +37,8 @@ public enum Commands_Attack implements Command {
             }
             else {
 
-                playerAgent.attemptAction(new Attacking(playerAgent.getActor(),
-                                                        GameInput.getPlayerTarget()));
+                playerAgent.attemptAction(new Action_Attack(playerAgent.getActor(),
+                                                            GameInput.getPlayerTarget()));
 
             }
 

@@ -6,12 +6,12 @@ import game.Direction;
 /**
  *
  */
-public class TurnThenMove extends Turning {
+public class Action_TurnThenMove extends Action_Turn {
 
     private final boolean isWalking;
 
 
-    public TurnThenMove(Actor actors, Direction turningTowards, boolean isWalking) {
+    public Action_TurnThenMove(Actor actors, Direction turningTowards, boolean isWalking) {
         super(actors, turningTowards);
         this.isWalking = isWalking;
     }
@@ -25,10 +25,10 @@ public class TurnThenMove extends Turning {
         Action next;
 
         if (!targetDirectionReached) {
-            next = new TurnThenMove(getActor(), turningTowards, isWalking);
+            next = new Action_TurnThenMove(getActor(), turningTowards, isWalking);
         }
         else {
-            next = new Moving(getActor(), turningTowards, isWalking);
+            next = new Action_Move(getActor(), turningTowards, isWalking);
         }
 
         if (hasFlag(ActionFlag.DO_NOT_REPEAT)) {

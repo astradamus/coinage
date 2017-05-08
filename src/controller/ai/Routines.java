@@ -6,8 +6,8 @@ import actor.attribute.Perception;
 import actor.attribute.Rank;
 import actor.stats.Health;
 import controller.action.Action;
-import controller.action.Moving;
-import controller.action.TurnThenMove;
+import controller.action.Action_Move;
+import controller.action.Action_TurnThenMove;
 import game.Direction;
 import game.Game;
 import game.physical.PhysicalFlag;
@@ -35,10 +35,10 @@ class Routines {
         final Action action;
 
         if (alreadyFacingGoal) {
-            action = new Moving(actor, goal, isWalking);
+            action = new Action_Move(actor, goal, isWalking);
         }
         else {
-            action = new TurnThenMove(actor, goal, isWalking);
+            action = new Action_TurnThenMove(actor, goal, isWalking);
         }
 
         if (doNotRepeat) {
@@ -67,7 +67,7 @@ class Routines {
             turningTowards = turningTowards.getRightNeighbor();
         }
 
-        agent.attemptAction(new TurnThenMove(actor, turningTowards, false).doNotRepeat());
+        agent.attemptAction(new Action_TurnThenMove(actor, turningTowards, false).doNotRepeat());
     }
 
 

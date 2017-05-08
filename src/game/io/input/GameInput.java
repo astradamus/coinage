@@ -1,9 +1,9 @@
 package game.io.input;
 
 import controller.action.Action;
-import controller.action.Moving;
-import controller.action.TurnThenMove;
-import controller.action.Turning;
+import controller.action.Action_Move;
+import controller.action.Action_Turn;
+import controller.action.Action_TurnThenMove;
 import game.Direction;
 import game.Game;
 import game.physical.Physical;
@@ -106,7 +106,7 @@ public class GameInput {
         }
         else if (startRepeatingMoveDelay == 0 && shouldDelayMoveRepeat()) {
             runningGame.getPlayerAgent().attemptAction(
-                    new Moving(runningGame.getActivePlayerActor(), delayedMoveDirection, false));
+                    new Action_Move(runningGame.getActivePlayerActor(), delayedMoveDirection, false));
             terminateRepeatingMoveTimer();
         }
     }
@@ -199,8 +199,8 @@ public class GameInput {
 
 
     private static void turnThenMove(Direction direction) {
-        final TurnThenMove action =
-                new TurnThenMove(runningGame.getActivePlayerActor(), direction, false);
+        final Action_TurnThenMove action =
+                new Action_TurnThenMove(runningGame.getActivePlayerActor(), direction, false);
 
         if (shouldDelayMoveRepeat()) {
             delayRepeatOfMove(action, direction);
@@ -212,18 +212,18 @@ public class GameInput {
 
     private static void turn(Direction direction) {
         runningGame.getPlayerAgent()
-                .attemptAction(new Turning(runningGame.getActivePlayerActor(), direction));
+                .attemptAction(new Action_Turn(runningGame.getActivePlayerActor(), direction));
     }
 
 
     private static void move(Direction direction) {
-        final Moving moving = new Moving(runningGame.getActivePlayerActor(), direction, false);
+        final Action_Move actionMove = new Action_Move(runningGame.getActivePlayerActor(), direction, false);
 
         if (shouldDelayMoveRepeat()) {
-            delayRepeatOfMove(moving, direction);
+            delayRepeatOfMove(actionMove, direction);
         }
 
-        runningGame.getPlayerAgent().attemptAction(moving);
+        runningGame.getPlayerAgent().attemptAction(actionMove);
     }
 
 

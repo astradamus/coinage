@@ -10,13 +10,13 @@ import world.World;
 /**
  *
  */
-public class EquipWeapon extends Action {
+public class Action_EquipWeapon extends Action {
 
     private final Physical weapon;
     private Thing validatedWeapon;
 
 
-    public EquipWeapon(Actor actor, Physical weapon) {
+    public Action_EquipWeapon(Actor actor, Physical weapon) {
         super(actor, null);
         this.weapon = weapon;
     }

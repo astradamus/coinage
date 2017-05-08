@@ -18,12 +18,12 @@ import java.awt.Color;
 /**
  * Actors perform attacks to inflict damage upon other actors.
  */
-public class Attacking extends Action {
+public class Action_Attack extends Action {
 
     private Actor victim;
 
 
-    public Attacking(Actor actor, Coordinate target) {
+    public Action_Attack(Actor actor, Coordinate target) {
         super(actor, target);
     }
 
@@ -51,7 +51,7 @@ public class Attacking extends Action {
 
 
     /**
-     * Attacking will fail if there is no living actor at the target location.
+     * Action_Attack will fail if there is no living actor at the target location.
      */
     @Override
     protected boolean validate(World world) {

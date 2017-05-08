@@ -51,8 +51,7 @@ public class Attacking extends Action {
 
 
     /**
-     * Attacking will fail if the intendedVictim is already dead or if the intendedVictim is no longer
-     * at the target location.
+     * Attacking will fail if there is no living actor at the target location.
      */
     @Override
     protected boolean validate(World world) {

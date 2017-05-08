@@ -84,8 +84,8 @@ class Routines {
 
 
     /**
-     * Sweeps the area in which the agent resides for other actor controllers. The first one it finds
-     * within sensory range (as defined by the agent's perception attribute)
+     * Sweeps the area in which the agent resides for other actor controllers, reacting to the first one it finds
+     * within sensory range (as defined by the agent's perception attribute), or doing nothing if none are found.
      */
     public static void performSensoryScan(AiActorAgent agent) {
 
@@ -96,16 +96,12 @@ class Routines {
         // Get all actor controllers in our area.
         final Set<Actor> localActors = agent.requestActorsInMyArea();
 
+        // Scan through each, skipping invalid options.
         for (Actor scanTarget : localActors) {
+            final boolean targetIsSelf = scanTarget == agent.getActor();
+            final boolean eitherIsTimid = actor.hasFlag(PhysicalFlag.TIMID) || scanTarget.hasFlag(PhysicalFlag.TIMID);
 
-            // Scan through each, skipping any that fail either of the following tests.
-            if (
-
-                // Don't react to self.
-                    scanTarget != agent.getActor()
-
-                            // Timid actors ignore each other.
-                            && !(actor.hasFlag(PhysicalFlag.TIMID) && scanTarget.hasFlag(PhysicalFlag.TIMID))) {
+            if (!targetIsSelf && !eitherIsTimid) {
 
                 // If we've passed the tests, determine if this actor controller is within either visual or
                 // auditory range (in that order). If it is, react accordingly, if not, go to the next

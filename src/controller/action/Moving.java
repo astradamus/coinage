@@ -15,7 +15,7 @@ import java.awt.Color;
  * to move, albeit less so if the direction is immediately adjacent (i.e. northwest and northeast
  * for north).
  * <p>
- * Passing {@code true} to {@code isWalking} will reduce movement to half speed.
+ * Passing {@code true} to {@code isWalking} will reduce movement to one-third speed.
  */
 public class Moving extends Action {
 

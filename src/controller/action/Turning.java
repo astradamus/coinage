@@ -7,8 +7,7 @@ import world.World;
 /**
  * Actors perform turns to change their facing direction. Actors can only turn one direction grade
  * at a time, but attempts to turn more than one grade will automatically repeat until the target is
- * reached. Passing {@code true} to {@code moveAfterTurning} will cause the complete turning chain
- * to be finalized with a movement in the given direction.
+ * reached.
  */
 public class Turning extends Action {
 

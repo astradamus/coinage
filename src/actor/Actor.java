@@ -90,7 +90,7 @@ public class Actor extends Physical {
      * does not currently have an action queued.
      */
     public final boolean isFreeToAct() {
-        return action == null && actionTimer.isReady();
+        return action == null && actionTimer.isFreeToAct();
     }
 
 
@@ -101,8 +101,8 @@ public class Actor extends Physical {
      * that you lose the beats you spent warming up the replaced action.
      */
     public final void startAction(Action action) {
-        actionTimer.cancelWarmUp();
-        actionTimer.addBeatsToWarmUp(action.calcDelayToPerform());
+        actionTimer.cancelPerforming();
+        actionTimer.addPerformingDelay(action.calcDelayToPerform());
         this.action = action;
     }
 
@@ -131,14 +131,14 @@ public class Actor extends Physical {
      */
     public final void onUpdate(Executor executor) {
 
-        if (!actionTimer.isReady()) {
+        if (!actionTimer.isFreeToAct()) {
             actionTimer.decrementClock();
         }
         else if (action != null) {
 
             final Action executing = action;
             final boolean performedSuccessfully = executor.executeAction(executing);
-            actionTimer.addBeatsToCoolDown(action.calcDelayToRecover());
+            actionTimer.addRecoveringDelay(action.calcDelayToRecover());
 
             if (performedSuccessfully) {
 

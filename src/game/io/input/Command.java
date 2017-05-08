@@ -1,15 +1,15 @@
 package game.io.input;
 
 
-
 /**
  *
  */
 public interface Command {
 
-  int getHotKeyCode();
-  String getControlText();
+    int getHotKeyCode();
 
-  void execute();
+    String getControlText();
+
+    void execute();
 
 }

@@ -12,26 +12,26 @@ import world.World;
  */
 public interface Controller {
 
-  void setControllerInterface(ControllerInterface controllerInterface);
+    void setControllerInterface(ControllerInterface controllerInterface);
 
-  void onUpdate(Executor executor);
+    void onUpdate(Executor executor);
 
-  boolean getIsStillRunning();
+    boolean getIsStillRunning();
 
-  /**
-   * Called between frames, after the current update() has finished. Determines the order in which
-   * Controllers will have onUpdate() called for the next frame--higher returns go first. Should not
-   * return the same value every time its called, unless we're intentionally forcing this controller
-   * to be called first or last in the order every time.
-   */
-  default Integer getRolledInitiative() {
-    return 0;
-  }
+    /**
+     * Called between frames, after the current update() has finished. Determines the order in which
+     * Controllers will have onUpdate() called for the next frame--higher returns go first. Should not
+     * return the same value every time its called, unless we're intentionally forcing this controller
+     * to be called first or last in the order every time.
+     */
+    default Integer getRolledInitiative() {
+        return 0;
+    }
 
-  /**
-   * Non-local controllers should return null.
-   */
-  default Area getLocality(World world) {
-    return null;
-  }
+    /**
+     * Non-local controllers should return null.
+     */
+    default Area getLocality(World world) {
+        return null;
+    }
 }

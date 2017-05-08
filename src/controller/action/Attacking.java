@@ -20,115 +20,114 @@ import java.awt.Color;
  */
 public class Attacking extends Action {
 
-  private Actor victim;
+    private Actor victim;
 
 
-  public Attacking(Actor actor, Coordinate target) {
-    super(actor, target);
-  }
-
-
-  @Override
-  public Color getIndicatorColor() {
-    return Color.RED;
-  }
-
-
-  @Override
-  public int calcDelayToPerform() {
-    final Thing equippedWeapon = getActor().getActiveWeapon();
-    return equippedWeapon.getWeaponComponent()
-        .calcAttackSpeed(getActor().getAttributeRank(Attribute.REFLEX));
-  }
-
-
-  @Override
-  public int calcDelayToRecover() {
-    final Thing equippedWeapon = getActor().getActiveWeapon();
-    return equippedWeapon.getWeaponComponent()
-        .calcRecoverySpeed(getActor().getAttributeRank(Attribute.REFLEX));
-  }
-
-
-  /**
-   * Attacking will fail if the intendedVictim is already dead or if the intendedVictim is no longer
-   * at the target location.
-   */
-  @Override
-  protected boolean validate(World world) {
-
-    // Check if there's a victim in the target square for the attack to hit.
-    victim = getLiveTargetAt(world, getTarget());
-
-    // If we have a victim, then this attack is a hit.
-    final boolean attackHit = victim != null;
-
-    if (!attackHit && hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
-
-      final String attackTypeString =
-          getActor().getActiveWeapon().getWeaponComponent().getDamageType().getAttackString();
-
-      EventLog
-          .registerEvent(Event.FAILURE, "Your " + attackTypeString + " has hit naught but air.");
+    public Attacking(Actor actor, Coordinate target) {
+        super(actor, target);
     }
 
-    return attackHit;
-  }
 
-
-  /**
-   * Wound the victim with the weapon equipped by this actor.
-   */
-  @Override
-  protected void apply(World world) {
-
-    final Thing weapon = getActor().getActiveWeapon();
-    final WeaponComponent weaponComponent = weapon.getWeaponComponent();
-
-    // Determine how much damage this attack will do.
-    final Rank muscle = getActor().getAttributeRank(Attribute.MUSCLE);
-    final int damage = weaponComponent.calculateDamageRange(muscle).getRandomWithin(Game.RANDOM);
-
-    // Construct the event log string for this attack.
-    final String hitString = weaponComponent.getDamageType().getHitString();
-
-    String victimName = victim.getName();
-    if (hasFlag(ActionFlag.PLAYER_IS_TARGET)) {
-      victimName = "YOU";
+    @Override
+    public Color getIndicatorColor() {
+        return Color.RED;
     }
 
-    final String messageA = hitString + " " + victimName + " with ";
-    final String messageB = weapon.getName() + " for " + Integer.toString(damage) + " damage.";
 
-    String message;
-
-    if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
-      message = "You have " + messageA + "your " + messageB;
-    }
-    else {
-      message = getActor().getName() + " has " + messageA + "its " + messageB;
+    @Override
+    public int calcDelayToPerform() {
+        final Thing equippedWeapon = getActor().getActiveWeapon();
+        return equippedWeapon.getWeaponComponent()
+                .calcAttackSpeed(getActor().getAttributeRank(Attribute.REFLEX));
     }
 
-    // Log the message if the player is in this area.
-    EventLog.registerEventIfPlayerIsLocal(victim.getCoordinate(), Event.ACTOR_WOUNDED, message);
 
-    // Apply the damage to the victim and notify the victim's controller.
-    victim.getHealth().wound(damage);
-    victim.getActorObserver().onVictimized(getActor());
-  }
-
-
-  /**
-   * @return The living actor occupying the target coordinate, or null if there isn't one.
-   */
-  private Actor getLiveTargetAt(World world, Coordinate coordinate) {
-
-    final Physical targetPhysical = world.getSquare(coordinate).getAll().get(0);
-    if (!targetPhysical.hasFlag(PhysicalFlag.DEAD) && targetPhysical.getClass() == Actor.class) {
-      return (Actor) targetPhysical;
+    @Override
+    public int calcDelayToRecover() {
+        final Thing equippedWeapon = getActor().getActiveWeapon();
+        return equippedWeapon.getWeaponComponent()
+                .calcRecoverySpeed(getActor().getAttributeRank(Attribute.REFLEX));
     }
-    else {
-      return null;
+
+
+    /**
+     * Attacking will fail if the intendedVictim is already dead or if the intendedVictim is no longer
+     * at the target location.
+     */
+    @Override
+    protected boolean validate(World world) {
+
+        // Check if there's a victim in the target square for the attack to hit.
+        victim = getLiveTargetAt(world, getTarget());
+
+        // If we have a victim, then this attack is a hit.
+        final boolean attackHit = victim != null;
+
+        if (!attackHit && hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
+
+            final String attackTypeString =
+                    getActor().getActiveWeapon().getWeaponComponent().getDamageType().getAttackString();
+
+            EventLog.registerEvent(Event.FAILURE, "Your " + attackTypeString + " has hit naught but air.");
+        }
+
+        return attackHit;
     }
-  }
+
+
+    /**
+     * Wound the victim with the weapon equipped by this actor.
+     */
+    @Override
+    protected void apply(World world) {
+
+        final Thing weapon = getActor().getActiveWeapon();
+        final WeaponComponent weaponComponent = weapon.getWeaponComponent();
+
+        // Determine how much damage this attack will do.
+        final Rank muscle = getActor().getAttributeRank(Attribute.MUSCLE);
+        final int damage = weaponComponent.calculateDamageRange(muscle).getRandomWithin(Game.RANDOM);
+
+        // Construct the event log string for this attack.
+        final String hitString = weaponComponent.getDamageType().getHitString();
+
+        String victimName = victim.getName();
+        if (hasFlag(ActionFlag.PLAYER_IS_TARGET)) {
+            victimName = "YOU";
+        }
+
+        final String messageA = hitString + " " + victimName + " with ";
+        final String messageB = weapon.getName() + " for " + Integer.toString(damage) + " damage.";
+
+        String message;
+
+        if (hasFlag(ActionFlag.PLAYER_IS_ACTOR)) {
+            message = "You have " + messageA + "your " + messageB;
+        }
+        else {
+            message = getActor().getName() + " has " + messageA + "its " + messageB;
+        }
+
+        // Log the message if the player is in this area.
+        EventLog.registerEventIfPlayerIsLocal(victim.getCoordinate(), Event.ACTOR_WOUNDED, message);
+
+        // Apply the damage to the victim and notify the victim's controller.
+        victim.getHealth().wound(damage);
+        victim.getActorObserver().onVictimized(getActor());
+    }
+
+
+    /**
+     * @return The living actor occupying the target coordinate, or null if there isn't one.
+     */
+    private Actor getLiveTargetAt(World world, Coordinate coordinate) {
+
+        final Physical targetPhysical = world.getSquare(coordinate).getAll().get(0);
+        if (!targetPhysical.hasFlag(PhysicalFlag.DEAD) && targetPhysical.getClass() == Actor.class) {
+            return (Actor) targetPhysical;
+        }
+        else {
+            return null;
+        }
+    }
 }

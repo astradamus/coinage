@@ -6,5 +6,5 @@ import controller.action.Action;
  *
  */
 public interface Executor {
-  boolean executeAction(Action action);
+    boolean executeAction(Action action);
 }

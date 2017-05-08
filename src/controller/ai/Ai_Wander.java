@@ -19,70 +19,70 @@ import game.Game;
  */
 public class Ai_Wander extends Behavior {
 
-  private static final int WANDER_CHAIN_MAX_LENGTH = 3;
+    private static final int WANDER_CHAIN_MAX_LENGTH = 3;
 
-  private int wanderChain;
-
-
-  public Ai_Wander(AiActorAgent agent) {
-    super(agent);
-    wanderChain = Game.RANDOM.nextInt(WANDER_CHAIN_MAX_LENGTH) + 1;
-  }
+    private int wanderChain;
 
 
-  @Override
-  protected void onExhibit() {
-    wander();
-  }
-
-
-  private void wander() {
-
-    // If we've completed enough wander steps, we can stop wandering.
-    if (wanderChain <= 0) {
-      markComplete();
+    public Ai_Wander(AiActorAgent agent) {
+        super(agent);
+        wanderChain = Game.RANDOM.nextInt(WANDER_CHAIN_MAX_LENGTH) + 1;
     }
 
-    else {
 
-      // Pick a direction at random and start walking that way.
-      final Direction randomWander = Direction.getRandom();
-      Routines.turnThenMove(getAgent(), randomWander, true, false);
-
-      // Apply this wander step to the counter.
-      wanderChain--;
-    }
-  }
-
-
-  @Override
-  public void onActionExecuted(Action action) {
-
-    // If one of our movements fails, or sometimes even if it succeeds, run the main routine to
-    // start a new wander step.
-    if (action.hasFlag(ActionFlag.FAILED) || (action.hasFlag(ActionFlag.SUCCEEDED)
-        && Game.RANDOM.nextInt(10) < 4)) {
-      wander();
+    @Override
+    protected void onExhibit() {
+        wander();
     }
 
-    // Perform a sensory scan after each of our movements.
-    Routines.performSensoryScan(getAgent());
-  }
 
+    private void wander() {
 
-  @Override
-  public void onActorTurnComplete() {
+        // If we've completed enough wander steps, we can stop wandering.
+        if (wanderChain <= 0) {
+            markComplete();
+        }
 
-    if (getActor().isFreeToAct()) {
-      wander();
+        else {
+
+            // Pick a direction at random and start walking that way.
+            final Direction randomWander = Direction.getRandom();
+            Routines.turnThenMove(getAgent(), randomWander, true, false);
+
+            // Apply this wander step to the counter.
+            wanderChain--;
+        }
     }
-  }
 
 
-  @Override
-  public void onVictimized(Actor attacker) {
+    @Override
+    public void onActionExecuted(Action action) {
 
-    // If we are attacked, either fight or flee.
-    Routines.evaluateNewAggressor(getAgent(), attacker);
-  }
+        // If one of our movements fails, or sometimes even if it succeeds, run the main routine to
+        // start a new wander step.
+        if (action.hasFlag(ActionFlag.FAILED) || (action.hasFlag(ActionFlag.SUCCEEDED)
+                && Game.RANDOM.nextInt(10) < 4)) {
+            wander();
+        }
+
+        // Perform a sensory scan after each of our movements.
+        Routines.performSensoryScan(getAgent());
+    }
+
+
+    @Override
+    public void onActorTurnComplete() {
+
+        if (getActor().isFreeToAct()) {
+            wander();
+        }
+    }
+
+
+    @Override
+    public void onVictimized(Actor attacker) {
+
+        // If we are attacked, either fight or flee.
+        Routines.evaluateNewAggressor(getAgent(), attacker);
+    }
 }

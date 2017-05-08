@@ -13,110 +13,109 @@ import java.util.Stack;
  */
 public class GameEngine {
 
-  private static final int MILLISECONDS_PER_HEARTBEAT = 20;
+    private static final int MILLISECONDS_PER_HEARTBEAT = 20;
 
-  private static final Stack<TimeMode> TIME_MODE = new Stack<>();
-  private static Game runningGame;
+    private static final Stack<TimeMode> TIME_MODE = new Stack<>();
+    private static Game runningGame;
 
-  private static Thread thread;
-  private static final Runnable gameLoop = new Runnable() {
-    @Override
-    public void run() {
-      synchronized (this) {
-        while (!thread.isInterrupted()) {
+    private static Thread thread;
+    private static final Runnable gameLoop = new Runnable() {
+        @Override
+        public void run() {
+            synchronized (this) {
+                while (!thread.isInterrupted()) {
 
-          // Freeze the game (stop sending state updates) if the Engine has been paused, but
-          //   continue sending Display updates.
+                    // Freeze the game (stop sending state updates) if the Engine has been paused, but
+                    //   continue sending Display updates.
 
-          GameInput.onUpdate();
+                    GameInput.onUpdate();
 
-          TimeMode timeMode = TIME_MODE.peek();
-          if (timeMode == TimeMode.LIVE || (timeMode == TimeMode.PRECISION && !runningGame
-              .getActivePlayerActor().isFreeToAct())) {
-            runningGame.update();
-          }
+                    TimeMode timeMode = TIME_MODE.peek();
+                    if (timeMode == TimeMode.LIVE || (timeMode == TimeMode.PRECISION && !runningGame
+                            .getActivePlayerActor().isFreeToAct())) {
+                        runningGame.update();
+                    }
 
-          GameDisplay.onUpdate();
+                    GameDisplay.onUpdate();
 
-          try {
-            wait(MILLISECONDS_PER_HEARTBEAT);
-          }
-          catch (InterruptedException e) {
-            e.printStackTrace();
-            break;
-          }
+                    try {
+                        wait(MILLISECONDS_PER_HEARTBEAT);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        break;
+                    }
+                }
+            }
         }
-      }
+    };
+
+    static {
+        TIME_MODE.push(TimeMode.LIVE);
     }
-  };
-
-  static {
-    TIME_MODE.push(TimeMode.LIVE);
-  }
 
 
-  public static TimeMode getTimeMode() {
-    return TIME_MODE.peek();
-  }
+    public static TimeMode getTimeMode() {
+        return TIME_MODE.peek();
+    }
 
 
-  public static void setTimeMode(TimeMode timeMode) {
-    if (TIME_MODE.contains(timeMode)) {
+    public static void setTimeMode(TimeMode timeMode) {
+        if (TIME_MODE.contains(timeMode)) {
 
-      while (TIME_MODE.peek() != timeMode) {
+            while (TIME_MODE.peek() != timeMode) {
+                TIME_MODE.pop();
+            }
+        }
+        else {
+            TIME_MODE.push(timeMode);
+        }
+    }
+
+
+    public static void revertTimeMode() {
         TIME_MODE.pop();
-      }
     }
-    else {
-      TIME_MODE.push(timeMode);
+
+
+    static void start() {
+        if (thread == null || !thread.isAlive()) {
+            thread = new Thread(gameLoop);
+            thread.start();
+        }
+        else {
+            System.out.println("Tried to start thread when one was already running.");
+        }
     }
-  }
 
 
-  public static void revertTimeMode() {
-    TIME_MODE.pop();
-  }
-
-
-  static void start() {
-    if (thread == null || !thread.isAlive()) {
-      thread = new Thread(gameLoop);
-      thread.start();
+    static void stop() {
+        if (thread != null && thread.isAlive()) {
+            thread.interrupt();
+        }
+        else {
+            System.out.println("Tried to stop thread when none were running.");
+        }
     }
-    else {
-      System.out.println("Tried to start thread when one was already running.");
+
+
+    public static void loadRunningGame(Game runningGame) {
+        if (GameEngine.runningGame != null) {
+            throw new IllegalStateException(
+                    "Already running a game, must first call unloadRunningGame().");
+        }
+        GameEngine.runningGame = runningGame;
     }
-  }
 
 
-  static void stop() {
-    if (thread != null && thread.isAlive()) {
-      thread.interrupt();
+    /**
+     * @param runningGame Must be supplied to ensure this method is only called from high places.
+     * @throws InvalidParameterException If the supplied game is null or does not match the currently
+     *                                   running game.
+     */
+    public static void unloadRunningGame(Game runningGame) {
+        if (GameEngine.runningGame != runningGame) {
+            throw new InvalidParameterException("Game parameter does not match currently running game.");
+        }
+        GameEngine.runningGame = null;
     }
-    else {
-      System.out.println("Tried to stop thread when none were running.");
-    }
-  }
-
-
-  public static void loadRunningGame(Game runningGame) {
-    if (GameEngine.runningGame != null) {
-      throw new IllegalStateException(
-          "Already running a game, must first call unloadRunningGame().");
-    }
-    GameEngine.runningGame = runningGame;
-  }
-
-
-  /**
-   * @param runningGame Must be supplied to ensure this method is only called from high places.
-   * @throws InvalidParameterException If the supplied game is null or does not match the currently
-   *                                   running game.
-   */
-  public static void unloadRunningGame(Game runningGame) {
-    if (GameEngine.runningGame != runningGame) {
-      throw new InvalidParameterException("Game parameter does not match currently running game.");
-    }
-    GameEngine.runningGame = null;
-  }
 }

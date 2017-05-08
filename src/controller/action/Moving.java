@@ -19,127 +19,127 @@ import java.awt.Color;
  */
 public class Moving extends Action {
 
-  private final static int BASELINE_RANK = 5;
-  private final static int BEATS_AT_BASELINE = 4;
-  private final static int DISTANCE_ADJUSTMENT_DIVISOR = 3;
+    private final static int BASELINE_RANK = 5;
+    private final static int BEATS_AT_BASELINE = 4;
+    private final static int DISTANCE_ADJUSTMENT_DIVISOR = 3;
 
-  private static final int FOUR_LEGGED_FULL_SPEED_BONUS = 1;
+    private static final int FOUR_LEGGED_FULL_SPEED_BONUS = 1;
 
-  private final Direction movingIn;
-  private final boolean isWalking;
-
-
-  public Moving(Actor actor, Direction movingIn, boolean isWalking) {
-    super(actor, actor.getCoordinate().offset(movingIn.relativeX, movingIn.relativeY));
-    this.movingIn = movingIn;
-    this.isWalking = isWalking;
-  }
+    private final Direction movingIn;
+    private final boolean isWalking;
 
 
-  @Override
-  public Color getIndicatorColor() {
-    return Color.WHITE;
-  }
-
-
-  /**
-   * At {@code BASELINE_RANK} reflex, an actor will suffer a {@code BEATS_AT_BASELINE} action delay.
-   * For every {@code DISTANCE_ADJUSTMENT_DIVISOR} ranks above or below {@code BASELINE_RANK}, the
-   * actor suffers one less or one more beat of action delay, respectively.
-   */
-  @Override
-  public int calcDelayToPerform() {
-
-    // Take the actor's reflex rank.
-    final int actorReflex = getActor().getAttributeRank(Attribute.REFLEX).ordinal();
-
-    // Determine distance from BASELINE_RANK.
-    final int distanceFromBaseline = actorReflex - BASELINE_RANK;
-
-    // Subtract adjustment from baseline to get normal delay to perform.
-    int calculatedDelay = BEATS_AT_BASELINE - (distanceFromBaseline / DISTANCE_ADJUSTMENT_DIVISOR);
-
-    // Determine facing adjustment.
-    if (isWalking) {
-      return calculatedDelay * 3; // Walking always takes three times as long.
+    public Moving(Actor actor, Direction movingIn, boolean isWalking) {
+        super(actor, actor.getCoordinate().offset(movingIn.relativeX, movingIn.relativeY));
+        this.movingIn = movingIn;
+        this.isWalking = isWalking;
     }
 
-    if (getIsMovingInFacedDirection()) {
-      if (getActor().hasFlag(PhysicalFlag.FOUR_LEGGED)) {
-        calculatedDelay -= FOUR_LEGGED_FULL_SPEED_BONUS;
-      }
-      return calculatedDelay; // Full speed, no adjustment necessary.
+
+    @Override
+    public Color getIndicatorColor() {
+        return Color.WHITE;
     }
 
-    if (getIsMovingInAdjacentDirection()) {
-      return (int) (calculatedDelay * 1.5); // Adjacent directions take 50% longer to move in.
+
+    /**
+     * At {@code BASELINE_RANK} reflex, an actor will suffer a {@code BEATS_AT_BASELINE} action delay.
+     * For every {@code DISTANCE_ADJUSTMENT_DIVISOR} ranks above or below {@code BASELINE_RANK}, the
+     * actor suffers one less or one more beat of action delay, respectively.
+     */
+    @Override
+    public int calcDelayToPerform() {
+
+        // Take the actor's reflex rank.
+        final int actorReflex = getActor().getAttributeRank(Attribute.REFLEX).ordinal();
+
+        // Determine distance from BASELINE_RANK.
+        final int distanceFromBaseline = actorReflex - BASELINE_RANK;
+
+        // Subtract adjustment from baseline to get normal delay to perform.
+        int calculatedDelay = BEATS_AT_BASELINE - (distanceFromBaseline / DISTANCE_ADJUSTMENT_DIVISOR);
+
+        // Determine facing adjustment.
+        if (isWalking) {
+            return calculatedDelay * 3; // Walking always takes three times as long.
+        }
+
+        if (getIsMovingInFacedDirection()) {
+            if (getActor().hasFlag(PhysicalFlag.FOUR_LEGGED)) {
+                calculatedDelay -= FOUR_LEGGED_FULL_SPEED_BONUS;
+            }
+            return calculatedDelay; // Full speed, no adjustment necessary.
+        }
+
+        if (getIsMovingInAdjacentDirection()) {
+            return (int) (calculatedDelay * 1.5); // Adjacent directions take 50% longer to move in.
+        }
+
+        else {
+            return calculatedDelay * 2; // All other directions take twice as long to move in.
+        }
     }
 
-    else {
-      return calculatedDelay * 2; // All other directions take twice as long to move in.
+
+    /**
+     * Moving will fail if the target coordinate is blocked or if the actor is somehow relocated
+     * before completing the movement.
+     */
+    @Override
+    protected boolean validate(World world) {
+
+        if (!world.validateCoordinate(getTarget())) {
+            return false;
+        }
+
+        final boolean targetIsBlocked = world.getSquare(getTarget()).isBlocked();
+        final boolean performerHasMoved = !world.getSquare(getOrigin()).getAll().contains(getActor());
+
+        return !targetIsBlocked && !performerHasMoved;
     }
-  }
 
 
-  /**
-   * Moving will fail if the target coordinate is blocked or if the actor is somehow relocated
-   * before completing the movement.
-   */
-  @Override
-  protected boolean validate(World world) {
+    /**
+     * Remove the actor from its original location, add it to the new location, and update its stored
+     * coordinate accordingly. If this move crosses area borders, it gains the {@code
+     * ACTOR_CHANGED_AREA} flag.
+     */
+    @Override
+    protected void apply(World world) {
 
-    if (!world.validateCoordinate(getTarget())) {
-      return false;
+        final Actor performerActor = getActor();
+
+        world.getSquare(getOrigin()).pull(performerActor);
+        world.getSquare(getTarget()).put(performerActor);
+        performerActor.setCoordinate(getTarget());
+
+        if (world.getArea(getOrigin()) != world.getArea(getTarget())) {
+            addFlag(ActionFlag.ACTOR_CHANGED_AREA);
+        }
     }
 
-    final boolean targetIsBlocked = world.getSquare(getTarget()).isBlocked();
-    final boolean performerHasMoved = !world.getSquare(getOrigin()).getAll().contains(getActor());
 
-    return !targetIsBlocked && !performerHasMoved;
-  }
-
-
-  /**
-   * Remove the actor from its original location, add it to the new location, and update its stored
-   * coordinate accordingly. If this move crosses area borders, it gains the {@code
-   * ACTOR_CHANGED_AREA} flag.
-   */
-  @Override
-  protected void apply(World world) {
-
-    final Actor performerActor = getActor();
-
-    world.getSquare(getOrigin()).pull(performerActor);
-    world.getSquare(getTarget()).put(performerActor);
-    performerActor.setCoordinate(getTarget());
-
-    if (world.getArea(getOrigin()) != world.getArea(getTarget())) {
-      addFlag(ActionFlag.ACTOR_CHANGED_AREA);
+    /**
+     * Movement will always repeat on success unless {@code doNotRepeat()} is called.
+     */
+    @Override
+    public Action attemptRepeat() {
+        if (hasFlag(ActionFlag.DO_NOT_REPEAT)) {
+            return null;
+        }
+        else {
+            return new Moving(getActor(), movingIn, isWalking);
+        }
     }
-  }
 
 
-  /**
-   * Movement will always repeat on success unless {@code doNotRepeat()} is called.
-   */
-  @Override
-  public Action attemptRepeat() {
-    if (hasFlag(ActionFlag.DO_NOT_REPEAT)) {
-      return null;
+    private boolean getIsMovingInFacedDirection() {
+        return getActor().getFacing() == movingIn;
     }
-    else {
-      return new Moving(getActor(), movingIn, isWalking);
+
+
+    private boolean getIsMovingInAdjacentDirection() {
+        final Direction actorFacing = getActor().getFacing();
+        return movingIn == actorFacing.getLeftNeighbor() || movingIn == actorFacing.getRightNeighbor();
     }
-  }
-
-
-  private boolean getIsMovingInFacedDirection() {
-    return getActor().getFacing() == movingIn;
-  }
-
-
-  private boolean getIsMovingInAdjacentDirection() {
-    final Direction actorFacing = getActor().getFacing();
-    return movingIn == actorFacing.getLeftNeighbor() || movingIn == actorFacing.getRightNeighbor();
-  }
 }

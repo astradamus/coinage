@@ -7,7 +7,8 @@ import game.Direction;
  */
 interface DirectionListener {
 
-  void receiveDirection(Direction direction);
-  void receiveDirectionsCleared();
+    void receiveDirection(Direction direction);
+
+    void receiveDirectionsCleared();
 
 }

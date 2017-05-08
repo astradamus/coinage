@@ -7,9 +7,9 @@ import java.util.Set;
 
 public interface ControllerInterface {
 
-  void onLocalityChanged(Controller controller, Area from, Area to);
+    void onLocalityChanged(Controller controller, Area from, Area to);
 
-  void reevaluateActiveAreas();
+    void reevaluateActiveAreas();
 
-  Set<Actor> requestActorsInMyArea(ActorAgent actorAgent);
+    Set<Actor> requestActorsInMyArea(ActorAgent actorAgent);
 }

@@ -15,45 +15,45 @@ import java.util.Map;
  */
 public class CSVReader {
 
-  private final BufferedReader reader;
-  private final List<String> keys;
+    private final BufferedReader reader;
+    private final List<String> keys;
 
-  public CSVReader(File file) throws IOException {
-    reader = new BufferedReader(new FileReader(file));
-    keys = readAndSeparateLine();
-  }
-
-
-  public Map<String, String> readLine() throws IOException {
-
-    final List<String> values = readAndSeparateLine();
-
-    if (values == null) {
-      return null; // End of file.
+    public CSVReader(File file) throws IOException {
+        reader = new BufferedReader(new FileReader(file));
+        keys = readAndSeparateLine();
     }
 
-    final Map<String, String> map = new HashMap<>();
 
-    for (int i = 0; i < values.size(); i++) {
-      map.put(keys.get(i), values.get(i));
+    public Map<String, String> readLine() throws IOException {
+
+        final List<String> values = readAndSeparateLine();
+
+        if (values == null) {
+            return null; // End of file.
+        }
+
+        final Map<String, String> map = new HashMap<>();
+
+        for (int i = 0; i < values.size(); i++) {
+            map.put(keys.get(i), values.get(i));
+        }
+
+        return map;
     }
 
-    return map;
-  }
 
-
-  public void close() throws IOException {
-    reader.close();
-  }
-
-
-  private List<String> readAndSeparateLine() throws IOException {
-    final String line = reader.readLine();
-    if (line == null) {
-      return null; // End of file.
+    public void close() throws IOException {
+        reader.close();
     }
-    else {
-      return Arrays.asList(line.split(","));
+
+
+    private List<String> readAndSeparateLine() throws IOException {
+        final String line = reader.readLine();
+        if (line == null) {
+            return null; // End of file.
+        }
+        else {
+            return Arrays.asList(line.split(","));
+        }
     }
-  }
 }

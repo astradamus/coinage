@@ -17,43 +17,46 @@ import java.awt.event.KeyEvent;
 public enum Commands_Interact implements Command {
 
 
-  PICK_UP {
+    PICK_UP {
+        @Override
+        public int getHotKeyCode() {
+            return KeyEvent.VK_P;
+        }
 
-    @Override
-    public int getHotKeyCode() {
-      return KeyEvent.VK_P;
+        @Override
+        public String getControlText() {
+            return "P: Pick up item.";
+        }
+
+        @Override
+        public void execute() {
+
+            PlayerAgent playerAgent = GameInput.getRunningGame().getPlayerAgent();
+            Actor playerActor = playerAgent.getActor();
+
+            // Have the player choose what to pick up, then start picking it up.
+
+            final Coordinate playerTarget = GameInput.getPlayerTarget();
+            final Integer playerSelection = GameInput.getPlayerSelection();
+
+            final Physical selected = GameInput.getRunningGame()
+                    .getWorld()
+                    .getSquare(playerTarget)
+                    .getAll()
+                    .get(playerSelection);
+
+            if (selected.hasFlag(PhysicalFlag.IMMOVABLE)) {
+                EventLog.registerEvent(Event.INVALID_INPUT, "You can't pick up " + selected.getName() + ".");
+                return;
+            }
+
+            playerAgent.attemptAction(new PickingUp(playerActor, GameInput.getPlayerTarget(), selected));
+
+            GameInput.enterMode(GameMode.EXPLORE);
+
+        }
+
     }
-
-    @Override
-    public String getControlText() {
-      return "P: Pick up item.";
-    }
-
-    @Override
-    public void execute() {
-
-      PlayerAgent playerAgent = GameInput.getRunningGame().getPlayerAgent();
-      Actor playerActor = playerAgent.getActor();
-
-      // Have the player choose what to pick up, then start picking it up.
-
-      final Coordinate playerTarget = GameInput.getPlayerTarget();
-      final Integer playerSelection = GameInput.getPlayerSelection();
-
-      final Physical selected = GameInput.getRunningGame().getWorld().getSquare(playerTarget).getAll().get(playerSelection);
-
-      if (selected.hasFlag(PhysicalFlag.IMMOVABLE)) {
-        EventLog.registerEvent(Event.INVALID_INPUT, "You can't pick up " + selected.getName() + ".");
-        return;
-      }
-
-      playerAgent.attemptAction(new PickingUp(playerActor, GameInput.getPlayerTarget(), selected));
-
-      GameInput.enterMode(GameMode.EXPLORE);
-
-    }
-
-  }
 
 
 }

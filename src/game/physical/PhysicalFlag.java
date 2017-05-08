@@ -3,19 +3,19 @@ package game.physical;
 /**
  *
  */
-public enum  PhysicalFlag {
+public enum PhysicalFlag {
 
-  // ALL PHYSICALS
-  BLOCKING,
-  IMMOVABLE,
+    // ALL PHYSICALS
+    BLOCKING,
+    IMMOVABLE,
 
 
-  // ACTORS
-  FOUR_LEGGED,
+    // ACTORS
+    FOUR_LEGGED,
 
-  AGGRESSIVE,
-  TIMID,
+    AGGRESSIVE,
+    TIMID,
 
-  DEAD
+    DEAD
 
 }

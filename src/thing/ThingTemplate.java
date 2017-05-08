@@ -12,26 +12,26 @@ import java.util.List;
  */
 public class ThingTemplate {
 
-  final String name;
-  private final List<Appearance> appearances;
-  final EnumSet<PhysicalFlag> flags;
-  final WeaponComponent weaponComponent;
+    final String name;
+    private final List<Appearance> appearances;
+    final EnumSet<PhysicalFlag> flags;
+    final WeaponComponent weaponComponent;
 
-  public ThingTemplate(String name, List<Appearance> appearances, EnumSet<PhysicalFlag> flags,
-      WeaponComponent weaponComponent) {
-    this.name = name;
-    this.appearances = appearances;
-    this.flags = flags;
-    this.weaponComponent = weaponComponent;
-  }
-
-
-  public String getName() {
-    return name;
-  }
+    public ThingTemplate(String name, List<Appearance> appearances, EnumSet<PhysicalFlag> flags,
+                         WeaponComponent weaponComponent) {
+        this.name = name;
+        this.appearances = appearances;
+        this.flags = flags;
+        this.weaponComponent = weaponComponent;
+    }
 
 
-  Appearance getRandomAppearance() {
-    return appearances.get(Game.RANDOM.nextInt(appearances.size()));
-  }
+    public String getName() {
+        return name;
+    }
+
+
+    Appearance getRandomAppearance() {
+        return appearances.get(Game.RANDOM.nextInt(appearances.size()));
+    }
 }

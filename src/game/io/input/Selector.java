@@ -7,42 +7,42 @@ import world.Coordinate;
  */
 class Selector<Selecting> {
 
-  private final String prompt;
-  private final Coordinate selectOrigin;
-  private final int selectRange;
-  private final SelectCallback<Selecting> callback;
+    private final String prompt;
+    private final Coordinate selectOrigin;
+    private final int selectRange;
+    private final SelectCallback<Selecting> callback;
 
-  private boolean complete = false;
-
-
-  public Selector(String prompt, Coordinate selectOrigin,
-                  int selectRange, SelectCallback<Selecting> callback) {
-    this.prompt = prompt;
-    this.selectOrigin = selectOrigin;
-    this.selectRange = selectRange;
-    this.callback = callback;
-  }
+    private boolean complete = false;
 
 
-  void execute(Selecting selection) {
-    if (complete) {
-      throw new IllegalStateException("Attempted to execute callback for second time!");
+    public Selector(String prompt, Coordinate selectOrigin,
+                    int selectRange, SelectCallback<Selecting> callback) {
+        this.prompt = prompt;
+        this.selectOrigin = selectOrigin;
+        this.selectRange = selectRange;
+        this.callback = callback;
     }
-    callback.execute(selection);
-    complete = true;
-  }
 
 
-  public String getPrompt() {
-    return prompt;
-  }
+    void execute(Selecting selection) {
+        if (complete) {
+            throw new IllegalStateException("Attempted to execute callback for second time!");
+        }
+        callback.execute(selection);
+        complete = true;
+    }
 
-  public Coordinate getSelectOrigin() {
-    return selectOrigin;
-  }
 
-  public int getSelectRange() {
-    return selectRange;
-  }
+    public String getPrompt() {
+        return prompt;
+    }
+
+    public Coordinate getSelectOrigin() {
+        return selectOrigin;
+    }
+
+    public int getSelectRange() {
+        return selectRange;
+    }
 
 }

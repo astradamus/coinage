@@ -5,9 +5,9 @@ package world.blueprint;
  */
 public interface BlueprintFeature {
 
-  /**
-   * Defines this map feature's frequency relative to the other features of its map.
-   */
-  int getWeight();
+    /**
+     * Defines this map feature's frequency relative to the other features of its map.
+     */
+    int getWeight();
 
 }

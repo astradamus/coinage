@@ -17,75 +17,75 @@ import utils.IntegerRange;
  */
 public class WeaponComponent {
 
-  private final DamageType damageType;
-  private final int damage;
+    private final DamageType damageType;
+    private final int damage;
 
-  private final double damageBonusMultiplierPerMuscle;
-  private final double damageConsistency;
+    private final double damageBonusMultiplierPerMuscle;
+    private final double damageConsistency;
 
-  private final int attackSpeed;
-  private final double speedBonusFromReflex;
+    private final int attackSpeed;
+    private final double speedBonusFromReflex;
 
-  private final int recoverySpeed;
-  private final double recoveryBonusFromReflex;
+    private final int recoverySpeed;
+    private final double recoveryBonusFromReflex;
 
-  public WeaponComponent(DamageType damageType, int damage,
-                         double damageBonusMultiplierPerMuscle, double damageConsistency,
-                         int attackSpeed, double speedBonusFromReflex,
-                         int recoverySpeed, double recoveryBonusFromReflex) {
+    public WeaponComponent(DamageType damageType, int damage,
+                           double damageBonusMultiplierPerMuscle, double damageConsistency,
+                           int attackSpeed, double speedBonusFromReflex,
+                           int recoverySpeed, double recoveryBonusFromReflex) {
 
-    this.damageType = damageType;
-    this.damage = damage;
+        this.damageType = damageType;
+        this.damage = damage;
 
-    this.damageBonusMultiplierPerMuscle = damageBonusMultiplierPerMuscle;
-    this.damageConsistency = damageConsistency;
+        this.damageBonusMultiplierPerMuscle = damageBonusMultiplierPerMuscle;
+        this.damageConsistency = damageConsistency;
 
-    this.attackSpeed = attackSpeed;
-    this.speedBonusFromReflex = speedBonusFromReflex;
+        this.attackSpeed = attackSpeed;
+        this.speedBonusFromReflex = speedBonusFromReflex;
 
-    this.recoverySpeed = recoverySpeed;
-    this.recoveryBonusFromReflex = recoveryBonusFromReflex;
+        this.recoverySpeed = recoverySpeed;
+        this.recoveryBonusFromReflex = recoveryBonusFromReflex;
 
-  }
-
-
-  public IntegerRange calculateDamageRange(Rank wielderMuscleRank) {
-
-    final int bonusFromMuscle = calculateMuscleBonusDamage(wielderMuscleRank);
-    final int maximumDamage = damage + bonusFromMuscle;
-    final int minimumDamage = (int) Math.round(maximumDamage * damageConsistency);
-
-    return new IntegerRange(minimumDamage,maximumDamage);
-
-  }
-
-  private int calculateMuscleBonusDamage(Rank wielderMuscleRank) {
-    final double totalMultiplier = damageBonusMultiplierPerMuscle * wielderMuscleRank.ordinal();
-    return (int) Math.round(damage * totalMultiplier);
-  }
+    }
 
 
-  public int calcAttackSpeed(Rank actorReflexRank) {
+    public IntegerRange calculateDamageRange(Rank wielderMuscleRank) {
 
-    // Cast to int truncates decimals! Reflex contributions to speed count only in whole numbers.
-    final int modifier = (int) (actorReflexRank.ordinal() * speedBonusFromReflex);
+        final int bonusFromMuscle = calculateMuscleBonusDamage(wielderMuscleRank);
+        final int maximumDamage = damage + bonusFromMuscle;
+        final int minimumDamage = (int) Math.round(maximumDamage * damageConsistency);
 
-    return attackSpeed - modifier;
+        return new IntegerRange(minimumDamage, maximumDamage);
 
-  }
+    }
 
-  public int calcRecoverySpeed(Rank actorReflexRank) {
-
-    // Cast to int truncates decimals! Reflex contributions to speed count only in whole numbers.
-    final int modifier = (int) (actorReflexRank.ordinal() * recoveryBonusFromReflex);
-
-    return recoverySpeed - modifier;
-
-  }
+    private int calculateMuscleBonusDamage(Rank wielderMuscleRank) {
+        final double totalMultiplier = damageBonusMultiplierPerMuscle * wielderMuscleRank.ordinal();
+        return (int) Math.round(damage * totalMultiplier);
+    }
 
 
-  public DamageType getDamageType() {
-    return damageType;
-  }
+    public int calcAttackSpeed(Rank actorReflexRank) {
+
+        // Cast to int truncates decimals! Reflex contributions to speed count only in whole numbers.
+        final int modifier = (int) (actorReflexRank.ordinal() * speedBonusFromReflex);
+
+        return attackSpeed - modifier;
+
+    }
+
+    public int calcRecoverySpeed(Rank actorReflexRank) {
+
+        // Cast to int truncates decimals! Reflex contributions to speed count only in whole numbers.
+        final int modifier = (int) (actorReflexRank.ordinal() * recoveryBonusFromReflex);
+
+        return recoverySpeed - modifier;
+
+    }
+
+
+    public DamageType getDamageType() {
+        return damageType;
+    }
 
 }

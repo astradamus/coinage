@@ -6,22 +6,22 @@ package world;
  * given feature should appear on that terrain type in the owning Biome.
  */
 public class BiomeProp {
-  private final String thingTemplateID;
-  private final double frequency;
+    private final String thingTemplateID;
+    private final double frequency;
 
 
-  public BiomeProp(String thingTemplateID, double frequency) {
-    this.thingTemplateID = thingTemplateID;
-    this.frequency = frequency;
-  }
+    public BiomeProp(String thingTemplateID, double frequency) {
+        this.thingTemplateID = thingTemplateID;
+        this.frequency = frequency;
+    }
 
 
-  public String getThingTemplateID() {
-    return thingTemplateID;
-  }
+    public String getThingTemplateID() {
+        return thingTemplateID;
+    }
 
 
-  public double getFrequency() {
-    return frequency;
-  }
+    public double getFrequency() {
+        return frequency;
+    }
 }

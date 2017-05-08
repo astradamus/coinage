@@ -8,24 +8,24 @@ import game.physical.Physical;
  */
 public class Thing extends Physical {
 
-  private final WeaponComponent weaponComponent;
+    private final WeaponComponent weaponComponent;
 
-  Thing(ThingTemplate tT) {
-    super(
-        tT.name,
-        tT.getRandomAppearance()
-    );
+    Thing(ThingTemplate tT) {
+        super(
+                tT.name,
+                tT.getRandomAppearance()
+        );
 
-    weaponComponent = tT.weaponComponent;
+        weaponComponent = tT.weaponComponent;
 
-    if (tT.flags != null) {
-      tT.flags.forEach(this::addFlag);
+        if (tT.flags != null) {
+            tT.flags.forEach(this::addFlag);
+        }
+
     }
 
-  }
-
-  public WeaponComponent getWeaponComponent() {
-    return weaponComponent;
-  }
+    public WeaponComponent getWeaponComponent() {
+        return weaponComponent;
+    }
 
 }

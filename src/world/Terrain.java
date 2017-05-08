@@ -9,9 +9,9 @@ import game.physical.PhysicalFlag;
  */
 class Terrain extends Physical {
 
-  Terrain(String name, Appearance appearance) {
-    super(name, appearance);
-    addFlag(PhysicalFlag.IMMOVABLE);
-  }
+    Terrain(String name, Appearance appearance) {
+        super(name, appearance);
+        addFlag(PhysicalFlag.IMMOVABLE);
+    }
 
 }

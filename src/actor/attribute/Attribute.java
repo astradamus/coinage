@@ -5,16 +5,16 @@ package actor.attribute;
  */
 public enum Attribute {
 
-  MUSCLE,
+    MUSCLE,
 
-  GRIT,
+    GRIT,
 
-  REFLEX,
+    REFLEX,
 
-  TALENT,
+    TALENT,
 
-  PERCEPTION,
+    PERCEPTION,
 
-  CHARM
+    CHARM
 
 }

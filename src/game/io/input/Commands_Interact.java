@@ -1,7 +1,7 @@
 package game.io.input;
 
 import actor.Actor;
-import controller.action.PickingUp;
+import controller.action.Collecting;
 import controller.player.PlayerAgent;
 import game.io.display.Event;
 import game.io.display.EventLog;
@@ -17,15 +17,15 @@ import java.awt.event.KeyEvent;
 public enum Commands_Interact implements Command {
 
 
-    PICK_UP {
+    COLLECT {
         @Override
         public int getHotKeyCode() {
-            return KeyEvent.VK_P;
+            return KeyEvent.VK_C;
         }
 
         @Override
         public String getControlText() {
-            return "P: Pick up item.";
+            return "C: Collect item.";
         }
 
         @Override
@@ -46,11 +46,11 @@ public enum Commands_Interact implements Command {
                     .get(playerSelection);
 
             if (selected.hasFlag(PhysicalFlag.IMMOVABLE)) {
-                EventLog.registerEvent(Event.INVALID_INPUT, "You can't pick up " + selected.getName() + ".");
+                EventLog.registerEvent(Event.INVALID_INPUT, "You can't collect " + selected.getName() + ".");
                 return;
             }
 
-            playerAgent.attemptAction(new PickingUp(playerActor, GameInput.getPlayerTarget(), selected));
+            playerAgent.attemptAction(new Collecting(playerActor, selected, GameInput.getPlayerTarget()));
 
             GameInput.enterMode(GameMode.EXPLORE);
 

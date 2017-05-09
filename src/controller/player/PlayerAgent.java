@@ -11,7 +11,7 @@ import world.MapCoordinate;
 import world.World;
 
 /**
- * ActorAgent that enables movement of an Actor with keyboard input.
+ * ActorAgent that allows a player control over an actor in the world.
  */
 public class PlayerAgent extends ActorAgent {
 

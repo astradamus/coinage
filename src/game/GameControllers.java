@@ -7,7 +7,7 @@ import controller.ControllerInterface;
 import controller.action.Action;
 import game.physical.PhysicalFlag;
 import world.Area;
-import world.Coordinate;
+import world.GlobalCoordinate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -138,7 +138,7 @@ public class GameControllers implements Executor, ControllerInterface {
 
 
     private void calculateActiveAreasAndControllers() {
-        final Coordinate playerAt = game.getActivePlayerActor().getCoordinate();
+        final GlobalCoordinate playerAt = game.getActivePlayerActor().getGlobalCoordinate();
         activeAreas = game.getWorld().getAllAreasWithinRange(playerAt, CONTROLLER_PROCESS_RADIUS);
         activeAreas.add(null); // Null contains non-local controllers. Always process it!
 
@@ -177,7 +177,7 @@ public class GameControllers implements Executor, ControllerInterface {
         // If the player is here and alive, include them in the return.
         final Actor playerActor = game.getActivePlayerActor();
         if (!playerActor.hasFlag(PhysicalFlag.DEAD)
-                && game.getWorld().getArea(playerActor.getCoordinate()) == area) {
+                && game.getWorld().getArea(playerActor.getGlobalCoordinate()) == area) {
             set.add(playerActor);
         }
 

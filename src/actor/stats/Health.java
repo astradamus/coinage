@@ -65,7 +65,7 @@ public class Health {
                 final String message = actor.getName() + " has died.";
 
                 // Notify the player, if they are local.
-                EventLog.registerEventIfPlayerIsLocal(actor.getCoordinate(), Event.ACTOR_WOUNDED, message);
+                EventLog.registerEventIfPlayerIsLocal(actor.getGlobalCoordinate(), Event.ACTOR_WOUNDED, message);
 
                 // Notify the parent class.
                 actor.die();

@@ -13,7 +13,7 @@ import game.physical.Physical;
 import game.physical.PhysicalFlag;
 import thing.Thing;
 import thing.ThingFactory;
-import world.Coordinate;
+import world.GlobalCoordinate;
 
 import java.awt.Color;
 import java.util.EnumSet;
@@ -40,7 +40,7 @@ public class Actor extends Physical {
 
     private ActorObserver actorObserver;
 
-    private Coordinate coordinate;
+    private GlobalCoordinate globalCoordinate;
     private Direction facing = Direction.getRandom();
     private Action action;
 
@@ -225,13 +225,13 @@ public class Actor extends Physical {
     }
 
 
-    public final Coordinate getCoordinate() {
-        return coordinate;
+    public final GlobalCoordinate getGlobalCoordinate() {
+        return globalCoordinate;
     }
 
 
-    public final void setCoordinate(Coordinate coordinate) {
-        this.coordinate = coordinate;
+    public final void setGlobalCoordinate(GlobalCoordinate globalCoordinate) {
+        this.globalCoordinate = globalCoordinate;
     }
 
 
@@ -294,10 +294,10 @@ public class Actor extends Physical {
 
 
     /**
-     * @return The coordinate that is the target of this actor's current action, or null if there is
+     * @return The globalCoordinate that is the target of this actor's current action, or null if there is
      * none.
      */
-    public Coordinate getActionTarget() {
+    public GlobalCoordinate getActionTarget() {
         if (action != null) {
             return action.getTarget();
         }

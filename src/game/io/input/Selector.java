@@ -1,6 +1,6 @@
 package game.io.input;
 
-import world.Coordinate;
+import world.GlobalCoordinate;
 
 /**
  *
@@ -8,14 +8,14 @@ import world.Coordinate;
 class Selector<Selecting> {
 
     private final String prompt;
-    private final Coordinate selectOrigin;
+    private final GlobalCoordinate selectOrigin;
     private final int selectRange;
     private final SelectCallback<Selecting> callback;
 
     private boolean complete = false;
 
 
-    public Selector(String prompt, Coordinate selectOrigin,
+    public Selector(String prompt, GlobalCoordinate selectOrigin,
                     int selectRange, SelectCallback<Selecting> callback) {
         this.prompt = prompt;
         this.selectOrigin = selectOrigin;
@@ -37,7 +37,7 @@ class Selector<Selecting> {
         return prompt;
     }
 
-    public Coordinate getSelectOrigin() {
+    public GlobalCoordinate getSelectOrigin() {
         return selectOrigin;
     }
 

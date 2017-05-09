@@ -24,7 +24,7 @@ public final class Area {
     }
 
 
-    Square getSquare(AreaCoordinate coordinate) {
-        return squares.get(coordinate.areaX, coordinate.areaY);
+    Square getSquare(LocalCoordinate coordinate) {
+        return squares.get(coordinate.localX, coordinate.localY);
     }
 }

@@ -4,7 +4,7 @@ import actor.Actor;
 import game.io.display.Event;
 import game.io.display.EventLog;
 import game.physical.Physical;
-import world.Coordinate;
+import world.GlobalCoordinate;
 import world.World;
 
 /**
@@ -15,7 +15,7 @@ public class Action_Place extends Action {
     private final Physical placingWhat;
 
 
-    public Action_Place(Actor actor, Coordinate placingWhere, Physical placingWhat) {
+    public Action_Place(Actor actor, GlobalCoordinate placingWhere, Physical placingWhat) {
         super(actor, placingWhere);
         this.placingWhat = placingWhat;
     }

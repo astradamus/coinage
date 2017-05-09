@@ -13,8 +13,8 @@ import game.io.GameEngine;
 import game.io.display.Event;
 import game.io.display.EventLog;
 import game.physical.PhysicalFlag;
-import world.Coordinate;
-import world.MapCoordinate;
+import world.GlobalCoordinate;
+import world.WorldMapCoordinate;
 import world.World;
 
 /**
@@ -72,12 +72,12 @@ public class Ai_Fight extends Behavior {
 
         else {
 
-            final Coordinate actorAt = getActor().getCoordinate();
-            final Coordinate enemyAt = victim.getCoordinate();
+            final GlobalCoordinate actorAt = getActor().getGlobalCoordinate();
+            final GlobalCoordinate enemyAt = victim.getGlobalCoordinate();
 
             // If we are adjacent to our enemy, attack them.
             if (actorAt.getIsAdjacentTo(enemyAt)) {
-                final Action_Attack action = new Action_Attack(getActor(), victim.getCoordinate());
+                final Action_Attack action = new Action_Attack(getActor(), victim.getGlobalCoordinate());
 
                 if (getAgent().getGameInformer().getActorIsPlayer(victim)) {
                     action.targetIsPlayer();
@@ -98,11 +98,11 @@ public class Ai_Fight extends Behavior {
                     final World.Informer worldInformer = getAgent().getGameInformer().getWorldInformer();
 
                     final Rank perception = getActor().getAttributeRank(Attribute.PERCEPTION);
-                    final MapCoordinate actorMC = worldInformer.convertToMapCoordinate(actorAt);
-                    final MapCoordinate enemyMC = worldInformer.convertToMapCoordinate(enemyAt);
+                    final WorldMapCoordinate actorWMC = worldInformer.convertToWorldMapCoordinate(actorAt);
+                    final WorldMapCoordinate enemyWMC = worldInformer.convertToWorldMapCoordinate(enemyAt);
 
                     // If we can track our enemy, pursue them and continue the fight.
-                    if (Perception.getCanTrackLocation(perception, actorMC, enemyMC)) {
+                    if (Perception.getCanTrackLocation(perception, actorWMC, enemyWMC)) {
                         Routines.approachOneStep(getAgent(), enemyAt);
                     }
 

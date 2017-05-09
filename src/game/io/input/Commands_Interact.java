@@ -7,7 +7,7 @@ import game.io.display.Event;
 import game.io.display.EventLog;
 import game.physical.Physical;
 import game.physical.PhysicalFlag;
-import world.Coordinate;
+import world.GlobalCoordinate;
 
 import java.awt.event.KeyEvent;
 
@@ -36,7 +36,7 @@ public enum Commands_Interact implements Command {
 
             // Have the player choose what to pick up, then start picking it up.
 
-            final Coordinate playerTarget = GameInput.getPlayerTarget();
+            final GlobalCoordinate playerTarget = GameInput.getPlayerTarget();
             final Integer playerSelection = GameInput.getPlayerSelection();
 
             final Physical selected = GameInput.getRunningGame()

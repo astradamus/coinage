@@ -3,8 +3,8 @@ package game.io.display;
 import game.Game;
 import game.io.input.GameInput;
 import game.physical.Physical;
-import world.AreaCoordinate;
-import world.Coordinate;
+import world.GlobalCoordinate;
+import world.LocalCoordinate;
 import world.World;
 
 import javax.swing.JPanel;
@@ -34,16 +34,16 @@ class AreaPanel extends JPanel {
         final Game runningGame = GameDisplay.getRunningGame();
         final World world = runningGame.getWorld();
 
-        Coordinate playerAt = runningGame.getActivePlayerActor().getCoordinate();
-        AreaCoordinate playerAtAC = world.convertToAreaCoordinate(playerAt);
-        Coordinate playerAreaOrigin = playerAt.offset(-playerAtAC.areaX, -playerAtAC.areaY);
+        GlobalCoordinate playerAt = runningGame.getActivePlayerActor().getGlobalCoordinate();
+        LocalCoordinate playerAtAC = world.convertToLocalCoordinate(playerAt);
+        GlobalCoordinate playerAreaOrigin = playerAt.offset(-playerAtAC.localX, -playerAtAC.localY);
 
         for (int y = 0; y < world.getAreaSizeInSquares().getHeight(); y++) {
             for (int x = 0; x < world.getAreaSizeInSquares().getWidth(); x++) {
 
-                Coordinate thisCoordinate = playerAreaOrigin.offset(x, y);
+                GlobalCoordinate thisGlobalCoordinate = playerAreaOrigin.offset(x, y);
 
-                final Physical visible = world.getSquare(thisCoordinate).peek();
+                final Physical visible = world.getSquare(thisGlobalCoordinate).peek();
 
                 final char mapSymbol = visible.getMapSymbol();
                 final Color color = visible.getColor();
@@ -55,8 +55,8 @@ class AreaPanel extends JPanel {
                 SquareDrawer.drawSquare(g, mapSymbol, color, bgColor, SQUARE_SIZE, placeX, placeY);
 
                 // Draw a cursor on the square targeted by the player.
-                Coordinate target = GameInput.getPlayerTarget();
-                if (target != null && target.equalTo(thisCoordinate)) {
+                GlobalCoordinate target = GameInput.getPlayerTarget();
+                if (target != null && target.equalTo(thisGlobalCoordinate)) {
                     SquareDrawer.drawOval(g, GameDisplay.CURSOR, SQUARE_SIZE, placeX, placeY);
                 }
             }

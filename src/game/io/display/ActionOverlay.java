@@ -6,8 +6,8 @@ import game.Game;
 import game.TimeMode;
 import game.io.GameEngine;
 import game.physical.Appearance;
-import world.AreaCoordinate;
-import world.Coordinate;
+import world.LocalCoordinate;
+import world.GlobalCoordinate;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -34,7 +34,7 @@ class ActionOverlay {
 
         // Draw an overlay on actors indicating the direction they are facing.
         Set<Actor> localActors = runningGame.getGameControllers()
-                .getActorsInArea(runningGame.getWorld().getArea(playerActor.getCoordinate()));
+                .getActorsInArea(runningGame.getWorld().getArea(playerActor.getGlobalCoordinate()));
 
         localActors.add(playerActor);
 
@@ -58,14 +58,14 @@ class ActionOverlay {
 
         g.setColor(actor.getColor());
 
-        AreaCoordinate actorAt =
-                GameDisplay.getRunningGame().getWorld().convertToAreaCoordinate(actor.getCoordinate());
+        LocalCoordinate actorAt =
+                GameDisplay.getRunningGame().getWorld().convertToLocalCoordinate(actor.getGlobalCoordinate());
 
         int[] drawX = new int[6];
         int[] drawY = new int[6];
 
-        int originX = actorAt.areaX * SQUARE_SIZE;
-        int originY = actorAt.areaY * SQUARE_SIZE;
+        int originX = actorAt.localX * SQUARE_SIZE;
+        int originY = actorAt.localY * SQUARE_SIZE;
 
         Point[] points = new Point[]{
                 getOffsetFor(facing.getLeftNeighbor(), 0), getOffsetFor(facing, 0),
@@ -87,17 +87,17 @@ class ActionOverlay {
     private static void drawActionIndicator(Graphics2D g, Actor actor) {
 
         Color color = actor.getActionIndicatorColor();
-        final Coordinate actionTarget = actor.getActionTarget();
+        final GlobalCoordinate actionTarget = actor.getActionTarget();
         if (actionTarget != null) {
 
             final Game runningGame = GameDisplay.getRunningGame();
 
-            AreaCoordinate actionTargetAC = runningGame.getWorld().convertToAreaCoordinate(actionTarget);
+            LocalCoordinate actionTargetAC = runningGame.getWorld().convertToLocalCoordinate(actionTarget);
 
             int actionDelay = actor.getTotalActionDelay() + 1;
 
-            int drawX = actionTargetAC.areaX * SQUARE_SIZE;
-            int drawY = actionTargetAC.areaY * SQUARE_SIZE;
+            int drawX = actionTargetAC.localX * SQUARE_SIZE;
+            int drawY = actionTargetAC.localY * SQUARE_SIZE;
 
             char character = '+';
 

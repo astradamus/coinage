@@ -11,7 +11,7 @@ import controller.action.Action_TurnThenMove;
 import game.Direction;
 import game.Game;
 import game.physical.PhysicalFlag;
-import world.Coordinate;
+import world.GlobalCoordinate;
 
 import java.util.Set;
 
@@ -74,9 +74,9 @@ class Routines {
     /**
      * Makes the agent advance one square towards the given coordinate.
      */
-    public static void approachOneStep(AiActorAgent agent, Coordinate destination) {
+    public static void approachOneStep(AiActorAgent agent, GlobalCoordinate destination) {
 
-        final Coordinate actorAt = agent.getActor().getCoordinate();
+        final GlobalCoordinate actorAt = agent.getActor().getGlobalCoordinate();
         final Direction toPursue = actorAt.getDirectionTo(destination);
 
         turnThenMove(agent, toPursue, false, true);
@@ -90,7 +90,7 @@ class Routines {
     public static void performSensoryScan(AiActorAgent agent) {
 
         final Actor actor = agent.getActor();
-        final Coordinate actorAt = actor.getCoordinate();
+        final GlobalCoordinate actorAt = actor.getGlobalCoordinate();
         final Rank perceptionRank = actor.getAttributeRank(Attribute.PERCEPTION);
 
         // Get all actor controllers in our area.
@@ -107,7 +107,7 @@ class Routines {
                 // auditory range (in that order). If it is, react accordingly, if not, go to the next
                 // actor controller in this area.
 
-                final Coordinate targetAt = scanTarget.getCoordinate();
+                final GlobalCoordinate targetAt = scanTarget.getGlobalCoordinate();
 
                 // Can we see the target?
                 if (Perception.getCanSeeLocation(perceptionRank, actor.getFacing(), actorAt, targetAt)) {

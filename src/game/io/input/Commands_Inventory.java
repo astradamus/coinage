@@ -7,7 +7,7 @@ import game.io.display.Event;
 import game.io.display.EventLog;
 import game.physical.Physical;
 import thing.Thing;
-import world.Coordinate;
+import world.GlobalCoordinate;
 
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -74,10 +74,10 @@ public enum Commands_Inventory implements Command {
 
                 // Prompt player to select a location and drop the item there.
                 GameInput.beginSelectingCoordinate(
-                        new Selector<>("PLACE WHERE?", player.getActor().getCoordinate(), 1,
-                                       new SelectCallback<Coordinate>() {
+                        new Selector<>("PLACE WHERE?", player.getActor().getGlobalCoordinate(), 1,
+                                       new SelectCallback<GlobalCoordinate>() {
                                            @Override
-                                           public void execute(Coordinate selected) {
+                                           public void execute(GlobalCoordinate selected) {
 
                                                player.attemptAction(new Action_Place(player.getActor(), selected, placing));
 

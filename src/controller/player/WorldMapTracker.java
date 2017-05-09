@@ -1,7 +1,7 @@
 package controller.player;
 
 import utils.Dimension;
-import world.MapCoordinate;
+import world.WorldMapCoordinate;
 
 public class WorldMapTracker {
 
@@ -13,12 +13,12 @@ public class WorldMapTracker {
     }
 
 
-    public boolean getAreaIsRevealed(MapCoordinate mapCoordinate) {
-        return worldMapRevealed[mapCoordinate.worldAreasY][mapCoordinate.worldAreasX];
+    public boolean getAreaIsRevealed(WorldMapCoordinate worldMapCoordinate) {
+        return worldMapRevealed[worldMapCoordinate.worldAreasY][worldMapCoordinate.worldAreasX];
     }
 
 
-    public void setAreaIsRevealed(MapCoordinate mapCoordinate) {
-        worldMapRevealed[mapCoordinate.worldAreasY][mapCoordinate.worldAreasX] = true;
+    public void setAreaIsRevealed(WorldMapCoordinate worldMapCoordinate) {
+        worldMapRevealed[worldMapCoordinate.worldAreasY][worldMapCoordinate.worldAreasX] = true;
     }
 }

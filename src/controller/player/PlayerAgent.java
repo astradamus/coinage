@@ -7,7 +7,7 @@ import controller.action.ActionFlag;
 import game.io.display.Event;
 import game.io.display.EventLog;
 import world.Area;
-import world.MapCoordinate;
+import world.WorldMapCoordinate;
 import world.World;
 
 /**
@@ -44,7 +44,7 @@ public class PlayerAgent extends ActorAgent {
         // Update WorldMapRevealed component accordingly.
         if (action.hasFlag(ActionFlag.ACTOR_CHANGED_AREA)) {
 
-            MapCoordinate playerAt = world.convertToMapCoordinate(getActor().getCoordinate());
+            WorldMapCoordinate playerAt = world.convertToWorldMapCoordinate(getActor().getGlobalCoordinate());
             worldMapTracker.setAreaIsRevealed(playerAt);
             getControllerInterface().reevaluateActiveAreas();
         }

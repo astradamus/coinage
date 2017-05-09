@@ -2,8 +2,7 @@ package game;
 
 import actor.Actor;
 import controller.player.PlayerAgent;
-import world.Coordinate;
-import world.MapCoordinate;
+import world.WorldMapCoordinate;
 import world.World;
 
 import java.util.Random;
@@ -59,8 +58,8 @@ public class Game {
     }
 
 
-    public boolean getWorldMapAreaIsRevealed(MapCoordinate mapCoordinate) {
-        return (playerAgent.getWorldMapRevealedComponent().getAreaIsRevealed(mapCoordinate));
+    public boolean getWorldMapAreaIsRevealed(WorldMapCoordinate worldMapCoordinate) {
+        return (playerAgent.getWorldMapRevealedComponent().getAreaIsRevealed(worldMapCoordinate));
     }
 
 

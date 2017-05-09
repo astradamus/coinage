@@ -10,7 +10,7 @@ import game.physical.Physical;
 import game.physical.PhysicalFlag;
 import thing.Thing;
 import thing.WeaponComponent;
-import world.Coordinate;
+import world.GlobalCoordinate;
 import world.World;
 
 import java.awt.Color;
@@ -23,7 +23,7 @@ public class Action_Attack extends Action {
     private Actor victim;
 
 
-    public Action_Attack(Actor actor, Coordinate target) {
+    public Action_Attack(Actor actor, GlobalCoordinate target) {
         super(actor, target);
     }
 
@@ -108,7 +108,7 @@ public class Action_Attack extends Action {
         }
 
         // Log the message if the player is in this area.
-        EventLog.registerEventIfPlayerIsLocal(victim.getCoordinate(), Event.ACTOR_WOUNDED, message);
+        EventLog.registerEventIfPlayerIsLocal(victim.getGlobalCoordinate(), Event.ACTOR_WOUNDED, message);
 
         // Apply the damage to the victim and notify the victim's controller.
         victim.getHealth().wound(damage);
@@ -117,11 +117,11 @@ public class Action_Attack extends Action {
 
 
     /**
-     * @return The living actor occupying the target coordinate, or null if there isn't one.
+     * @return The living actor occupying the target globalCoordinate, or null if there isn't one.
      */
-    private Actor getLiveTargetAt(World world, Coordinate coordinate) {
+    private Actor getLiveTargetAt(World world, GlobalCoordinate globalCoordinate) {
 
-        final Physical targetPhysical = world.getSquare(coordinate).getAll().get(0);
+        final Physical targetPhysical = world.getSquare(globalCoordinate).getAll().get(0);
         if (!targetPhysical.hasFlag(PhysicalFlag.DEAD) && targetPhysical.getClass() == Actor.class) {
             return (Actor) targetPhysical;
         }

@@ -35,9 +35,9 @@ public class World {
     }
 
 
-    public Coordinate makeRandomCoordinate() {
-        return new Coordinate(Game.RANDOM.nextInt(globalSizeInSquares.getWidth()),
-                              Game.RANDOM.nextInt(globalSizeInSquares.getHeight()));
+    public GlobalCoordinate makeRandomGlobalCoordinate() {
+        return new GlobalCoordinate(Game.RANDOM.nextInt(globalSizeInSquares.getWidth()),
+                                    Game.RANDOM.nextInt(globalSizeInSquares.getHeight()));
     }
 
 
@@ -46,8 +46,8 @@ public class World {
     }
 
 
-    public Set<Area> getAllAreasWithinRange(Coordinate target, int radius) {
-        final MapCoordinate worldTarget = convertToMapCoordinate(target);
+    public Set<Area> getAllAreasWithinRange(GlobalCoordinate target, int radius) {
+        final WorldMapCoordinate worldTarget = convertToWorldMapCoordinate(target);
 
         final int offX = Utils.clamp(worldTarget.worldAreasX - radius, 0, worldTarget.worldAreasX);
         final int offY = Utils.clamp(worldTarget.worldAreasY - radius, 0, worldTarget.worldAreasY);
@@ -59,28 +59,28 @@ public class World {
     }
 
 
-    public Square getSquare(Coordinate coordinate) {
+    public Square getSquare(GlobalCoordinate globalCoordinate) {
         try {
-            final Area area = getArea(coordinate);
+            final Area area = getArea(globalCoordinate);
             if (area == null) {
                 return null;
             }
-            return area.getSquare(convertToAreaCoordinate(coordinate));
+            return area.getSquare(convertToLocalCoordinate(globalCoordinate));
         } catch (IndexOutOfBoundsException iob) {
             return null; // Target is not valid.
         }
     }
 
 
-    public boolean validateCoordinate(Coordinate coordinate) {
-        return coordinate != null && globalSizeInSquares
-                .getCoordinateIsWithinBounds(coordinate.globalX, coordinate.globalY);
+    public boolean validateCoordinate(GlobalCoordinate globalCoordinate) {
+        return globalCoordinate != null && globalSizeInSquares
+                .getCoordinateIsWithinBounds(globalCoordinate.globalX, globalCoordinate.globalY);
     }
 
 
-    public boolean validateCoordinate(MapCoordinate mapCoordinate) {
-        return mapCoordinate != null && worldSizeInAreas
-                .getCoordinateIsWithinBounds(mapCoordinate.worldAreasX, mapCoordinate.worldAreasY);
+    public boolean validateCoordinate(WorldMapCoordinate worldMapCoordinate) {
+        return worldMapCoordinate != null && worldSizeInAreas
+                .getCoordinateIsWithinBounds(worldMapCoordinate.worldAreasX, worldMapCoordinate.worldAreasY);
     }
 
 
@@ -94,25 +94,25 @@ public class World {
     }
 
 
-    public MapCoordinate convertToMapCoordinate(Coordinate coordinate) {
-        return new MapCoordinate(coordinate.globalX / areaSizeInSquares.getWidth(),
-                                 coordinate.globalY / areaSizeInSquares.getHeight());
+    public WorldMapCoordinate convertToWorldMapCoordinate(GlobalCoordinate globalCoordinate) {
+        return new WorldMapCoordinate(globalCoordinate.globalX / areaSizeInSquares.getWidth(),
+                                      globalCoordinate.globalY / areaSizeInSquares.getHeight());
     }
 
 
-    public AreaCoordinate convertToAreaCoordinate(Coordinate coordinate) {
-        return new AreaCoordinate(coordinate.globalX % areaSizeInSquares.getWidth(),
-                                  coordinate.globalY % areaSizeInSquares.getHeight());
+    public LocalCoordinate convertToLocalCoordinate(GlobalCoordinate globalCoordinate) {
+        return new LocalCoordinate(globalCoordinate.globalX % areaSizeInSquares.getWidth(),
+                                   globalCoordinate.globalY % areaSizeInSquares.getHeight());
     }
 
 
-    public Area getArea(Coordinate coordinate) {
-        if (!validateCoordinate(coordinate)) {
+    public Area getArea(GlobalCoordinate globalCoordinate) {
+        if (!validateCoordinate(globalCoordinate)) {
             return null;
         }
 
-        final MapCoordinate mapCoordinate = convertToMapCoordinate(coordinate);
-        return getArea(mapCoordinate);
+        final WorldMapCoordinate worldMapCoordinate = convertToWorldMapCoordinate(globalCoordinate);
+        return getArea(worldMapCoordinate);
     }
 
 
@@ -121,23 +121,23 @@ public class World {
     }
 
 
-    public Area getArea(MapCoordinate mapCoordinate) {
-        if (!validateCoordinate(mapCoordinate)) {
+    public Area getArea(WorldMapCoordinate worldMapCoordinate) {
+        if (!validateCoordinate(worldMapCoordinate)) {
             return null;
         }
-        return areas.get(mapCoordinate.worldAreasX, mapCoordinate.worldAreasY);
+        return areas.get(worldMapCoordinate.worldAreasX, worldMapCoordinate.worldAreasY);
     }
 
 
     public class Informer {
 
-        public MapCoordinate convertToMapCoordinate(Coordinate coordinate) {
-            return World.this.convertToMapCoordinate(coordinate);
+        public WorldMapCoordinate convertToWorldMapCoordinate(GlobalCoordinate globalCoordinate) {
+            return World.this.convertToWorldMapCoordinate(globalCoordinate);
         }
 
 
-        public Area getArea(Coordinate coordinate) {
-            return World.this.getArea(coordinate);
+        public Area getArea(GlobalCoordinate globalCoordinate) {
+            return World.this.getArea(globalCoordinate);
         }
     }
 }

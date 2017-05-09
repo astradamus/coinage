@@ -5,8 +5,8 @@ import controller.action.Action;
 import controller.action.ActionFlag;
 import game.Direction;
 import game.physical.PhysicalFlag;
-import world.Coordinate;
-import world.MapCoordinate;
+import world.GlobalCoordinate;
+import world.WorldMapCoordinate;
 import world.World;
 
 /**
@@ -70,12 +70,12 @@ public class Ai_Retreat extends Behavior {
 
         else {
 
-            final Coordinate actorAt = getActor().getCoordinate();
-            final Coordinate pursuerAt = pursuer.getCoordinate();
+            final GlobalCoordinate actorAt = getActor().getGlobalCoordinate();
+            final GlobalCoordinate pursuerAt = pursuer.getGlobalCoordinate();
 
             final World.Informer worldInformer = getAgent().getGameInformer().getWorldInformer();
-            final MapCoordinate actorWMC = worldInformer.convertToMapCoordinate(actorAt);
-            final MapCoordinate pursuerWMC = worldInformer.convertToMapCoordinate(pursuerAt);
+            final WorldMapCoordinate actorWMC = worldInformer.convertToWorldMapCoordinate(actorAt);
+            final WorldMapCoordinate pursuerWMC = worldInformer.convertToWorldMapCoordinate(pursuerAt);
 
             // If we are two areas away we've escaped and can stop retreating.
             if (actorWMC.getDistance(pursuerWMC) >= 2) {
@@ -128,8 +128,8 @@ public class Ai_Retreat extends Behavior {
         // pursuer.
         else {
 
-            final Coordinate actorAt = getActor().getCoordinate();
-            final Coordinate attackerAt = pursuer.getCoordinate();
+            final GlobalCoordinate actorAt = getActor().getGlobalCoordinate();
+            final GlobalCoordinate attackerAt = pursuer.getGlobalCoordinate();
 
             final boolean pursuerIsClose = actorAt.getDistance(attackerAt) <= 3;
 

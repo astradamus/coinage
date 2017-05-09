@@ -7,7 +7,7 @@ import controller.action.Action_TurnThenMove;
 import game.Direction;
 import game.Game;
 import game.physical.Physical;
-import world.Coordinate;
+import world.GlobalCoordinate;
 
 import java.awt.event.KeyListener;
 import java.security.InvalidParameterException;
@@ -25,7 +25,7 @@ public class GameInput {
     private static Game runningGame;
     private static GameMode gameMode = GameMode.EXPLORE;
 
-    private static Selector<Coordinate> coordinateSelector = null;
+    private static Selector<GlobalCoordinate> coordinateSelector = null;
     private static Selector<Physical> physicalSelector = null;
     private static TargetCursor targetCursor = null;
 
@@ -130,7 +130,7 @@ public class GameInput {
     }
 
 
-    static void beginSelectingCoordinate(Selector<Coordinate> coordinateSelector) {
+    static void beginSelectingCoordinate(Selector<GlobalCoordinate> coordinateSelector) {
         clearSelectsAndCursor();
 
         GameInput.coordinateSelector = coordinateSelector;
@@ -273,7 +273,7 @@ public class GameInput {
     }
 
 
-    public static Coordinate getPlayerTarget() {
+    public static GlobalCoordinate getPlayerTarget() {
         if (targetCursor != null) {
             return targetCursor.getTarget();
         }

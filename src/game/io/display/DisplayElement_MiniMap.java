@@ -3,10 +3,9 @@ package game.io.display;
 import game.TimeMode;
 import game.io.GameEngine;
 import game.physical.Appearance;
-import utils.Dimension;
 import world.Area;
-import world.Coordinate;
-import world.MapCoordinate;
+import world.GlobalCoordinate;
+import world.WorldMapCoordinate;
 import world.World;
 
 import java.awt.Color;
@@ -41,7 +40,7 @@ public class DisplayElement_MiniMap implements DisplayElement {
     public void drawTo(Graphics g, int originX, int originY, int width) {
 
         final World world = GameDisplay.getRunningGame().getWorld();
-        Coordinate playerAt = GameDisplay.getRunningGame().getActivePlayerActor().getCoordinate();
+        GlobalCoordinate playerAt = GameDisplay.getRunningGame().getActivePlayerActor().getGlobalCoordinate();
 
         // draw the zone of Areas surrounding the player's current area, using a blank 'unknown'
         //   token for Areas that have not yet been explored by the player, and skipping any null Areas
@@ -49,7 +48,7 @@ public class DisplayElement_MiniMap implements DisplayElement {
         for (int y = 0; y < SIZE_IN_SQUARES; y++) {
             for (int x = 0; x < SIZE_IN_SQUARES; x++) {
 
-                final MapCoordinate thisCoordinate = world.convertToMapCoordinate(playerAt)
+                final WorldMapCoordinate thisCoordinate = world.convertToWorldMapCoordinate(playerAt)
                         .offset(x - MAP_RADIUS_SQUARES, y - MAP_RADIUS_SQUARES);
                 final Area area = world.getArea(thisCoordinate);
 

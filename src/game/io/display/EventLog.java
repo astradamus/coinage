@@ -4,8 +4,8 @@ import game.Game;
 import utils.Dimension;
 import utils.Utils;
 import world.Area;
-import world.AreaCoordinate;
-import world.Coordinate;
+import world.LocalCoordinate;
+import world.GlobalCoordinate;
 import world.World;
 
 import java.awt.AlphaComposite;
@@ -227,11 +227,11 @@ public class EventLog {
      * Registers a new event for immediate display in the log only if the player is located in the
      * same area as the given coordinate.
      */
-    public static void registerEventIfPlayerIsLocal(Coordinate nearTo, Color color, String message) {
+    public static void registerEventIfPlayerIsLocal(GlobalCoordinate nearTo, Color color, String message) {
 
         final Game runningGame = GameDisplay.getRunningGame();
         final World world = runningGame.getWorld();
-        final Area playerArea = world.getArea(runningGame.getActivePlayerActor().getCoordinate());
+        final Area playerArea = world.getArea(runningGame.getActivePlayerActor().getGlobalCoordinate());
         final Area eventArea = world.getArea(nearTo);
 
         if (playerArea == eventArea) {
@@ -302,10 +302,10 @@ public class EventLog {
      */
     private static boolean getIsPlayerBelowSwapLine() {
         final Game runningGame = GameDisplay.getRunningGame();
-        final AreaCoordinate playerAt = runningGame.getWorld()
-                .convertToAreaCoordinate(runningGame.getActivePlayerActor().getCoordinate());
+        final LocalCoordinate playerAt = runningGame.getWorld()
+                .convertToLocalCoordinate(runningGame.getActivePlayerActor().getGlobalCoordinate());
 
-        return playerAt.areaY > topOrBottomSwapLine;
+        return playerAt.localY > topOrBottomSwapLine;
     }
 
 

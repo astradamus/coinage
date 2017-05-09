@@ -2,7 +2,7 @@ package game.io.input;
 
 import game.Direction;
 import utils.Utils;
-import world.Coordinate;
+import world.GlobalCoordinate;
 import world.World;
 
 /**
@@ -12,17 +12,17 @@ public class TargetCursor {
 
     private final World world;
 
-    private final Coordinate areaOrigin;
+    private final GlobalCoordinate areaOrigin;
     private final Integer areaRange;
     private Integer listSelectLength;
 
     private Direction cursorMovingIn = null;
     private int moveDelay = 0;
 
-    private Coordinate target = null;
+    private GlobalCoordinate target = null;
     private Integer listSelectIndex = null;
 
-    private TargetCursor(World world, Coordinate areaOrigin, Integer areaRange, Integer listSelectLength) {
+    private TargetCursor(World world, GlobalCoordinate areaOrigin, Integer areaRange, Integer listSelectLength) {
         this.world = world;
         this.areaOrigin = areaOrigin;
         this.target = areaOrigin;
@@ -33,7 +33,7 @@ public class TargetCursor {
         }
     }
 
-    public static TargetCursor makeSquareTargeter(World world, Coordinate targetOrigin, Integer areaRange) {
+    public static TargetCursor makeSquareTargeter(World world, GlobalCoordinate targetOrigin, Integer areaRange) {
         return new TargetCursor(world, targetOrigin, areaRange, null);
     }
 
@@ -41,7 +41,7 @@ public class TargetCursor {
         return new TargetCursor(world, null, null, listSelectLength);
     }
 
-    public static TargetCursor makeSquareAndListTargeter(World world, Coordinate targetOrigin, Integer areaRange) {
+    public static TargetCursor makeSquareAndListTargeter(World world, GlobalCoordinate targetOrigin, Integer areaRange) {
         return new TargetCursor(world, targetOrigin, areaRange, world.getSquare(targetOrigin).getAll().size());
     }
 
@@ -60,7 +60,7 @@ public class TargetCursor {
                 relativeY = Utils.clamp(relativeY, -areaRange, +areaRange);
             }
 
-            Coordinate movingTo = areaOrigin.offset(relativeX, relativeY);
+            GlobalCoordinate movingTo = areaOrigin.offset(relativeX, relativeY);
 
             if (movingTo != null && world.validateCoordinate(movingTo)) {
                 target = movingTo;
@@ -88,7 +88,7 @@ public class TargetCursor {
     }
 
 
-    public Coordinate getTarget() {
+    public GlobalCoordinate getTarget() {
         return target;
     }
 

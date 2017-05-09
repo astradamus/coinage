@@ -6,7 +6,7 @@ import controller.ai.AiActorAgent;
 import controller.player.PlayerAgent;
 import thing.ThingFactory;
 import utils.Dimension;
-import world.Coordinate;
+import world.GlobalCoordinate;
 import world.Square;
 import world.World;
 import world.WorldFactory;
@@ -43,15 +43,15 @@ public class GameBuilder {
             Actor actor = ActorFactory.makeActor(id);
 
             if (actor != null) {
-                Coordinate randomCoordinate;
+                GlobalCoordinate randomGlobalCoordinate;
                 Square square;
                 do {
-                    randomCoordinate = world.makeRandomCoordinate();
-                    square = world.getSquare(randomCoordinate);
+                    randomGlobalCoordinate = world.makeRandomGlobalCoordinate();
+                    square = world.getSquare(randomGlobalCoordinate);
                 }
                 while (square.isBlocked());
                 square.put(actor);
-                actor.setCoordinate(randomCoordinate);
+                actor.setGlobalCoordinate(randomGlobalCoordinate);
                 gameControllers.addController(new AiActorAgent(actor, newGame.getInformer()));
             }
         }
@@ -62,15 +62,15 @@ public class GameBuilder {
             throw new RuntimeException("Failed to instantiate an actor for the player.");
         }
 
-        Coordinate playerStartCoordinate = world.makeRandomCoordinate();
-        player.setCoordinate(playerStartCoordinate);
+        GlobalCoordinate playerStartGlobalCoordinate = world.makeRandomGlobalCoordinate();
+        player.setGlobalCoordinate(playerStartGlobalCoordinate);
 
-        world.getSquare(playerStartCoordinate).put(player);
+        world.getSquare(playerStartGlobalCoordinate).put(player);
 
         // assign the Human to a PlayerAgent and addController it
         PlayerAgent playerController = new PlayerAgent(player, world);
         playerController.getWorldMapRevealedComponent()
-                .setAreaIsRevealed(world.convertToMapCoordinate(playerStartCoordinate));
+                .setAreaIsRevealed(world.convertToWorldMapCoordinate(playerStartGlobalCoordinate));
 
         gameControllers.addController(playerController);
 

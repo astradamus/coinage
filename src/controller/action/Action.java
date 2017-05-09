@@ -1,7 +1,7 @@
 package controller.action;
 
 import actor.Actor;
-import world.Coordinate;
+import world.GlobalCoordinate;
 import world.World;
 
 import java.awt.Color;
@@ -18,14 +18,14 @@ import java.util.EnumSet;
 public abstract class Action {
 
     private final Actor actor;
-    private final Coordinate origin;
-    private final Coordinate target;
+    private final GlobalCoordinate origin;
+    private final GlobalCoordinate target;
     private final EnumSet<ActionFlag> flags;
 
 
-    Action(Actor actor, Coordinate targetWhere) {
+    Action(Actor actor, GlobalCoordinate targetWhere) {
         this.actor = actor;
-        this.origin = actor.getCoordinate();
+        this.origin = actor.getGlobalCoordinate();
         this.target = targetWhere;
         this.flags = EnumSet.noneOf(ActionFlag.class);
     }
@@ -137,12 +137,12 @@ public abstract class Action {
     }
 
 
-    public final Coordinate getOrigin() {
+    public final GlobalCoordinate getOrigin() {
         return origin;
     }
 
 
-    public final Coordinate getTarget() {
+    public final GlobalCoordinate getTarget() {
         return target;
     }
 }

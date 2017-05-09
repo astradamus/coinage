@@ -5,7 +5,7 @@ import game.io.display.Event;
 import game.io.display.EventLog;
 import game.physical.Physical;
 import game.physical.PhysicalFlag;
-import world.Coordinate;
+import world.GlobalCoordinate;
 import world.World;
 
 /**
@@ -16,7 +16,7 @@ public class Action_Collect extends Action {
     private final Physical thingToCollect;
 
 
-    public Action_Collect(Actor actor, Physical thingToCollect, Coordinate whereThingIs) {
+    public Action_Collect(Actor actor, Physical thingToCollect, GlobalCoordinate whereThingIs) {
         super(actor, whereThingIs);
         this.thingToCollect = thingToCollect;
     }

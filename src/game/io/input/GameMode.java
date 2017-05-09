@@ -6,7 +6,7 @@ import game.io.GameEngine;
 import game.io.display.DisplayElement;
 import game.io.display.DisplayElement_Text;
 import game.io.display.EventLog;
-import world.Coordinate;
+import world.GlobalCoordinate;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -69,7 +69,7 @@ public enum GameMode {
             final Game runningGame = GameInput.getRunningGame();
             GameInput.setTargetCursor(TargetCursor.makeSquareTargeter(runningGame.getWorld(),
                                                                       runningGame.getActivePlayerActor()
-                                                                              .getCoordinate(), 1));
+                                                                              .getGlobalCoordinate(), 1));
 
             pauseIfUnpaused();
         }
@@ -106,7 +106,7 @@ public enum GameMode {
             final Game runningGame = GameInput.getRunningGame();
             GameInput.setTargetCursor(TargetCursor.makeSquareTargeter(runningGame.getWorld(),
                                                                       runningGame.getActivePlayerActor()
-                                                                              .getCoordinate(), null));
+                                                                              .getGlobalCoordinate(), null));
 
             pauseIfUnpaused();
         }
@@ -147,7 +147,7 @@ public enum GameMode {
             final Game runningGame = GameInput.getRunningGame();
             GameInput.setTargetCursor(TargetCursor.makeSquareAndListTargeter(runningGame.getWorld(),
                                                                              runningGame.getActivePlayerActor()
-                                                                                     .getCoordinate(), 1));
+                                                                                     .getGlobalCoordinate(), 1));
 
             pauseIfUnpaused();
         }
@@ -169,7 +169,7 @@ public enum GameMode {
         public List<DisplayElement> getDisplayElements() {
 
             // If there is a target, create an element for the physicals there.
-            Coordinate playerTarget = GameInput.getPlayerTarget();
+            GlobalCoordinate playerTarget = GameInput.getPlayerTarget();
             DisplayElement_Text physicalsAtTarget = (playerTarget == null) ? null :
                     DisplayElement.makePhysicalsList(GameInput.getRunningGame()
                                                              .getWorld()

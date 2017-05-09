@@ -1,8 +1,8 @@
 package actor.attribute;
 
 import game.Direction;
-import world.Coordinate;
-import world.MapCoordinate;
+import world.GlobalCoordinate;
+import world.WorldMapCoordinate;
 
 /**
  *
@@ -16,7 +16,7 @@ public class Perception {
      */
     public static boolean getCanSeeLocation(Rank perceptionRank,
                                             Direction currentFacing,
-                                            Coordinate from, Coordinate to) {
+                                            GlobalCoordinate from, GlobalCoordinate to) {
 
         final int visionRange = perceptionRank.ordinal() * 2;
         final int globalDistance = from.getDistance(to);
@@ -41,7 +41,7 @@ public class Perception {
      * {@code from} coordinate by an actor with the given {@code perceptionRank}. For each point of
      * perception, an actor may hear across one additional square's distance.
      */
-    public static boolean getCanHearLocation(Rank perceptionRank, Coordinate from, Coordinate to) {
+    public static boolean getCanHearLocation(Rank perceptionRank, GlobalCoordinate from, GlobalCoordinate to) {
 
         final int hearingRange = perceptionRank.ordinal();
         final int globalDistance = from.getDistance(to);
@@ -59,8 +59,8 @@ public class Perception {
      * to it.
      */
     public static boolean getCanTrackLocation(Rank perceptionRank,
-                                              MapCoordinate from,
-                                              MapCoordinate to) {
+                                              WorldMapCoordinate from,
+                                              WorldMapCoordinate to) {
 
         final int trackingRange = Math.max(1, perceptionRank.ordinal() / 4);
         final int worldDistance = from.getDistance(to);

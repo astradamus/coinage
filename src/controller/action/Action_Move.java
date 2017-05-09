@@ -30,7 +30,7 @@ public class Action_Move extends Action {
 
 
     public Action_Move(Actor actor, Direction movingIn, boolean isWalking) {
-        super(actor, actor.getCoordinate().offset(movingIn.relativeX, movingIn.relativeY));
+        super(actor, actor.getGlobalCoordinate().offset(movingIn.relativeX, movingIn.relativeY));
         this.movingIn = movingIn;
         this.isWalking = isWalking;
     }
@@ -111,7 +111,7 @@ public class Action_Move extends Action {
 
         world.getSquare(getOrigin()).pull(performerActor);
         world.getSquare(getTarget()).put(performerActor);
-        performerActor.setCoordinate(getTarget());
+        performerActor.setGlobalCoordinate(getTarget());
 
         if (world.getArea(getOrigin()) != world.getArea(getTarget())) {
             addFlag(ActionFlag.ACTOR_CHANGED_AREA);

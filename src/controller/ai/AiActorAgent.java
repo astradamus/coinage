@@ -62,7 +62,7 @@ public class AiActorAgent extends ActorAgent {
         if (action.hasFlag(ActionFlag.ACTOR_CHANGED_AREA)) {
             final World.Informer worldInformer = gameInformer.getWorldInformer();
             Area from = worldInformer.getArea(action.getOrigin());
-            Area to = worldInformer.getArea(getActor().getCoordinate());
+            Area to = worldInformer.getArea(getActor().getGlobalCoordinate());
             getControllerInterface().onLocalityChanged(this, from, to);
         }
 
@@ -109,7 +109,7 @@ public class AiActorAgent extends ActorAgent {
 
     @Override
     public Area getLocality(World world) {
-        return world.getArea(getActor().getCoordinate());
+        return world.getArea(getActor().getGlobalCoordinate());
     }
 
 

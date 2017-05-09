@@ -6,24 +6,24 @@ import utils.Utils;
 /**
  *
  */
-public class Coordinate {
+public class GlobalCoordinate {
 
     public final int globalX;
     public final int globalY;
 
-    public Coordinate(int globalX, int globalY) {
+    public GlobalCoordinate(int globalX, int globalY) {
         this.globalX = globalX;
         this.globalY = globalY;
     }
 
-    public Coordinate offset(int offX, int offY) {
-        return new Coordinate(globalX + offX, globalY + offY);
+    public GlobalCoordinate offset(int offX, int offY) {
+        return new GlobalCoordinate(globalX + offX, globalY + offY);
     }
 
     /**
      * @return The Chebyshev/"Chessboard" distance between this and another coordinate.
      */
-    public int getDistance(Coordinate target) {
+    public int getDistance(GlobalCoordinate target) {
 
         final int deltaX = Math.abs(this.globalX - target.globalX);
         final int deltaY = Math.abs(this.globalY - target.globalY);
@@ -38,18 +38,18 @@ public class Coordinate {
      * means the range considered "northwest" is a lot bigger than that considered "north" or "west"
      * individually.
      */
-    public Direction getDirectionTo(Coordinate target) {
+    public Direction getDirectionTo(GlobalCoordinate target) {
         return Direction.fromPointToPoint(this.globalX, this.globalY, target.globalX, target.globalY);
     }
 
-    public boolean getIsAdjacentTo(Coordinate target) {
+    public boolean getIsAdjacentTo(GlobalCoordinate target) {
         return Utils.getPointsAreAdjacent(
                 this.globalX, this.globalY,
                 target.globalX, target.globalY);
     }
 
-    public boolean equalTo(Coordinate coordinate) {
-        return globalX == coordinate.globalX && globalY == coordinate.globalY;
+    public boolean equalTo(GlobalCoordinate globalCoordinate) {
+        return globalX == globalCoordinate.globalX && globalY == globalCoordinate.globalY;
     }
 
 }

@@ -6,7 +6,7 @@ import actor.attribute.Perception;
 import actor.attribute.Rank;
 import controller.action.Action_Turn;
 import game.Direction;
-import world.Coordinate;
+import world.GlobalCoordinate;
 
 /**
  * This behavior will make the agent respond to a sound produced by a given intruder. The agent will
@@ -19,11 +19,11 @@ import world.Coordinate;
  */
 public class Ai_Investigate extends Behavior {
 
-    private final Coordinate sourceOfSound;
+    private final GlobalCoordinate sourceOfSound;
     private final Actor intruder;
 
 
-    public Ai_Investigate(AiActorAgent investigator, Coordinate sourceOfSound, Actor intruder) {
+    public Ai_Investigate(AiActorAgent investigator, GlobalCoordinate sourceOfSound, Actor intruder) {
         super(investigator);
         this.sourceOfSound = sourceOfSound;
         this.intruder = intruder;
@@ -51,9 +51,9 @@ public class Ai_Investigate extends Behavior {
 
         final Rank perception = getActor().getAttributeRank(Attribute.PERCEPTION);
         final Direction actorFacing = getActor().getFacing();
-        final Coordinate actorAt = getActor().getCoordinate();
+        final GlobalCoordinate actorAt = getActor().getGlobalCoordinate();
 
-        final Coordinate intruderActuallyAt = intruder.getCoordinate();
+        final GlobalCoordinate intruderActuallyAt = intruder.getGlobalCoordinate();
 
         // If we can see what we're looking for, react to it.
         if (Perception.getCanSeeLocation(perception, actorFacing, actorAt, intruderActuallyAt)) {

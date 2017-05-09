@@ -80,7 +80,7 @@ public class Ai_Fight extends Behavior {
                 final Action_Attack action = new Action_Attack(getActor(), victim.getCoordinate());
 
                 if (getAgent().getGameInformer().getActorIsPlayer(victim)) {
-                    action.playerIsTarget();
+                    action.targetIsPlayer();
                 }
 
                 getAgent().attemptAction(action);

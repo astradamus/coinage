@@ -3,12 +3,12 @@ package controller.player;
 import utils.Dimension;
 import world.MapCoordinate;
 
-public class Component_WorldMapRevealed {
+public class WorldMapTracker {
 
     private final boolean[][] worldMapRevealed;
 
 
-    public Component_WorldMapRevealed(Dimension worldSizeInAreas) {
+    public WorldMapTracker(Dimension worldSizeInAreas) {
         worldMapRevealed = new boolean[worldSizeInAreas.getHeight()][worldSizeInAreas.getWidth()];
     }
 

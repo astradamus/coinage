@@ -16,12 +16,12 @@ import world.World;
 public class PlayerAgent extends ActorAgent {
 
     private final World world;
-    private final Component_WorldMapRevealed component_worldMapRevealed;
+    private final WorldMapTracker worldMapTracker;
 
 
     public PlayerAgent(Actor actor, World world) {
         super(actor);
-        this.component_worldMapRevealed = new Component_WorldMapRevealed(world.getWorldSizeInAreas());
+        this.worldMapTracker = new WorldMapTracker(world.getWorldSizeInAreas());
         this.world = world;
     }
 
@@ -45,14 +45,14 @@ public class PlayerAgent extends ActorAgent {
         if (action.hasFlag(ActionFlag.ACTOR_CHANGED_AREA)) {
 
             MapCoordinate playerAt = world.convertToMapCoordinate(getActor().getCoordinate());
-            component_worldMapRevealed.setAreaIsRevealed(playerAt);
+            worldMapTracker.setAreaIsRevealed(playerAt);
             getControllerInterface().reevaluateActiveAreas();
         }
     }
 
 
-    public final Component_WorldMapRevealed getWorldMapRevealedComponent() {
-        return component_worldMapRevealed;
+    public final WorldMapTracker getWorldMapRevealedComponent() {
+        return worldMapTracker;
     }
 
 

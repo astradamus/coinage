@@ -1,7 +1,7 @@
 package world;
 
 import game.Game;
-import utils.Array2D;
+import utils.Array2d;
 import utils.Dimension;
 import utils.Utils;
 
@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class World {
 
-    private final Array2D<Area> areas;
+    private final Array2d<Area> areas;
 
     private final Dimension worldSizeInAreas;
     private final Dimension areaSizeInSquares;
@@ -21,7 +21,7 @@ public class World {
     private final Informer informer = new Informer();
 
 
-    World(Array2D<Area> areas, Dimension areaSizeInSquares) {
+    World(Array2d<Area> areas, Dimension areaSizeInSquares) {
 
         this.areas = areas;
 

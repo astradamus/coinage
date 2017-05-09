@@ -3,7 +3,7 @@ package world;
 import game.Game;
 import game.physical.Physical;
 import thing.ThingFactory;
-import utils.Array2D;
+import utils.Array2d;
 import utils.Dimension;
 import world.blueprint.Blueprint;
 import world.blueprint.BlueprintFactory;
@@ -24,10 +24,10 @@ class AreaFactory {
                 BlueprintFactory.generateWithCrawler(areaSizeInSquares, biome.getBiomeTerrain());
 
         // Generate Props
-        final Array2D<Physical> physicals = generateProps(biome, terrainBlueprint, areaSizeInSquares);
+        final Array2d<Physical> physicals = generateProps(biome, terrainBlueprint, areaSizeInSquares);
 
         // Produce square map from Blueprint
-        final Array2D<Square> squares =
+        final Array2d<Square> squares =
                 terrainBlueprint.build().map(biomeTerrain -> new Square(biomeTerrain.getTerrainTypeID()));
 
         // Add props to square map.
@@ -44,10 +44,10 @@ class AreaFactory {
     }
 
 
-    private static Array2D<Physical> generateProps(Biome biome, Blueprint<BiomeTerrain> blueprint,
+    private static Array2d<Physical> generateProps(Biome biome, Blueprint<BiomeTerrain> blueprint,
                                                    Dimension dimension) {
 
-        final Array2D<Physical> physicals = new Array2D<>(dimension);
+        final Array2d<Physical> physicals = new Array2d<>(dimension);
 
         // For each terrain classification in the biome...
         for (BiomeTerrain biomeTerrain : biome.getBiomeTerrain()) {

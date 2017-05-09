@@ -1,6 +1,6 @@
 package world;
 
-import utils.Array2D;
+import utils.Array2d;
 
 /**
  *
@@ -9,10 +9,10 @@ public final class Area {
 
     private final Biome biome;
 
-    private final Array2D<Square> squares;
+    private final Array2d<Square> squares;
 
 
-    Area(Biome biome, Array2D<Square> squares) {
+    Area(Biome biome, Array2d<Square> squares) {
 
         this.biome = biome;
         this.squares = squares;

@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class Array2D<E> implements Iterable<E> {
+public class Array2d<E> implements Iterable<E> {
 
     private final Dimension dimension;
     private final Object[] elementData;
@@ -17,17 +17,17 @@ public class Array2D<E> implements Iterable<E> {
     /**
      * Private constructor used only by ModifiableView and UnmodifiableView.
      */
-    private Array2D() {
+    private Array2d() {
         dimension = null;
         elementData = null;
     }
 
 
     /**
-     * Constructs this Array2D as a shallow copy of the given Array2D (both contain the same elements
-     * upon copying, but changes to one Array2D will not affect the other).
+     * Constructs this Array2d as a shallow copy of the given Array2d (both contain the same elements
+     * upon copying, but changes to one Array2d will not affect the other).
      */
-    public Array2D(Array2D<E> toCopy) {
+    public Array2d(Array2d<E> toCopy) {
         this(toCopy.getDimension());
         for (int y = 0; y < dimension.getHeight(); y++) {
             for (int x = 0; x < dimension.getWidth(); x++) {
@@ -38,18 +38,18 @@ public class Array2D<E> implements Iterable<E> {
 
 
     /**
-     * Constructs this Array2D with all values set to null.
+     * Constructs this Array2d with all values set to null.
      */
-    public Array2D(Dimension dimension) {
+    public Array2d(Dimension dimension) {
         this.dimension = dimension;
         elementData = new Object[dimension.getHeight() * dimension.getWidth()];
     }
 
 
     /**
-     * Constructs this Array2D with all values set to {@code defaultValue}.
+     * Constructs this Array2d with all values set to {@code defaultValue}.
      */
-    public Array2D(Dimension dimension, E defaultValue) {
+    public Array2d(Dimension dimension, E defaultValue) {
         this.dimension = dimension;
         elementData = new Object[dimension.getHeight() * dimension.getWidth()];
         setAll(defaultValue);
@@ -84,16 +84,16 @@ public class Array2D<E> implements Iterable<E> {
 
 
     /**
-     * Sets every object in the Array2D to the given element.
+     * Sets every object in the Array2d to the given element.
      */
-    public Array2D setAll(E object) {
+    public Array2d setAll(E object) {
         Arrays.setAll(elementData, i -> object);
         return this;
     }
 
 
     /**
-     * Returns the size of this Array2D.
+     * Returns the size of this Array2d.
      */
     public Dimension getDimension() {
         return dimension;
@@ -101,39 +101,39 @@ public class Array2D<E> implements Iterable<E> {
 
 
     /**
-     * Returns a view of the specified portion of this Array2D. The view is backed by this one, so
+     * Returns a view of the specified portion of this Array2d. The view is backed by this one, so
      * changes in either will affect the other, although the new view can only be modified if this
-     * Array2D is modifiable.
+     * Array2d is modifiable.
      *
-     * @param viewport The size of the new Array2D.
+     * @param viewport The size of the new Array2d.
      * @param offX     Where the left edge of the viewport should start on the backing array.
      * @param offY     Where the top edge of the viewport should start on the backing array.
      */
     @SuppressWarnings("unchecked")
-    public Array2D<E> view(Dimension viewport, int offX, int offY) {
+    public Array2d<E> view(Dimension viewport, int offX, int offY) {
         rangeCheckView(viewport, offX, offY);
         return new ModifiableView(viewport, offX, offY);
     }
 
 
     /**
-     * Returns a view of the specified portion of this Array2D. The view is backed by this one, so
+     * Returns a view of the specified portion of this Array2d. The view is backed by this one, so
      * changes to the original will affect the new, but attempts to change the new will throw {@code
      * UnsupportedOperationException}.
      *
-     * @param viewport The size of the new Array2D.
+     * @param viewport The size of the new Array2d.
      * @param offX     Where the left edge of the viewport should start on the backing array.
      * @param offY     Where the top edge of the viewport should start on the backing array.
      */
     @SuppressWarnings("unchecked")
-    public Array2D<E> unmodifiableView(Dimension viewport, int offX, int offY) {
+    public Array2d<E> unmodifiableView(Dimension viewport, int offX, int offY) {
         rangeCheckView(viewport, offX, offY);
         return new UnmodifiableView(viewport, offX, offY);
     }
 
 
     /**
-     * Ensures no view is created that would extend past the boundaries of its parent Array2D.
+     * Ensures no view is created that would extend past the boundaries of its parent Array2d.
      */
     private void rangeCheckView(Dimension viewport, int offX, int offY) {
         final int limitX = viewport.getWidth() - 1 + offX;
@@ -145,7 +145,7 @@ public class Array2D<E> implements Iterable<E> {
 
 
     /**
-     * Returns a set containing all of the elements stored in this Array2D.
+     * Returns a set containing all of the elements stored in this Array2d.
      */
     @SuppressWarnings("unchecked")
     public Set<E> toSet() {
@@ -174,15 +174,15 @@ public class Array2D<E> implements Iterable<E> {
 
 
     /**
-     * Returns a new Array2D that is the result of applying the given function to every element in
+     * Returns a new Array2d that is the result of applying the given function to every element in
      * this one.
      *
-     * @param mapper A function that takes in the type of this Array2D and returns type {@code <R>}.
+     * @param mapper A function that takes in the type of this Array2d and returns type {@code <R>}.
      * @param <R>    The type returned by the mapper.
      */
-    public <R> Array2D<R> map(Function<E, R> mapper) {
+    public <R> Array2d<R> map(Function<E, R> mapper) {
         Objects.requireNonNull(mapper);
-        final Array2D<R> mapped = new Array2D<>(getDimension());
+        final Array2d<R> mapped = new Array2d<>(getDimension());
         for (int y = 0; y < getDimension().getHeight(); y++) {
             for (int x = 0; x < getDimension().getWidth(); x++) {
                 mapped.put(mapper.apply(get(x, y)), x, y);
@@ -192,7 +192,7 @@ public class Array2D<E> implements Iterable<E> {
     }
 
 
-    private class ModifiableView extends Array2D<E> {
+    private class ModifiableView extends Array2d<E> {
 
         final Dimension viewport;
         final int offX;
@@ -220,19 +220,19 @@ public class Array2D<E> implements Iterable<E> {
         @Override
         public E get(int x, int y) {
             rangeCheck(x, y);
-            return Array2D.this.get(x + offX, y + offY);
+            return Array2d.this.get(x + offX, y + offY);
         }
 
 
         @Override
         public E put(E object, int x, int y) {
             rangeCheck(x, y);
-            return Array2D.this.put(object, x + offX, y + offY);
+            return Array2d.this.put(object, x + offX, y + offY);
         }
 
 
         @Override
-        public Array2D<E> setAll(E object) {
+        public Array2d<E> setAll(E object) {
             for (int y = 0; y < viewport.getHeight(); y++) {
                 for (int x = 0; x < viewport.getWidth(); x++) {
                     put(object, x, y);
@@ -269,18 +269,18 @@ public class Array2D<E> implements Iterable<E> {
 
         @Override
         public E put(E object, int x, int y) {
-            throw new UnsupportedOperationException("This Array2D is unmodifiable.");
+            throw new UnsupportedOperationException("This Array2d is unmodifiable.");
         }
 
 
         @Override
-        public Array2D<E> setAll(E object) {
-            throw new UnsupportedOperationException("This Array2D is unmodifiable.");
+        public Array2d<E> setAll(E object) {
+            throw new UnsupportedOperationException("This Array2d is unmodifiable.");
         }
 
 
         @Override
-        public Array2D<E> view(Dimension viewport, int offX, int offY) {
+        public Array2d<E> view(Dimension viewport, int offX, int offY) {
             return unmodifiableView(viewport, offX, offY);
         }
     }

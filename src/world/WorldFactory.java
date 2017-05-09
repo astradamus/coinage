@@ -1,6 +1,6 @@
 package world;
 
-import utils.Array2D;
+import utils.Array2d;
 import utils.Dimension;
 import world.blueprint.Blueprint;
 import world.blueprint.BlueprintFactory;
@@ -22,7 +22,7 @@ public class WorldFactory {
                                      STDGEN_PATCH_PATCHINESS);
 
         // Produce areas from Blueprint.
-        Array2D<Area> areas =
+        Array2d<Area> areas =
                 blueprint.build().map(biome -> AreaFactory.standardGeneration(biome, areaSizeInSquares));
 
         return new World(areas.unmodifiableView(worldSizeInAreas, 0, 0), areaSizeInSquares);

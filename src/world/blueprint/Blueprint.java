@@ -1,6 +1,6 @@
 package world.blueprint;
 
-import utils.Array2D;
+import utils.Array2d;
 import utils.Dimension;
 
 import java.util.Collections;
@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A builder class used to fabricate Array2D's of any type extending BlueprintFeature, containing
+ * A builder class used to fabricate Array2d's of any type extending BlueprintFeature, containing
  * the elements in featureSet distributed according to their getWeight() value relative to the other
  * features in the set. Does not actually distribute the features, only sets itself up as a base and
  * exposes methods that enable easily distributing these features (so that the method of
@@ -20,7 +20,7 @@ public class Blueprint<E extends BlueprintFeature> {
     private final Set<E> featureSet;
     private final E mostCommonFeature;
 
-    private final Array2D<E> featureLayout;
+    private final Array2d<E> featureLayout;
 
     private final Map<E, Integer> featureCountGoals;
     private final Map<E, Integer> featureCounts;
@@ -70,7 +70,7 @@ public class Blueprint<E extends BlueprintFeature> {
 
         // Make a base map filled with the heaviest feature index.
         this.featureSet = featureSet;
-        this.featureLayout = new Array2D<>(dimension, mostCommonFeature);
+        this.featureLayout = new Array2d<>(dimension, mostCommonFeature);
         this.featureCountGoals = Collections.unmodifiableMap(featureCountGoals);
     }
 
@@ -137,10 +137,10 @@ public class Blueprint<E extends BlueprintFeature> {
 
 
     /**
-     * Returns (a copy of) the Array2D described by this blueprint.
+     * Returns (a copy of) the Array2d described by this blueprint.
      */
-    public Array2D<E> build() {
-        return new Array2D<>(featureLayout);
+    public Array2d<E> build() {
+        return new Array2d<>(featureLayout);
     }
 
 

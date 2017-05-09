@@ -11,7 +11,7 @@ import java.util.function.Function;
 public class Array2D<E> implements Iterable<E> {
 
     private final Dimension dimension;
-    private final Object[][] elementData;
+    private final Object[] elementData;
 
 
     /**
@@ -42,7 +42,7 @@ public class Array2D<E> implements Iterable<E> {
      */
     public Array2D(Dimension dimension) {
         this.dimension = dimension;
-        elementData = new Object[dimension.getHeight()][dimension.getWidth()];
+        elementData = new Object[dimension.getHeight() * dimension.getWidth()];
     }
 
 
@@ -51,7 +51,7 @@ public class Array2D<E> implements Iterable<E> {
      */
     public Array2D(Dimension dimension, E defaultValue) {
         this.dimension = dimension;
-        elementData = new Object[dimension.getHeight()][dimension.getWidth()];
+        elementData = new Object[dimension.getHeight() * dimension.getWidth()];
         setAll(defaultValue);
     }
 
@@ -61,7 +61,14 @@ public class Array2D<E> implements Iterable<E> {
      */
     @SuppressWarnings("unchecked")
     public E get(int x, int y) {
-        return (E) elementData[y][x];
+        return (E) elementData[getInternalIndex(x, y)];
+    }
+
+    /**
+     * Converts a 2d index (x, y) to the appropriate index (i) in the internal backing 1d array.
+     */
+    private int getInternalIndex(int x, int y) {
+        return y * dimension.getHeight() + x;
     }
 
 
@@ -71,7 +78,7 @@ public class Array2D<E> implements Iterable<E> {
      */
     public E put(E object, int x, int y) {
         final E replaced = get(x, y);
-        elementData[y][x] = object;
+        elementData[getInternalIndex(x, y)] = object;
         return replaced;
     }
 
@@ -80,9 +87,7 @@ public class Array2D<E> implements Iterable<E> {
      * Sets every object in the Array2D to the given element.
      */
     public Array2D setAll(E object) {
-        for (Object[] subArray : elementData) {
-            Arrays.setAll(subArray, i -> object);
-        }
+        Arrays.setAll(elementData, i -> object);
         return this;
     }
 
@@ -145,10 +150,8 @@ public class Array2D<E> implements Iterable<E> {
     @SuppressWarnings("unchecked")
     public Set<E> toSet() {
         final HashSet<E> set = new HashSet<>();
-        for (final Object[] subArray : elementData) {
-            for (final Object element : subArray) {
-                set.add((E) element);
-            }
+        for (final Object element : elementData) {
+            set.add((E) element);
         }
         return set;
     }
